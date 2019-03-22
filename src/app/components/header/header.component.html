@@ -1,0 +1,89 @@
+<div id="particles-js"></div>
+
+<!-- HEADER -->
+<div class="qlc-top qlc-top-home">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 pl-md-2 pr-md-2">
+        <div class="qlc-menu">
+
+          <!-- MENU -->
+          <a routerLink="/" routerLinkActive="active" class="brand"></a>
+          <div class="menu-holder">
+            <div class="menu-item menu-lang" data-link="menu-sub-language"></div>
+            <div class="menu-item menu-account" data-link="menu-sub-account"></div>
+            <div class="menu-item menu-currency usd" data-link="menu-sub-currency"></div>
+            <div class="menu-item menu-search" data-link="menu-sub-search"></div>
+            <div class="menu-search-field" data-link="menu-sub-search">Search for: Address, Transaction, Block, Phone Number</div>
+            <div class="menu-item menu-main" data-link="menu-sub-main"><span>Menu</span></div>
+
+          </div>
+
+          <!-- SUB MAIN -->
+          <div class="menu-sub-holder menu-sub-main">
+            <div class="menu-item menu-close"></div>
+            <div class="menu-sub-items">
+              <a routerLink="/topwallets" routerLinkActive="active">Top Wallets</a>
+              <a routerLink="/representatives" routerLinkActive="active">Representatives</a>
+              <a routerLink="/accounts" routerLinkActive="active">Accounts</a>
+              <a routerLink="/transactions" routerLinkActive="active">Transactions</a>
+              <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+            </div>
+            <div class="sub-left">Menu</div>
+          </div>
+
+          <!-- SUB SEARCH -->
+          <div class="menu-sub-holder menu-sub-search">
+            <div class="menu-sub-search-form">
+              <form>
+                <input type="text" class="search-text">
+                <input type="button" class="search-button">
+              </form>
+            </div>
+            <div class="sub-left sub-left-search">Search</div>
+          </div>
+
+          <!-- SUB CURRENCY -->
+          <div class="menu-sub-holder menu-sub-currency">
+            <div class="menu-item menu-close"></div>
+            <div class="menu-sub-items menu-sub-items-currency">
+              <a href="#">USD<span class="mobile-menu-only"> American Dollar</span></a>
+              <a href="#">CNY<span class="mobile-menu-only"> Chinese Yuan</span></a>
+              <a href="#">EUR<span class="mobile-menu-only"> Euro</span></a>
+              <a href="#">GBP<span class="mobile-menu-only"> British Pound</span></a>
+              <a href="#">QLC<span class="mobile-menu-only"> QLC Chain Token</span></a>
+              <a href="#">NEO<span class="mobile-menu-only"> NEO Token</span></a>
+              <a href="#">ETH<span class="mobile-menu-only"> Ethereum</span></a>
+              <a href="#">BTC<span class="mobile-menu-only"> Bitcoin</span></a>
+            </div>
+            <div class="sub-left sub-left-currency usd">Choose your currency</div>
+          </div>
+
+          <!-- SUB ACCOUNT -->
+          <div class="menu-sub-holder menu-sub-account">
+            <div class="menu-item menu-close"></div>
+            <div class="menu-sub-items menu-sub-items-account">
+              <a routerLink="/login" routerLinkActive="active">Sign in</a>
+              <a routerLink="/createwallet" routerLinkActive="active">Create account</a>
+            </div>
+            <div class="sub-left sub-left-account">Account</div>
+          </div>
+
+          <!-- SUB LANGUAGE -->
+          <div class="menu-sub-holder menu-sub-language">
+            <div class="menu-item menu-close"></div>
+            <div class="menu-sub-items menu-sub-items-language">
+              <a href="#"><img src="assets/img/flags/de.png"><span class="mobile-menu-only"> Deutsch</span></a>
+              <a href="#"><img src="assets/img/flags/ru.png"><span class="mobile-menu-only"> Pу̏скӣ</span></a>
+              <a href="#"><img src="assets/img/flags/kr.png"><span class="mobile-menu-only"> 한국어</span></a>
+              <a href="#"><img src="assets/img/flags/cn.png"><span class="mobile-menu-only"> 简体中文</span></a>
+              <a href="#"><img src="assets/img/flags/en.png"><span class="mobile-menu-only"> English</span></a>
+            </div>
+            <div class="sub-left sub-left-language">Choose your language</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

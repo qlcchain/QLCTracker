@@ -1,0 +1,275 @@
+<!-- ACCOUNT -->
+<div class="container mt-4 mb-2 qlc-content-home">
+  <div class="row">
+
+    <!-- TITLE -->
+    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+      <div class="content-title">
+        <h1>Account details</h1>
+      </div>
+    </div>
+
+          <!-- ADDRESS -->
+    <div class="col-lg-9 col-md-9 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue">
+        <div class="container">
+
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Address hash</div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+            <div class="col-12 text-break">{{accountId}} <a href="#"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a> <a href="#"><img src="assets/img/icons/qr-code.svg" class="img-qr" data-toggle="tooltip" data-placement="top" title="Show QR code"></a></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    <!-- PHONE -->
+    <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue">
+        <div class="container">
+
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Phone number</div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+            <div class="col-12 text-break">+852 5534 5678 <a href="#"><img src="./assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- MORE INFO -->
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row qlc-table-header-white">
+            <div class="col-12">Balance</div>
+          </div>
+          <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+            <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc }} QLC</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pt-0">
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">= 449,210.25 $</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row qlc-table-header-white">
+            <div class="col-12">Pending</div>
+          </div>
+          <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+            <div class="col-12 pb-1">{{ pendingSum | qlc }} QLC</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pt-0">
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">= 4.49 $</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-blue">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Total transactions</div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-mid mt-3 pb-0">
+            <div class="col-12 pb-1">93,235</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pt-0">
+            <div class="col-12 text-wrap pt-1"><span class="text-lightblue">S: 31,004 / R: 59,201 / C: 3,030</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Representative</div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-small mt-3 mb-3">
+            <div class="col-12 text-break"><a [routerLink]="'/account/'+accountMeta.representative">{{ accountMeta.representative }}</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        
+  </div>
+  </div>
+
+
+<!-- PENDING TRANSACTIONS -->
+<div class="container mt-3 mb-0" *ngIf="pendingBlocks.length > 0">
+  <div class="row">
+    
+    <div class="col-12 pl-0 pr-0">
+      
+      <!-- TITLE -->
+      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+        <div class="content-title">
+          <h1>Pending Transactions</h1>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+
+
+          <div class="container">
+
+            <div class="row qlc-table-header">
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Account / Transaction ID</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
+            </div>
+<!--
+            <div class="row qlc-table-row closed">
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0"><span class="qlc-icon icon-receive" title="Receive"></span><span class="d-none d-sm-none d-md-inline-block"><span class="text-color-lightgrey">State</span><br><span class="text-bold-grey">Receive</span></span></div>
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate"><span class="text-color-lightgrey">from:</span> <a href="index_02_details_account.html">qlc_7eyst8ffjq679d3or3snbah75aojet3sxmrax3ggd33rx6jdzxy5c4qadh84</a><a href="index_02_details_transaction.html"><br><span class="text-tiny">5EACB5E606CDBA8993E21658290B8CA4E9F93AD37ADDEB080F60A52F920102DE</span></a></div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right text-color-green"><span data-toggle="tooltip" data-placement="top" title="+0.45 $">+10.00</span><br><span class="text-color-grey">QLCX</span></div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right"><span class="text-color-lightgrey">15 min ago</span><br class="hide-mobile"> Jan 28, 2019 22:35:32</div>
+              <div class="container transaction-details"></div>
+            </div>
+
+            <div class="row qlc-table-row closed">
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0"><span class="qlc-icon icon-receive" title="Receive"></span><span class="d-none d-sm-none d-md-inline-block"><span class="text-color-lightgrey">State</span><br><span class="text-bold-grey">Receive</span></span></div>
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate"><span class="text-color-lightgrey">from:</span> <a href="index_02_details_account.html">qlc_7eyst8ffjq679d3or3snbah75aojet3sxmrax3ggd33rx6jdzxy5c4qadh84</a><a href="index_02_details_transaction.html"><br><span class="text-tiny">5EACB5E606CDBA8993E21658290B8CA4E9F93AD37ADDEB080F60A52F920102DE</span></a></div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right text-color-green"><span data-toggle="tooltip" data-placement="top" title="+0.45 $">+10.00</span><br><span class="text-color-grey">QLCX</span></div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right"><span class="text-color-lightgrey">15 min ago</span><br class="hide-mobile"> Jan 28, 2019 22:35:32</div>
+              <div class="container transaction-details"></div>
+            </div>
+-->
+            <div class="row qlc-table-row closed" *ngFor="let pending of pendingBlocks">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+                  <span class="qlc-icon icon-receive" title="Receive"></span>
+                  <span class="d-none d-sm-none d-md-inline-block">
+                    <span class="text-color-lightgrey">State</span><br>
+                    <span class="text-bold-grey">Receive</span>
+                  </span>
+                </div>
+                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
+                  <span class="text-color-lightgrey">from:</span> 
+                  <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a>
+                  <a [routerLink]="'/transaction/' + pending.hash"><br>
+                    <span class="text-tiny">{{ pending.hash }}</span>
+                  </a>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
+                  pending.type == 'Send' ? 'text-color-red' : 'text-color-green'
+                }}">
+                  <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{pending.type == 'Send' ? '-' : '+'}} {{ pending.amount | qlc }}</span>
+                  <br><span class="text-color-grey">{{ pending.tokenName }}</span>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                  <span class="text-color-lightgrey">2 weeks ago</span>
+                  <br class="hide-mobile"> Jan 14, 2019 19:00:00
+                </div>
+                <div class="container transaction-details">
+  
+                </div>
+              </div>
+
+
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+    
+  </div>
+</div>
+
+<!-- LATEST TRANSACTIONS -->
+<div class="container mt-0 mb-3">
+  <div class="row">
+    
+    <div class="col-12 pl-0 pr-0">
+      
+      <!-- TITLE -->
+      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+        <div class="content-title">
+          <h1>Latest Transactions</h1>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+
+
+          <div class="container">
+
+            <div class="row qlc-table-header">
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Account / Transaction ID</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
+            </div>
+
+            <div class="row qlc-table-row closed" *ngFor="let history of accountHistory">
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+                <span class="qlc-icon icon-{{ history.type }}" title="{{ history.type }}"></span>
+                <span class="d-none d-sm-none d-md-inline-block">
+                  <span class="text-color-lightgrey">State</span><br>
+                  <span class="text-bold-grey">{{ history.type }}</span>
+                </span>
+              </div>
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
+                <span class="text-color-lightgrey">{{history.type == 'Send' ? 'to' : 'from'}}:</span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a>
+                <a [routerLink]="'/transaction/' + history.hash"><br>
+                  <span class="text-tiny">{{ history.hash }}</span>
+                </a>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
+                history.type == 'Send' ? 'text-color-red' : 'text-color-green'
+              }}">
+                <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | qlc }}</span>
+                <br><span class="text-color-grey">{{ history.tokenName }}</span>
+              </div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                {{ history.timestamp * 1000 | date: 'short' }}
+              </div>
+              <div class="container transaction-details">
+
+              </div>
+            </div>
+
+
+            
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BUTTON -->
+      <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center">
+        <a href="index_01_list_transactions.html" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+      </div>
+
+    </div>
+    
+  </div>
+</div>
+
+
+
+<div class="container mt-4 mb-4">
+  <div class="row">
+  </div>
+</div>

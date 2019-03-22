@@ -1,0 +1,9 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+        <div *ngFor="let notification of notifications">
+            <alert [type]="notification.type" [dismissible]="true" (onClosed)="onClosed(notification)">{{ notification.message }}</alert>
+          </div>
+    </div>
+  </div>
+</div>

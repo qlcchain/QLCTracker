@@ -1,0 +1,167 @@
+{
+	"name": "smsBilling",
+	"version": "0.1.0",
+	"main": "main.js",
+	"scripts": {
+		"ng": "ng",
+		"start": "ng serve",
+		"build": "ng build",
+		"test": "ng test",
+		"lint": "ng lint",
+		"e2e": "ng e2e",
+		"sms:dev": "ng serve --open",
+		"sms:build": "ng build --configuration=production",
+		"sms:build-desktop": "ng build --configuration=desktop --base-href ./",
+		"desktop:dev": "electron main.js",
+		"desktop:local": "electron-builder",
+		"desktop:devLocal": "electron-builder -c.compression=store",
+		"desktop:full": "electron-builder -wml --x64"
+	},
+	"private": true,
+	"dependencies": {
+		"@angular/animations": "^7.2.10",
+		"@angular/common": "^7.2.10",
+		"@angular/compiler": "^7.2.10",
+		"@angular/core": "^7.2.10",
+		"@angular/forms": "^7.2.10",
+		"@angular/platform-browser": "^7.2.10",
+		"@angular/platform-browser-dynamic": "^7.2.10",
+		"@angular/router": "^7.2.10",
+		"@types/jquery": "^3.3.29",
+		"bignumber.js": "^8.1.1",
+		"bootstrap": "^4.3.1",
+		"core-js": "^2.6.5",
+		"cross-spawn-with-kill": "^1.0.0",
+		"electron-log": "^3.0.1",
+		"electron-updater": "^4.0.6",
+		"electron-util": "^0.11.0",
+		"jquery": "^3.3.1",
+		"jsonrpc-lite": "^2.0.5",
+		"ngx-bootstrap": "^3.2.0",
+		"particles.js": "^2.0.0",
+		"qlc.js": "0.0.2",
+		"rxjs": "~6.3.3",
+		"signal-exit": "^3.0.2",
+		"to-executable-name": "^2.0.0",
+		"tslib": "^1.9.0",
+		"xhr2": "^0.1.4",
+		"zone.js": "~0.8.26"
+	},
+	"devDependencies": {
+		"@angular-devkit/build-angular": "^0.13.6",
+		"@angular/cli": "^7.3.6",
+		"@angular/compiler-cli": "^7.2.10",
+		"@angular/language-service": "^7.2.10",
+		"@types/jasmine": "~2.8.8",
+		"@types/jasminewd2": "~2.0.3",
+		"@types/node": "^8.10.44",
+		"codelyzer": "~4.5.0",
+		"electron": "^4.1.1",
+		"electron-builder": "^20.39.0",
+		"electron-is-dev": "^1.0.1",
+		"jasmine-core": "~2.99.1",
+		"jasmine-spec-reporter": "~4.2.1",
+		"karma": "^4.0.1",
+		"karma-chrome-launcher": "~2.2.0",
+		"karma-coverage-istanbul-reporter": "^2.0.5",
+		"karma-jasmine": "~1.1.2",
+		"karma-jasmine-html-reporter": "^0.2.2",
+		"popper.js": "^1.14.7",
+		"protractor": "~5.4.0",
+		"ts-node": "~7.0.0",
+		"tslint": "~5.11.0",
+		"typescript": "~3.2.2"
+	},
+	"build": {
+		"appId": "org.qlcchain.smsBilling",
+		"buildVersion": "0.1.0",
+		"productName": "SMS Billing",
+		"asar": true,
+		"files": [
+			"dist/**/*",
+			"node_modules/**/*",
+			"package.json",
+			"main.js"
+		],
+		"directories": {
+			"output": "dist-desktop",
+			"app": "./"
+		},
+		"dmg": {
+			"window": {
+				"width": 540,
+				"height": 380
+			},
+			"contents": [
+				{
+					"x": 410,
+					"y": 230,
+					"type": "link",
+					"path": "/Applications"
+				},
+				{
+					"x": 130,
+					"y": 230,
+					"type": "file"
+				}
+			]
+		},
+		"mac": {
+			"target": [
+				"dmg"
+			],
+			"type": "distribution",
+			"extraResources": {
+				"from": "./extra/darwin/",
+				"to": "./",
+				"filter": [
+					"**/*"
+				]
+			},
+			"binaries": [
+				"./dist-desktop/mac/smsBilling.app/Contents/Resources/gqlc"
+			],
+			"category": "public.app-category.finance"
+		},
+		"win": {
+			"target": [
+				"nsis",
+				"portable"
+			],
+			"extraResources": {
+				"from": "./extra/win32/${arch}",
+				"to": "./",
+				"filter": [
+					"**/*"
+				]
+			}
+		},
+		"nsis": {
+			"oneClick": false,
+			"allowToChangeInstallationDirectory": true
+		},
+		"linux": {
+			"target": [
+				"deb",
+				"AppImage"
+			],
+			"desktop": {
+				"Categories": "P2P;Finance;Security"
+			},
+			"extraResources": {
+				"from": "./extra/linux/",
+				"to": "./",
+				"filter": [
+					"**/*"
+				]
+			}
+		},
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "qlcchain",
+				"repo": "sms-billing"
+			}
+		]
+	}
+}

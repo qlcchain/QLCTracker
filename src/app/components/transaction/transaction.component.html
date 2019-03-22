@@ -1,0 +1,315 @@
+<!-- TRANSACTION DETAILS -->
+<div class="container mt-4 mb-2 qlc-content-home">
+  <div class="row">
+
+    <!-- TITLE -->
+    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+      <div class="content-title">
+        <h1>Transaction details</h1>
+      </div>
+    </div>
+
+          <!-- TX HASH -->
+    <div class="col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Transaction hash</div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+            <div class="col-12 text-break">{{ transactionHash }}</div>
+          </div>
+        </div>
+      </div>
+          </div>
+          
+          <!-- FROM TO -->
+          <div class="col-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+              <div class="content-box-white">
+                  <div class="container transaction-details open">
+                      <div class="row">
+                          <div class="col-lg-6 text-center pt-4 pb-4">
+                              <div class="text-label pb-0">Sent from</div>
+                              <div class="text-truncate pl-5 pr-5 pt-2 pb-2"><a routerLink="/account/{{ transaction.address }}">{{ transaction.address }}</a></div>
+                              <!--<div class="text-color-red pt-0 text-bold">-17.481 QN1</div>-->
+                          </div>
+                          <div class="col-lg-6 text-center pt-4 pb-4">
+                              <div class="text-label pb-0">Sent to</div>
+                              <div class="text-truncate pl-5 pr-5 pt-2 pb-2"><a routerLink="/account/{{ transaction.link_as_account }}">{{ transaction.link_as_account }}</a></div>
+                              <!--<div class="text-color-green pt-0 text-bold">+17.481 QN1</div>-->
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        
+  </div>
+  </div>
+
+
+  <!-- MAIN INFO / SEND -->
+  <div class="container" *ngIf="transaction.subType == 'send'">
+      <div class="row">
+          
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-red bg-type-send">
+                  <div class="container">
+                      <div class="row qlc-table-header-red">
+                          <div class="col-12">Type</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">State Send</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+              <div class="content-box-red">
+                  <div class="container">
+                      <div class="row qlc-table-header-red">
+                          <div class="col-12">Amount</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.amount | qlc }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-blue">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue">
+                          <div class="col-12">Token</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.tokenName }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+              <div class="content-box-blue">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue">
+                          <div class="col-12">Date/time</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.timestamp * 1000 | date: 'short' }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+                  
+      </div>
+  </div>
+
+
+  <!-- MAIN INFO / RECEIVE -->
+  <div class="container" *ngIf="transaction.subType == 'receive'">
+      <div class="row">
+          
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-green bg-type-receive">
+                  <div class="container">
+                      <div class="row qlc-table-header-green">
+                          <div class="col-12">Type</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">State Receive</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+              <div class="content-box-green">
+                  <div class="container">
+                      <div class="row qlc-table-header-green">
+                          <div class="col-12">Amount</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.amount | qlc }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-blue">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue">
+                          <div class="col-12">Token</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.tokenName }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+              <div class="content-box-blue">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue">
+                          <div class="col-12">Date/time</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.timestamp * 1000 | date: 'short' }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+                  
+      </div>
+  </div>
+
+
+  <!-- MAIN INFO / CHANGE -->
+  <div class="container" *ngIf="transaction.subType != 'receive' && transaction.subType != 'send' ">
+      <div class="row">
+          
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-darkblue bg-type-change">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue">
+                          <div class="col-12">Type</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.type }} {{ transaction.subType }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+              <div class="content-box-darkblue">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue">
+                          <div class="col-12">Amount</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.amount | qlc }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-blue">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue">
+                          <div class="col-12">Token</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.tokenName }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+              <div class="content-box-blue">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue">
+                          <div class="col-12">Date/time</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                          <div class="col-12">{{ transaction.timestamp * 1000 | date: 'short' }}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+                  
+      </div>
+  </div>
+
+
+<!-- RAW DATA BLOCKS -->
+
+<div class="container mt-0">
+  <div class="row equal">
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row qlc-table-header-white sub-page">
+            <div class="col-12">Representative</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pb-1">
+            <div class="col-12 text-wrap pb-4"><a routerLink="/account/{{ transaction.representative }}">{{ transaction.representative }}</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+                      <div class="row qlc-table-header-white sub-page">
+                          <div class="col-12">WORK</div>
+                      </div>
+                      <div class="row qlc-table-row-white sub-page pb-1">
+                          <div class="col-12 text-wrap pb-4">{{ transaction.work }}</div>
+                      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-white">
+                  <div class="container">
+                      <div class="row qlc-table-header-white sub-page">
+                          <div class="col-12">SIGNATURE</div>
+                      </div>
+                      <div class="row qlc-table-row-white sub-page pb-1">
+                          <div class="col-12 text-wrap pb-4">{{ transaction.signature }}</div>
+                      </div>
+                  </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-white">
+                  <div class="container">
+                      <div class="row qlc-table-header-white sub-page">
+                          <div class="col-12">PREVIOUS</div>
+                      </div>
+                      <div class="row qlc-table-row-white sub-page pb-1">
+                          <div class="col-12 text-wrap pb-4"><a routerLink="/transaction/{{ transaction.previous }}">{{ transaction.previous }}</a></div>
+                      </div>
+                  </div>
+      </div>
+    </div>
+    
+  </div>
+  </div>
+  
+  <!-- RAW BLOCK -->    
+  <div class="container mt-0">
+      <div class="row equal">
+
+          <div class="col-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-white">
+                  <div class="container">
+                      <div class="row qlc-table-header-white sub-page">
+                          <div class="col-12">Raw Block Data</div>
+                      </div>
+                      <div class="row qlc-table-row-white sub-page">
+                          <div class="col-12">
+                              <code><pre>{{ transactionJSON }}</pre></code>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+<div class="container mt-4 mb-4">
+  <div class="row">
+  </div>
+</div>
