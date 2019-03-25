@@ -15,7 +15,7 @@
             <div class="menu-item menu-currency usd" data-link="menu-sub-currency"></div>
             <div class="menu-item menu-search" data-link="menu-sub-search"></div>
             <div class="menu-search-field" data-link="menu-sub-search">Search for: Address, Transaction, Block, Phone Number</div>
-            <div class="menu-item menu-main" data-link="menu-sub-main"><span>Menu</span></div>
+            <div class="menu-item menu-main" data-link="menu-sub-main"><span>{{ 'NAV.menu' | translate }}</span></div>
 
           </div>
 
@@ -24,10 +24,10 @@
             <div class="menu-item menu-close"></div>
             <div class="menu-sub-items">
               <a routerLink="/topwallets" routerLinkActive="active">Top Wallets</a>
-              <a routerLink="/representatives" routerLinkActive="active">Representatives</a>
-              <a routerLink="/accounts" routerLinkActive="active">Accounts</a>
-              <a routerLink="/transactions" routerLinkActive="active">Transactions</a>
-              <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+              <a routerLink="/representatives" routerLinkActive="active">{{ 'NAV.representatives' | translate }}</a>
+              <a routerLink="/accounts" routerLinkActive="active">{{ 'NAV.accounts' | translate }}</a>
+              <a routerLink="/transactions" routerLinkActive="active">{{ 'NAV.transactions' | translate }}</a>
+              <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">{{ 'NAV.home' | translate }}</a>
             </div>
             <div class="sub-left">Menu</div>
           </div>
@@ -63,12 +63,15 @@
           <div class="menu-sub-holder menu-sub-account">
             <div class="menu-item menu-close"></div>
             <div class="menu-sub-items menu-sub-items-account">
-              <a routerLink="/login" routerLinkActive="active">Sign in</a>
-              <a routerLink="/createwallet" routerLinkActive="active">Create account</a>
+              <a routerLink="/login" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()">Sign in</a>
+              <a (click)="lockWallet()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">Log out</a>
+              <a routerLink="/myaccount" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">My account</a>
+              <a routerLink="/createwallet" routerLinkActive="active">Create/Import account</a>
             </div>
             <div class="sub-left sub-left-account">Account</div>
           </div>
-
+          
+          
           <!-- SUB LANGUAGE -->
           <div class="menu-sub-holder menu-sub-language">
             <div class="menu-item menu-close"></div>

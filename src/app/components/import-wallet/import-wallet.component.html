@@ -1,0 +1,65 @@
+<div class="container mt-0 mb-3 qlc-content-first">
+  <div class="row">
+    
+    <div class="col-12 pl-0 pr-0">
+      
+      <!-- TITLE -->
+      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+        <div class="content-title">
+          <h1>Import account</h1>
+        </div>
+      </div>
+      
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+            <div class="row align-items-center rowContent autoHP">
+                <div class="col-12 px-0 py-3 text-center" *ngIf="activePanel == 'error'">
+                    {{ 'IMPORT_WALLET.error' | translate }}
+                </div>
+                <div class="col-12 px-0 py-3 text-center" *ngIf="activePanel == 'import'">
+                    {{ 'IMPORT_WALLET.import' | translate }}
+                  </div>
+                  <div class="col-12 px-0 py-3 text-center" *ngIf="activePanel == 'imported'">
+                      {{ 'IMPORT_WALLET.imported' | translate }}
+                    </div>
+                
+              </div>
+              <div class="row align-items-center rowContent autoHP">
+                <div class="col-md-12 px-0" *ngIf="activePanel == 'import'">
+                  <div class="row align-items-center justify-content-center rowDefault autoHP">
+                    <div class="col-6 px-0 py-3 text-truncate dataName">
+                        {{ 'IMPORT_WALLET.confirm' | translate }}
+                    </div>
+                  </div>
+                  <div class="row align-items-center justify-content-center rowDefault autoHP">
+                    <div class="col-6 px-0 pb-3 text-left text-truncate">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input type="password" class="form-control" [(ngModel)]="walletPassword" placeholder="{{ 'IMPORT_WALLET.confirm_placeholder' | translate }}" type="password" onfocus="this.placeholder = ''">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row align-items-center justify-content-center rowDefault rowButtons" >
+                <div class="col-lg-3 col-md-5 col-sm-6 col-12 px-0 px-sm-2 pb-3 text-left text-truncate mobile-break">
+                  <button (click)="decryptWallet()" type="submit" class="btn btn-primary" *ngIf="activePanel == 'import'">{{ 'IMPORT_WALLET.import_wallet' | translate }}</button>
+                  <button routerLink="/myaccount" type="submit" class="btn btn-primary" *ngIf="activePanel == 'imported'">View my account</button>
+                </div>
+              </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+
+<div class="container mt-4 mb-4">
+  <div class="row">
+  </div>
+</div>

@@ -22,6 +22,10 @@ html, body {
     }
 }
 
+a {
+    cursor: pointer;
+}
+
 .alert.alert-success {
 	background-color: $greenLight;
 	color: white;

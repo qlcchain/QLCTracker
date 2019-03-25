@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { WalletService } from 'src/app/services/wallet.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 
 declare var particlesJS: any;
 declare var jQuery: any;
@@ -16,9 +20,21 @@ declare global {
 })
 export class HeaderComponent implements OnInit {
 
-  
+  wallet = this.walletService.wallet;
 
-  constructor() { }
+	msg3 = '';
+	msg4 = '';
+	msg5 = '';
+
+  constructor(
+    public walletService: WalletService,
+    private notificationService: NotificationService,
+    private trans: TranslateService,
+    private router: Router
+  ) 
+  { 
+    this.loadLang();
+  }
 
   ngOnInit() {
     
@@ -117,5 +133,28 @@ export class HeaderComponent implements OnInit {
       });*/
     })(jQuery);
   }
+
+
+  async lockWallet() {
+		if (this.wallet.type === 'ledger') {
+			return; // No need to lock a ledger wallet, no password saved
+		}
+		if (!this.wallet.password) {
+			return this.notificationService.sendWarning(this.msg3);
+		}
+		const locked = await this.walletService.lockWallet();
+		if (locked) {
+      this.notificationService.sendSuccess(this.msg4);
+      this.router.navigate(['/login']);
+		} else {
+			this.notificationService.sendError(this.msg5);
+		}
+  }
+  
+  loadLang() {
+		this.trans.get('WALLET_WARNINGS.msg3').subscribe((res: string) => { this.msg3 = res; });
+		this.trans.get('WALLET_WARNINGS.msg4').subscribe((res: string) => { this.msg4 = res; });
+		this.trans.get('WALLET_WARNINGS.msg5').subscribe((res: string) => { this.msg5 = res; });
+	}
 
 }

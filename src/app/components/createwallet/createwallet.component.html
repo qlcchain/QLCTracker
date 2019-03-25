@@ -1,65 +1,331 @@
-<!-- CREATE WALLET - STEP #1 -->
 <div class="container mt-0 pt-0 mt-0 mb-2 qlc-content-first">
-  <div class="row pt-0 mt-0">
-
-    <!-- SIGN IN -->
-    <div class="col-lg-12 pl-0 pr-0 pt-0">
-              
-              <!-- SUMMARY -->
-              <div class="container mt-0 mb-4">
-                  <div class="row">
-
-                      <!-- TITLE -->
-                      <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                          <div class="content-title">
-                              <h1>Create new wallet</h1>
-                          </div>
-                      </div>
-
-                      <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                          <div class="content-box-white">
-                              <form>
-                                  <div class="container">
-          
-                                      <div class="row qlc-table-header-white pb-4 pt-5">
-                                          <div class="col-lg-6 offset-lg-3 content-title"><h2 class="title-grey">Read carefully before prodeeding!</h2></div>
-                                          <div class="col-lg-6 offset-lg-3 mt-4 text-paragraph-default">
-
-                                              <p class="text-justify">When you create a new wallet, a new QLC Chain Wallet seed will be generated which can be used to create brand new accounts on the QLC Chain network. Your QLC Wallet seed is the master key to all of your accounts and any money inside of them!</p>
-                                              <p class="text-justify"><strong>Make sure you back up your seed, write it down, and keep it incredibly safe! <span class="text-color-red align-justify">There is NO way to recover it after creation, and all funds inside WILL be lost without it!</span></strong></p>
-                                              
-
-                                          </div>
-
-                                          <div class="col-lg-6 offset-lg-3 mt-4">
-
-                                            <div class="custom-control custom-check custom-control-inline">
-                                                <input type="checkbox" id="confirmUnderstand" name="confirmUnderstand" class="custom-control-input">
-                                                <label class="custom-control-label" for="confirmUnderstand">I have read and understand everything</label>
-                                            </div>
-
+    <div class="row pt-0 mt-0">
+        <div class="col-lg-12 pl-0 pr-0 pt-0">
+            <div class="container mt-0 mb-4">
+                
+                <!-- configure/import wallet start --> 
+                <div class="row" *ngIf="activePanel == 0">
+                    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                        <div class="content-title">
+                            <h1>{{ 'CONFIGURE_WALLET.configure_wallet_title' | translate }}</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                        <div class="content-box-white">
+                            <div class="col-12 my-3" *ngIf="wallet.seed">
+                                <div class="col-12 px-0 py-3 text-center content-title" [innerHTML]="'CONFIGURE_WALLET.configure_wallet_warning' | translate">
+                                    
+                                </div>
+                            </div>
+                            <div class="row justify-content-md-center defaultTable content text-center mb-3" *ngIf="activePanel == 0">
+                                <div class="col-12 px-4 mt-3 ">
+                                    <p>
+                                        {{ 'CONFIGURE_WALLET.configure_wallet_text' | translate }}
+                                    </p>
+                                </div>
+                                <div class="col-12 px-0 ">
+                                    <div class="row justify-content-center buttons">
+                                        <div class="col-xl-3 col-lg-4 col-10">
+                                            <a (click)="setPanel(11)"><button type="submit" class="btn btn-primary btn-blue mt-1">{{ 'CONFIGURE_WALLET.configure_wallet_button_import' | translate }}</button></a>
                                         </div>
+                                        <div class="col-xl-3 col-lg-4 col-10">
+                                            <a (click)="setPanel(1)"><button type="submit" class="btn btn-primary btn-blue mt-1">{{ 'CONFIGURE_WALLET.configure_wallet_button_create' | translate }}</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+                <!-- configure/import wallet end --> 
+                
+                <!-- create new wallet text start -->
+                <div class="row" *ngIf="activePanel == 1">
+                    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                        <div class="content-title">
+                            <h1>{{ 'CREATE_NEW_WALLET.create_new_wallet_title' | translate }}</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                        <div class="content-box-white">
+                            <form>
+                                <div class="container">
+                                    <div class="row qlc-table-header-white pb-4 pt-5">
+                                        <div class="col-lg-6 offset-lg-3 content-title"><h2 class="title-grey">{{ 'CREATE_NEW_WALLET.create_new_wallet_warning' | translate }}</h2></div>
+                                        <div class="col-lg-6 offset-lg-3 mt-4 text-paragraph-default">
+                                            <p class="text-justify">{{ 'CREATE_NEW_WALLET.create_new_wallet_text1' | translate }}</p>
+                                            <p class="text-justify">
+                                                <strong>
+                                                    {{ 'CREATE_NEW_WALLET.create_new_wallet_text2' | translate }}
+                                                    <span class="text-color-red align-justify">{{ 'CREATE_NEW_WALLET.create_new_wallet_text3' | translate }}</span>
+                                                </strong>
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-6 offset-lg-3 mt-4">
+                                            <div class="custom-control custom-check custom-control-inline">
+                                                <input type="checkbox" id="confirmUnderstand" name="confirmUnderstand" class="custom-control-input" [(ngModel)]="agree">
+                                                <label class="custom-control-label" for="confirmUnderstand">{{ 'CREATE_NEW_WALLET.create_new_wallet_agree' | translate }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row qlc-table-row-white">
+                                        <div class="col-12 pl-4 pb-3 pr-3 pt-2 text-center">
+                                            <input (click)="createNewWallet()" [disabled]="!agree" class="btn btn-primary btn-blue mt-1" value="{{ 'CREATE_NEW_WALLET.create_new_wallet_button' | translate }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>                    
+                </div>
+                <!-- create new wallet text end -->
+                
+                <!-- new wallet created start -->
+                <div class="row" *ngIf="activePanel == 3">
+                    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                        <div class="content-title">
+                            <h1>{{ 'CREATE_NEW_CREATED.create_new_created_title' | translate }}</h1>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                        <div class="content-box-white">
+                            <div class="col-12 px-0 text-center py-3">
+                                {{ 'CREATE_NEW_CREATED.create_new_created_text' | translate }}
+                            </div>
+                            <div class="row align-items-top">
+                                <div class="col-xl-6">
+                                    <div class="col-12 defaultTable tableQLC content">
+                                        <div class="row align-items-center rowTitles">
+                                            <div class="col-12 pb-3">
+                                                {{ 'CREATE_NEW_CREATED.mnemonic' | translate }}
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center rowDefault">
+                                            <div class="col-12 pb-3">
+                                                {{ newWalletMnemonic }}
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center rowButtons">
+                                            <div class="col-12">
+                                                <a tooltip="{{ 'CREATE_NEW_CREATED.copy_mnemonic' | translate }}" ngxClipboard [cbContent]="newWalletMnemonic" (cbOnSuccess)="copied()" class="icon-text-link"><span class="icon copy light"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="col-12 defaultTable tableQLC content">
+                                        <div class="row align-items-center rowTitles">
+                                            <div class="col-12 pb-3">
+                                                {{ 'CREATE_NEW_CREATED.seed' | translate }}
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center rowDefault">
+                                            <div class="col-12 pb-3">
+                                                {{ newWalletSeed }}
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center rowButtons">
+                                            <div class="col-12 align-self-end">
+                                                <a tooltip="{{ 'CREATE_NEW_CREATED.copy_seed' | translate }}" ngxClipboard [cbContent]="newWalletSeed" (cbOnSuccess)="copied()" class="icon-text-link" ><span class="icon copy light"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            <div class="row defaultTable content">
+                                <div class="col-12 pb-3">
+                                    <div class="row align-items-center rowContent autoHP">
+                                        <div class="col-12 px-0 pb-1 text-center boldbig" [innerHtml]="'CREATE_NEW_CREATED.warning1' | translate">
+                                            
+                                        </div>
+                                        <div class="col-12 px-0 pb-3 text-center boldbig">
+                                            {{ 'CREATE_NEW_CREATED.warning2' | translate }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row align-items-center justify-content-center rowDefault rowButtons">
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+                                            <a (click)="confirmNewSeed()"><button type="submit" class="btn btn-danger">{{ 'CREATE_NEW_CREATED.create_new_created_button' | translate }}</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+                <!-- new wallet created end -->
+                
+                <!-- set wallet password start -->
+                <div class="row" *ngIf="activePanel == 4">
+                    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                        <div class="content-title">
+                            <h1>{{ 'SET_WALLET_PASSWORD.set_wallet_password_title' | translate }}</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                        <div class="content-box-white">
+                            <div class="col-12 px-0 text-center pt-3">
+                                {{ 'SET_WALLET_PASSWORD.set_wallet_password_text' | translate }}
+                            </div>
+                                <div class="row align-items-center rowContent autoHP">
+                                    <div class="col-md-6">
+                                        <div class="col-12 py-3 text-truncate dataName">
+                                            {{ 'SET_WALLET_PASSWORD.password' | translate }}
+                                        </div>
+                                        <div class="col-12 pb-3 text-left text-truncate">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="password" class="form-control" [(ngModel)]="walletPasswordModel" placeholder="{{ 'SET_WALLET_PASSWORD.password_placeholder' | translate }}" onfocus="this.placeholder = ''">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-12 pb-3 py-md-3 text-truncate dataName">
+                                            {{ 'SET_WALLET_PASSWORD.confirm' | translate }}
+                                        </div>
+                                        <div class="col-12 pb-3 text-left text-truncate">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="password" class="form-control" (keyup.enter)="saveWalletPassword()" [(ngModel)]="walletPasswordConfirmModel" placeholder="{{ 'SET_WALLET_PASSWORD.confirm_placeholder' | translate }}" onfocus="this.placeholder = ''">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row align-items-center justify-content-center rowDefault rowButtons">
+                                    <div class="col-lg-3 col-md-5 col-sm-6 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+                                        <button (click)="saveWalletPassword()" type="submit" class="btn btn-primary">{{ 'SET_WALLET_PASSWORD.set_wallet_password_button' | translate }}</button>
+                                    </div>
+                                    <div class="col-12 boldBig text-center pt-4 pb-3">
+                                        {{ 'SET_WALLET_PASSWORD.warning' | translate }}
+                                    </div>
+                                </div>
+                        </div>
+                    </div>                    
+                </div>
+                <!-- set wallet password end -->
+                
+                <!-- wallet configured start -->
+                <div class="row" *ngIf="activePanel == 5">
+                    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                        <div class="content-title">
+                            <h1>{{ 'WALLET_CONFIGURED.wallet_configured_title' | translate }}</h1>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                        <div class="content-box-white">
+                            <div class="col-12 px-0 text-center py-3">
+                                {{ 'WALLET_CONFIGURED.wallet_configured_text' | translate }} 
+                            </div>
 
-                                      </div>
-                                      
-                                      <div class="row qlc-table-row-white">
-                                          <div class="col-12 pl-4 pb-3 pr-3 pt-2 text-center">
-                                              <a href="/myaccount" class="btn btn-primary btn-blue mt-1">CREATE WALLET NOW</a>
-                                          </div>
-                                      </div>
+                            <div class="row justify-content-center">
+                                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5 col-12 px-0 px-sm-2">
+                                    <button routerLink="/myaccount" type="submit" class="btn btn-primary">{{ 'WALLET_CONFIGURED.wallet_configured_button' | translate }}</button>
+                                </div>
+                            </div>
 
-                                  </div>
-                              </form>
-                          </div>
-                      </div>
+                            <div class="col-12 px-0 text-center py-3">
+                                {{ 'WALLET_CONFIGURED.warning' | translate }}
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+                <!-- wallet configured end -->
+                <div class="row" *ngIf="activePanel == 11">
 
-                  </div>
-              </div>
+                        <!-- TITLE -->
+                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                            <div class="content-title">
+                                <h1>{{ 'IMPORT.import_title' | translate }}</h1>
+                            </div>
+                        </div>
+  
+                        <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                            <div class="content-box-white">
+                                    <div class="container">
+            
+                                        <div class="row qlc-table-header-white pb-4 pt-5">
+                                            <div class="col-lg-6 offset-lg-3 content-title"><h2 class="title-grey">How would you like to access your account?</h2></div>
+                                            <div class="col-lg-6 offset-lg-3 mt-4">
+  
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="signinType1" name="signinType" class="custom-control-input" value="mnemonic" checked [(ngModel)]="selectedImportOption">
+                                                    <label class="custom-control-label" for="signinType1">Wallet Mnemonic phase</label>
+                                                </div>
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="signinType2" name="signinType" class="custom-control-input" value="seed" [(ngModel)]="selectedImportOption">
+                                                    <label class="custom-control-label" for="signinType2">Wallet Seed</label>
+                                                </div>
 
-          </div>
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="signinType3" name="signinType" class="custom-control-input" value="file" [(ngModel)]="selectedImportOption">
+                                                    <label class="custom-control-label" for="signinType3">Wallet file</label>
+                                                </div>
+  
+                                            
+                                            <div class="row justify-content-center rowContent autoHP" *ngIf="selectedImportOption === 'seed'">
+                                                    <div class="col-12 px-0 py-3 text-truncate dataName">{{ 'IMPORT.seed_title' | translate }}</div>
+                                                    <div class="col-12 px-0 pb-3 text-left text-truncate">
+                                                        <div class="form-group">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedModel" placeholder="{{ 'IMPORT.seed_placeholder' | translate }}" onfocus="this.placeholder = ''">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center rowContent autoHP" *ngIf="selectedImportOption === 'mnemonic'">
+                                                    <div class="col-12 px-0 py-3 text-truncate dataName">{{ 'IMPORT.mnemonic_title' | translate }}</div>
+                                                    <div class="col-12 px-0 pb-3 text-left text-truncate">
+                                                        <div class="form-group">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" (keyup.enter)="importExistingWallet()" [(ngModel)]="importSeedMnemonicModel" placeholder="{{ 'IMPORT.mnemonic_placeholder' | translate }}" onfocus="this.placeholder = ''">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center rowContent autoHP" *ngIf="selectedImportOption === 'file'">
+                                                    <div class="col-12 px-0 py-3">{{ 'IMPORT.file_text' | translate }}</div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row qlc-table-row-white">
+                                            <div class="col-12 pl-4 pb-3 pr-3 pt-2 text-center">
+                                                    <button type="submit" class="btn btn-primary" *ngIf="selectedImportOption === 'mnemonic'" (click)="importExistingWallet()">{{ 'IMPORT.mnemonic_button' | translate }}</button>
+                                                    <button type="submit" class="btn btn-primary" *ngIf="selectedImportOption === 'seed'" (click)="importExistingWallet()">{{ 'IMPORT.seed_button' | translate }}</button>
+                                                    <button type="submit" class="btn btn-primary" *ngIf="selectedImportOption === 'file'" (click)="importExistingWallet()">{{ 'IMPORT.file_button' | translate }}</button>
+                                                    <input type="file" id="import-from-file" *ngIf="selectedImportOption === 'file'" (change)="importFromFile($event.target.files)" multiple>
+                                            </div>
+                                        </div>
+  
+                                    </div>
+                            </div>
+                        </div>
+  
+                    </div>
+                
+                
+                
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
 
 
 <div class="container mt-4 mb-4">
-  <div class="row">
-  </div>
+    <div class="row">
+    </div>
 </div>

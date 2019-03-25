@@ -78,7 +78,7 @@
                                       <div class="col-12">Account balance</div>
                                   </div>
                                   <div class="row qlc-table-row-white row-text-mid mt-3 mb-0 pb-0">
-                                          <div class="col-12 pb-1">16,440 QLCX</div>
+                                          <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc }} QLC</div>
                                       </div>
                                       <div class="row qlc-table-row-white sub-page pt-0">
                                           <div class="col-12 text-wrap pt-1"><span class="text-blue">= 8,210.25 $</span></div>
@@ -155,15 +155,10 @@
                                       <div class="col-xl-3 col-lg-3 col-md-6 col-sm-4 col-8 pr-4 text-right">Time</div>
                                   </div>
       
-                                  <div class="row qlc-table-row closed">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a href="index_02_details_transaction.html">3AD37ADDEB080F60A52F920102DE5EACB5E606CDBA8993E21658290B8CA4E9F9</a></div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">+852 5534 5678</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">20 sec ago</span></div>
-                                  </div>
-                                  <div class="row qlc-table-row closed">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a href="index_02_details_transaction.html">ACB5E606CDBA8993E21658290B8CA4E9F93AD37ADDEB080F60A52F920102DE5E</a></div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">+852 3455 8810</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">20 sec ago</span></div>
+                                  <div class="row qlc-table-row closed" *ngFor="let pending of pendingBlocks">
+                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a [routerLink]="'/transaction/' + pending.hash">{{ pending.hash }}</a></div>
+                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">N/A</div>
+                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">{{ pending.timestamp | date: 'short' }}</span></div>
                                   </div>
 
                               </div>
@@ -191,20 +186,10 @@
                                       <div class="col-xl-3 col-lg-3 col-md-6 col-sm-4 col-8 pr-4 text-right">Time</div>
                                   </div>
       
-                                  <div class="row qlc-table-row closed">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a href="index_02_details_transaction.html">3AD37ADDEB080F60A52F920102DE5EACB5E606CDBA8993E21658290B8CA4E9F9</a></div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">+852 5534 5678</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">20 sec ago</span></div>
-                                  </div>
-                                  <div class="row qlc-table-row closed">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a href="index_02_details_transaction.html">ACB5E606CDBA8993E21658290B8CA4E9F93AD37ADDEB080F60A52F920102DE5E</a></div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">+852 3455 8810</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">20 sec ago</span></div>
-                                  </div>
-                                  <div class="row qlc-table-row closed">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a href="index_02_details_transaction.html">ACB5E606CDBA8993E21658290B8CA4E9F93AD37ADDEB080F60A52F920102DE5E</a></div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">+852 3455 8810</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">20 sec ago</span></div>
+                                  <div class="row qlc-table-row closed" *ngFor="let history of accountHistory">
+                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a  routerLink="/transaction/{{ history.hash }}">{{ history.hash }}</a></div>
+                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">N/A</div>
+                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">{{ history.timestamp * 1000 | date: 'short' }}</span></div>
                                   </div>
 
                               </div>

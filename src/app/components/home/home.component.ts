@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, ChildActivationEnd } from '@angular/router';
+import { Router, ChildActivationEnd } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { NodeService } from 'src/app/services/node.service';
-import { load } from '@angular/core/src/render3';
 import { timer } from 'rxjs';
 
 @Component({
@@ -22,7 +21,6 @@ export class HomeComponent implements OnInit {
   routerSub = null;
 
   constructor(
-    private router: ActivatedRoute,
 		private route: Router,
 		private api: ApiService,
 		private node: NodeService
@@ -65,7 +63,7 @@ export class HomeComponent implements OnInit {
 		}
 
 		const representativeOnline = await this.api.onlineRepresentatives();
-		if (!representativeOnline.error) {
+		if (representativeOnline.result) {
 			this.representativeOnline = representativeOnline.result.length; 
 		}
 	}

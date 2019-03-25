@@ -17,9 +17,11 @@ export class ApiService {
 	alive = true;
 	
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
-	private c = new Client(this.HTTP_RPC, () => {});
+	c = new Client(this.HTTP_RPC, () => {});
 	
 	//private connectInterval = interval(1000);
+
+	qlcTokenHash = '';
 
 	constructor(private http: HttpClient, private node: NodeService) {
 		//this.connectInterval.pipe(takeUntil(() => this.node.status)).subscribe()
@@ -41,100 +43,181 @@ export class ApiService {
 				this.connect();*/
 		});
 	}
-	
+
 	async accounts(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
-		
-		return await this.c.request( methods.ledger.accounts, count, offset );
-	}
-	
-	async accountsCount(): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.ledger.accountsCount );
-	}
-	
-	
-	
-	async blocks(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
-		//this.node.setOffline('error');
-		return await this.c.request( methods.ledger.blocks, count, offset );
-	}
-	
-	async blocksCount(): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.ledger.blocksCount );
-	}
-	
-	
-	
-	async accountsBalances(accounts: string[]): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.qlcclassic.accountsBalances, accounts );
-		//return await this.request('qlcclassic_accountsBalances', { params: [accounts] });
-	}
-	
-	async accountForPublicKey(account: string): Promise<{ result: any; error?: any }> {
-		return await this.c.request( methods.account.accountForPublicKey, account );
-	}
-	
-	
-	
-	async accountsFrontiers(accounts: string[]): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.qlcclassic.accountsFrontiers, accounts );
-		//return await this.request('qlcclassic_accountsFrontiers', { params: [accounts] });
-	}
-	
-	async accountsPending(accounts: string[], count: number = 50): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.qlcclassic.accountsPending, accounts, count );
-	}
-	
-	
-	async onlineRepresentatives(): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.net.onlineRepresentatives )
-	}
-	
-	async representatives(): Promise<any> {
-		return await this.c.request( methods.ledger.representatives )
-	}
-	
-	async accountVotingWeight(address): Promise<string> {
-		return await this.c.request( methods.ledger.accountVotingWeight, address )
-	}
-	
-	
-	
-	async blocksInfo(blocks): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.ledger.blocksInfo, blocks );
-	}
-	
-	async blockAccount(account): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.ledger.blockAccount, account );
-	}
-	
-	async process(block): Promise<{ result: string; error?: string }> {
-		return await this.c.request( methods.qlcclassic.process, block )
-		//return await this.request('qlcclassic_process', { params: [block] });
-	}
-	
-	async accountHistory(account, count = 25): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.ledger.accountHistoryTopn, account, count );
-	}
-		
-	async accountInfo(account): Promise<{ result: any ; error?: any }> {
-		console.log('accountInfo ' + account);
 		try {
-			const returns = await this.c.request( methods.ledger.accountInfo, account );
-			console.log(returns);
-			return returns;
-		} catch (error) {
-			console.log(error);
-			return error;
+			return await this.c.request( methods.ledger.accounts, count, offset );
+		} catch (err) {
+			return err;
 		}
 	}
 	
+	async accountsCount(): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request( methods.ledger.accountsCount );
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async accountsBalances(accounts: string[]): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.accountsBalances, accounts);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async accountsFrontiers(accounts: string[]): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.accountsFrontiers, accounts);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async accountsPending(accounts: string[], count: number = 50): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.accountsPending, accounts, count);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async delegatorsCount(account: string): Promise<{ count: string }> {
+		try {
+			return await this.c.request(methods.ledger.delegatorsCount, account);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async onlineRepresentatives(): Promise<{ result: any }> {
+		try {
+			return await this.c.request(methods.net.onlineRepresentatives);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async representatives(order = true): Promise<{ result: any }> {
+		try {
+			return await this.c.request(methods.ledger.representatives, order);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async accountVotingWeight(account): Promise<{ result: any }> {
+		try {
+			return await this.c.request(methods.ledger.accountVotingWeight, account);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async blocksInfo(blocks): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.blocksInfo, blocks);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async blockHash(block): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.blockHash, block);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async blockCount(): Promise<{ count: number; unchecked: number }> {
+		try {
+			return await this.c.request(methods.ledger.blocksCount);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async process(block): Promise<{ result: string; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.process, block);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async accountHistory(account, count = 25): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.accountHistoryTopn, account, count);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async accountInfo(account): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.accountInfo, account);
+		} catch (err) {
+			return err;
+		}
+	}
+
 	async validateAccountNumber(account): Promise<{ result: true | false }> {
-		return await this.c.request( methods.qlcclassic.validateAccount, account );
-		//return await this.request('qlcclassic_validateAccount', { params: [account] });
+		try {
+			return await this.c.request(methods.account.accountValidate, account);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async pending(account, count): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.accountsPending([account], count);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async tokens(): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request(methods.ledger.tokens);
+		} catch (err) {
+			return err;
+		}
+	}
+
+	async blocks(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request( methods.ledger.blocks, count, offset );
+		} catch (err) {
+			return err;
+		}
 	}
 	
-	async tokens(): Promise<{ result: any; error?: string }> {
-		return await this.c.request( methods.ledger.tokens );
+	async blocksCount(): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request( methods.ledger.blocksCount );
+		} catch (err) {
+			return err;
+		}
+	}
+	
+	async accountForPublicKey(account: string): Promise<{ result: any; error?: any }> {
+		try {
+			return await this.c.request( methods.account.accountForPublicKey, account );
+		} catch (err) {
+			return err;
+		}
+	}
+	
+	async blockAccount(account): Promise<{ result: any; error?: string }> {
+		try {
+			return await this.c.request( methods.ledger.blockAccount, account );
+		} catch (err) {
+			return err;
+		}
 	}
 	
 	async tokenByHash(tokenHash): Promise<any> {

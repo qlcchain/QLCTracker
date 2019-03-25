@@ -1,10 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { FormsModule } from '@angular/forms';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 
+import { ClipboardModule } from 'ngx-clipboard';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
@@ -23,10 +26,21 @@ import { LoginComponent } from './components/login/login.component';
 import { CreatewalletComponent } from './components/createwallet/createwallet.component';
 import { MyaccountComponent } from './components/myaccount/myaccount.component';
 
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS, HttpClient} from '@angular/common/http';
 import { HttpErrorInterceptor } from './http-error.interceptor';
 import { QlcPipe } from './pipes/qlc.pipe';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { environment } from '../environments/environment';
+import { DeviceDetectorModule } from 'ngx-device-detector';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { ImportWalletComponent } from './components/import-wallet/import-wallet.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -45,17 +59,34 @@ import { NotificationsComponent } from './components/notifications/notifications
     CreatewalletComponent,
     MyaccountComponent,
     QlcPipe,
-    NotificationsComponent
+    NotificationsComponent,
+    ImportWalletComponent,
+    AutofocusDirective
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
+    ClipboardModule,
 		TooltipModule.forRoot(),
 		BsDropdownModule.forRoot(),
 		CollapseModule.forRoot(),
 		ModalModule.forRoot(),
-		AlertModule.forRoot(),
+    AlertModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: (createTranslateLoader),
+          deps: [HttpClient]
+      }
+    }),
+    DeviceDetectorModule.forRoot(),
+    LoggerModule.forRoot({
+			serverLoggingUrl: `${environment.apiUrl}/logs`,
+			level: NgxLoggerLevel.DEBUG,
+			serverLogLevel: NgxLoggerLevel.ERROR
+		})
   ],
   providers: [
     {

@@ -11,6 +11,7 @@ import { TopwalletsComponent } from './components/topwallets/topwallets.componen
 import { LoginComponent } from './components/login/login.component';
 import { MyaccountComponent } from './components/myaccount/myaccount.component';
 import { CreatewalletComponent } from './components/createwallet/createwallet.component';
+import { ImportWalletComponent } from './components/import-wallet/import-wallet.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'topwallets', component: TopwalletsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'createwallet', component: CreatewalletComponent },
+  { path: 'import-wallet', component: ImportWalletComponent },
   { path: 'myaccount', component: MyaccountComponent },
   { path: '**', component: HomeComponent },
 ];
