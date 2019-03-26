@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  wallet = this.walletService.wallet;
   
   constructor(
     private walletService: WalletService,
@@ -30,9 +31,27 @@ export class AppComponent {
   }
 
   async ngOnInit() {
+    // When the page closes, determine if we should lock the wallet
+		window.addEventListener('beforeunload', e => {
+			if (this.wallet.locked) {
+				return; // Already locked, nothing to worry about
+			}
+			if (this.settings.settings.lockOnClose === 1) {
+				this.walletService.lockWallet();
+			}
+		});
+		window.addEventListener('unload', e => {
+			if (this.wallet.locked) {
+				return; // Already locked, nothing to worry about
+			}
+			if (this.settings.settings.lockOnClose === 1) {
+				this.walletService.lockWallet();
+			}
+		});
     this.settings.loadAppSettings();
 		this.addressBook.loadAddressBook();
 		this.workPool.loadWorkCache();
     await this.walletService.loadStoredWallet();
   }
+  
 }

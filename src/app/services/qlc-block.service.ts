@@ -71,13 +71,11 @@ export class QLCBlockService {
 
 	async generateChange(walletAccount, representativeAccount, ledger = false) {
 		const changeBlock = await this.api.c.buildinLedger.generateChangeBlock(walletAccount.id, representativeAccount);
-		const processResponse = await this.api.process(await this.signBlockAndAddWork(changeBlock, walletAccount.keyPair));
+		const processResponse = await this.procesBlock(changeBlock, walletAccount.keyPair);
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
 			walletAccount.header = header;
-			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
-			this.workPool.removeFromCache(changeBlock.previous);
 			return header;
 		} else {
 			return null;
@@ -93,13 +91,11 @@ export class QLCBlockService {
 		};
 
 		const sendBlock = await this.api.c.buildinLedger.generateSendBlock(blockData);
-		const processResponse = await this.api.process(await this.signBlockAndAddWork(sendBlock, walletAccount.keyPair));
+		const processResponse = await this.procesBlock(sendBlock, walletAccount.keyPair);
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
 			walletAccount.header = header;
-			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
-			this.workPool.removeFromCache(sendBlock.previous);
 			return header;
 		} else {
 			return null;
@@ -117,34 +113,45 @@ export class QLCBlockService {
 		const sendBlock = srcBlockInfo.result[0];
 
 		const receiveBlock = await this.api.c.buildinLedger.generateReceiveBlock(sendBlock);
-		const processResponse = await this.api.process(await this.signBlockAndAddWork(receiveBlock, walletAccount.keyPair));
+		const processResponse = await this.procesBlock(receiveBlock, walletAccount.keyPair);
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
 			walletAccount.header = header;
-			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
-			this.workPool.removeFromCache(receiveBlock.previous);
 			return header;
 		} else {
 			return null;
 		}
 	}
 
-	async signBlockAndAddWork(block, keyPair) {
+	async procesBlock(block, keyPair) {
 		const blockHash = await this.api.blockHash(block);
 		const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
 		const signature = this.util.hex.fromUint8(signed);
 
 		block.signature = signature;
+		let generateWorkFor = block.previous;
+		if (block.previous === this.zeroHash) {
+			const publicKey = await this.api.accountPublicKey(block.address);
+			generateWorkFor = publicKey.result;
+		}
 
-		if (!this.workPool.workExists(block.previous)) {
+		if (!this.workPool.workExists(generateWorkFor)) {
 			this.notifications.sendInfo(this.msg3);
 		}
 		//console.log('generating work');
-		const work = await this.workPool.getWork(block.previous);
+		const work = await this.workPool.getWork(generateWorkFor);
 		//console.log('work >>> ' + work);
 		block.work = work;
-		return block;
+
+		const processResponse = await this.api.process(block);
+		if (processResponse && processResponse.result) {
+			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
+			this.workPool.removeFromCache(generateWorkFor);
+			return processResponse;
+		} else {
+			return null;
+		}
 	}
 
 	sendLedgerDeniedNotification() {

@@ -44,6 +44,14 @@ export class ApiService {
 		});
 	}
 
+	async accountPublicKey(account: string): Promise<{ result: string; error?: string }> {
+		try {
+			return await this.c.request(methods.account.accountPublicKey, account);
+		} catch (err) {
+			return err;
+		}
+	}
+
 	async accounts(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
 		try {
 			return await this.c.request( methods.ledger.accounts, count, offset );
