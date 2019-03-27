@@ -37,6 +37,9 @@ import { DeviceDetectorModule } from 'ngx-device-detector';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { ImportWalletComponent } from './components/import-wallet/import-wallet.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { MyaccountsComponent } from './components/myaccounts/myaccounts.component';
+import { SendComponent } from './components/send/send.component';
+import { FiatPipe } from './pipes/fiat.pipe';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -61,7 +64,10 @@ export function createTranslateLoader(http: HttpClient) {
     QlcPipe,
     NotificationsComponent,
     ImportWalletComponent,
-    AutofocusDirective
+    AutofocusDirective,
+    MyaccountsComponent,
+    SendComponent,
+    FiatPipe
   ],
   imports: [
     BrowserModule,

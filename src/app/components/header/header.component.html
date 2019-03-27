@@ -65,7 +65,8 @@
             <div class="menu-sub-items menu-sub-items-account">
               <a routerLink="/login" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()">Sign in</a>
               <a (click)="lockWallet()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">Log out</a>
-              <a routerLink="/myaccount" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">My account</a>
+              <a routerLink="/myaccounts" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">My accounts</a>
+              <a routerLink="/send" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">Send</a>
               <a routerLink="/createwallet" routerLinkActive="active">Create/Import account</a>
             </div>
             <div class="sub-left sub-left-account">Account</div>

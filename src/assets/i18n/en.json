@@ -130,10 +130,65 @@
 		"msg19": "Wallet seed copied to clipboard!",
 		"msg20": "Bad import data",
 		"msg21": "Unable to parse import data, make sure you selected the right file!"
+    },
+    "SEND_TOKENS_TAB": {
+		"send_tokens_title": "Send Tokens",
+		"from_account": "From account",
+		"to_account": "To account",
+		"to_account_placeholder": "To account",
+		"amount": "Amount",
+		"max": "Max",
+		"amount_placeholder": "Amount to send",
+		"send": "Send",
+		"confirm_transaction": "Confirm Transaction",
+		"you_are_about_to_send": "You are about to send",
+		"amount_to_send": "Amount to send",
+		"confirm_send": "Confirm & Send"
+	},
+	"SEND_WARNINGS": {
+		"msg1": "Account not found",
+		"msg2": "To account address is not valid",
+		"msg3": "From and to account are required",
+		"msg4": "From account not found",
+		"msg5": "From and to account cannot be the same",
+		"msg6": "Amount is invalid",
+		"msg7": "Transactions for less than 1 qlc will be ignored by the node.  Send raw amounts with at least 1 qlc.",
+		"msg8": "From account does not have enough",
+		"msg9": "Unable to find sending account in wallet",
+		"msg10": "Wallet must be unlocked",
+		"msg11": "Successfully sent",
+		"msg12": "There was an error sending your transaction, please try again.",
+		"msg13": "There was an error sending your transaction:"
+	},
+	"ACCOUNTS": {
+		"title": "Accounts",
+		"title_button": "ADD NEW ACCOUNT",
+		"token": "Token",
+		"quantity": "Quantity",
+		"price": "Price",
+		"24H": "24H",
+		"total_value": "Total Value",
+		"wallet_details": "Account details"
+	},
+	"ACCOUNTS_WARNINGS": {
+		"msg1": "Wallet is locked.",
+		"msg2": "Wallet is not configured",
+		"msg3": "You can only track up to 20 accounts at a time.",
+		"msg4": "Successfully created new account",
+		"msg5": "Successfully copied to clipboard!",
+		"msg6": "Wallet must be unlocked.",
+		"msg7": "Successfully removed account",
+		"msg8": "Unable to delete account:",
+		"msg9": "Ledger device must be ready",
+		"msg10": "Confirming account address on Ledger device...",
+		"msg11": "Account address confirmed on Ledger",
+		"msg12": "Account address denied - if it is wrong do not use the wallet!"
 	},
 	"CANCEL": "Cancel",
 	"OK": "Ok",
     "LOADING": "Loading",
     "TYPE": "TYPE",
-    "COPY_TO_CLIPBOARD": "Copy to clipboard"
+    "COPY_TO_CLIPBOARD": "Copy to clipboard",
+    "SEND_TOKENS": "Send Tokens",
+	"EDIT_NAME": "Edit Name"
 }

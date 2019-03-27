@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
 		}
 
     this.unlockPassword = '';
-    this.router.navigate(['/myaccount']);
+    this.router.navigate(['/myaccounts']);
   }
   
   loadLang() {

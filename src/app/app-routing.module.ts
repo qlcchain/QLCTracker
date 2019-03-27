@@ -12,6 +12,8 @@ import { LoginComponent } from './components/login/login.component';
 import { MyaccountComponent } from './components/myaccount/myaccount.component';
 import { CreatewalletComponent } from './components/createwallet/createwallet.component';
 import { ImportWalletComponent } from './components/import-wallet/import-wallet.component';
+import { MyaccountsComponent } from './components/myaccounts/myaccounts.component';
+import { SendComponent } from './components/send/send.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +32,10 @@ const routes: Routes = [
   { path: 'createwallet', component: CreatewalletComponent },
   { path: 'import-wallet', component: ImportWalletComponent },
   { path: 'myaccount', component: MyaccountComponent },
+  { path: 'myaccount/:account', component: MyaccountComponent },
+  { path: 'myaccounts', component: MyaccountsComponent },
+  { path: 'send', component: SendComponent },
+  { path: 'send/:account', component: SendComponent },
   { path: '**', component: HomeComponent },
 ];
 

@@ -1,0 +1,61 @@
+@import "../../../scss/mixins";
+.accounts {
+	position: relative;
+	text-align: left;
+	h1 {
+		display: inline-block;
+		margin-bottom: 0;
+	}
+	button.btn.content-header {
+		width: auto;
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	.editNameButtons button.btn {
+		margin-top: 0;
+	}
+	.account {
+		> div > .accountHeader {
+			background-color: $accountHeaderBg;
+			min-height: 58px;
+			border-left: 4px solid $default;
+			border-bottom: 1px solid #edeef4;
+			padding-left: 16px;
+			padding-right: 20px;
+
+			
+			
+			.options {
+				text-align: right;
+			}
+			.name {
+				font-weight: bold;
+				color: $default;
+			}
+			.address {
+				font-weight: bold;
+			}
+		}
+		.price {
+			@media (max-width: 992px) {
+				display: none;
+			}
+		}
+		.pricechange {
+			@media (max-width: 992px) {
+				display: none;
+			}
+		}
+		.totalvalue {
+			@media (max-width: 767px) {
+				display: none;
+			}
+		}
+		> div > .accountFooter {
+			color: $text;
+		}
+	}
+}

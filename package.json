@@ -41,6 +41,7 @@
 		"electron-log": "^3.0.1",
 		"electron-updater": "^4.0.6",
 		"electron-util": "^0.11.0",
+		"fs-extra": "^7.0.1",
 		"jquery": "^3.3.1",
 		"jsonrpc-lite": "^2.0.5",
 		"ngx-bootstrap": "^3.2.0",
@@ -48,6 +49,7 @@
 		"ngx-device-detector": "^1.3.5",
 		"ngx-logger": "^3.3.12",
 		"particles.js": "^2.0.0",
+		"peer-id": "^0.12.2",
 		"qlc.js": "0.0.3",
 		"rxjs": "~6.3.3",
 		"signal-exit": "^3.0.2",
@@ -82,9 +84,9 @@
 		"typescript": "~3.2.2"
 	},
 	"build": {
-		"appId": "org.qlcchain.smsBilling",
+		"appId": "org.qlcchain.smsbilling",
 		"buildVersion": "0.1.0",
-		"productName": "SMS Billing",
+		"productName": "SMSBilling",
 		"asar": true,
 		"files": [
 			"dist/**/*",
@@ -120,13 +122,19 @@
 				"dmg"
 			],
 			"type": "distribution",
-			"extraResources": {
-				"from": "./extra/darwin/",
-				"to": "./",
-				"filter": [
-					"**/*"
-				]
-			},
+			"extraResources": [
+				{
+					"from": "./extra/darwin/x64/",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				},
+				{
+					"from": "./extra/config.json",
+					"to": "./"
+				}
+			],
 			"binaries": [
 				"./dist-desktop/mac/smsBilling.app/Contents/Resources/gqlc"
 			],
@@ -137,13 +145,22 @@
 				"nsis",
 				"portable"
 			],
-			"extraResources": {
-				"from": "./extra/win32/${arch}",
-				"to": "./",
-				"filter": [
-					"**/*"
-				]
-			}
+			"extraResources": [
+				{
+					"from": "./extra/win32/${arch}",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				},
+				{
+					"from": "./extra/config.json",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				}
+			]
 		},
 		"nsis": {
 			"oneClick": false,
@@ -157,13 +174,22 @@
 			"desktop": {
 				"Categories": "P2P;Finance;Security"
 			},
-			"extraResources": {
-				"from": "./extra/linux/",
-				"to": "./",
-				"filter": [
-					"**/*"
-				]
-			}
+			"extraResources": [
+				{
+					"from": "./extra/linux/x64/",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				},
+				{
+					"from": "./extra/config.json",
+					"to": "./",
+					"filter": [
+						"**/*"
+					]
+				}
+			]
 		},
 		"publish": [
 			{

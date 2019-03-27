@@ -1,0 +1,100 @@
+<div class="container mt-0 pt-0 mt-0 mb-2 qlc-content-first">
+    <div class="row pt-0 mt-0">
+        <div class="col-lg-12 pl-0 pr-0 pt-0">
+            <div class="container mt-0 mb-4">
+                
+                <!-- configure/import wallet start --> 
+                <div class="row">
+                    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                        <div class="content-title">
+                            <h1>{{ 'ACCOUNTS.title' | translate }}</h1>
+                        </div>
+                    </div>
+                </div>
+
+<div class="container accounts">
+	<div class="row">
+		<div class="col-12 px-0">
+			<h1>{{ 'ACCOUNTS.title' | translate }}</h1>
+			<button type="submit" class="btn btn-primary content-header" (click)="createAccount()" *ngIf="accounts.length">
+				{{ 'ACCOUNTS.title_button' | translate }}
+			</button>
+		</div>
+	</div>
+	<div *ngIf="!accounts.length" class="row defaultTable content">
+		<div class="col-12 text-center">
+			{{ 'NO_WALLET_CONFIGURED' | translate
+			}}<a routerLink="/configure-wallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+		</div>
+	</div>
+	<div *ngFor="let account of accounts" class="row defaultTable account">
+		<div class="col-12">
+			<div class="row align-items-center accountHeader">
+				<div class="col-12 px-0" *ngIf="account.editName">
+					<div class="editNameButtons">
+						<div class="row">
+							<div class="col-md-8 col-12 py-3 py-md-0 pr-md-1">
+								<input type="text" class="form-control" [(ngModel)]="account.addressBookName" />
+							</div>
+							<div class="col-md-2 col-12 px-md-1">
+								<button class="btn btn-primary" type="button" (click)="editNameCancel(account)">
+									{{ 'CANCEL' | translate }}
+								</button>
+							</div>
+							<div class="col-md-2 col-12 py-3 py-md-0 pl-md-1">
+								<button class="btn btn-danger" type="button" (click)="editNameSave(account)">
+									{{ 'OK' | translate }}
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-10 col-sm-9 col-7 pl-0 text-truncate" *ngIf="!account.editName">
+					<a
+						[routerLink]="'/account/' + account.id"
+						tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}"
+						container="body"
+					>
+						<span *ngIf="account.addressBookName" class="name pr-2">{{ account.addressBookName }}</span>
+						<span class="address">{{ account.id }}</span>
+					</a>
+				</div>
+				<div class="col-lg-2 col-sm-3 col-5 pr-0 text-right options" *ngIf="!account.editName">
+					<a
+						ngxClipboard
+						[cbContent]="account.id"
+						(cbOnSuccess)="copied()"
+						class="icon copy"
+						tooltip="{{ 'COPY_ADDRESS' | translate }}"
+					></a
+					><a class="icon edit" tooltip="{{ 'EDIT_NAME' | translate }}" (click)="editName(account)">{{ 'EDIT_NAME' | translate }}</a
+					><a [routerLink]="'/send/' + account.id" class="icon send" tooltip="{{ 'SEND_TOKENS' | translate }}">{{ 'SEND_TOKENS' | translate }}</a>
+				</div>
+			</div>
+			<div class="row align-items-center rowTitles">
+				<div class="col-md-4 pl-0 col-6">{{ 'ACCOUNTS.token' | translate }}</div>
+				<div class="col-lg-2 pr-0 col-md-4 col-6 text-right">{{ 'ACCOUNTS.quantity' | translate }}</div>
+				<div class="col-2 price text-right">{{ 'ACCOUNTS.price' | translate }}</div>
+				<div class="col-2 pricechange text-right">{{ 'ACCOUNTS.24H' | translate }}</div>
+				<div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">{{ 'ACCOUNTS.total_value' | translate }}</div>
+			</div>
+			<div class="row align-items-center rowContent" *ngFor="let balance of account.accountMeta.tokens">
+				<div class="col-md-4 pl-0 col-6 text-truncate">
+					<span class="tokenIcon {{ balance.token | lowercase }}"></span> {{ balance.tokenName }}
+				</div>
+				<div class="col-lg-2 pr-0 col-md-4 col-6 text-right">
+					{{ balance.balance || 0 | qlc: settings.settings.displayDenomination }} {{ balance.symbol }}
+				</div>
+				<div class="col-2 price text-right">-</div>
+				<div class="col-2 pricechange text-right no_change">-</div>
+				<div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">-</div>
+			</div>
+
+			<div class="row align-items-center rowFooter accountFooter"><div class="col-12 pl-0 pr-0 text-right">-</div></div>
+		</div>
+	</div>
+</div>
+            </div>
+        </div>
+    </div>
+</div>
