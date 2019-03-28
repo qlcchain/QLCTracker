@@ -50,7 +50,7 @@
 		"ngx-logger": "^3.3.12",
 		"particles.js": "^2.0.0",
 		"peer-id": "^0.12.2",
-		"qlc.js": "0.0.3",
+		"qlc.js": "0.0.4",
 		"rxjs": "~6.3.3",
 		"signal-exit": "^3.0.2",
 		"to-executable-name": "^2.0.0",

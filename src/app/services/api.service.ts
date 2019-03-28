@@ -15,6 +15,7 @@ import { timer } from 'rxjs';
 export class ApiService {
 	rpcUrl = environment.apiUrl;
 	alive = true;
+	connectTimer = null;
 	
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
 	c = new Client(this.HTTP_RPC, () => {});
@@ -29,19 +30,33 @@ export class ApiService {
 	}
 
 	async connect() {
-		const source = timer(200);
-		const abc =  source.subscribe(async val => {
-			try {
-				const returns = await this.c.request( methods.ledger.blocksCount );
-				console.log(returns);
+		const source = timer(1000);
+		this.connectTimer = source.subscribe(async val => {
+			
+			const returns = await this.c.buildinLedger.blocksCount();
+
+			if (returns.result) {
+				if ( returns.result.count == 2) {
+					this.node.setSynchronizing();
+					this.connect();
+				} else {
+					this.node.setSynchronized();
+				}
 				this.node.setOnline();
-			} catch (error) {
-				console.log(error);
+			} else if (returns.error) {
+				console.log(returns.error);
+				this.connect();
+			} else {
+				console.log('error connecting');
 				this.connect();
 			}
-			/*if (this.node.status !== true)
-				this.connect();*/
 		});
+	}
+
+	async reconnect() {
+		console.log('reconnect');
+		this.node.setOffline('ERROR - connection problem. Reconnecting.');
+		this.connect();
 	}
 
 	async accountPublicKey(account: string): Promise<{ result: string; error?: string }> {
@@ -53,11 +68,10 @@ export class ApiService {
 	}
 
 	async accounts(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
-		try {
-			return await this.c.request( methods.ledger.accounts, count, offset );
-		} catch (err) {
-			return err;
-		}
+		const result = await this.c.buildinLedger.accounts(count,offset);
+		if (!result.result && !result.error) 
+			this.reconnect();
+		return result;
 	}
 	
 	async accountsCount(): Promise<{ result: any; error?: string }> {
@@ -85,11 +99,10 @@ export class ApiService {
 	}
 
 	async accountsPending(accounts: string[], count: number = 50): Promise<{ result: any; error?: string }> {
-		try {
-			return await this.c.request(methods.ledger.accountsPending, accounts, count);
-		} catch (err) {
-			return err;
-		}
+		const result = await this.c.buildinLedger.accountsPending(accounts,count);
+		if (!result.result && !result.error) 
+			this.reconnect();
+		return result;
 	}
 
 	async delegatorsCount(account: string): Promise<{ count: string }> {
@@ -180,14 +193,6 @@ export class ApiService {
 		}
 	}
 
-	async pending(account, count): Promise<{ result: any; error?: string }> {
-		try {
-			return await this.accountsPending([account], count);
-		} catch (err) {
-			return err;
-		}
-	}
-
 	async tokens(): Promise<{ result: any; error?: string }> {
 		try {
 			return await this.c.request(methods.ledger.tokens);
@@ -197,11 +202,11 @@ export class ApiService {
 	}
 
 	async blocks(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
-		try {
-			return await this.c.request( methods.ledger.blocks, count, offset );
-		} catch (err) {
-			return err;
-		}
+		const result = await this.c.buildinLedger.blocks(count,offset);
+		if (result === null) 
+			this.reconnect();
+
+		return result;
 	}
 	
 	async blocksCount(): Promise<{ result: any; error?: string }> {
