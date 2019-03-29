@@ -1139,6 +1139,7 @@ a.qlc-top-mainnet-red:hover {
     line-height: 12px;
     text-transform: uppercase;
     font-weight: 700;
+    padding-top: 14px !important;
 }
 
 .h-auto {
@@ -1259,18 +1260,58 @@ pre {
     cursor: pointer;
 }
 
+.form-control {
+    min-height: 41px;
+    padding-top: 14px !important;
+}
+.custom-select {
+    min-height: 41px;
+    border: 1px solid #a8a6ae !important;
+    padding-top: 8px !important;
+}
 
+.sendTokens .input-group-text.maxLink {
+    color: #005cbf !important;
+    width: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.sendTokens .toaccount {
+    position: absolute;
+    top: 0px !important;
+    width: calc(100% - 100px);
+    max-height: 20px !important;
+    overflow-y: hidden;
+    line-height: 16px !important;
+    padding-bottom: 0px !important;
+    padding-top:4px !important;
+    left: 18px !important;
+    padding-left: 14px !important;
+    border: none !important;
+    background: transparent !important;
+}
+.input-group-prepend .input-group-text {
+    padding-top: 9px !important;
+}
 
+.form-control:focus, .custom-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(95, 0, 172, 0.00) !important;
+}
 
-
-
-
-
-
-
-
-
-
+.balance, .fiat {
+    padding-top: 10px !important;
+}
+.custom-select {
+    background: url('../assets/img/qlc-icon-customselect.png') no-repeat center right;
+    background-size: 20px 13px !important;
+}
+.balance-box {
+    opacity:0.4;
+    cursor: pointer;
+}
+.balance-box.active {
+    opacity:1;
+}
 
 
 

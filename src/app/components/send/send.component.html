@@ -18,7 +18,7 @@
 	<div class="row">
 
 		<!-- ADDRESS -->
-		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4">
+		<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
 			<div class="content-box-blue h-100 pb-3">
 				<div class="container">
 
@@ -35,13 +35,13 @@
 
 
 		<!-- BALANCES -->
-		<div class="col-xl-9 col-lg-8 col-md-6 col-sm-12">
+		<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3">
 				<div class="container pl-0 pr-0">
 					<div class="row pl-0 pr-0">
 
 					<!-- BALANCES -->
-					<div class="col-4 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0">
-						<div class="content-box-white h-auto mt-2 pb-2">
+					<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-1 order-2">
+						<div class="content-box-white h-auto mt-2 pb-2 balance-box active">
 							<div class="container">
 								<div class="row qlc-table-header-white">
 									<div class="col-12">QLC Balance</div>
@@ -67,8 +67,8 @@
 					</div>
 
 					<!-- BALANCES -->
-					<div class="col-4 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0">
-						<div class="content-box-white h-auto mt-2 pb-2">
+					<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-2 order-3">
+						<div class="content-box-white h-auto mt-2 pb-2 balance-box">
 							<div class="container">
 								<div class="row qlc-table-header-white">
 									<div class="col-12">Q-SMS Balance</div>
@@ -94,8 +94,8 @@
 					</div>
 
 					<!-- BALANCES -->
-					<div class="col-4 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0">
-						<div class="content-box-white h-auto mt-2 pb-2">
+					<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-3 order-4">
+						<div class="content-box-white h-auto mt-2 pb-2 balance-box">
 							<div class="container">
 								<div class="row qlc-table-header-white">
 									<div class="col-12">Q-GAS Balance</div>
@@ -123,10 +123,10 @@
 
 
 					<!-- SEND FORM -->
-					<div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4">
-						<div class="content-box-white h-auto mt-2 pb-2 pl-4 pr-4">
+					<div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+						<div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
 
-							<div class="container ml-1 pr-3s" *ngIf="activePanel == 'send'">
+							<div class="container ml-1 pr-3 pl-3" *ngIf="activePanel == 'send'">
 
 								<div *ngIf="!accounts.length" class="row defaultTable content">
 									<div class="col-12 text-center">
@@ -138,9 +138,9 @@
 									<div class="col-12">
 										
 										<div class="row rowContent mb-5">
-											<div class="col-md-2 form-label-custom-2 pt-3">{{ 'SEND_TOKENS_TAB.amount' | translate }}</div>
+											<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'SEND_TOKENS_TAB.amount' | translate }}</div>
 											<div class="col-md-10">
-												<div class="row align-items-center">
+												<div class="row align-items-top">
 													<div class="col-md-6 pb-3 pb-md-0">
 														<div class="input-group">
 															<div class="input-group-prepend">
@@ -176,9 +176,9 @@
 														</div>
 													</div>
 													<div class="col-md-6 pt-2 pt-md-0">
-														<div class="row align-items-center">
-															<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'TOKEN' | translate }}</div>
-															<div class="col-md-10">
+														<div class="row align-items-top">
+															<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'TOKEN' | translate }}</div>
+															<div class="col-md-9">
 																<div class="form-group">
 																	<select class="custom-select" [(ngModel)]="selectedTokenSymbol" (change)="selectToken()">
 																		<option *ngFor="let token of accountTokens" [value]="token.tokenInfo.tokenSymbol">{{
@@ -190,7 +190,7 @@
 														</div>
 													</div>
 												</div>
-												<div class="row align-items-center pt-3 pt-md-2">
+												<div class="row align-items-top pt-3 pt-md-2">
 													<div class="col-md-6 d-none d-md-block">
 														<div class="input-group">
 															<div class="input-group-prepend"><div class="input-group-text">USD/$</div></div>
@@ -202,9 +202,9 @@
 														</div>
 													</div>
 													<div class="col-md-6">
-														<div class="row align-items-center">
-															<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'BALANCE' | translate }}</div>
-															<div class="col-md-10 ">
+														<div class="row align-items-top">
+															<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'BALANCE' | translate }}</div>
+															<div class="col-md-9 ">
 																<div class="row">
 																	<div class="col-6 pr-0 balance">
 																		{{ selectedToken.balance | qlc: settings.settings.displayDenomination }}
@@ -220,7 +220,7 @@
 
 
 										<div class="row">
-											<div class="col-md-2 form-label-custom-2">
+											<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">
 												{{ 'SEND_TOKENS_TAB.from_account' | translate }}
 											</div>
 											<div class="col-md-10">
@@ -236,10 +236,10 @@
 
 										
 										<div class="row">
-											<div class="col-md-2 form-label-custom-2 pt-3">
+											<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">
 												{{ 'SEND_TOKENS_TAB.to_account' | translate }}
 											</div>
-											<div class="col-md-10 text-left text-truncate py-3">
+											<div class="col-md-10 text-left text-truncate">
 												<div class="form-group">
 													<select
 														class="custom-select contacts"
@@ -265,9 +265,9 @@
 										</div>
 
 
-										<div class="row rowAmount pl-1">
-											<div class="col-md-2 "></div>
-											<div class="col-lg-5 col-md-4 col-sm-6 col-12">
+										<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3">
+											<div class="col-md-2"></div>
+											<div class="col-lg-5 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
 												<button type="submit" class="btn btn-primary" (click)="sendTransaction()" style="min-width:100%;">
 													{{ 'SEND_TOKENS_TAB.send' | translate }}
 												</button>
