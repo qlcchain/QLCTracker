@@ -1,0 +1,50 @@
+{
+    "version": 2,
+    "dataDir": "gqlc_testnet",
+    "storageMax": "10GB",
+    "autoGenerateReceive": false,
+    "logLevel": "error",
+    "performanceEnabled": false,
+    "rpc": {
+        "rpcEnabled": true,
+        "httpEndpoint": "tcp4://127.0.0.1:19735",
+        "httpEnabled": true,
+        "httpCors": [
+            "*"
+        ],
+        "httpVirtualHosts": [],
+        "webSocketEnabled": false,
+        "webSocketEndpoint": "tcp4://0.0.0.0:19736",
+        "ipcEndpoint": "gqlc.ipc",
+        "ipcEnabled": false,
+        "publicModules": [
+            "qlcclassic",
+            "ledger",
+            "account",
+            "net",
+            "util",
+            "wallet",
+            "mintage",
+            "contract",
+            "sms"
+        ]
+    },
+    "p2p": {
+        "bootNode": [
+            "/ip4/47.103.40.20/tcp/19734/ipfs/QmdFSukPUMF3t1JxjvTo14SEEb5JV9JBT6PukGRo6A2g4f",
+            "/ip4/47.112.112.138/tcp/19734/ipfs/QmW9ocg4fRjckCMQvRNYGyKxQd6GiutAY4HBRxMrGrZRfc"
+        ],
+        "listen": "/ip4/0.0.0.0/tcp/19734",
+        "syncInterval": 120,
+        "discovery": {
+            "discoveryInterval": 30,
+            "limit": 20,
+            "mDNSEnabled": false,
+            "mDNSInterval": 30
+        },
+        "identity": {
+            "peerId": "",
+            "privateKey": ""
+        }
+    }
+}

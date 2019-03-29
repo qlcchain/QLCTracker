@@ -84,6 +84,38 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "desktop-testnet": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.desktop-testnet.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "testnet": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.testnet.ts"
+                }
+              ]
             }
           }
         },
@@ -95,6 +127,9 @@
           "configurations": {
             "production": {
               "browserTarget": "smsBilling:build:production"
+            },
+            "testnet": {
+              "browserTarget": "smsBilling:build:testnet"
             }
           }
         },
