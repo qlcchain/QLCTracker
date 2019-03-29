@@ -91,7 +91,9 @@ export class MyaccountComponent implements OnInit {
   
   async loadAccount() {
     this.pendingBlocks = [];
-		this.accountId = this.wallet.accounts[0].accountMeta.account;
+    this.accountId = this.router.snapshot.params.account;
+    if (this.accountId == undefined || this.accountId == '')
+		  this.accountId = this.wallet.accounts[0].accountMeta.account;
     console.log(this.wallet);
     console.log(this.accountId);
 		const tokenMap = {};
@@ -127,7 +129,7 @@ export class MyaccountComponent implements OnInit {
 
 		// If there is a pending balance, or the account is not opened yet, load pending transactions
 		// if ((!this.accountMeta.error && this.accountMeta.pending > 0) || this.accountMeta.error) {
-		const accountPending = await this.api.pending(this.accountId, 25);
+		const accountPending = await this.api.accountsPending([this.accountId], 25);
 		if (!accountPending.error && accountPending.result) {
 			const pendingResult = accountPending.result;
 
