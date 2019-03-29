@@ -3,6 +3,7 @@ import { Router, ChildActivationEnd } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { NodeService } from 'src/app/services/node.service';
 import { timer } from 'rxjs';
+import BigNumber from 'bignumber.js';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,8 @@ export class HomeComponent implements OnInit {
 	accountsCreated = 0;
 	transactionsCount = { count: 0, unchecked: 0 };
 	representativeOnline = 0;
+	votingPower = new BigNumber(0);
+	votingPowerPercent = '0';
 
   routerSub = null;
 
@@ -62,10 +65,21 @@ export class HomeComponent implements OnInit {
 			this.transactionsCount = transactionsCount.result; // transactionsCount.unchecked == pending transactions ??
 		}
 
-		const representativeOnline = await this.api.onlineRepresentatives();
-		if (representativeOnline.result) {
-			this.representativeOnline = representativeOnline.result.length; 
-		}
+		const representatives = await this.api.representatives();
+		if (representatives.result) {
+			const onlineRepresentatives = await this.api.onlineRepresentatives();
+			const onlineReps = onlineRepresentatives.result;
+			this.representativeOnline = onlineReps.length; 
+			const tokens = await this.api.tokenInfoByName('QLC');
+      let displayReps = [];
+			let votingOnline = new BigNumber(0);
+      onlineReps.forEach(async rep => {
+				const representative = Array.isArray(representatives.result) ? representatives.result.filter(repMeta => repMeta.address === rep)[0] : null;
+				votingOnline = new BigNumber(representative.balance).plus(votingOnline);
+				this.votingPower = votingOnline;
+				this.votingPowerPercent = new BigNumber(votingOnline).dividedBy(tokens.result.totalSupply).multipliedBy(100).toFixed(2); 
+			});
+    }
 	}
 
   async loadTransactions() {

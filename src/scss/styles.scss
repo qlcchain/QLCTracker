@@ -16,6 +16,10 @@ html, body {
     text-rendering: optimizeSpeed;
 }
 
+body {
+    overflow-y: scroll;
+}
+
 @-moz-document url-prefix() {
     a {
         margin: 0;
@@ -494,6 +498,9 @@ div[class*="col-"] a:hover {
     text-transform: none;
     border-bottom: 1px solid #edeef4;
 }
+.qlc-table-row-twolines {
+    padding-bottom:10px;
+}
 .qlc-table-row:hover {
     background: #f9f9fb;
 }
@@ -505,19 +512,19 @@ div[class*="col-"] a:hover {
     padding: 20px 10px 16px 10px;
 } 
 .qlc-table-row div {
-    padding: 20px 10px 18px 10px;
+    padding: 16px 10px 18px 10px;
 }
 .qlc-table-header div:last-child {
     padding: 20px 20px 16px 10px;
 }
 .qlc-table-row div:last-child {
-    padding: 20px 20px 18px 10px;
+    padding: 16px 20px 18px 10px;
 }
 .qlc-table-header div:first-child {
     padding: 20px 10px 16px 20px;
 }
 .qlc-table-row div:first-child {
-    padding: 20px 10px 18px 20px;
+    padding: 16px 10px 18px 20px;
 }
 
 .img-qr {
@@ -717,9 +724,9 @@ div[class*="col-"] a:hover {
 }
 .qlc-table-row-white.sub-page {
     word-wrap:break-word;
-    font-size: 14px;
-    line-height: 22px;
-    padding-top:12px;
+    font-size: 12px;
+    line-height: 18px;
+    padding-top:8px;
     padding-bottom:25px;
 }
 .row-text-big {
@@ -731,8 +738,8 @@ div[class*="col-"] a:hover {
 }
 .row-text-mid {
     font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
-    font-size: 22px !important;
-    line-height: 28px !important;
+    font-size: 20px !important;
+    line-height: 26px !important;
     font-weight: 500;
     letter-spacing: 0px;
 }
@@ -760,35 +767,35 @@ div[class*="col-"] a:hover {
     vertical-align: middle;
     margin-top:-4px;
 }
-.icon-send {
+.icon-Send {
     background: url("../assets/img/qlc-icon-send-red.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-receive {
+.icon-Receive {
     background: url("../assets/img/qlc-icon-receive-green.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-open {
+.icon-Open {
     background: url("../assets/img/qlc-icon-open-purple.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-change {
+.icon-Change {
     background: url("../assets/img/qlc-icon-change-blue.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-block {
+.icon-Block {
     background: url("../assets/img/qlc-icon-block-purple.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
@@ -899,7 +906,9 @@ div[class*="col-"] a:hover {
     padding: 10px 14px !important;
 }
 
-
+.btn-grey {
+    background:#c0c0c5 !important;
+}
 
 
 
@@ -1115,6 +1124,124 @@ a.qlc-top-mainnet-red:hover {
 
 
 
+.form-label-custom {
+    font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
+    color: #a8a6ae;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.form-label-custom-2 {
+    font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
+    color: #a8a6ae;
+    font-size: 12px;
+    line-height: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.h-auto {
+    height:auto;
+}
+.icon-token {
+    margin-left: 10px;
+    max-width: 48px;
+    max-height: 48px;
+}
+pre {
+    font-size: 100% !important;
+}
+
+
+.menu-myaccount {
+    font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
+    color: #ffffff !important;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 20px 46px;
+    display:block;
+    width:100%;
+}
+.menu-myaccount:hover {
+    text-decoration: none !important;
+    color:#7fb0ec !important;
+}
+.menu-icon-send {
+    background: url('../assets/img/qlc-icon-send-white.svg') no-repeat 10px center;
+    background-size: 20px 20px;
+}
+.menu-icon-qrcode {
+    background: url('../assets/img/icons/qr-code.svg') no-repeat 10px center;
+    background-size: 20px 20px;
+}
+.menu-icon-rename {
+    background: url('../assets/img/qlc-icon-edit-white.svg') no-repeat 10px center;
+    background-size: 20px 20px;
+}
+.menu-icon-details {
+    background: url('../assets/img/qlc-icon-block-white.svg') no-repeat 10px center;
+    background-size: 20px 20px;
+}
+
+
+.btn-primary {
+    background-color:#005cbf !important;
+}
+.btn-primary:hover {
+    background-color:#00479d !important;
+}
+.btn-icon-receive, .btn-icon-receive:hover {
+    text-align: left;
+    padding-left: 55px !important;
+    background: #000000 url('../assets/img/qlc-icon-receive-white.svg') no-repeat 25px center !important;
+    background-size: 20px 20px !important;
+}
+.btn-icon-qlc, .btn-icon-qlc:hover {
+    text-align: left;
+    padding-left: 55px !important;
+    background: #000000 url('../assets/img/qlc-icon-qlc-white.svg') no-repeat 25px center !important;
+    background-size: 20px 20px !important;
+}
+.superlight {
+    font-weight: 400;
+    font-size:10px;
+}
+.btn-darkgrey {
+    background-color:#595757 !important;
+}
+.btn-darkgrey:hover {
+    background-color:#8d8a8a !important;
+}
+.btn-blue2 {
+    background-color:#2069c2 !important;
+}
+.btn-blue2:hover {
+    background-color:#007bff !important;
+}
+.btn-purple {
+    background-color:#452d78 !important;
+}
+.btn-purple:hover {
+    background-color:#6e49bb !important;
+}
+.btn-green {
+    background-color: #62b519 !important;
+}
+.btn-green:hover {
+    background-color: #77ca2e !important;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1249,6 +1376,10 @@ a.qlc-top-mainnet-red:hover {
 .menu-sub-items, .menu-sub-items.menu-sub-items-currency, .menu-sub-items.menu-sub-items-account, .menu-sub-items.menu-sub-items-language {
     width: calc(100% - 30px);
 }
+/*.content-box-white, .content-box-purple, .content-box-blue {
+    padding-left:15px;
+    padding-right:15px;
+}*/
 
 /*
 .menu-sub-items.menu-sub-items-currency, .menu-sub-items.menu-sub-items-account, .menu-sub-items.menu-sub-items-language {

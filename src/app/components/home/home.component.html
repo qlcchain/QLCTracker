@@ -16,10 +16,10 @@
             <div class="col-12">VOTE RATIO</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">78,60%</div>
+            <div class="col-12">{{ votingPowerPercent }} %</div>
           </div>
           <div class="row qlc-table-header-darkblue">
-            <div class="col-12"><a routerLink="/"><span class="qlc-icon icon-arrow-right-bluelight"></span>Details</a></div>
+            <div class="col-12"><a routerLink="/representatives"><span class="qlc-icon icon-arrow-right-bluelight"></span>Details</a></div>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
             <div class="col-12">Settled messages</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">224,888</div>
+            <div class="col-12">{{ transactionsCount.count | number}}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
             <div class="col-12"><a routerLink="/"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
@@ -103,16 +103,16 @@
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
             </div>
 
-            <div class="row qlc-table-row closed" *ngFor="let transaction of transactions">
+            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of transactions">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
-                <span class="qlc-icon icon-{{ transaction.subType }}" title="{{ transaction.subType }}"></span>
+                <span class="qlc-icon icon-{{ transaction.type }}" title="{{ transaction.type }}"></span>
                 <span class="d-none d-sm-none d-md-inline-block">
                   <span class="text-color-lightgrey">State</span><br>
                   <span class="text-bold-grey">{{ transaction.type }}</span>
                 </span>
               </div>
               <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{transaction.type == 'Send' ? 'to' : 'from'}}:</span> 
+                <span class="text-color-lightgrey">{{transaction.type == 'Send' ? 'to' : 'from'}}: </span> 
                 <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)">{{ transaction.link_as_account || transaction.address }}</a>
                 <a [routerLink]="'/transaction/' + transaction.hash"><br>
                   <span class="text-tiny">{{ transaction.hash }}</span>
@@ -182,13 +182,13 @@
       <div class="content-box-white">
         <div class="container">
           <div class="row qlc-table-header-white sub-page">
-            <div class="col-12">Voting power online (QLCX)</div>
+            <div class="col-12">Voting power online (QLC)</div>
           </div>
           <div class="row qlc-table-row-white sub-page pb-0">
-            <div class="col-12 text-wrap pb-1"><span class="row-text-big">592,212,090</span></div>
+            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ votingPower | qlc :"0" | number }}</span></div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">84.25 % of total voting power</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ votingPowerPercent }} % of total voting power</span></div>
           </div>
         </div>
       </div>

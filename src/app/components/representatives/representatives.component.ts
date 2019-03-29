@@ -111,27 +111,19 @@ export class RepresentativesComponent implements OnInit {
   async loadData() {
     const representatives = await this.api.representatives();
 		if (representatives.result) {
-      this.representatives = representatives.result;
-      this.representativesCount = this.representatives.lenght;
-      console.log(representatives);
+			const onlineRepresentatives = await this.api.onlineRepresentatives();
+			const onlineReps = onlineRepresentatives.result;
+			const tokens = await this.api.tokenInfoByName('QLC');
+      let displayReps = [];
       representatives.result.forEach(async rep => {
-        console.log(rep);
-        const accountVotingWeight = await this.api.accountVotingWeight(rep.address);
-        console.log(accountVotingWeight);
+				const repOnline = onlineReps.indexOf(rep.address) !== -1;
+				rep.online = repOnline;
+				rep.votingPower = (rep.balance / tokens.result.totalSupply*100).toFixed(2);
+				displayReps.push(rep);
 			});
+			this.representatives = displayReps;
+			this.representativesCount = displayReps.length;
     }
-    const onlineRepresentatives = await this.api.onlineRepresentatives();
-    console.log(onlineRepresentatives);
-    if (onlineRepresentatives.result) {
-      //this.representatives = onlineRepresentatives.result;
-      onlineRepresentatives.result.forEach(async rep => {
-        console.log(rep);
-        const accountVotingWeight = await this.api.accountVotingWeight(rep.address);
-        console.log(accountVotingWeight);
-			});
-    }
-    const tokens = await this.api.tokens();
-    console.log(tokens);
   }
 
 }

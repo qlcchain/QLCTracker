@@ -12,7 +12,7 @@
                     </div>
                     
                     <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                        <div class="content-box-white">
+                        <div class="content-box-white pt-5 pb-5">
                             <div class="col-12 my-3" *ngIf="wallet.seed">
                                 <div class="col-12 px-0 py-3 text-center content-title" [innerHTML]="'CONFIGURE_WALLET.configure_wallet_warning' | translate">
                                     
@@ -170,16 +170,25 @@
                     </div>
                     
                     <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                        <div class="content-box-white pt-5 pb-5">
+
+                            <div class="row justify-content-md-center defaultTable content text-center mb-3" *ngIf="activePanel == 0">
+                                <div class="col-12 px-4 mt-3 ">
+
+
+                    <!--<div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
                         <div class="content-box-white">
-                            <div class="col-12 px-0 text-center pt-3">
-                                {{ 'SET_WALLET_PASSWORD.set_wallet_password_text' | translate }}
+                            <div class="col-12 px-0 text-center pt-3">-->
+                                        
+                                        {{ 'SET_WALLET_PASSWORD.set_wallet_password_text' | translate }}
+                                </div>
                             </div>
-                                <div class="row align-items-center rowContent autoHP">
-                                    <div class="col-md-6">
-                                        <div class="col-12 py-3 text-truncate dataName">
+                            <div class="row align-items-center rowContent autoHP">
+                                    <div class="col-md-6 offset-md-3">
+                                        <div class="col-12 py-3 text-truncate dataName form-label-custom">
                                             {{ 'SET_WALLET_PASSWORD.password' | translate }}
                                         </div>
-                                        <div class="col-12 pb-3 text-left text-truncate">
+                                        <div class="col-12 pb-0 text-left text-truncate">
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <input type="password" class="form-control" [(ngModel)]="walletPasswordModel" placeholder="{{ 'SET_WALLET_PASSWORD.password_placeholder' | translate }}" onfocus="this.placeholder = ''">
@@ -187,8 +196,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="col-12 pb-3 py-md-3 text-truncate dataName">
+                                    <div class="col-md-6 offset-md-3">
+                                        <div class="col-12 pb-0 py-md-3 text-truncate dataName form-label-custom">
                                             {{ 'SET_WALLET_PASSWORD.confirm' | translate }}
                                         </div>
                                         <div class="col-12 pb-3 text-left text-truncate">
@@ -202,7 +211,7 @@
                                 </div>
                                 
                                 <div class="row align-items-center justify-content-center rowDefault rowButtons">
-                                    <div class="col-lg-3 col-md-5 col-sm-6 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
+                                    <div class="col-lg-3 col-md-5 col-sm-6 col-12 text-truncate mobile-break text-center">
                                         <button (click)="saveWalletPassword()" type="submit" class="btn btn-primary">{{ 'SET_WALLET_PASSWORD.set_wallet_password_button' | translate }}</button>
                                     </div>
                                     <div class="col-12 boldBig text-center pt-4 pb-3">
@@ -223,8 +232,8 @@
                     </div>
                     
                     <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                        <div class="content-box-white">
-                            <div class="col-12 px-0 text-center py-3">
+                        <div class="content-box-white pt-1">
+                            <div class="col-12 px-0 text-center py-3 pt-5 mt-3 pb-5">
                                 {{ 'WALLET_CONFIGURED.wallet_configured_text' | translate }} 
                             </div>
 
@@ -234,7 +243,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-12 px-0 text-center py-3">
+                            <div class="col-12 px-0 text-center py-3 pt-5 pb-5 mb-1">
                                 {{ 'WALLET_CONFIGURED.warning' | translate }}
                             </div>
                         </div>
@@ -271,9 +280,8 @@
                                                     <input type="radio" id="signinType3" name="signinType" class="custom-control-input" value="file" [(ngModel)]="selectedImportOption">
                                                     <label class="custom-control-label" for="signinType3">Wallet file</label>
                                                 </div>
-  
                                             
-                                            <div class="row justify-content-center rowContent autoHP" *ngIf="selectedImportOption === 'seed'">
+                                            <div class="row justify-content-center rowContent autoHP pt-2 pl-3 pr-3" *ngIf="selectedImportOption === 'seed'">
                                                     <div class="col-12 px-0 py-3 text-truncate dataName">{{ 'IMPORT.seed_title' | translate }}</div>
                                                     <div class="col-12 px-0 pb-3 text-left text-truncate">
                                                         <div class="form-group">
@@ -283,7 +291,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row justify-content-center rowContent autoHP" *ngIf="selectedImportOption === 'mnemonic'">
+                                                <div class="row justify-content-center rowContent autoHP pt-2 pl-3 pr-3" *ngIf="selectedImportOption === 'mnemonic'">
                                                     <div class="col-12 px-0 py-3 text-truncate dataName">{{ 'IMPORT.mnemonic_title' | translate }}</div>
                                                     <div class="col-12 px-0 pb-3 text-left text-truncate">
                                                         <div class="form-group">
@@ -293,7 +301,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row justify-content-center rowContent autoHP" *ngIf="selectedImportOption === 'file'">
+                                                <div class="row justify-content-center rowContent autoHP pt-2 pl-3 pr-3" *ngIf="selectedImportOption === 'file'">
                                                     <div class="col-12 px-0 py-3">{{ 'IMPORT.file_text' | translate }}</div>
                                                     
                                                 </div>

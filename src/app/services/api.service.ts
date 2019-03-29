@@ -20,8 +20,6 @@ export class ApiService {
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
 	c = new Client(this.HTTP_RPC, () => {});
 	
-	//private connectInterval = interval(1000);
-
 	qlcTokenHash = '';
 
 	constructor(private http: HttpClient, private node: NodeService) {
@@ -231,6 +229,13 @@ export class ApiService {
 		} catch (err) {
 			return err;
 		}
+	}
+
+	async tokenInfoByName(tokenName): Promise<{ result: any; error?: string }> {
+		const result = await this.c.buildinLedger.tokenInfoByName(tokenName);
+		if (!result.result && !result.error) 
+			this.reconnect();
+		return result;
 	}
 	
 	async tokenByHash(tokenHash): Promise<any> {

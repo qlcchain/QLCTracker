@@ -1,15 +1,234 @@
-<!-- USER ACCOUNT -->
+<!-- LATEST TRANSACTIONS -->
+<div class="container mt-0 qlc-content-first">
+    <div class="row">
+        <div class="col-12 pl-0 pr-0 pb-2">
+            
+            <!-- TITLE -->
+            <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+                <div class="content-title">
+                    <h1>Wallet Details</h1>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+    
+<div class="container">
+    <div class="row">
+        <!-- LEFT -->
+        <div class="xl-col-9 col-md-9 col-sm-12 order-md-1 order-2 pl-0 pr-0">
+            
+            <div class="container">
+                
+                <div class="row">
+                    <div class="col-12 pb-2 pl-2 pr-2">
+                        <div class="content-box-blue h-auto pb-3">
+                            <div class="container">
+                                <div class="row qlc-table-header-blue">
+                                    <div class="col-12">Address</div>
+                                </div>
+                                <div class="row qlc-table-row-blue row-text-mid mt-3">
+                                    <div class="col-12 text-break pr-3">{{ accountId }} <a href="#"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+
+                <div class="row">
+                    <!-- BALANCE QLC -->
+                    <div class="col-4 pl-2 pr-2">
+                        <div class="content-box-white h-auto mt-2 pb-2">
+                            <div class="container">
+                                <div class="row qlc-table-header-white">
+                                    <div class="col-12">QLC Balance</div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-3 mt-3">
+                                        <img src="../../../assets/img/token-qlc.png" class="w-100 icon-token">
+                                    </div>
+                                    <div class="col-9 pr-0 pl-0">
+                                        <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QLC']">{{ accountMeta.balances['QLC'].balance | qlc }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QLC'])">NaN</div>
+                                        </div>
+                                        <div class="row qlc-table-row-white sub-page pt-0">
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container mt-3">
+                            <div class="row">
+                                <div class="col-12 pl-0 pr-0">
+                                    <button routerLink="" type="submit" class="btn btn-primary btn-purple btn-icon-receive w-100 pl-2 pr-2">RECEIVE QLC <span class="superlight">({{ pendingBlocks.length }} Pending)</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <!-- BALANCE Q-SMS -->
+                    <div class="col-4 pl-2 pr-2">
+                        <div class="content-box-white h-auto mt-2 pb-2">
+                            <div class="container">
+                                <div class="row qlc-table-header-white">
+                                    <div class="col-12">Q-SMS Balance</div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-3 mt-3">
+                                        <img src="../../../assets/img/token-sms2.png" class="w-100 icon-token">
+                                    </div>
+                                    <div class="col-9 pr-0 pl-0">
+                                        <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['Q-SMS']">{{ accountMeta.balances['Q-SMS'].balance | qlc }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['Q-SMS'])">NaN</div>
+                                        </div>
+                                        <div class="row qlc-table-row-white sub-page pt-0">
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container mt-3">
+                            <div class="row">
+                                <div class="col-12 pl-0 pr-0">
+                                    <button routerLink="" type="submit" class="btn btn-primary btn-blue2 btn-icon-receive w-100 pl-2 pr-2">RECEIVE Q-SMS <span class="superlight">(0 Pending)</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+                    
+                    <!-- BALANCE Q-GAS -->
+                    <div class="col-4 pl-2 pr-2">
+                        <div class="content-box-white h-auto mt-2 pb-2">
+                            <div class="container">
+                                <div class="row qlc-table-header-white">
+                                    <div class="col-12">Q-GAS Balances</div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-3 mt-3">
+                                        <img src="../../../assets/img/token-gas.png" class="w-100 icon-token">
+                                    </div>
+                                    <div class="col-9 pr-0 pl-0">
+                                        <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['Q-GAS']">{{ accountMeta.balances['Q-GAS'].balance | qlc }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['Q-GAS'])">NaN</div>
+                                        </div>
+                                        <div class="row qlc-table-row-white sub-page pt-0">
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container mt-3">
+                            <div class="row">
+                                <div class="col-12 pl-0 pr-0">
+                                    <button routerLink="" type="submit" class="btn btn-primary btn-darkgrey btn-icon-receive w-100 pl-2 pr-2">RECEIVE Q-GAS <span class="superlight">(0 Pending)</span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container mt-3">
+                            <div class="row">
+                                <div class="col-12 pl-0 pr-0">
+                                    <button routerLink="" type="submit" class="btn btn-primary btn-green btn-icon-qlc w-100 pl-2 pr-2">CLAIM Q-GAS <span class="superlight">(0)</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="xl-col-3 col-md-3 col-sm-12 order-md-2 order-1 pl-0 pr-0">
+            
+            <div class="col-12 pl-2 pr-2 h-100">
+                <div class="content-box-darkblue h-100">
+
+                    <div class="container">
+                        <div class="row qlc-table-header-blue">
+                            <div class="col-12">Account Actions</div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col-12">
+                                <a routerLink="/send/{{ accountId }}" class="menu-myaccount menu-icon-send">Send Tokens</a>
+                                <a href="#" class="menu-myaccount menu-icon-qrcode">Show QR Code</a>
+                                <a href="#" class="menu-myaccount menu-icon-rename">Rename Account</a>
+                                <a href="#" class="menu-myaccount menu-icon-details">Account Details</a>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+
+
+
+
+
+
+
+
+
 <div class="container mt-0 pt-0 mt-0 mb-2 qlc-content-first">
   <div class="row pt-0 mt-0">
 
-    <!-- LEFT - SEND -->
     <div class="col-lg-6 pl-0 pr-0 pt-0">
               
-      <!-- CREATE MESSAGES -->
       <div class="container mt-0 mb-4">
           <div class="row">
 
-              <!-- TITLE -->
               <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
                   <div class="content-title">
                       <h1>Send messages</h1>
@@ -56,14 +275,11 @@
 
   </div>
 
-    <!-- RIGHT - ACC DETAILS -->
     <div class="col-lg-6 pl-0 pr-0 pt-0">
               
-              <!-- INFOS -->
               <div class="container mt-0 mb-4">
                   <div class="row">
 
-                      <!-- TITLE -->
                       <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
                           <div class="content-title">
                               <h1>Account details</h1>
@@ -136,14 +352,12 @@
                       </div>
 
 
-                      <!-- TITLE -->
                       <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2 mt-4">
                           <div class="content-title">
                               <h1>Pending messages</h1>
                           </div>
                       </div>
 
-                      <!-- LIST -->
                       <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
                           <div class="content-box-white">
               
@@ -167,14 +381,12 @@
                       </div>
 
 
-                      <!-- TITLE -->
                       <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
                           <div class="content-title">
                               <h1>Settled messages</h1>
                           </div>
                       </div>
-
-                      <!-- LIST -->
+a
                       <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
                           <div class="content-box-white">
               
@@ -211,3 +423,5 @@
   <div class="row">
   </div>
 </div>
+
+-->

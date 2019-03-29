@@ -9,7 +9,7 @@
       </div>
     </div>
 
-          <!-- ADDRESS -->
+    <!-- ADDRESS -->
     <div class="col-lg-9 col-md-9 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
       <div class="content-box-blue">
         <div class="container">
@@ -152,7 +152,7 @@
               <div class="container transaction-details"></div>
             </div>
 -->
-            <div class="row qlc-table-row closed" *ngFor="let pending of pendingBlocks">
+            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let pending of pendingBlocks">
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                   <span class="qlc-icon icon-receive" title="Receive"></span>
                   <span class="d-none d-sm-none d-md-inline-block">
@@ -221,7 +221,7 @@
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
             </div>
 
-            <div class="row qlc-table-row closed" *ngFor="let history of accountHistory">
+            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let history of accountHistory">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                 <span class="qlc-icon icon-{{ history.type }}" title="{{ history.type }}"></span>
                 <span class="d-none d-sm-none d-md-inline-block">
@@ -230,7 +230,7 @@
                 </span>
               </div>
               <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{history.type == 'Send' ? 'to' : 'from'}}:</span> 
+                <span class="text-color-lightgrey">{{history.type == 'Send' ? 'to' : 'from'}}: </span> 
                 <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a>
                 <a [routerLink]="'/transaction/' + history.hash"><br>
                   <span class="text-tiny">{{ history.hash }}</span>

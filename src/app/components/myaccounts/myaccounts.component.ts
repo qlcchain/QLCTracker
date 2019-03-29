@@ -70,7 +70,27 @@ export class MyaccountsComponent implements OnInit {
 		for (let i = 0; i < this.accounts.length; i++) {
 			const am = await this.api.accountInfo(this.accounts[i].id);
 			if (!am.error) {
-				this.accounts[i].accountMeta = am.result;
+        let accountMeta = [];
+        if (am.result.tokens && Array.isArray(am.result.tokens)) {
+          am.result.tokens.forEach(token => {
+            accountMeta[token.tokenName] = token;
+          });
+        }
+        this.accounts[i].balances = accountMeta;
+
+        const pending = await this.api.accountsPending([this.accounts[i].id]);
+        let pendingCount = 0;
+        const pendingResult = pending.result;
+				for (const account in pendingResult) {
+					if (!pendingResult.hasOwnProperty(account)) {
+						continue;
+					}
+					pendingCount += pendingResult[account].length;
+        }
+        this.accounts[i].pendingCount = pendingCount;
+
+        console.log(pending.result);
+        console.log(this.accounts[i]);
 			}
 		}
 		// walletAccount.account_info = await this.api.accountInfo(accountID);

@@ -43,7 +43,13 @@ export class MyaccountComponent implements OnInit {
 	//representativeResults$ = new BehaviorSubject([]);
 	showRepresentatives = false;
 	representativeListMatch = '';
-	isNaN = isNaN;
+  isNaN = isNaN;
+  
+  msg1 = '';
+	msg2 = '';
+	msg3 = '';
+	msg4 = '';
+	msg5 = '';
 
   constructor(
 		private router: ActivatedRoute,
@@ -56,7 +62,8 @@ export class MyaccountComponent implements OnInit {
     private node: NodeService,
 		public settings: AppSettingsService,
 		private qlcBlock: QLCBlockService,
-		private trans: TranslateService
+		private trans: TranslateService,
+		private notificationService: NotificationService,
   ) { }
 
   async ngOnInit() {
@@ -72,6 +79,14 @@ export class MyaccountComponent implements OnInit {
 		if (this.routerSub) {
 			this.routerSub.unsubscribe();
 		}
+  }
+  
+  loadLang() {
+		this.trans.get('RECEIVE_WARNINGS.msg1').subscribe((res: string) => { this.msg1 = res;	});
+		this.trans.get('RECEIVE_WARNINGS.msg2').subscribe((res: string) => { this.msg2 = res;	});
+		this.trans.get('RECEIVE_WARNINGS.msg3').subscribe((res: string) => { this.msg3 = res;	});
+		this.trans.get('RECEIVE_WARNINGS.msg4').subscribe((res: string) => { this.msg4 = res;	});
+		this.trans.get('RECEIVE_WARNINGS.msg5').subscribe((res: string) => { this.msg5 = res;	});
 	}
 
 	load() {
@@ -114,7 +129,15 @@ export class MyaccountComponent implements OnInit {
 				}
 			}
 			this.accountMeta = am;
-		}
+    }
+    
+    let accountMeta = [];
+    if (accountInfo.result.tokens && Array.isArray(accountInfo.result.tokens)) {
+      accountInfo.result.tokens.forEach(token => {
+        accountMeta[token.tokenName] = token;
+      });
+    }
+    this.accountMeta.balances = accountMeta;
 
 		if (this.accountMeta && this.accountMeta.tokens) {
 			this.repLabel = null;
@@ -190,6 +213,35 @@ export class MyaccountComponent implements OnInit {
 			}
 			this.accountHistory = this.accountHistory.filter(h => h.type !== 'Change');
 		}
+  }
+  
+  async receivePending(pendingBlock) {
+		const sendBlock = pendingBlock.block;
+		if (!sendBlock) return;
+		const walletAccount = await this.walletService.getWalletAccount(pendingBlock.account);
+		if (!walletAccount) {
+			throw new Error(this.msg1);
+		}
+
+		if (this.walletService.walletIsLocked()) {
+			return this.notificationService.sendWarning(this.msg2);
+		}
+		pendingBlock.loading = true;
+
+		const newBlock = await this.qlcBlock.generateReceive(walletAccount, sendBlock, this.walletService.isLedgerWallet());
+		// console.log('receive block hash >>> ' + newBlock);
+		if (newBlock) {
+			this.notificationService.sendSuccess(this.msg3 + ` ` + pendingBlock.tokenName);
+		} else {
+			if (!this.walletService.isLedgerWallet()) {
+				this.notificationService.sendError(this.msg4);
+			}
+		}
+
+		pendingBlock.loading = false;
+
+		await this.walletService.reloadBalances();
+		//await this.loadPendingForAll();
 	}
 
 }

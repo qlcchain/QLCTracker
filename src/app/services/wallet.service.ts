@@ -23,6 +23,7 @@ export interface WalletAccount {
 	keyPair: any;
 	index: number;
 	balance: BigNumber;
+	balances: any;
 	// pending: BigNumber;
 	pendingCount: number;
 	// balanceRaw: BigNumber;
@@ -462,6 +463,7 @@ export class WalletService {
 			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
 			pendingCount: 0,
+			balances: null,
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,
@@ -616,6 +618,7 @@ export class WalletService {
 			secret: null,
 			keyPair: null,
 			balance: new BigNumber(0),
+			balances: null,
 			// pending: new BigNumber(0),
 			pendingCount: 0,
 			// balanceRaw: new BigNumber(0),

@@ -1,16 +1,305 @@
-<div class="container mt-0 pt-0 mt-0 mb-2 qlc-content-first">
-    <div class="row pt-0 mt-0">
-        <div class="col-lg-12 pl-0 pr-0 pt-0">
-            <div class="container mt-0 mb-4">
-                
-                <!-- configure/import wallet start --> 
-                <div class="row">
-                    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                        <div class="content-title">
-                            <h1>SEND TOKENS</h1>
-                        </div>
-                    </div>
-                </div>
+<!-- LATEST TRANSACTIONS -->
+<div class="container mt-0 qlc-content-first">
+	<div class="row">
+		<div class="col-12 pl-0 pr-0">
+			
+			<!-- TITLE -->
+			<div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+				<div class="content-title">
+					<h1>Send Tokens</h1>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="container accounts">
+	<div class="row">
+
+		<!-- ADDRESS -->
+		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4">
+			<div class="content-box-blue h-100 pb-3">
+				<div class="container">
+
+				<div class="row qlc-table-header-blue">
+					<div class="col-12">Address</div>
+				</div>
+				<div class="row qlc-table-row-blue row-text-mid mt-3">
+					<div class="col-12 text-break pr-3">{{ fromAccountID }}</div>
+				</div>
+				
+				</div>
+			</div>
+		</div>
+
+
+		<!-- BALANCES -->
+		<div class="col-xl-9 col-lg-8 col-md-6 col-sm-12">
+				<div class="container pl-0 pr-0">
+					<div class="row pl-0 pr-0">
+
+					<!-- BALANCES -->
+					<div class="col-4 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0">
+						<div class="content-box-white h-auto mt-2 pb-2">
+							<div class="container">
+								<div class="row qlc-table-header-white">
+									<div class="col-12">QLC Balance</div>
+								</div>
+							</div>
+							<!-- QLC -->
+							<div class="container">
+								<div class="row">
+									<div class="col-3 mt-3">
+										<img src="../../../assets/img/token-qlc.png" class="w-100 icon-token">
+									</div>
+									<div class="col-9 pr-0 pl-0">
+										<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+											<div class="col-12 pb-0">{{ selectedToken.balance | qlc: settings.settings.displayDenomination }}</div>
+										</div>
+										<div class="row qlc-table-row-white sub-page pt-0">
+											<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- BALANCES -->
+					<div class="col-4 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0">
+						<div class="content-box-white h-auto mt-2 pb-2">
+							<div class="container">
+								<div class="row qlc-table-header-white">
+									<div class="col-12">Q-SMS Balance</div>
+								</div>
+							</div>
+							<!-- QLC -->
+							<div class="container">
+								<div class="row">
+									<div class="col-3 mt-3">
+										<img src="../../../assets/img/token-sms2.png" class="w-100 icon-token">
+									</div>
+									<div class="col-9 pr-0 pl-0">
+										<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+											<div class="col-12 pb-0">0.00</div>
+										</div>
+										<div class="row qlc-table-row-white sub-page pt-0">
+											<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- BALANCES -->
+					<div class="col-4 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0">
+						<div class="content-box-white h-auto mt-2 pb-2">
+							<div class="container">
+								<div class="row qlc-table-header-white">
+									<div class="col-12">Q-GAS Balance</div>
+								</div>
+							</div>
+							<!-- QLC -->
+							<div class="container">
+								<div class="row">
+									<div class="col-3 mt-3">
+										<img src="../../../assets/img/token-gas.png" class="w-100 icon-token">
+									</div>
+									<div class="col-9 pr-0 pl-0">
+										<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+											<div class="col-12 pb-0">0.00</div>
+										</div>
+										<div class="row qlc-table-row-white sub-page pt-0">
+											<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+					<!-- SEND FORM -->
+					<div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4">
+						<div class="content-box-white h-auto mt-2 pb-2 pl-4 pr-4">
+
+							<div class="container ml-1 pr-3s" *ngIf="activePanel == 'send'">
+
+								<div *ngIf="!accounts.length" class="row defaultTable content">
+									<div class="col-12 text-center">
+										{{ 'NO_WALLET_CONFIGURED' | translate
+										}}<a routerLink="/configure-wallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+									</div>
+								</div>
+								<div *ngIf="accounts.length" class="row defaultTable sendTokens">
+									<div class="col-12">
+										
+										<div class="row rowContent mb-5">
+											<div class="col-md-2 form-label-custom-2 pt-3">{{ 'SEND_TOKENS_TAB.amount' | translate }}</div>
+											<div class="col-md-10">
+												<div class="row align-items-center">
+													<div class="col-md-6 pb-3 pb-md-0">
+														<div class="input-group">
+															<div class="input-group-prepend">
+																<div class="input-group-text ">
+																	{{ selectedToken.tokenInfo ? selectedToken.tokenInfo.tokenName : '' }}
+																</div>
+															</div>
+															<input
+																type="text"
+																class="form-control inlineForm"
+																[(ngModel)]="amount"
+																placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}"
+																onfocus="this.placeholder = ''"
+																style="height: 41px;"
+															/>
+															<div class="input-group-append">
+																<a (click)="setMaxAmount()">
+																	<div class="input-group-text maxLink">{{ 'SEND_TOKENS_TAB.max' | translate }}</div>
+																</a>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6 d-block d-md-none pb-3 pb-md-0">
+														<div class="input-group">
+															<div class="input-group-prepend"><div class="input-group-text">USD/$</div></div>
+															<input
+																type="text"
+																class="form-control inlineForm2"
+																[(ngModel)]="amountFiat"
+																placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}"
+																onfocus="this.placeholder = ''"
+															/>
+														</div>
+													</div>
+													<div class="col-md-6 pt-2 pt-md-0">
+														<div class="row align-items-center">
+															<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'TOKEN' | translate }}</div>
+															<div class="col-md-10">
+																<div class="form-group">
+																	<select class="custom-select" [(ngModel)]="selectedTokenSymbol" (change)="selectToken()">
+																		<option *ngFor="let token of accountTokens" [value]="token.tokenInfo.tokenSymbol">{{
+																			token.tokenInfo.tokenSymbol
+																		}}</option>
+																	</select>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="row align-items-center pt-3 pt-md-2">
+													<div class="col-md-6 d-none d-md-block">
+														<div class="input-group">
+															<div class="input-group-prepend"><div class="input-group-text">USD/$</div></div>
+															<input
+																type="text"
+																class="form-control inlineForm2"
+																placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}"
+															/>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="row align-items-center">
+															<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'BALANCE' | translate }}</div>
+															<div class="col-md-10 ">
+																<div class="row">
+																	<div class="col-6 pr-0 balance">
+																		{{ selectedToken.balance | qlc: settings.settings.displayDenomination }}
+																	</div>
+																	<div class="col-6 pl-0 text-right fiat">(-)</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+
+										<div class="row">
+											<div class="col-md-2 form-label-custom-2">
+												{{ 'SEND_TOKENS_TAB.from_account' | translate }}
+											</div>
+											<div class="col-md-10">
+												<div class="form-group">
+													<select class="custom-select" [(ngModel)]="fromAccountID" (change)="selectAccount()">
+														<option *ngFor="let account of accounts" [value]="account.id"
+															>{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }}</option
+														>
+													</select>
+												</div>
+											</div>
+										</div>
+
+										
+										<div class="row">
+											<div class="col-md-2 form-label-custom-2 pt-3">
+												{{ 'SEND_TOKENS_TAB.to_account' | translate }}
+											</div>
+											<div class="col-md-10 text-left text-truncate py-3">
+												<div class="form-group">
+													<select
+														class="custom-select contacts"
+														[(ngModel)]="bookContact"
+														(change)="selectFromBook()"
+														[ngClass]="{ success: toAccountStatus === 2, dangerRight: toAccountStatus === 0 }"
+													>
+														<option *ngFor="let book of (addressBookResults$ | async)" [value]="book.account"
+															>{{ book.name }} {{ book.account }}</option
+														>
+													</select>
+													<input
+														type="text"
+														class="form-control toaccount"
+														placeholder="{{ 'SEND_TOKENS_TAB.to_account_placeholder' | translate }}"
+														onfocus="this.placeholder = ''"
+														(blur)="validateDestination()"
+														[(ngModel)]="toAccountID"
+														[ngClass]="{ success: toAccountStatus === 2, dangerLeft: toAccountStatus === 0 }"
+													/>
+												</div>
+											</div>
+										</div>
+
+
+										<div class="row rowAmount pl-1">
+											<div class="col-md-2 "></div>
+											<div class="col-lg-5 col-md-4 col-sm-6 col-12">
+												<button type="submit" class="btn btn-primary" (click)="sendTransaction()" style="min-width:100%;">
+													{{ 'SEND_TOKENS_TAB.send' | translate }}
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>		
+
+
+
+
+
+
+
+
+
+
+<!--
+
+
 
 <div class="container" *ngIf="activePanel == 'send'">
 
@@ -156,7 +445,7 @@
 		</div>
 	</div>
 </div>
-
+-->
 <div class="container" *ngIf="activePanel == 'confirm'">
 	<div class="row">
 		<div class="col-12 px-0">
@@ -229,8 +518,4 @@
 			</div>
 		</div>
 	</div>
-</div>
-            </div>
-        </div>
-    </div>
 </div>
