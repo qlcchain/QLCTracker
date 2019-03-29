@@ -21,6 +21,7 @@ declare global {
 export class HeaderComponent implements OnInit {
 
   wallet = this.walletService.wallet;
+  search_text = '';
 
 	msg3 = '';
 	msg4 = '';
@@ -157,4 +158,12 @@ export class HeaderComponent implements OnInit {
 		this.trans.get('WALLET_WARNINGS.msg5').subscribe((res: string) => { this.msg5 = res; });
 	}
 
+  
+  search() {
+    if ((this.search_text.startsWith('qlc_1') || this.search_text.startsWith('qlc_3')) && this.search_text.length === 64) {
+      this.router.navigate(['/account/'+this.search_text]);
+    } else if(this.search_text.length === 64) {
+      this.router.navigate(['/transaction/'+this.search_text]);
+    }
+  }
 }

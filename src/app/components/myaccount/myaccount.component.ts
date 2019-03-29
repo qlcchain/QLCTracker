@@ -242,6 +242,6 @@ export class MyaccountComponent implements OnInit {
 
 		await this.walletService.reloadBalances();
 		//await this.loadPendingForAll();
-	}
+  }
 
 }

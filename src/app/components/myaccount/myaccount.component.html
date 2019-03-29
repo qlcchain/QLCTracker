@@ -30,7 +30,7 @@
                                     <div class="col-12">Address</div>
                                 </div>
                                 <div class="row qlc-table-row-blue row-text-mid mt-3">
-                                    <div class="col-12 text-break pr-3">{{ accountId }} <a href="#"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+                                    <div class="col-12 text-break pr-3">{{ accountId }} <a ngxClipboard [cbContent]="accountId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
                                 </div>
                             </div>
                         </div>

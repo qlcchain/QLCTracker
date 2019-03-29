@@ -35,10 +35,10 @@
           <!-- SUB SEARCH -->
           <div class="menu-sub-holder menu-sub-search">
             <div class="menu-sub-search-form">
-              <form>
-                <input type="text" class="search-text">
-                <input type="button" class="search-button">
-              </form>
+              
+                <input type="text" name="search" class="search-text" [(ngModel)]="search_text">
+                <input type="button" class="search-button" (click)="search()">
+              
             </div>
             <div class="sub-left sub-left-search">Search</div>
           </div>
