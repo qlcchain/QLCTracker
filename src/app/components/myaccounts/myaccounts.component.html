@@ -9,16 +9,16 @@
 					<h1>My Wallets</h1>
 				</div>
 			</div>
-      <button type="submit" class="btn btn-primary content-header" (click)="createAccount()" *ngIf="accounts.length">
+      <!--<button type="submit" class="btn btn-primary content-header" (click)="createAccount()" *ngIf="accounts.length">
         {{ 'ACCOUNTS.title_button' | translate }}
-      </button>
+      </button>-->
 		</div>
 	</div>
 </div>
 
 
 
-<div class="container accounts">
+<div class="container accounts pb-5 mb-5">
     
     <div *ngIf="!accounts.length" class="row defaultTable content">
         <div class="col-12 text-center">
@@ -115,6 +115,16 @@
 
 		</div>
 		<!-- // END ADDRESS -->
+
+
+		<!-- NEW WALLET BUTTON -->
+		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pl-0 pt-0 pr-0 pb-0">
+			<button type="submit" class="btn btn-primary button-newaccount" (click)="createAccount()" *ngIf="accounts.length">
+				{{ 'ACCOUNTS.title_button' | translate }}
+			</button>
+		</div>
+		<!-- // END NEW WALLET BUTTON -->
+
 
 
 
