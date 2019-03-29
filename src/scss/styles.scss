@@ -1210,24 +1210,32 @@ pre {
 }
 .btn-darkgrey {
     background-color:#595757 !important;
+    min-width: auto !important;
+    max-width: 100% !important;
 }
 .btn-darkgrey:hover {
     background-color:#8d8a8a !important;
 }
 .btn-blue2 {
     background-color:#2069c2 !important;
+    min-width: auto !important;
+    max-width: 100% !important;    
 }
 .btn-blue2:hover {
     background-color:#007bff !important;
 }
 .btn-purple {
     background-color:#452d78 !important;
+    min-width: auto !important;
+    max-width: 100% !important;    
 }
 .btn-purple:hover {
     background-color:#6e49bb !important;
 }
 .btn-green {
     background-color: #62b519 !important;
+    min-width: auto !important;
+    max-width: 100% !important;    
 }
 .btn-green:hover {
     background-color: #77ca2e !important;
@@ -1247,7 +1255,9 @@ pre {
     background-color: #005cbf !important;
 }
 
-
+.cursor-pointer {
+    cursor: pointer;
+}
 
 
 
