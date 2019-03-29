@@ -130,7 +130,7 @@ async function run() {
 	}
 	console.log(`prepare gqlc data dir ${configDir}`);
 
-	const config = path.join(configDir, 'qlc.json');
+	const config = path.join(configDir, 'qlc_wallet.json');
 	console.log(configDir);
 	console.log(config);
 	async function prepare_config() {
@@ -156,7 +156,7 @@ async function run() {
 	await prepare_config();
 
 	console.log(`start qglc ${cmd}`);
-	const child = crossSpawn(cmd, ['--config', configDir], {
+	const child = crossSpawn(cmd, ['--config', config], {
 		windowsHide: true,
 		stdio: ['ignore', 'pipe', 'pipe']
 	});
