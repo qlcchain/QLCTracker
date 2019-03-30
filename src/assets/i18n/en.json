@@ -333,6 +333,15 @@
 		"msg4": "There was an error receiving the transaction",
 		"msg5": "Successfully copied to clipboard!"
 	},
+	"SERVICE_WARNINGS_QLC_SERVICE": {
+		"msg1": "Account of",
+		"msg2": "must have an open block first",
+		"msg3": "Generating Proof of Work...",
+		"msg4": "Unable to get account information for",
+		"msg5": "Node returned an error",
+		"msg6": "Transaction denied on Ledger device",
+		"msg7": "Waiting for confirmation on Ledger Device..."
+	},
 	"CANCEL": "Cancel",
 	"OK": "Ok",
     "LOADING": "Loading",

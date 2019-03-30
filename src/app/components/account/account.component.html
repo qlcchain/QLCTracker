@@ -52,7 +52,7 @@
             <div class="col-12">Balance</div>
           </div>
           <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-            <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc | currency:'':'':'1.2-8' }} QLC</div>
+            <div class="col-12 pb-1" *ngIf="accountMeta.coinBalance">{{ accountMeta.coinBalance | qlc | currency:'':'':'1.2-8' }} QLC</div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
             <div class="col-12 text-wrap pt-1"><span class="text-blue">= 0.00 $</span></div>
@@ -244,7 +244,7 @@
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                 history.type == 'Send' ? 'text-color-red' : 'text-color-green'
               }}">
-                <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | qlc | currency:'':'':'1.2-8' }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="+9.00 $" *ngIf="history.amount">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | qlc | currency:'':'':'1.2-8' }}</span>
                 <br><span class="text-color-grey">{{ history.tokenName }}</span>
               </div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
