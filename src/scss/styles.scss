@@ -576,6 +576,15 @@ div[class*="col-"] a:hover {
     height: 100%;
 }
 
+.content-box-purple {
+    background: #6e49bb;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,0.08);
+    padding: 0px;
+    display: block;
+    position: relative;
+    height: 100%;
+}
+
 .bg-blue-voting {
     background: #2069c2 url("../assets/img/bg_box_votes.png") no-repeat right top;
     background-size: auto;
@@ -613,16 +622,20 @@ div[class*="col-"] a:hover {
 }
 
 .bg-type-send {
-    background: #c10f0f url("../assets/img/bg_box_type_send.png") no-repeat right top;
-    background-size: auto 100%;
+    background: #c10f0f url("../assets/img/bg_box_type_send.png") no-repeat right top !important;
+    background-size: auto 100% !important;
 }
 .bg-type-receive {
-    background: #56af08 url("../assets/img/bg_box_type_receive.png") no-repeat right top;
-    background-size: auto 100%;
+    background: #56af08 url("../assets/img/bg_box_type_receive.png") no-repeat right top !important;
+    background-size: auto 100% !important;
 }
 .bg-type-change {
-    background: #00479d url("../assets/img/bg_box_type_change.png") no-repeat right top;
-    background-size: auto 100%;
+    background: #00479d url("../assets/img/bg_box_type_change.png") no-repeat right top !important;
+    background-size: auto 100% !important;
+}
+.bg-type-open {
+    background: #452d78 url("../assets/img/bg_box_type_open.png") no-repeat right top !important;
+    background-size: auto 100% !important;
 }
 
 
@@ -987,7 +1000,7 @@ a.qlc-top-mainnet-red:hover {
     height: 100%;
 }
 .content-box-purple {
-    background: #543694;
+    background: #452d78;
     box-shadow: 0 0 16px 0 rgba(0,0,0,0.08);
     padding: 0px;
     display: block;
@@ -1029,7 +1042,7 @@ a.qlc-top-mainnet-red:hover {
     background: none;
     color: #ffffff;
     font-size: 36px;
-    font-weight: 300;
+    font-weight: 400;
     letter-spacing: 0px;
 }
 .qlc-table-row-purple.sub-page {
@@ -1039,24 +1052,25 @@ a.qlc-top-mainnet-red:hover {
     padding-top:12px;
     padding-bottom:25px;
 }
-.qlc-table-header-darkpurple {
+.qlc-table-header-darkpurple, .qlc-table-header-purple {
     font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
-    background: #452d78;
-    color: #a887ef;
+    background: none;
+    color: #a887ef !important;
     font-size: 12px;
     text-transform: uppercase;
     font-weight: 700;
 }
-.qlc-table-header-darkpurple div a {
+.qlc-table-header-darkpurple div a, .qlc-table-header-purple div a {
     color:#a887ef;
     text-decoration: none;
     letter-spacing: 0.25px;
 }
-.qlc-table-header-darkpurple div a:hover, .qlc-table-header-darkpurple div a:active {
+.qlc-table-header-darkpurple div a:hover, .qlc-table-header-darkpurple div a:active,
+.qlc-table-header-purple div a:hover, .qlc-table-header-purple div a:active {
     color:#ffffff;
     text-decoration: none;
 }
-.qlc-table-header-darkpurple div a .qlc-icon {
+.qlc-table-header-darkpurple div a .qlc-icon, .qlc-table-header-purple div a .qlc-icon {
     margin-top: -4px;
 }
 .qlc-table-header-purple, .qlc-table-header-white {

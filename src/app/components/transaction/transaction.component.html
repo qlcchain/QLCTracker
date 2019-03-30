@@ -168,7 +168,7 @@
 
 
   <!-- MAIN INFO / CHANGE -->
-  <div class="container" *ngIf="transaction.type != 'Receive' && transaction.type != 'Send' ">
+  <div class="container" *ngIf="transaction.type == 'Change'">
       <div class="row">
           
           <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -225,6 +225,66 @@
                   
       </div>
   </div>
+
+
+<!-- MAIN INFO / OPEN -->
+<div class="container" *ngIf="transaction.type == 'Open'">
+    <div class="row">
+        
+        <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+            <div class="content-box-purple bg-type-open">
+                <div class="container">
+                    <div class="row qlc-table-header-purple">
+                        <div class="col-12">Type</div>
+                    </div>
+                    <div class="row qlc-table-row-purple row-text-mid mt-3 mb-3">
+                        <div class="col-12">{{ transaction.type }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+            <div class="content-box-purple">
+                <div class="container">
+                    <div class="row qlc-table-header-purple">
+                        <div class="col-12">Amount</div>
+                    </div>
+                    <div class="row qlc-table-row-purple row-text-mid mt-3 mb-3">
+                        <div class="col-12">{{ transaction.amount | qlc }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+            <div class="content-box-blue">
+                <div class="container">
+                    <div class="row qlc-table-header-blue">
+                        <div class="col-12">Token</div>
+                    </div>
+                    <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                        <div class="col-12">{{ transaction.tokenName }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+            <div class="content-box-blue">
+                <div class="container">
+                    <div class="row qlc-table-header-blue">
+                        <div class="col-12">Date/time</div>
+                    </div>
+                    <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
+                        <div class="col-12">{{ transaction.timestamp * 1000 | date: 'short' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                
+    </div>
+</div>
 
 
 <!-- RAW DATA BLOCKS -->
