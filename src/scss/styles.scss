@@ -1241,6 +1241,14 @@ pre {
 .btn-green:hover {
     background-color: #77ca2e !important;
 }
+.btn-danger, .btn-red {
+    background-color: #c10f0f !important;
+    min-width: auto !important;
+    max-width: 100% !important;    
+}
+.btn-danger:hover, .btn-red:hover {
+    background-color: #ea2525 !important;
+}
 .button-newaccount {
     display:block;
     position: relative;
@@ -1279,7 +1287,7 @@ pre {
 .sendTokens .toaccount {
     position: absolute;
     top: 0px !important;
-    width: calc(100% - 100px);
+    width: calc(100% - 60px) !important;
     max-height: 20px !important;
     overflow-y: hidden;
     line-height: 16px !important;
@@ -1312,8 +1320,21 @@ pre {
 .balance-box.active {
     opacity:1;
 }
-
-
+.confirmTransaction .sum {
+    color: #005cbf !important;
+}
+.confirmTransaction .name {
+    font-size: 18px;
+    font-weight: 700;
+}
+.confirmTransaction .address {
+    font-size: 12px;
+    font-weight: 400;
+}
+.confirmTransaction .address:hover, .confirmTransaction .name:hover {
+    text-decoration: none !important;
+    color:#005cbf !important;
+}
 
 
 

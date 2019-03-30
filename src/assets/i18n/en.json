@@ -143,6 +143,7 @@
 		"confirm_transaction": "Confirm Transaction",
 		"you_are_about_to_send": "You are about to send",
 		"amount_to_send": "Amount to send",
+		"amount_to_receive": "Amount to receive",
 		"confirm_send": "Confirm & Send"
 	},
 	"SEND_WARNINGS": {
