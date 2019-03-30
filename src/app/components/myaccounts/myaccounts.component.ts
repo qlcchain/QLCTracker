@@ -5,6 +5,8 @@ import { NotificationService } from '../../services/notification.service';
 import { AddressBookService } from '../../services/address-book.service';
 import { AppSettingsService } from '../../services/app-settings.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { QLCBlockService } from 'src/app/services/qlc-block.service';
+import { UtilService } from 'src/app/services/util.service';
 
 @Component({
   selector: 'app-myaccounts',
@@ -14,7 +16,11 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 export class MyaccountsComponent implements OnInit {
 	accounts = this.walletService.wallet.accounts;
 	wallet = this.walletService.wallet;
-	isLedgerWallet = this.walletService.isLedgerWallet();
+  isLedgerWallet = this.walletService.isLedgerWallet();
+  
+  pendingBlocks = [];
+  successfulBlocks = [];
+  processingPending = false;
 
 	msg1 = '';
 	msg2 = '';
@@ -29,7 +35,9 @@ export class MyaccountsComponent implements OnInit {
 	msg11 = '';
 	msg12 = '';
 	msgEdit1 = '';
-	msgEdit2 = '';
+  msgEdit2 = '';
+  
+  msgLocked = '';
 
 	constructor(
 		private walletService: WalletService,
@@ -37,7 +45,9 @@ export class MyaccountsComponent implements OnInit {
 		private notificationService: NotificationService,
 		private addressBook: AddressBookService,
 		public settings: AppSettingsService,
-		private trans: TranslateService
+		private trans: TranslateService,
+		private qlcBlock: QLCBlockService,
+    private util: UtilService
 	) {
 		this.loadLang();
 	}
@@ -63,11 +73,11 @@ export class MyaccountsComponent implements OnInit {
 		this.trans.get('ACCOUNTS_WARNINGS.msg11').subscribe((res: string) => {	this.msg11 = res; });
 		this.trans.get('ACCOUNTS_WARNINGS.msg12').subscribe((res: string) => {	this.msg12 = res; });
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg5').subscribe((res: string) => {	this.msgEdit1 = res; });
-		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg6').subscribe((res: string) => {	this.msgEdit2 = res; });
+    this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg6').subscribe((res: string) => {	this.msgEdit2 = res; });
+    this.trans.get('RECEIVE_WARNINGS.msg2').subscribe((res: string) => {	this.msgLocked = res; });
 	}
 
 	async loadBalances() {
-    console.log(this.accounts);
 		for (let i = 0; i < this.accounts.length; i++) {
 			const am = await this.api.accountInfo(this.accounts[i].id);
 			if (!am.error) {
@@ -89,9 +99,6 @@ export class MyaccountsComponent implements OnInit {
         pendingCount += pendingResult[account].length;
       }
       this.accounts[i].pendingCount = pendingCount;
-
-      console.log(pending.result);
-      console.log(this.accounts[i]);
 			
 		}
 		// walletAccount.account_info = await this.api.accountInfo(accountID);
@@ -156,5 +163,85 @@ export class MyaccountsComponent implements OnInit {
 
 		this.notificationService.sendSuccess(this.msgEdit2);
 		account.editName = false;
+  }
+  
+  async receive(account) {
+    await this.loadPending(account);
+    this.processPendingBlocks();
+  }
+
+  async loadPending(account) {
+    this.pendingBlocks = [];
+    const accountPending = await this.api.accountsPending([account], 25);
+		if (!accountPending.error && accountPending.result) {
+			const pendingResult = accountPending.result;
+
+			for (const account in pendingResult) {
+				if (!pendingResult.hasOwnProperty(account)) {
+					continue;
+        }
+        let walletAccount = this.wallet.accounts.find(a => a.id === account);
+				walletAccount.pendingCount = pendingResult[account].length;
+				pendingResult[account].forEach(pending => {
+					this.pendingBlocks.push({
+            account: pending.source,
+            receiveAccount: account,
+						amount: pending.amount,
+						tokenName: pending.tokenName,
+						timestamp: pending.timestamp,
+						hash: pending.hash
+					});
+				});
+			}
+		}
+  }
+
+  async processPendingBlocks(tokenName = 'all') {
+    if (this.walletService.walletIsLocked()) {
+      this.notificationService.sendWarning(this.msgLocked);
+      return;
+		}
+		if (this.processingPending || this.wallet.locked || !this.pendingBlocks.length) {
+			return;
+		}
+    this.processingPending = true;
+
+    const nextBlock = this.pendingBlocks[0];
+		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
+			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
+		}
+		const walletAccount = await this.walletService.getWalletAccount(nextBlock.receiveAccount);
+		if (!walletAccount) {
+			return; // Dispose of the block, no matching account
+		}
+
+		let newHash = null;
+
+		if (tokenName !== 'all') {
+			if (nextBlock.tokenName == tokenName) {
+        newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.walletService.isLedgerWallet());
+        console.log(newHash);
+			}
+		} else {
+      newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.walletService.isLedgerWallet());
+		}
+		if (newHash) {
+			if (this.successfulBlocks.length >= 15) {
+				this.successfulBlocks.shift();
+			}
+			this.successfulBlocks.push(nextBlock.hash);
+
+			const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
+			this.notificationService.sendSuccess(
+				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenName}!`
+			);
+      await this.loadBalances();
+			// await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
+		} 
+
+		this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+		this.processingPending = false;
+
+		setTimeout(() => this.processPendingBlocks(), 1500);
 	}
 }

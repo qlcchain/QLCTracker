@@ -326,6 +326,13 @@
 		"msg9": ", please try again",
 		"msg10": "Successfully updated representatives!"
 	},
+	"RECEIVE_WARNINGS": {
+		"msg1": "unable to find receiving account in wallet",
+		"msg2": "Wallet must be unlocked",
+		"msg3": "Successfully received",
+		"msg4": "There was an error receiving the transaction",
+		"msg5": "Successfully copied to clipboard!"
+	},
 	"CANCEL": "Cancel",
 	"OK": "Ok",
     "LOADING": "Loading",

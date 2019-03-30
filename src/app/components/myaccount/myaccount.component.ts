@@ -98,6 +98,7 @@ export class MyaccountComponent implements OnInit {
 				this.loadPending();
 			}
 		});
+    this.loadLang();
   }
   
   ngOnDestroy() {
@@ -328,21 +329,16 @@ export class MyaccountComponent implements OnInit {
   }
 
   async processPendingBlocks(tokenName = 'all') {
-    
-    console.log('processPendingBlocks ' + tokenName);
-    console.log(this.processingPending);
-    console.log(this.wallet.locked);
-    console.log(this.pendingBlocks);
-    console.log(!this.pendingBlocks.length);
+    if (this.walletService.walletIsLocked()) {
+      this.notificationService.sendWarning(this.msg2);
+      return;
+		}
 		if (this.processingPending || this.wallet.locked || !this.pendingBlocks.length) {
 			return;
 		}
     this.processingPending = true;
-    console.log('processPendingBlocks 2');
 
     const nextBlock = this.pendingBlocks[0];
-    console.log('nextBlock');
-    console.log(nextBlock);
 		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
 			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
 		}
@@ -354,16 +350,12 @@ export class MyaccountComponent implements OnInit {
 		let newHash = null;
 
 		if (tokenName !== 'all') {
-      console.log('not all ' + tokenName);
 			if (nextBlock.tokenName == tokenName) {
-        console.log('we have a match all ' + tokenName);
         newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.walletService.isLedgerWallet());
         console.log(newHash);
 			}
 		} else {
-      console.log('all');
       newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.walletService.isLedgerWallet());
-      console.log(newHash);
 		}
 		if (newHash) {
 			if (this.successfulBlocks.length >= 15) {
