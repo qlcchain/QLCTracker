@@ -48,7 +48,7 @@
 
 
   <!-- MAIN INFO / SEND -->
-  <div class="container" *ngIf="transaction.subType == 'send'">
+  <div class="container" *ngIf="transaction.type == 'Send'">
       <div class="row">
           
           <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -108,7 +108,7 @@
 
 
   <!-- MAIN INFO / RECEIVE -->
-  <div class="container" *ngIf="transaction.subType == 'receive'">
+  <div class="container" *ngIf="transaction.type == 'Receive'">
       <div class="row">
           
           <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -168,7 +168,7 @@
 
 
   <!-- MAIN INFO / CHANGE -->
-  <div class="container" *ngIf="transaction.subType != 'receive' && transaction.subType != 'send' ">
+  <div class="container" *ngIf="transaction.type != 'Receive' && transaction.type != 'Send' ">
       <div class="row">
           
           <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -178,7 +178,7 @@
                           <div class="col-12">Type</div>
                       </div>
                       <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
-                          <div class="col-12">{{ transaction.type }} {{ transaction.subType }}</div>
+                          <div class="col-12">{{ transaction.type }}</div>
                       </div>
                   </div>
               </div>

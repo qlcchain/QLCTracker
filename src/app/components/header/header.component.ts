@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { WalletService } from 'src/app/services/wallet.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 declare var particlesJS: any;
 declare var jQuery: any;
@@ -23,6 +24,8 @@ export class HeaderComponent implements OnInit {
   wallet = this.walletService.wallet;
   search_text = '';
 
+  modalRef: BsModalRef;
+
 	msg3 = '';
 	msg4 = '';
 	msg5 = '';
@@ -31,7 +34,8 @@ export class HeaderComponent implements OnInit {
     public walletService: WalletService,
     private notificationService: NotificationService,
     private trans: TranslateService,
-    private router: Router
+    private router: Router,
+		private modalService: BsModalService
   ) 
   { 
     this.loadLang();
@@ -165,5 +169,8 @@ export class HeaderComponent implements OnInit {
     } else if(this.search_text.length === 64) {
       this.router.navigate(['/transaction/'+this.search_text]);
     }
+  }
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
   }
 }

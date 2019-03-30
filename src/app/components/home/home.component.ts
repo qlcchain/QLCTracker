@@ -18,8 +18,10 @@ export class HomeComponent implements OnInit {
 	accountsCreated = 0;
 	transactionsCount = { count: 0, unchecked: 0 };
 	representativeOnline = 0;
+	representativesCount = 0;
 	votingPower = new BigNumber(0);
 	votingPowerPercent = '0';
+	tokensCount = 0;
 
   routerSub = null;
 
@@ -65,8 +67,14 @@ export class HomeComponent implements OnInit {
 			this.transactionsCount = transactionsCount.result; // transactionsCount.unchecked == pending transactions ??
 		}
 
+		const tokensCount = await this.api.tokens();
+		if (!tokensCount.error) {
+			this.tokensCount = tokensCount.result.length;
+		}
+
 		const representatives = await this.api.representatives();
 		if (representatives.result) {
+			this.representativesCount = representatives.result.length;
 			const onlineRepresentatives = await this.api.onlineRepresentatives();
 			const onlineReps = onlineRepresentatives.result;
 			this.representativeOnline = onlineReps.length; 

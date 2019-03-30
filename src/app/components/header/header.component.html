@@ -23,7 +23,8 @@
           <div class="menu-sub-holder menu-sub-main">
             <div class="menu-item menu-close"></div>
             <div class="menu-sub-items">
-              <a routerLink="/topwallets" routerLinkActive="active">Top Wallets</a>
+              <!-- <a routerLink="/topwallets" routerLinkActive="active">Top Wallets</a>-->
+              <a routerLink="/tokens" routerLinkActive="active">Tokens</a>
               <a routerLink="/representatives" routerLinkActive="active">{{ 'NAV.representatives' | translate }}</a>
               <a routerLink="/accounts" routerLinkActive="active">{{ 'NAV.accounts' | translate }}</a>
               <a routerLink="/transactions" routerLinkActive="active">{{ 'NAV.transactions' | translate }}</a>
@@ -47,14 +48,14 @@
           <div class="menu-sub-holder menu-sub-currency">
             <div class="menu-item menu-close"></div>
             <div class="menu-sub-items menu-sub-items-currency">
-              <a href="#">USD<span class="mobile-menu-only"> American Dollar</span></a>
-              <a href="#">CNY<span class="mobile-menu-only"> Chinese Yuan</span></a>
-              <a href="#">EUR<span class="mobile-menu-only"> Euro</span></a>
-              <a href="#">GBP<span class="mobile-menu-only"> British Pound</span></a>
-              <a href="#">QLC<span class="mobile-menu-only"> QLC Chain Token</span></a>
-              <a href="#">NEO<span class="mobile-menu-only"> NEO Token</span></a>
-              <a href="#">ETH<span class="mobile-menu-only"> Ethereum</span></a>
-              <a href="#">BTC<span class="mobile-menu-only"> Bitcoin</span></a>
+              <a (click)="openModal(dev)">USD<span class="mobile-menu-only"> American Dollar</span></a>
+              <a (click)="openModal(dev)">CNY<span class="mobile-menu-only"> Chinese Yuan</span></a>
+              <a (click)="openModal(dev)">EUR<span class="mobile-menu-only"> Euro</span></a>
+              <a (click)="openModal(dev)">GBP<span class="mobile-menu-only"> British Pound</span></a>
+              <a (click)="openModal(dev)">QLC<span class="mobile-menu-only"> QLC Chain Token</span></a>
+              <a (click)="openModal(dev)">NEO<span class="mobile-menu-only"> NEO Token</span></a>
+              <a (click)="openModal(dev)">ETH<span class="mobile-menu-only"> Ethereum</span></a>
+              <a (click)="openModal(dev)">BTC<span class="mobile-menu-only"> Bitcoin</span></a>
             </div>
             <div class="sub-left sub-left-currency usd">Choose your currency</div>
           </div>
@@ -77,11 +78,11 @@
           <div class="menu-sub-holder menu-sub-language">
             <div class="menu-item menu-close"></div>
             <div class="menu-sub-items menu-sub-items-language">
-              <a href="#"><img src="assets/img/flags/de.png"><span class="mobile-menu-only"> Deutsch</span></a>
-              <a href="#"><img src="assets/img/flags/ru.png"><span class="mobile-menu-only"> Pу̏скӣ</span></a>
-              <a href="#"><img src="assets/img/flags/kr.png"><span class="mobile-menu-only"> 한국어</span></a>
-              <a href="#"><img src="assets/img/flags/cn.png"><span class="mobile-menu-only"> 简体中文</span></a>
-              <a href="#"><img src="assets/img/flags/en.png"><span class="mobile-menu-only"> English</span></a>
+              <a (click)="openModal(dev)"><img src="assets/img/flags/de.png"><span class="mobile-menu-only"> Deutsch</span></a>
+              <a (click)="openModal(dev)"><img src="assets/img/flags/ru.png"><span class="mobile-menu-only"> Pу̏скӣ</span></a>
+              <a (click)="openModal(dev)"><img src="assets/img/flags/kr.png"><span class="mobile-menu-only"> 한국어</span></a>
+              <a (click)="openModal(dev)"><img src="assets/img/flags/cn.png"><span class="mobile-menu-only"> 简体中文</span></a>
+              <a (click)="openModal(dev)"><img src="assets/img/flags/en.png"><span class="mobile-menu-only"> English</span></a>
             </div>
             <div class="sub-left sub-left-language">Choose your language</div>
           </div>
@@ -91,3 +92,17 @@
     </div>
   </div>
 </div>
+
+<ng-template #dev>
+  <div class="modal-body">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        <div class="row text-center">
+          <div class="col-12">
+            Under development.
+          </div>
+        </div>
+    
+  </div>
+</ng-template>

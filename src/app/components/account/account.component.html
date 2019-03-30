@@ -52,10 +52,10 @@
             <div class="col-12">Balance</div>
           </div>
           <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-            <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc }} QLC</div>
+            <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc | number }} QLC</div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">= - $</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">= 0.00 $</span></div>
           </div>
         </div>
       </div>
@@ -68,10 +68,10 @@
             <div class="col-12">Pending</div>
           </div>
           <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-            <div class="col-12 pb-1">{{ pendingSum | qlc }} QLC</div>
+            <div class="col-12 pb-1">{{ pendingSum | qlc | number }} QLC</div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">= - $</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">= 0.00 $</span></div>
           </div>
         </div>
       </div>
