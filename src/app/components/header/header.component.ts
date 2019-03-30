@@ -26,6 +26,10 @@ export class HeaderComponent implements OnInit {
 
   modalRef: BsModalRef;
 
+  unlockPassword = '';
+
+  msg1 = '';
+	msg2 = '';
 	msg3 = '';
 	msg4 = '';
 	msg5 = '';
@@ -150,13 +154,28 @@ export class HeaderComponent implements OnInit {
 		const locked = await this.walletService.lockWallet();
 		if (locked) {
       this.notificationService.sendSuccess(this.msg4);
-      this.router.navigate(['/login']);
 		} else {
 			this.notificationService.sendError(this.msg5);
 		}
   }
+
+  async unlockWalletConfirm() {
+		const unlocked = await this.walletService.unlockWallet(this.unlockPassword);
+		this.unlockPassword = '';
+
+		if (unlocked) {
+      this.notificationService.sendSuccess(this.msg1);
+      this.modalRef.hide();
+		} else {
+			this.notificationService.sendError(this.msg2);
+		}
+
+    this.unlockPassword = '';
+  }
   
   loadLang() {
+    this.trans.get('WALLET_WARNINGS.msg1').subscribe((res: string) => { this.msg1 = res; });
+		this.trans.get('WALLET_WARNINGS.msg2').subscribe((res: string) => { this.msg2 = res; });
 		this.trans.get('WALLET_WARNINGS.msg3').subscribe((res: string) => { this.msg3 = res; });
 		this.trans.get('WALLET_WARNINGS.msg4').subscribe((res: string) => { this.msg4 = res; });
 		this.trans.get('WALLET_WARNINGS.msg5').subscribe((res: string) => { this.msg5 = res; });

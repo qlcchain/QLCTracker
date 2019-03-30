@@ -37,7 +37,7 @@
           <div class="menu-sub-holder menu-sub-search">
             <div class="menu-sub-search-form">
               
-                <input type="text" name="search" class="search-text" [(ngModel)]="search_text">
+                <input type="text" name="search" class="search-text" (keyup.enter)="search()" [(ngModel)]="search_text">
                 <input type="button" class="search-button" (click)="search()">
               
             </div>
@@ -64,7 +64,7 @@
           <div class="menu-sub-holder menu-sub-account">
             <div class="menu-item menu-close"></div>
             <div class="menu-sub-items menu-sub-items-account">
-              <a routerLink="/login" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()">Sign in</a>
+              <a (click)="openModal(unlockWallet)" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()">Sign in</a>
               <a (click)="lockWallet()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">Log out</a>
               <a routerLink="/myaccounts" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">My accounts</a>
               <a routerLink="/send" routerLinkActive="active" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">Send</a>
@@ -106,5 +106,26 @@
       </div>
     </div>
 
+  </div>
+</ng-template>
+
+<ng-template #unlockWallet>
+  <div class="modal-header">
+    <h1 class="modal-title pull-left">Sign in</h1>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="input-group">
+        <input class="form-control" type="password" [(ngModel)]="unlockPassword" (keyup.enter)="unlockWalletConfirm()" placeholder="Enter your password" appAutofocus>
+      </div>
+    </div>
+    
+  </div>
+  <div class="modal-footer">
+    
+    <button class="btn btn-primary" type="button" (click)="unlockWalletConfirm()">UNLOCK</button>
   </div>
 </ng-template>
