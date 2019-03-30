@@ -35,7 +35,7 @@
             <div class="col-12">{{ transactionsCount.count | number}}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
-            <div class="col-12"><a routerLink="/"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
+            <div class="col-12"><a routerLink="/transactions"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
           </div>
         </div>
       </div>
@@ -45,13 +45,13 @@
       <div class="content-box-blue bg-blue-storage">
         <div class="container">
           <div class="row qlc-table-header-blue">
-            <div class="col-12">Block storage</div>
+            <div class="col-12">Accounts created</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">61.52 Gb</div>
+            <div class="col-12">{{ accountsCreated }}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
-            <div class="col-12"><a routerLink="/"><span class="qlc-icon icon-arrow-right-bluelight"></span>Storage details</a></div>
+            <div class="col-12"><a routerLink="/accounts"><span class="qlc-icon icon-arrow-right-bluelight"></span>All accounts</a></div>
           </div>
         </div>
       </div>
@@ -61,13 +61,13 @@
       <div class="content-box-blue bg-blue-transactions">
         <div class="container">
           <div class="row qlc-table-header-blue">
-            <div class="col-12">Tx per day</div>
+            <div class="col-12">Tokens</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">5,214</div>
+            <div class="col-12">{{ tokensCount }}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
-            <div class="col-12"><a routerLink="/transactions"><span class="qlc-icon icon-arrow-right-bluelight"></span>All transactions</a></div>
+            <div class="col-12"><a routerLink="/tokens"><span class="qlc-icon icon-arrow-right-bluelight"></span>All tokens</a></div>
           </div>
         </div>
       </div>
@@ -172,7 +172,7 @@
             <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ representativeOnline }}</span></div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ accountsCreated }} total accounts created</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ representativesCount }} total representatives</span></div>
           </div>
         </div>
       </div>
