@@ -1,0 +1,357 @@
+<div class="container mt-0 qlc-content-first">
+	<div class="row">
+		<div class="col-12 pl-0 pr-0">
+			<div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+				<div class="content-title">
+					<h1>{{ 'APP_SETTINGS.app_settings_title' | translate }}</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-12 px-0">
+      <h1>{{ 'APP_SETTINGS.app_settings_title' | translate }}</h1>
+    </div>
+  </div>
+  <div class="row defaultTable content">
+    <div class="col-12">
+      <div class="row align-items-center rowContent autoHP pb-2">
+        <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.language' | translate }}</div>
+        <div class="col-md-10 px-0 text-left text-truncate">
+          <div class="form-group">
+            <select class="custom-select" [(ngModel)]="selectedLang" >
+              <option *ngFor="let lang of languages" [value]="lang.value">{{ lang.name }}</option>
+            </select>
+          </div></div>
+        </div>
+        <div class="row align-items-center rowContent autoHP py-2">
+          <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.fiat_currency' | translate }}</div>
+          <div class="col-md-10 px-0 text-left text-truncate">
+            <div class="form-group">
+              <select class="custom-select" [(ngModel)]="selectedCurrency" id="form-horizontal-select">
+                <option *ngFor="let currency of currencies" [value]="currency.value">{{ currency.name }}</option>
+              </select>
+            </div></div>
+          </div>
+          <div class="row align-items-center rowContent autoHP py-2">
+            <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.lock_on_exit' | translate }}</div>
+            <div class="col-md-10 px-0 text-left text-truncate">
+              <div class="form-group">
+                <select class="custom-select" [(ngModel)]="selectedLockOption">
+                  <option *ngFor="let option of lockOptions" [value]="option.value">{{ option.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center rowContent autoHP py-2">
+            <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.lock_after_inactivity' | translate }}</div>
+            <div class="col-md-10 px-0 text-left text-truncate">
+              <div class="form-group">
+                <select class="custom-select" [(ngModel)]="selectedInactivityMinutes">
+                  <option *ngFor="let option of inactivityOptions" [value]="option.value">{{ option.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center rowContent autoHP py-2">
+            <div class="col-md-2 px-0 text-truncate dataName">{{ 'APP_SETTINGS.wallet_storage' | translate }}</div>
+            <div class="col-md-10 px-0 text-left text-truncate">
+              <div class="form-group">
+                <select class="custom-select" [(ngModel)]="selectedStorage">
+                  <option *ngFor="let storage of storageOptions" [value]="storage.value">{{ storage.name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center rowAmount">
+            <div class="col-md-2 px-0 text-truncate dataName"></div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 pr-md-0 text-left text-truncate">
+              <button (click)="updateAppSettings()" class="btn btn-primary">{{ 'APP_SETTINGS.app_settings_button' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 px-0 pt-5">
+          <h1>{{ 'APP_SETTINGS.advanced_settings_title' | translate }}</h1>
+        </div>
+      </div>
+      <div class="row defaultTable content appSettings">
+        <div class="col-12">
+          <div class="row align-items-center rowDefault">
+            
+            <div class="col-lg-2 px-lg-0 text-truncate dataName pl-0">{{ 'APP_SETTINGS.advanced_settings_text' | translate }}</div>
+            <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 pr-lg-2 text-left text-truncate">
+              <button (click)="openModal(clearWorkCatche)" class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button1' | translate }}</button>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
+              <button (click)="openModal(clearWalletData)" type="submit" class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button2' | translate }}</button>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
+              <button (click)="openModal(clearAllData)"  class="btn btn-danger">{{ 'APP_SETTINGS.advanced_settings_button3' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </div>		
+    </div>
+    
+    <ng-template #clearWorkCatche>
+      <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg24' | translate">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+        <button class="btn btn-danger" type="button" (click)="clearWorkCache()">{{ 'OK' | translate }}</button>
+      </div>
+    </ng-template>
+    
+    <ng-template #clearWalletData>
+      <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg26' | translate">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+        <button class="btn btn-danger" type="button" (click)="clearAllWalletData()">{{ 'OK' | translate }}</button>
+      </div>
+    </ng-template>
+    
+    <ng-template #clearAllData>
+      <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg28' | translate">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+        <button class="btn btn-danger" type="button" (click)="clearAll()">{{ 'OK' | translate }}</button>
+      </div>
+    </ng-template>
+
+    <div class="container settings">
+        <div class="row defaultTable content nomin" *ngIf="!(accounts).length">
+            <div class="col-12 text-center">
+                {{ 'NO_WALLET_CONFIGURED' | translate }}<a routerLink='/configure-wallet'>{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+            </div>
+          </div>
+        <div class="row" *ngIf="(accounts).length">
+          <div class="col-lg-6 px-0 pr-lg-3">
+            <div class="col-12 px-0" *ngIf="!walletService.isLedgerWallet()">
+              <div class="col-12 px-0">
+                <h1>{{ 'MANAGE_WALLET.change_wallet_password' | translate }}</h1>
+              </div>	
+              <div class="col-12">
+                <div class="row defaultTable content">
+                  <div class="col-12">
+                    <div class="row align-items-center rowContent">
+                      <div class="col-12 px-0">
+                        <div class="input-group">
+                          <input type="password" class="form-control" [(ngModel)]="newPassword" placeholder="{{ 'MANAGE_WALLET.password' | translate }}">
+                          
+                        </div>
+                      </div>
+    
+                    </div>
+                    <div class="row align-items-center rowContent">
+                      <div class="col-12 px-0">
+                        <div class="input-group">
+                          <input type="password" class="form-control" [(ngModel)]="confirmPassword" placeholder="{{ 'MANAGE_WALLET.password_confirm' | translate }}">
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row align-items-center rowButtons">
+                      <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 text-left text-truncate">
+                        <button type="submit" (click)="changePassword()" class="btn btn-primary">{{ 'MANAGE_WALLET.change_wallet_password_button' | translate }}</button>
+                      </div>
+                    </div>
+                  </div>
+    
+                </div>
+              </div>
+            </div>
+    
+         
+    
+            <div class="col-12 px-0">
+              <div class="col-12 px-0 d-block">
+                <div class="seperator"></div>
+              </div>
+              <div class="col-12 px-0">
+                <h1>{{ 'MANAGE_WALLET.export_wallet' | translate }}</h1>
+              </div>	
+              <div class="col-12">
+                <div class="row defaultTable content">
+                  <div class="col-12">
+                    <div class="row align-items-center rowContent autoH">
+                      <div class="col-12 px-0" [innerHTML]="'MANAGE_WALLET.export_wallet_text' | translate">
+                      </div>
+                    </div>
+                    <div *ngIf="showQRExport" >
+                        <div class="row align-items-center rowDefault">
+                            <div class="col-12 px-0 py">
+                              <div class="qrcode"><img [src]="QRExportImg"></div>
+                            </div>
+                          </div>
+                          <div class="row align-items-center rowContent autoH">
+                            <div class="col-12 px-0" [innerHTML]="'MANAGE_WALLET.export_wallet_text2' | translate">
+                            </div>
+                          </div>
+                          <div class="row align-items-center rowContent">
+                            <div class="col-12 px-0">
+                              <div class="input-group">
+                                <input type="text" class="form-control" id="" value="{{ QRExportUrl }}">
+                                
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row align-items-center rowContent">
+                            <div class="col-12 px-0">
+                              <a ngxClipboard [cbContent]="QRExportUrl" (cbOnSuccess)="notifications.sendSuccess('Wallet export copied to clipboard!')" class="icon-text-link"><span class="icon copy"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="row align-items-center rowButtons">
+                      <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 pr-sm-2 text-left text-truncate">
+                        <button type="submit" (click)="exportToFile()" class="btn btn-primary">{{ 'MANAGE_WALLET.export_as_file' | translate }}</button>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 pl-sm-2 text-left text-truncate">
+                        <button type="submit" (click)="exportWallet()" class="btn btn-primary">{{ 'MANAGE_WALLET.export_qr_code' | translate }}</button>
+                      </div>
+                    </div>
+                  </div>
+    
+                </div>
+              </div>
+            </div>
+            <div class="col-12 px-0">
+              <div class="col-12 px-0 d-block">
+                <div class="seperator"></div>
+              </div>
+              <div class="col-12 px-0">
+                <h1>{{ 'MANAGE_WALLET.import_address_book' | translate }}</h1>
+              </div>	
+              <div class="col-12">
+                <div class="row defaultTable content nomin">
+                  <div class="col-12">
+                    <div class="row align-items-center rowContent autoH">
+                      <div class="col-12 px-0">
+                          {{ 'MANAGE_WALLET.import_address_book_text' | translate }}
+                      </div>
+    
+                    </div>
+                    <div class="row align-items-center rowButtons">
+                      <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 pr-sm-2 text-left text-truncate">
+                        <button type="submit" class="btn btn-primary">{{ 'MANAGE_WALLET.upload_file' | translate }}</button>
+                        <input type="file" id="import-from-file" (change)="importFromFile($event.target.files)" multiple>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 px-0 pl-lg-3">
+            <div class="col-12 px-0" *ngIf="!walletService.isLedgerWallet()">
+              <div class="col-12 px-0 d-block d-lg-none">
+                <div class="seperator"></div>
+              </div>
+              <div class="col-12 px-0">
+                <h1>{{ 'MANAGE_WALLET.backup_wallet' | translate }}</h1>
+              </div>	
+              <div class="col-12">
+                <div class="row defaultTable content">
+                  <div class="col-12">
+                    <div class="row align-items-center rowContent autoHP"  *ngIf="wallet.locked">
+                      <div class="col-12 px-0 pb-2">
+                          {{ 'MANAGE_WALLET.backup_wallet_text1' | translate }}
+                      </div>
+                    </div>
+                    <div class="row align-items-center rowContent autoHP" *ngIf="!wallet.locked">
+                      <div class="col-12 px-0 pb-2">
+                          {{ 'MANAGE_WALLET.backup_wallet_text2' | translate }}<br>
+                        <a ngxClipboard [cbContent]="seedMnemonic()" (cbOnSuccess)="notifications.sendSuccess('Wallet mnemonic copied to clipboard!')">{{ 'MANAGE_WALLET.click_here' | translate }}</a> {{ 'MANAGE_WALLET.backup_wallet_text3' | translate }}
+    
+    
+                      </div>
+    
+                    </div>
+                    <div class="row align-items-center rowContent autoHP" *ngIf="!wallet.locked">
+                      <div class="col-12 px-0 py-2">
+                          {{ 'MANAGE_WALLET.backup_wallet_text4' | translate }}<br>
+                        <a ngxClipboard [cbContent]="wallet.seed" (cbOnSuccess)="notifications.sendSuccess('Wallet seed copied to clipboard!')">{{ 'MANAGE_WALLET.click_here' | translate }}</a> {{ 'MANAGE_WALLET.backup_wallet_text3' | translate }}
+                      </div>
+                    </div>
+                  </div>
+    
+                </div>
+              </div>
+            </div>
+            <div class="col-12 px-0">
+              <div class="col-12 px-0 d-block">
+                <div class="seperator"></div>
+              </div>
+              <div class="col-12 px-0">
+                <h1>{{ 'MANAGE_WALLET.export_address_book' | translate }}</h1>
+              </div>	
+              <div class="col-12">
+                <div class="row defaultTable content">
+                  <div class="col-12">
+                    <div class="row align-items-center rowContent autoH">
+                      <div class="col-12 px-0" [innerHTML]="'MANAGE_WALLET.export_address_book_text1' | translate">
+                      </div>
+    
+    
+                    </div>
+                    <div *ngIf="addressBookShowQRExport">
+                    <div class="row align-items-center rowDefault">
+                      
+                      <div class="col-12 px-0 py">
+    
+                        <div class="qrcode"><img [src]="addressBookQRExportImg"></div>
+                      </div>
+    
+    
+                    </div>
+    
+                    <div class="row align-items-center rowContent autoH">
+                      
+                      <div class="col-12 px-0" [innerHTML]="'MANAGE_WALLET.export_address_book_text2' | translate">
+                       </div>
+    
+    
+                    </div>
+                    <div class="row align-items-center rowContent">
+                      <div class="col-12 px-0">
+                        <div class="input-group">
+                          <input type="text" class="form-control"  value="{{ addressBookQRExportUrl }}">
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row align-items-center rowContent">
+                      <div class="col-12 px-0">
+                        <a ngxClipboard [cbContent]="addressBookQRExportUrl" (cbOnSuccess)="notifications.sendSuccess('Address book export copied to clipboard!')" class="icon-text-link"><span class="icon copy"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
+                      </div>
+                    </div>
+                  </div>
+                    
+    
+    
+    
+                    <div class="row align-items-center rowButtons">
+                      <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 pr-sm-2 text-left text-truncate">
+                        <button type="submit" (click)="exportAddressBookToFile()" class="btn btn-primary">{{ 'MANAGE_WALLET.export_as_file' | translate }}</button>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-6 col-12 px-0 pl-sm-2 text-left text-truncate">
+                        <button type="submit" (click)="exportAddressBook()" class="btn btn-primary">{{ 'MANAGE_WALLET.export_qr_code' | translate }}</button>
+                      </div>
+                    </div>
+                  </div>
+    
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    

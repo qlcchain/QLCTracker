@@ -14,7 +14,7 @@ export class TokensComponent implements OnInit {
   reloadTimer = null;
   routerSub = null;
 
-  tokens = {};
+  tokens = [];
 
   constructor(
 		private route: Router,

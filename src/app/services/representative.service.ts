@@ -14,7 +14,7 @@ export class RepresentativeService {
 
 	// Default representatives list
 	defaultRepresentatives = [
-		{
+		/*{
 			id: 'qlc_1t1uynkmrs597z4ns6ymppwt65baksgdjy1dnw483ubzm97oayyo38ertg44',
 			name: 'QLCChain genesis Rep',
 			trusted: true
@@ -42,6 +42,21 @@ export class RepresentativeService {
 		{
 			id: 'qlc_3nygrrfooudn69uw6sbqr3nkcyndta4oqy4938t1eqxr6yjtpi3fndad1gr7',
 			name: 'QLCChain Wallet Rep 5',
+			trusted: true
+		}*/
+		{
+			id: 'qlc_3hw8s1zubhxsykfsq5x7kh6eyibas9j3ga86ixd7pnqwes1cmt9mqqrngap4',
+			name: 'QLCChain genesis Rep',
+			trusted: true
+		},
+		{
+			id: 'qlc_1awe9yegmfkgt1znczg9noet1n3zhkfqfukwfh5cuf5gtjpcjczg7yfwwsp7',
+			name: 'QLCChain Wallet Rep 1',
+			trusted: true
+		},
+		{
+			id: 'qlc_1h14ymitgs6x5895b57wdi7gedop7jmnihxwryhgnr8ry1ecmpg9io6kkbha',
+			name: 'QLCChain Wallet Rep 2',
 			trusted: true
 		}
 	];

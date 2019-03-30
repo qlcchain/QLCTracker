@@ -20,7 +20,7 @@ export class ApiService {
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
 	c = new Client(this.HTTP_RPC, () => {});
 	
-	qlcTokenHash = '';
+	qlcTokenHash = 'a7e8fa30c063e96a489a47bc43909505bd86735da4a109dca28be936118a8582';
 
 	constructor(private http: HttpClient, private node: NodeService) {
 		//this.connectInterval.pipe(takeUntil(() => this.node.status)).subscribe()
@@ -210,7 +210,7 @@ export class ApiService {
 
 	async blocks(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.blocks(count,offset);
-		if (result === null) 
+		if (!result.result && !result.error) 
 			this.reconnect();
 
 		return result;
@@ -262,7 +262,7 @@ export class ApiService {
 	}
 	
 	//TODO: remove token hash
-	async accountInfoByToken(account, tokenHash): Promise<any> {
+	async accountInfoByToken(account, tokenHash = this.qlcTokenHash): Promise<any> {
 		const am = await this.accountInfo(account);
 		/*if (am.error) {
 			return null;
@@ -277,7 +277,7 @@ export class ApiService {
 
 	async phoneBlocks(phoneNumber:string): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.phoneBlocks(phoneNumber);
-		if (result === null) 
+		if (!result.result && !result.error) 
 			this.reconnect();
 
 		return result;

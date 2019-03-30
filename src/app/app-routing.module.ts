@@ -15,6 +15,9 @@ import { ImportWalletComponent } from './components/import-wallet/import-wallet.
 import { MyaccountsComponent } from './components/myaccounts/myaccounts.component';
 import { SendComponent } from './components/send/send.component';
 import { SearchComponent } from './components/search/search.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { MyrepresentativesComponent } from './components/myrepresentatives/myrepresentatives.component';
+import { ManageRepresentativesComponent } from './components/manage-representatives/manage-representatives.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -39,6 +42,10 @@ const routes: Routes = [
   { path: 'send', component: SendComponent },
   { path: 'send/:account', component: SendComponent },
   { path: 'search/:hash', component: SearchComponent },
+  { path: 'settings', component: SettingsComponent },
+  { path: 'myrepresentatives', component: MyrepresentativesComponent },
+  { path: 'manage-representatives', component: ManageRepresentativesComponent },
+  
   { path: '**', component: HomeComponent },
 ];
 

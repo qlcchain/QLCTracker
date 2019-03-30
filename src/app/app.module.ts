@@ -41,6 +41,10 @@ import { MyaccountsComponent } from './components/myaccounts/myaccounts.componen
 import { SendComponent } from './components/send/send.component';
 import { FiatPipe } from './pipes/fiat.pipe';
 import { SearchComponent } from './components/search/search.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { MyrepresentativesComponent } from './components/myrepresentatives/myrepresentatives.component';
+import { SqueezePipe } from './pipes/squeeze.pipe';
+import { ManageRepresentativesComponent } from './components/manage-representatives/manage-representatives.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -69,7 +73,11 @@ export function createTranslateLoader(http: HttpClient) {
     MyaccountsComponent,
     SendComponent,
     FiatPipe,
-    SearchComponent
+    SearchComponent,
+    SettingsComponent,
+    MyrepresentativesComponent,
+    SqueezePipe,
+    ManageRepresentativesComponent
   ],
   imports: [
     BrowserModule,
