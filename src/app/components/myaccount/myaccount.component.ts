@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { NodeService } from 'src/app/services/node.service';
 import { Router, ChildActivationEnd, ActivatedRoute } from '@angular/router';
@@ -11,6 +11,9 @@ import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { QLCBlockService } from 'src/app/services/qlc-block.service';
 import { TranslateService } from '@ngx-translate/core';
 import BigNumber from 'bignumber.js';
+import { AddressBookService } from 'src/app/services/address-book.service';
+import * as QRCode from 'qrcode';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-myaccount',
@@ -33,9 +36,13 @@ export class MyaccountComponent implements OnInit {
 	accountMeta: any = {};
 	accountId = '';
 
-	walletAccount = null;
-
-	showEditAddressBook = false;
+  walletAccount = null;
+  
+	modalRef: BsModalRef;
+  
+  qrCodeImage = null;
+  
+  showEditName = false;
 	addressBookTempName = '';
 	addressBookModel = '';
 	showEditRepresentative = false;
@@ -50,6 +57,8 @@ export class MyaccountComponent implements OnInit {
 	msg3 = '';
 	msg4 = '';
 	msg5 = '';
+	msgEdit1 = '';
+	msgEdit2 = '';
 
   constructor(
 		private router: ActivatedRoute,
@@ -64,6 +73,8 @@ export class MyaccountComponent implements OnInit {
 		private qlcBlock: QLCBlockService,
 		private trans: TranslateService,
 		private notificationService: NotificationService,
+		private addressBook: AddressBookService,
+		private modalService: BsModalService
   ) { }
 
   async ngOnInit() {
@@ -87,6 +98,8 @@ export class MyaccountComponent implements OnInit {
 		this.trans.get('RECEIVE_WARNINGS.msg3').subscribe((res: string) => { this.msg3 = res;	});
 		this.trans.get('RECEIVE_WARNINGS.msg4').subscribe((res: string) => { this.msg4 = res;	});
 		this.trans.get('RECEIVE_WARNINGS.msg5').subscribe((res: string) => { this.msg5 = res;	});
+		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg5').subscribe((res: string) => {	this.msgEdit1 = res; });
+		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg6').subscribe((res: string) => {	this.msgEdit2 = res; });
 	}
 
 	load() {
@@ -108,7 +121,10 @@ export class MyaccountComponent implements OnInit {
     this.pendingBlocks = [];
     this.accountId = this.router.snapshot.params.account;
     if (this.accountId == undefined || this.accountId == '')
-		  this.accountId = this.wallet.accounts[0].accountMeta.account;
+      this.accountId = this.wallet.accounts[0].accountMeta.account;
+
+    this.addressBookEntry = this.addressBook.getAccountName(this.accountId);
+		this.addressBookModel = this.addressBookEntry || '';
     console.log(this.wallet);
     console.log(this.accountId);
 		const tokenMap = {};
@@ -132,7 +148,7 @@ export class MyaccountComponent implements OnInit {
     }
     
     let accountMeta = [];
-    if (accountInfo.result.tokens && Array.isArray(accountInfo.result.tokens)) {
+    if (accountInfo.result && accountInfo.result.tokens && Array.isArray(accountInfo.result.tokens)) {
       accountInfo.result.tokens.forEach(token => {
         accountMeta[token.tokenName] = token;
       });
@@ -185,7 +201,8 @@ export class MyaccountComponent implements OnInit {
 
 		await this.getAccountHistory(this.accountId);
 
-    
+    const qrCode = await QRCode.toDataURL(`${this.accountId}`);
+		this.qrCodeImage = qrCode;
   }
 
 
@@ -243,5 +260,38 @@ export class MyaccountComponent implements OnInit {
 		await this.walletService.reloadBalances();
 		//await this.loadPendingForAll();
   }
+
+  editName() {
+		this.showEditName = true;
+		this.addressBookTempName = this.addressBookModel;
+	}
+	editNameCancel() {
+		this.showEditName = false;
+		this.addressBookModel = this.addressBookTempName;
+		this.addressBookTempName = '';
+	}
+	async editNameSave() {
+		const addressBookName = this.addressBookModel.trim();
+		if (!addressBookName) {
+			this.addressBook.deleteAddress(this.accountId);
+			this.notificationService.sendSuccess(this.msgEdit1);
+			this.showEditName = false;
+			return;
+		}
+
+		try {
+			await this.addressBook.saveAddress(this.accountId, addressBookName);
+		} catch (err) {
+			this.notificationService.sendError(err.message);
+			return;
+		}
+
+		this.notificationService.sendSuccess(this.msgEdit2);
+		this.showEditName = false;
+  }
+  
+  openModal(template: TemplateRef<any>) {
+		this.modalRef = this.modalService.show(template);
+	}
 
 }

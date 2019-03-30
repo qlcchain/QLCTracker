@@ -167,6 +167,15 @@ export class ApiService {
 		}
 	}
 
+	async accountBlocksCount(account): Promise<{ result: any; error?: string }> {
+		const result = await this.c.buildinLedger.accountBlocksCount(account);
+		if (!result.result && !result.error) 
+			this.reconnect();
+		return result;
+	}
+
+	
+
 	async accountHistory(account, count = 25): Promise<{ result: any; error?: string }> {
 		try {
 			return await this.c.request(methods.ledger.accountHistoryTopn, account, count);

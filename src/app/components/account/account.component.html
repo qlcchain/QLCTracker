@@ -18,7 +18,9 @@
             <div class="col-12">Address hash</div>
           </div>
           <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
-            <div class="col-12 text-break">{{accountId}} <a ngxClipboard [cbContent]="accountId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a> <a href="#"><img src="assets/img/icons/qr-code.svg" class="img-qr" data-toggle="tooltip" data-placement="top" title="Show QR code"></a></div>
+            <div class="col-12 text-break">{{accountId}} 
+              <a ngxClipboard [cbContent]="accountId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a> 
+              <a (click)="openModal(qrCode)"><img src="assets/img/icons/qr-code.svg" class="img-qr" data-toggle="tooltip" data-placement="top" title="Show QR code"></a></div>
           </div>
           
         </div>
@@ -53,7 +55,7 @@
             <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc }} QLC</div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">= 449,210.25 $</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">= - $</span></div>
           </div>
         </div>
       </div>
@@ -69,7 +71,7 @@
             <div class="col-12 pb-1">{{ pendingSum | qlc }} QLC</div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">= 4.49 $</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">= - $</span></div>
           </div>
         </div>
       </div>
@@ -82,10 +84,10 @@
             <div class="col-12">Total transactions</div>
           </div>
           <div class="row qlc-table-row-blue row-text-mid mt-3 pb-0">
-            <div class="col-12 pb-1">93,235</div>
+            <div class="col-12 pb-1">{{ accountBlocksCount }}</div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-lightblue">S: 31,004 / R: 59,201 / C: 3,030</span></div>
+            <!--<div class="col-12 text-wrap pt-1"><span class="text-lightblue">S: 31,004 / R: 59,201 / C: 3,030</span></div>-->
           </div>
         </div>
       </div>
@@ -259,7 +261,7 @@
 
       <!-- BUTTON -->
       <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center">
-        <a href="index_01_list_transactions.html" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+        <a [routerLink]="'/transactions/' + accountId" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
       </div>
 
     </div>
@@ -273,3 +275,13 @@
   <div class="row">
   </div>
 </div>
+
+<ng-template #qrCode>
+  <div class="modal-body">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        <div class="qrcode"><img *ngIf="qrCodeImage" [src]="qrCodeImage" /></div>
+    
+  </div>
+</ng-template>

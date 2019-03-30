@@ -9,12 +9,12 @@
                     <h1>Wallet Details</h1>
                 </div>
             </div>
-
+            
         </div>
     </div>
 </div>
 
-    
+
 <div class="container pb-2">
     <div class="row">
         <!-- LEFT -->
@@ -30,14 +30,33 @@
                                     <div class="col-12">Address</div>
                                 </div>
                                 <div class="row qlc-table-row-blue row-text-mid mt-3">
-                                    <div class="col-12 text-break pr-3">{{ accountId }} <a ngxClipboard [cbContent]="accountId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+                                    <div class="col-12 text-break pr-3"><span *ngIf="addressBookModel != ''">{{ addressBookModel }} - </span>{{ accountId }} <a ngxClipboard [cbContent]="accountId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+                                    <div class="col-12 px-0" *ngIf="showEditName">
+                                        <div class="editNameButtons">
+                                            <div class="row">
+                                                <div class="col-md-12 col-12 py-3">
+                                                    <input type="text" class="form-control" [(ngModel)]="addressBookModel" />
+                                                </div>
+                                                <div class="col-md-4 col-12 ">
+                                                    <button class="btn btn-primary" type="button" (click)="editNameCancel()">
+                                                        {{ 'CANCEL' | translate }}
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-4 col-12 py-3 py-md-0 ">
+                                                    <button class="btn btn-primary" type="button" (click)="editNameSave()">
+                                                        {{ 'OK' | translate }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            
-
+                
+                
                 <div class="row">
                     <!-- BALANCE QLC -->
                     <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
@@ -72,7 +91,7 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     
                     <!-- BALANCE Q-SMS -->
                     <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
@@ -150,16 +169,16 @@
                     </div>  
                 </div>
             </div>
-
-
+            
+            
         </div>
-
+        
         <!-- RIGHT -->
         <div class="col-lg-3 col-md-12 col-sm-12 order-lg-2 order-1 pl-0 pr-0 mb-xs-3 mb-3">
             
             <div class="col-12 pl-2 pr-2 h-100">
                 <div class="content-box-darkblue h-100 pb-4 pr-0">
-
+                    
                     <div class="container">
                         <div class="row qlc-table-header-blue">
                             <div class="col-12">Account Actions</div>
@@ -167,17 +186,17 @@
                         <div class="row pt-3 pr-0">
                             <div class="col-12 pr-0">
                                 <a routerLink="/send/{{ accountId }}" class="menu-myaccount menu-icon-send pr-0">Send Tokens</a>
-                                <a href="#" class="menu-myaccount menu-icon-qrcode pr-0">Show QR Code</a>
-                                <a href="#" class="menu-myaccount menu-icon-rename pr-0">Rename Account</a>
-                                <a href="#" class="menu-myaccount menu-icon-details pr-0">Account Details</a>
+                                <a (click)="openModal(qrCode)" class="menu-myaccount menu-icon-qrcode pr-0">Show QR Code</a>
+                                <a (click)="editName()" class="menu-myaccount menu-icon-rename pr-0">Rename Account</a>
+                                <a routerLink="/account/{{ accountId }}" class="menu-myaccount menu-icon-details pr-0">Account Details</a>
                             </div>
                         </div>
                         
                     </div>
-
+                    
                 </div>
             </div>
-
+            
         </div>
         
     </div>
@@ -195,7 +214,7 @@
                     <h1>Transactions</h1>
                 </div>
             </div>
-
+            
         </div>
     </div>
 </div>
@@ -204,7 +223,15 @@
 
 
 
-
+<ng-template #qrCode>
+  <div class="modal-body">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        <div class="qrcode"><img *ngIf="qrCodeImage" [src]="qrCodeImage" /></div>
+    
+  </div>
+</ng-template>
 
 
 
@@ -226,217 +253,217 @@
 
 
 <!--
-
-
-
-
-
-
-
-
-
-
-<div class="container mt-0 pt-0 mt-0 mb-2 qlc-content-first">
-  <div class="row pt-0 mt-0">
-
-    <div class="col-lg-6 pl-0 pr-0 pt-0">
-              
-      <div class="container mt-0 mb-4">
-          <div class="row">
-
-              <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                  <div class="content-title">
-                      <h1>Send messages</h1>
-                  </div>
-              </div>
-
-              <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                  <div class="content-box-white">
-                      <form>
-                          <div class="container">
-  
-                              <div class="row qlc-table-header-white pb-4">
-                                  <div class="col-12 pl-3 pb-0 pr-3">Message content</div>
-                                  <div class="col-12 pl-3 pt-2 pr-3"><textarea class="form-control h-120"></textarea></div>
-                                  <div class="col-12 pl-3 pb-0 pt-4 pr-3">Phone numbers (separate by commas)</div>
-                                  <div class="col-12 pl-3 pt-2 pr-3"><textarea class="form-control h-120"></textarea></div>
-                                  <div class="col-12 pl-3 pb-0 pt-4 pr-3">Campaign tag/key</div>
-                                  <div class="col-12 pl-3 pt-2 pr-3 pb-4"><input type="text" class="form-control" /></div>
-                              </div>
-                              <div class="row qlc-table-header pl-2">
-                                  <div class="col-6 pb-4 pr-3 pl-4">
-                                      Number of messages<br>
-                                      <div class="row-text-mid text-blue pt-2 pb-0 pl-0 text-lowercase"><span class="num-msg">0</span> messages</div>
-                                  </div>
-                                  <div class="col-6 pb-4 pr-3 pl-4">
-                                      Estimated price<br>
-                                      <div class="row-text-mid text-blue pt-2 pb-0 pl-0"><span class="num-price">0.00</span> QLCX</div>
-                                  </div>
-                                  
-                              </div>
-                              <div class="row qlc-table-row-white">
-                                  <div class="col-12 pl-4 pb-2 pr-3 pt-4 text-center">
-                                      <a href="index_01_list_transactions.html" class="btn btn-primary btn-blue mt-1">SEND MESSAGES</a>
-                                  </div>
-                              </div>
-
-                          </div>
-                      </form>
-                  </div>
-              </div>
-
-          </div>
-      </div>
-
-  </div>
-
-    <div class="col-lg-6 pl-0 pr-0 pt-0">
-              
-              <div class="container mt-0 mb-4">
-                  <div class="row">
-
-                      <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                          <div class="content-title">
-                              <h1>Account details</h1>
-                          </div>
-                      </div>
-
-
-                      <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
-                          <div class="content-box-white">
-                              <div class="container">
-                                  <div class="row qlc-table-header-white">
-                                      <div class="col-12">Account balance</div>
-                                  </div>
-                                  <div class="row qlc-table-row-white row-text-mid mt-3 mb-0 pb-0">
-                                          <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc }} QLC</div>
-                                      </div>
-                                      <div class="row qlc-table-row-white sub-page pt-0">
-                                          <div class="col-12 text-wrap pt-1"><span class="text-blue">= 8,210.25 $</span></div>
-                                      </div>
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
-                          <div class="content-box-white">
-                              <div class="container">
-                                  <div class="row qlc-table-header-white">
-                                      <div class="col-12">Total costs</div>
-                                  </div>
-                                  <div class="row qlc-table-row-white row-text-mid mt-3 mb-0 pb-0">
-                                      <div class="col-12 pb-1">1,205 QLCX</div>
-                                  </div>
-                                  <div class="row qlc-table-row-white sub-page pt-0">
-                                      <div class="col-12 text-wrap pt-1"><span class="text-blue">= 488.50 $</span></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
-                          <div class="content-box-blue">
-                              <div class="container">
-                                  <div class="row qlc-table-header-blue">
-                                      <div class="col-12">Number of campaigns</div>
-                                  </div>
-                                  <div class="row qlc-table-row-blue row-text-mid mt-3 mb-2">
-                                      <div class="col-12">47</div>
-                                  </div>
-                                  <div class="row qlc-table-header-darkblue">
-                                      <div class="col-12"><a href="index_01_list_transactions.html"><span class="qlc-icon icon-arrow-right-bluelight"></span>All campaigns</a></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-
-                      <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
-                          <div class="content-box-blue">
-                              <div class="container">
-                                  <div class="row qlc-table-header-blue">
-                                      <div class="col-12">Total messages sent</div>
-                                  </div>
-                                  <div class="row qlc-table-row-blue row-text-mid mt-3 mb-2">
-                                      <div class="col-12">2,410</div>
-                                  </div>
-                                  <div class="row qlc-table-header-darkblue">
-                                      <div class="col-12"><a href="index_01_list_transactions.html"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-
-
-                      <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2 mt-4">
-                          <div class="content-title">
-                              <h1>Pending messages</h1>
-                          </div>
-                      </div>
-
-                      <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                          <div class="content-box-white">
-              
-                              <div class="container">
-      
-                                  <div class="row qlc-table-header">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate">Transaction ID</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 d-none d-sm-block">Phone number</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-6 col-sm-4 col-8 pr-4 text-right">Time</div>
-                                  </div>
-      
-                                  <div class="row qlc-table-row closed" *ngFor="let pending of pendingBlocks">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a [routerLink]="'/transaction/' + pending.hash">{{ pending.hash }}</a></div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">N/A</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">{{ pending.timestamp | date: 'short' }}</span></div>
-                                  </div>
-
-                              </div>
-                          
-                          </div>
-                      </div>
-
-
-                      <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                          <div class="content-title">
-                              <h1>Settled messages</h1>
-                          </div>
-                      </div>
-a
-                      <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                          <div class="content-box-white">
-              
-                              <div class="container">
-      
-                                  <div class="row qlc-table-header">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate">Transaction ID</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 d-none d-sm-block">Phone number</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-6 col-sm-4 col-8 pr-4 text-right">Time</div>
-                                  </div>
-      
-                                  <div class="row qlc-table-row closed" *ngFor="let history of accountHistory">
-                                      <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a  routerLink="/transaction/{{ history.hash }}">{{ history.hash }}</a></div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">N/A</div>
-                                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">{{ history.timestamp * 1000 | date: 'short' }}</span></div>
-                                  </div>
-
-                              </div>
-                          
-                          </div>
-                      </div>
-
-
-                  </div>
-              </div>
-
-          </div>
-
-  </div>
-  </div>
-
-
-<div class="container mt-4 mb-4">
-  <div class="row">
-  </div>
-</div>
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="container mt-0 pt-0 mt-0 mb-2 qlc-content-first">
+        <div class="row pt-0 mt-0">
+            
+            <div class="col-lg-6 pl-0 pr-0 pt-0">
+                
+                <div class="container mt-0 mb-4">
+                    <div class="row">
+                        
+                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                            <div class="content-title">
+                                <h1>Send messages</h1>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                            <div class="content-box-white">
+                                <form>
+                                    <div class="container">
+                                        
+                                        <div class="row qlc-table-header-white pb-4">
+                                            <div class="col-12 pl-3 pb-0 pr-3">Message content</div>
+                                            <div class="col-12 pl-3 pt-2 pr-3"><textarea class="form-control h-120"></textarea></div>
+                                            <div class="col-12 pl-3 pb-0 pt-4 pr-3">Phone numbers (separate by commas)</div>
+                                            <div class="col-12 pl-3 pt-2 pr-3"><textarea class="form-control h-120"></textarea></div>
+                                            <div class="col-12 pl-3 pb-0 pt-4 pr-3">Campaign tag/key</div>
+                                            <div class="col-12 pl-3 pt-2 pr-3 pb-4"><input type="text" class="form-control" /></div>
+                                        </div>
+                                        <div class="row qlc-table-header pl-2">
+                                            <div class="col-6 pb-4 pr-3 pl-4">
+                                                Number of messages<br>
+                                                <div class="row-text-mid text-blue pt-2 pb-0 pl-0 text-lowercase"><span class="num-msg">0</span> messages</div>
+                                            </div>
+                                            <div class="col-6 pb-4 pr-3 pl-4">
+                                                Estimated price<br>
+                                                <div class="row-text-mid text-blue pt-2 pb-0 pl-0"><span class="num-price">0.00</span> QLCX</div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row qlc-table-row-white">
+                                            <div class="col-12 pl-4 pb-2 pr-3 pt-4 text-center">
+                                                <a href="index_01_list_transactions.html" class="btn btn-primary btn-blue mt-1">SEND MESSAGES</a>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="col-lg-6 pl-0 pr-0 pt-0">
+                
+                <div class="container mt-0 mb-4">
+                    <div class="row">
+                        
+                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                            <div class="content-title">
+                                <h1>Account details</h1>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+                            <div class="content-box-white">
+                                <div class="container">
+                                    <div class="row qlc-table-header-white">
+                                        <div class="col-12">Account balance</div>
+                                    </div>
+                                    <div class="row qlc-table-row-white row-text-mid mt-3 mb-0 pb-0">
+                                        <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc }} QLC</div>
+                                    </div>
+                                    <div class="row qlc-table-row-white sub-page pt-0">
+                                        <div class="col-12 text-wrap pt-1"><span class="text-blue">= 8,210.25 $</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+                            <div class="content-box-white">
+                                <div class="container">
+                                    <div class="row qlc-table-header-white">
+                                        <div class="col-12">Total costs</div>
+                                    </div>
+                                    <div class="row qlc-table-row-white row-text-mid mt-3 mb-0 pb-0">
+                                        <div class="col-12 pb-1">1,205 QLCX</div>
+                                    </div>
+                                    <div class="row qlc-table-row-white sub-page pt-0">
+                                        <div class="col-12 text-wrap pt-1"><span class="text-blue">= 488.50 $</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+                            <div class="content-box-blue">
+                                <div class="container">
+                                    <div class="row qlc-table-header-blue">
+                                        <div class="col-12">Number of campaigns</div>
+                                    </div>
+                                    <div class="row qlc-table-row-blue row-text-mid mt-3 mb-2">
+                                        <div class="col-12">47</div>
+                                    </div>
+                                    <div class="row qlc-table-header-darkblue">
+                                        <div class="col-12"><a href="index_01_list_transactions.html"><span class="qlc-icon icon-arrow-right-bluelight"></span>All campaigns</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+                            <div class="content-box-blue">
+                                <div class="container">
+                                    <div class="row qlc-table-header-blue">
+                                        <div class="col-12">Total messages sent</div>
+                                    </div>
+                                    <div class="row qlc-table-row-blue row-text-mid mt-3 mb-2">
+                                        <div class="col-12">2,410</div>
+                                    </div>
+                                    <div class="row qlc-table-header-darkblue">
+                                        <div class="col-12"><a href="index_01_list_transactions.html"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2 mt-4">
+                            <div class="content-title">
+                                <h1>Pending messages</h1>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                            <div class="content-box-white">
+                                
+                                <div class="container">
+                                    
+                                    <div class="row qlc-table-header">
+                                        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate">Transaction ID</div>
+                                        <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 d-none d-sm-block">Phone number</div>
+                                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-4 col-8 pr-4 text-right">Time</div>
+                                    </div>
+                                    
+                                    <div class="row qlc-table-row closed" *ngFor="let pending of pendingBlocks">
+                                        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a [routerLink]="'/transaction/' + pending.hash">{{ pending.hash }}</a></div>
+                                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">N/A</div>
+                                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">{{ pending.timestamp | date: 'short' }}</span></div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+                            <div class="content-title">
+                                <h1>Settled messages</h1>
+                            </div>
+                        </div>
+                        a
+                        <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+                            <div class="content-box-white">
+                                
+                                <div class="container">
+                                    
+                                    <div class="row qlc-table-header">
+                                        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate">Transaction ID</div>
+                                        <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 d-none d-sm-block">Phone number</div>
+                                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-4 col-8 pr-4 text-right">Time</div>
+                                    </div>
+                                    
+                                    <div class="row qlc-table-row closed" *ngFor="let history of accountHistory">
+                                        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a  routerLink="/transaction/{{ history.hash }}">{{ history.hash }}</a></div>
+                                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">N/A</div>
+                                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">{{ history.timestamp * 1000 | date: 'short' }}</span></div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+    
+    
+    <div class="container mt-4 mb-4">
+        <div class="row">
+        </div>
+    </div>
+    
 -->
