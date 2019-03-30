@@ -19,6 +19,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'transactions', component: TransactionsComponent },
   { path: 'transactions/:page', component: TransactionsComponent },
+  { path: 'transactions/:page/:account', component: TransactionsComponent },
   { path: 'transaction', component: TransactionComponent },
   { path: 'transaction/:transaction', component: TransactionComponent },
   { path: 'accounts', component: AccountsComponent },

@@ -176,9 +176,9 @@ export class ApiService {
 
 	
 
-	async accountHistory(account, count = 25): Promise<{ result: any; error?: string }> {
+	async accountHistory(account, count = 25, offset = 0): Promise<{ result: any; error?: string }> {
 		try {
-			return await this.c.request(methods.ledger.accountHistoryTopn, account, count);
+			return await this.c.request(methods.ledger.accountHistoryTopn, account, count, offset);
 		} catch (err) {
 			return err;
 		}

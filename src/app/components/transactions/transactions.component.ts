@@ -15,7 +15,8 @@ export class TransactionsComponent implements OnInit {
 	transactionsCount = 0;
 	pendingBlocks = [];
 
-  accountMeta: any = {};
+	accountMeta: any = {};
+	account = '';
 
 	routerSub = null;
 	
@@ -62,7 +63,11 @@ export class TransactionsComponent implements OnInit {
 	} 
 	
 	goTo(page) {
-    this.router.navigate(['/transactions/'+page], { relativeTo: this.route });
+		if (this.account != null && this.account != '') {
+			this.router.navigate(['/transactions/'+page+'/'+this.account], { relativeTo: this.route });
+		} else {
+			this.router.navigate(['/transactions/'+page], { relativeTo: this.route });
+		}
   }
 
   async loadTransactions() {
@@ -124,14 +129,30 @@ export class TransactionsComponent implements OnInit {
   }
 
   async getTransactions() {
-		const transactionsCount = await this.api.blocksCount();
-		console.log(transactionsCount);
-		if (!transactionsCount.error) {
-			this.transactionsCount = transactionsCount.result.count;
-			this.setPages();
+		this.account = this.route.snapshot.params.account;
+		let transactionsCount = null;
+		if (this.account != null && this.account != '') {
+			transactionsCount = await this.api.accountBlocksCount(this.account);
+			if (!transactionsCount.error) {
+				this.transactionsCount = transactionsCount.result;
+				this.setPages();
+			}
+		} else {
+			transactionsCount = await this.api.blocksCount();
+			if (!transactionsCount.error) {
+				this.transactionsCount = transactionsCount.result.count;
+				this.setPages();
+			}
 		}
+		
 
-		const transactions = await this.api.blocks(this.pageSize,this.offSet);
+		let transactions = null;
+		if (this.account != null && this.account != '') {
+			transactions = await await this.api.accountHistory(this.account,this.pageSize,this.offSet);
+		} else {
+			transactions = await await this.api.blocks(this.pageSize,this.offSet);
+		}
+		//transactions = await this.api.blocks(this.pageSize,this.offSet);
 		// const additionalBlocksInfo = [];
 
 		this.transactions = [];

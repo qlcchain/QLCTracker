@@ -180,7 +180,7 @@
                   <br class="hide-mobile"> Jan 14, 2019 19:00:00
                 </div>-->
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
-                  {{ history.timestamp * 1000 | date: 'short' }}
+                  {{ pending.timestamp * 1000 | date: 'short' }}
                 </div>
                 <div class="container transaction-details">
   
@@ -263,8 +263,8 @@
       </div>
 
       <!-- BUTTON -->
-      <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center">
-        <a [routerLink]="'/transactions/' + accountId" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+      <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="accountBlocksCount>pageSize">
+        <a [routerLink]="'/transactions/1/' + accountId" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
       </div>
 
     </div>

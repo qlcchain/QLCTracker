@@ -18,7 +18,7 @@ export class AccountComponent implements OnInit {
 	accountHistory: any[] = [];
 	pendingBlocks = [];
 	pendingSum = 0;
-	pageSize = 25;
+	pageSize = 10;
 
 	accountBlocksCount = 0;
 	
@@ -110,17 +110,18 @@ export class AccountComponent implements OnInit {
 					if (!pendingResult.hasOwnProperty(account)) {
 						continue;
 					}
+					
 					pendingResult[account].forEach(pending => {
+						console.log(pending)
 						this.pendingBlocks.push({
-							account: pending.pendingInfo.source,
-							amount: pending.pendingInfo.amount,
+							account: pending.source,
+							amount: pending.amount,
 							token: pending.tokenName,
-							// TODO: fill timestamp
-							// timestamp: accountPending.blocks[block].timestamp,
-							//addressBookName: this.addressBook.getAccountName(pending.pendingInfo.source) || null,
+							timestamp: pending.timestamp,
+							//addressBookName: this.addressBook.getAccountName(pending.source) || null,
 							hash: pending.hash
 						});
-						this.pendingSum += parseInt(pending.pendingInfo.amount)
+						this.pendingSum += parseInt(pending.amount)
 					});
 				}
 				console.log(this.pendingBlocks);
@@ -163,9 +164,9 @@ export class AccountComponent implements OnInit {
 		
 		async getAccountHistory(account, resetPage = true) {
 			if (resetPage) {
-				this.pageSize = 25;
+				this.pageSize = 10;
 			}
-			const accountHistory = await this.api.accountHistory(account, this.pageSize);
+			const accountHistory = await this.api.accountHistory(account, this.pageSize, 0);
 			// const additionalBlocksInfo = [];
 			
 			this.accountHistory = [];
