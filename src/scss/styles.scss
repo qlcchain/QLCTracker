@@ -621,6 +621,24 @@ div[class*="col-"] a:hover {
     background-size: auto 145%;
 }
 
+.bg-blue-accounts {
+    background: #2069c2 url("../assets/img/bg_box_accounts.png") no-repeat right top;
+    background-size: auto;
+}
+.bg-blue-accounts-sub {
+    background: #2069c2 url("../assets/img/bg_box_accounts.png") no-repeat right top;
+    background-size: auto 145%;
+}
+
+.bg-blue-tokens {
+    background: #2069c2 url("../assets/img/bg_box_tokens.png") no-repeat right top;
+    background-size: auto;
+}
+.bg-blue-tokens-sub {
+    background: #2069c2 url("../assets/img/bg_box_tokens.png") no-repeat right top;
+    background-size: auto 145%;
+}
+
 .bg-type-send {
     background: #c10f0f url("../assets/img/bg_box_type_send.png") no-repeat right top !important;
     background-size: auto 100% !important;
@@ -875,64 +893,6 @@ div[class*="col-"] a:hover {
     background: url("../assets/img/qlc-icon-status-avoid.svg") no-repeat center center;
     background-size: 100% 100%;
 }
-
-
-
-/* BUTTONS */
-
-.btn-primary {
-    color: #fff !important;
-    font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
-    font-size: 12px;
-    text-transform: uppercase;
-    font-weight: 700;
-    padding: 16px 60px;
-    border-radius: 0 !important;
-    min-width: 245px;
-    min-height: 50px;
-    border: 0px !important;
-}
-.btn-primary:hover, .btn-primary:active {
-    color:#fff;
-    text-decoration: none !important;
-}
-.btn-blue {
-    background: #2069c2;
-}
-.btn-blue:hover, .btn-blue:active, .btn-blue:focus {
-    background: #00479d;
-    color:#ffffff;
-}
-.btn-white {
-    background: #ffffff;
-    color: #595757 !important;
-}
-.btn-white:hover, .btn-white:active, .btn-white:focus, .btn-white.active {
-    background: #f9f9fb !important;
-    color: #595757 !important;
-}
-.btn-primary.btn-box {
-    height: 36px;
-    min-height: 36px;
-    width: auto;
-    min-width: auto;
-    padding: 10px 14px !important;
-}
-
-.btn-grey {
-    background:#c0c0c5 !important;
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1201,6 +1161,32 @@ pre {
 }
 
 
+/* BUTTONS */
+
+.btn-primary {
+    color: #fff !important;
+    font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 16px 60px;
+    border-radius: 0 !important;
+    min-width: 245px;
+    min-height: 50px;
+    border: 0px !important;
+}
+.btn-primary:hover, .btn-primary:active {
+    color:#fff;
+    text-decoration: none !important;
+}
+.btn-blue {
+    background: #2069c2;
+}
+.btn-blue:hover, .btn-blue:active, .btn-blue:focus {
+    background: #00479d;
+    color:#ffffff;
+}
+
 .btn-primary {
     background-color:#005cbf !important;
 }
@@ -1277,6 +1263,27 @@ pre {
 .button-newaccount:hover {
     background-color: #005cbf !important;
 }
+
+.btn-white {
+    background: #ffffff !important;
+    color: #595757 !important;
+}
+.btn-white:hover, .btn-white:active, .btn-white:focus, .btn-white.active {
+    background: #f9f9fb !important;
+    color: #595757 !important;
+}
+.btn-primary.btn-box {
+    height: 36px;
+    min-height: 36px;
+    width: auto;
+    min-width: auto;
+    padding: 10px 14px !important;
+}
+
+.btn-grey {
+    background:#c0c0c5 !important;
+}
+
 
 .cursor-pointer {
     cursor: pointer;

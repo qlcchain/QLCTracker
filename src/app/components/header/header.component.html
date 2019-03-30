@@ -95,14 +95,16 @@
 
 <ng-template #dev>
   <div class="modal-body">
-        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-                <span aria-hidden="true">&times;</span>
-              </button>
-        <div class="row text-center">
-          <div class="col-12">
-            Under development.
-          </div>
-        </div>
-    
+
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="row text-center">
+      <div class="col-12">
+        <h1 class="pt-5">Under development</h1>
+        <p class="pb-5">This feature will be available soon.</p>
+      </div>
+    </div>
+
   </div>
 </ng-template>
