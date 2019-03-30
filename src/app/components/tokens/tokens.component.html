@@ -19,18 +19,18 @@
           <div class="container">
             
             <div class="row qlc-table-header">
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">TOKEN NAME</div>
-                <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">SYMBOL</div>
-                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">TOTAL SUPPLY</div>
-                <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">Decimals</div>
-                <div class="col-xl-4 col-lg-5 col-md-5 col-sm-6 col-7 d-none d-lg-block text-right">Owner</div> 
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-5">TOKEN NAME</div>
+                <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block">SYMBOL</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-5 col-2 d-none d-sm-block text-right">TOTAL SUPPLY</div>
+                <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block text-right">Decimals</div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-7 text-right">Owner</div> 
             </div>
             <div class="row qlc-table-row closed" *ngFor="let token of tokens">
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">{{ token.tokenName }}</div>
-                <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">{{ token.tokenSymbol }}</div>
-                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">{{ token.totalSupply }}</div>
-                <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">{{ token.decimals }}</div>
-                <div class="col-xl-4 col-lg-5 col-md-5 col-sm-6 col-7 d-none d-lg-block text-right text-truncate" [routerLink]="'/account/' + (token.owner)">{{ token.owner }}</div> 
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-5"><img src="../../../assets/img/token-{{ token.tokenName | lowercase }}.png" class="table-token"> {{ token.tokenName }}</div>
+                <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block">{{ token.tokenSymbol }}</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-5 col-2 d-none d-sm-block text-right">{{ token.totalSupply | qlc | currency:'':'':'1.0-0' }}</div>
+                <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block text-right">{{ token.decimals }}</div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-7 text-right text-truncate pr-4"><a [routerLink]="'/account/' + (token.owner)">{{ token.owner }}</a></div> 
               <div class="container transaction-details"></div>
             </div>
           </div>

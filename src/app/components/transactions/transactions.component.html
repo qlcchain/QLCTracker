@@ -43,7 +43,7 @@
             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
               transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'
             }}">
-            <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc }}</span>
+            <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
             <br><span class="text-color-grey">{{ transaction.tokenName }}</span>
           </div>
           <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">

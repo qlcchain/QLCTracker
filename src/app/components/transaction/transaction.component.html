@@ -251,7 +251,7 @@
                         <div class="col-12">Amount</div>
                     </div>
                     <div class="row qlc-table-row-purple row-text-mid mt-3 mb-3">
-                        <div class="col-12">{{ transaction.amount | qlc }}</div>
+                        <div class="col-12">{{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</div>
                     </div>
                 </div>
             </div>

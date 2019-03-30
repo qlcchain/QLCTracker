@@ -16,7 +16,7 @@
             <div class="col-12">VOTE RATIO</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">{{ votingPowerPercent }} %</div>
+            <div class="col-12">{{ votingPowerPercent | currency:'':'':'1.2-2' }} %</div>
           </div>
           <div class="row qlc-table-header-darkblue">
             <div class="col-12"><a routerLink="/representatives"><span class="qlc-icon icon-arrow-right-bluelight"></span>Details</a></div>
@@ -32,7 +32,7 @@
             <div class="col-12">Settled messages</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">{{ transactionsCount.count | number}}</div>
+            <div class="col-12">{{ transactionsCount.count | currency:'':'':'1.0-0' }}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
             <div class="col-12"><a routerLink="/transactions"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
@@ -48,7 +48,7 @@
             <div class="col-12">Accounts created</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">{{ accountsCreated }}</div>
+            <div class="col-12">{{ accountsCreated | currency:'':'':'1.0-0' }}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
             <div class="col-12"><a routerLink="/accounts"><span class="qlc-icon icon-arrow-right-bluelight"></span>All accounts</a></div>
@@ -64,7 +64,7 @@
             <div class="col-12">Tokens issued</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">{{ tokensCount }}</div>
+            <div class="col-12">{{ tokensCount | currency:'':'':'1.0-0'}}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
             <div class="col-12"><a routerLink="/tokens"><span class="qlc-icon icon-arrow-right-bluelight"></span>All tokens</a></div>
@@ -121,7 +121,7 @@
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                 transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'
               }}">
-                <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
                 <br><span class="text-color-grey">{{ transaction.tokenName }}</span>
               </div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">

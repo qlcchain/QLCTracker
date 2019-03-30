@@ -316,6 +316,11 @@ a:focus, button:focus {
     line-height: 80px;
     padding: 0px 0px 0px 69px;
     cursor: default;
+
+    background: url('../assets/img/icons/menu-grey.svg') no-repeat 32px 32px;
+    background-size: 16px 16px;
+    padding: 0px 0px 0px 65px;
+
 }
 .sub-left.sub-left-search {
     width: 125px;
@@ -1356,7 +1361,13 @@ pre {
     text-decoration: none !important;
     color:#005cbf !important;
 }
-
+.table-token {
+    width: 20px;
+    height: 20px;
+    margin-top:-3px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
 
 
 
@@ -1408,6 +1419,14 @@ pre {
     height: 40px;
     width: 1px;
     margin:20px 0px 20px 1px;
+}
+.menu-item.menu-close:before {
+    content:'';
+    display:block;
+    background: #e0dfdf;
+    height: 40px;
+    width: 1px;
+    margin:20px 0px 20px -3px;
 }
 .menu-item.menu-lang {
     background: url('../assets/img/icons/language-grey.svg') no-repeat 20px 32px;
@@ -1764,7 +1783,7 @@ pre {
         background: #e0dfdf;
         height: 40px;
         width: 1px;
-        margin:0px 0px 20px -32px;
+        margin:0px 0px 20px -35px;
     }
     .menu-sub-search-form {
         height: 80px;
