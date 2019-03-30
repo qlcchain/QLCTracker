@@ -2,10 +2,10 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { NodeService } from 'src/app/services/node.service';
 import { Router, ChildActivationEnd, ActivatedRoute } from '@angular/router';
-import { timer } from 'rxjs';
+import { timer, interval } from 'rxjs';
 import { RepresentativeService } from 'src/app/services/representative.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { WalletService } from 'src/app/services/wallet.service';
+import { WalletService, WalletAccount } from 'src/app/services/wallet.service';
 import { UtilService } from 'src/app/services/util.service';
 import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { QLCBlockService } from 'src/app/services/qlc-block.service';
@@ -26,7 +26,9 @@ export class MyaccountComponent implements OnInit {
 
   accountHistory: any[] = [];
 	pendingBlocks = [];
-	pageSize = 5;
+	successfulBlocks = [];
+  pageSize = 10;
+  accountBlocksCount = 0;
 	maxPageSize = 200;
 
   routerSub = null;
@@ -36,7 +38,9 @@ export class MyaccountComponent implements OnInit {
 	accountMeta: any = {};
 	accountId = '';
 
-  walletAccount = null;
+  walletAccount = {
+    pendingCount: 0
+  } ;
   
 	modalRef: BsModalRef;
   
@@ -51,6 +55,8 @@ export class MyaccountComponent implements OnInit {
 	showRepresentatives = false;
 	representativeListMatch = '';
   isNaN = isNaN;
+
+  processingPending = false;
   
   msg1 = '';
 	msg2 = '';
@@ -58,7 +64,9 @@ export class MyaccountComponent implements OnInit {
 	msg4 = '';
 	msg5 = '';
 	msgEdit1 = '';
-	msgEdit2 = '';
+  msgEdit2 = '';
+  
+  private refreshInterval$ = interval(1000);
 
   constructor(
 		private router: ActivatedRoute,
@@ -83,7 +91,13 @@ export class MyaccountComponent implements OnInit {
 				this.load(); // Reload the state when navigating to itself from the transactions page
 			}
 		});
-		this.load();
+    this.load();
+    
+    this.refreshInterval$.subscribe(() => {
+			if (this.pendingBlocks.length !== this.walletAccount.pendingCount) {
+				this.loadPending();
+			}
+		});
   }
   
   ngOnDestroy() {
@@ -123,10 +137,10 @@ export class MyaccountComponent implements OnInit {
     if (this.accountId == undefined || this.accountId == '')
       this.accountId = this.wallet.accounts[0].accountMeta.account;
 
+    this.walletAccount = this.wallet.accounts.find(a => a.id === this.accountId);
+    console.log(this.walletAccount);
     this.addressBookEntry = this.addressBook.getAccountName(this.accountId);
 		this.addressBookModel = this.addressBookEntry || '';
-    console.log(this.wallet);
-    console.log(this.accountId);
 		const tokenMap = {};
 		const tokens = await this.api.tokens();
 		if (!tokens.error) {
@@ -168,26 +182,7 @@ export class MyaccountComponent implements OnInit {
 
 		// If there is a pending balance, or the account is not opened yet, load pending transactions
 		// if ((!this.accountMeta.error && this.accountMeta.pending > 0) || this.accountMeta.error) {
-		const accountPending = await this.api.accountsPending([this.accountId], 25);
-		if (!accountPending.error && accountPending.result) {
-			const pendingResult = accountPending.result;
-
-			for (const account in pendingResult) {
-				if (!pendingResult.hasOwnProperty(account)) {
-					continue;
-				}
-				pendingResult[account].forEach(pending => {
-					this.pendingBlocks.push({
-						account: pending.source,
-						amount: pending.amount,
-						token: pending.tokenName,
-						// TODO: fill timestamp
-						// timestamp: accountPending.blocks[block].timestamp,
-						hash: pending.hash
-					});
-				});
-			}
-		}
+		await this.loadPending();
 		// }
 
 		// If the account doesnt exist, set the pending balance manually
@@ -202,7 +197,36 @@ export class MyaccountComponent implements OnInit {
 		await this.getAccountHistory(this.accountId);
 
     const qrCode = await QRCode.toDataURL(`${this.accountId}`);
-		this.qrCodeImage = qrCode;
+    this.qrCodeImage = qrCode;
+    
+    const accountBlocksCount = await this.api.accountBlocksCount(this.accountId);
+			this.accountBlocksCount = accountBlocksCount.result;
+  }
+
+  async loadPending() {
+    this.pendingBlocks = [];
+    const accountPending = await this.api.accountsPending([this.accountId], 25);
+		if (!accountPending.error && accountPending.result) {
+			const pendingResult = accountPending.result;
+
+			for (const account in pendingResult) {
+				if (!pendingResult.hasOwnProperty(account)) {
+					continue;
+        }
+        let walletAccount = this.wallet.accounts.find(a => a.id === account);
+				walletAccount.pendingCount = pendingResult[account].length;
+				pendingResult[account].forEach(pending => {
+					this.pendingBlocks.push({
+            account: pending.source,
+            receiveAccount: account,
+						amount: pending.amount,
+						tokenName: pending.tokenName,
+						timestamp: pending.timestamp,
+						hash: pending.hash
+					});
+				});
+			}
+		}
   }
 
 
@@ -292,6 +316,74 @@ export class MyaccountComponent implements OnInit {
   
   openModal(template: TemplateRef<any>) {
 		this.modalRef = this.modalService.show(template);
+  }
+  
+  claim(token) {
+
+  }
+
+  async receive(token) {
+    await this.loadPending();
+    this.processPendingBlocks(token);
+  }
+
+  async processPendingBlocks(tokenName = 'all') {
+    
+    console.log('processPendingBlocks ' + tokenName);
+    console.log(this.processingPending);
+    console.log(this.wallet.locked);
+    console.log(this.pendingBlocks);
+    console.log(!this.pendingBlocks.length);
+		if (this.processingPending || this.wallet.locked || !this.pendingBlocks.length) {
+			return;
+		}
+    this.processingPending = true;
+    console.log('processPendingBlocks 2');
+
+    const nextBlock = this.pendingBlocks[0];
+    console.log('nextBlock');
+    console.log(nextBlock);
+		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
+			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
+		}
+		const walletAccount = await this.walletService.getWalletAccount(nextBlock.receiveAccount);
+		if (!walletAccount) {
+			return; // Dispose of the block, no matching account
+		}
+
+		let newHash = null;
+
+		if (tokenName !== 'all') {
+      console.log('not all ' + tokenName);
+			if (nextBlock.tokenName == tokenName) {
+        console.log('we have a match all ' + tokenName);
+        newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.walletService.isLedgerWallet());
+        console.log(newHash);
+			}
+		} else {
+      console.log('all');
+      newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.walletService.isLedgerWallet());
+      console.log(newHash);
+		}
+		if (newHash) {
+			if (this.successfulBlocks.length >= 15) {
+				this.successfulBlocks.shift();
+			}
+			this.successfulBlocks.push(nextBlock.hash);
+
+			const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
+			this.notifications.sendSuccess(
+				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenName}!`
+			);
+
+			// await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
+			await this.loadAccount();
+		} 
+
+		this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+		this.processingPending = false;
+
+		setTimeout(() => this.processPendingBlocks(), 1500);
 	}
 
 }
