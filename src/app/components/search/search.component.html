@@ -7,8 +7,8 @@
         <!-- TITLE -->
         <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
           <div class="content-title">
-            <h1>Search:</h1>
-            <h1>{{ search_text }}</h1>
+            <h1>Search</h1>
+            <h6>{{ search_text }}</h6>
           </div>
         </div>
         
@@ -20,14 +20,15 @@
               <div class="container">
                 <div class="row" *ngIf="phoneBlocks.send.length == 0 && phoneBlocks.receive.length == 0">
                   <div class="col-12">
-                      <h1 class="mt-3">Error no match found.</h1>
+                      <h1 class="mt-3 text-center"><h6>No match found.</h6></h1>
                   </div>
                 </div>
-                <div class="row" *ngIf="phoneBlocks.send.length > 0">
+                <!--<div class="row" *ngIf="phoneBlocks.send.length > 0">
                   <div class="col-12">
                       <h1 class="mt-3">Send</h1>
                   </div>
                 </div>
+                -->
                 <div class="row qlc-table-header" *ngIf="phoneBlocks.send.length > 0">
                   <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Account / Transaction ID</div>
                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
@@ -41,8 +42,8 @@
                     <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)">{{ transaction.link_as_account || transaction.address }}</a>
                     <a [routerLink]="'/transaction/' + transaction.hash"><br>
                       <span class="text-tiny">{{ transaction.hash }}</span>
-                    </a><br>
-                    Sender: {{ transaction.senderNumber }}, Receiver: {{ transaction.receiverNumber }}
+                    </a><br><br>
+                    <span class="text-tiny"><strong class="text-blue">Sender: {{ transaction.senderNumber }}</strong> &nbsp;&nbsp; Receiver: {{ transaction.receiverNumber }}</span>
                   </div>
                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                     transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'
@@ -57,11 +58,11 @@
                   
                 </div>
               </div>
-              <div class="row" *ngIf="phoneBlocks.receive.length > 0">
+              <!--<div class="row" *ngIf="phoneBlocks.receive.length > 0">
                 <div class="col-12">
                     <h1 class="mt-3">Receive</h1>
                 </div>
-              </div>
+              </div>-->
               <div class="row qlc-table-header" *ngIf="phoneBlocks.receive.length > 0">
                 <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Account / Transaction ID</div>
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
@@ -74,8 +75,8 @@
                     <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)">{{ transaction.link_as_account || transaction.address }}</a>
                     <a [routerLink]="'/transaction/' + transaction.hash"><br>
                       <span class="text-tiny">{{ transaction.hash }}</span>
-                    </a><br>
-                    Sender: {{ transaction.senderNumber }}, Receiver: {{ transaction.receiverNumber }}
+                    </a><br><br>
+                    <span class="text-tiny">Sender: {{ transaction.senderNumber }} &nbsp;&nbsp; <strong class="text-blue">Receiver: {{ transaction.receiverNumber }}</strong></span>
                   </div>
                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                     transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'

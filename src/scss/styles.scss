@@ -46,6 +46,7 @@ app-notifications {
     position: fixed;
     width: 100%;
     bottom: 0;
+    z-index: 1000001;
 }
 
 a::-moz-focus-inner, button::-moz-focus-inner{
@@ -1368,10 +1369,31 @@ pre {
     margin-right: 6px;
     vertical-align: middle;
 }
+.pass-field {
+    min-height: 41px !important;
+    padding-top: 8px !important;
+}
 
-
-
-
+.acc-button {
+    position:fixed;
+    right: 50px;
+    bottom: 50px;
+    width: 64px;
+    height: 64px;
+    display: block;
+    border-radius: 64px;
+    background-color: #56af08;
+    z-index: 9999999999999;
+}
+.acc-button.acc-unlock {
+    background-color:#c10f0f;
+}
+.acc-button.acc-lock {
+    background-color:#56af08;
+}
+.acc-button.acc-configure {
+    background-color:#005cbf;
+}
 
 
 /* RWD OVERRIDES */
