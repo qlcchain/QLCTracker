@@ -36,7 +36,7 @@ export class TokensComponent implements OnInit {
 			this.reloadTimer.unsubscribe();
     }
     if (this.routerSub) {
-			this.reloadTimer.unsubscribe();
+			this.routerSub.unsubscribe();
 		}
 	}
 
