@@ -94,11 +94,11 @@
 		"warning_ledger": "Press the Ledger status bar on the left side to reload your Ledger when connecting or disconnecting it."
     },
     "WALLET_WARNINGS": {
-		"msg1": "Wallet unlocked",
+		"msg1": "Account unlocked",
 		"msg2": "Invalid password, please try again!",
-		"msg3": "You must set a password on your wallet - it is currently blank!",
-		"msg4": "Wallet locked",
-		"msg5": "Unable to lock wallet",
+		"msg3": "You must set a password on your account - it is currently blank!",
+		"msg4": "Account locked",
+		"msg5": "Unable to lock account",
 		"msg6": "Checking Ledger Status...",
 		"msg7": "Successfully connected to Ledger device"
     },
@@ -164,12 +164,13 @@
 	"ACCOUNTS": {
 		"title": "Accounts",
 		"title_button": "ADD NEW ACCOUNT",
+		"title_button_wallet": "ADD NEW WALLET",
 		"token": "Token",
 		"quantity": "Quantity",
 		"price": "Price",
 		"24H": "24H",
 		"total_value": "Total Value",
-		"wallet_details": "Account details"
+		"wallet_details": "Wallet details"
 	},
 	"ACCOUNTS_WARNINGS": {
 		"msg1": "Wallet is locked.",

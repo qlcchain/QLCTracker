@@ -1,5 +1,11 @@
 <div id="particles-js"></div>
 
+<!--
+  <div class="acc-button acc-unlock"  (click)="openModal(unlockWallet)" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()"></div>
+  <div class="acc-button acc-lock" (click)="lockWallet()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()"></div>
+  <div class="acc-button acc-configure" routerLink="/createwallet" *ngIf="!walletService.isConfigured()"></div>
+-->
+
 <!-- HEADER -->
 <div class="qlc-top qlc-top-home">
   <div class="container">
@@ -64,9 +70,9 @@
           <div class="menu-sub-holder menu-sub-account">
             <div class="menu-item menu-close"></div>
             <div class="menu-sub-items menu-sub-items-account">
-              <a (click)="openModal(unlockWallet)" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()">Sign in</a>
-              <a (click)="lockWallet()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">Log out</a>
-              <a routerLink="/myaccounts" routerLinkActive="active" *ngIf="walletService.isConfigured()">My accounts</a>
+              <a (click)="openModal(unlockWallet)" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()">Unlock Account</a>
+              <a (click)="lockWallet()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">Lock Account</a>
+              <a routerLink="/myaccounts" routerLinkActive="active" *ngIf="walletService.isConfigured()">My Wallets</a>
               <a routerLink="/send" routerLinkActive="active" *ngIf="walletService.isConfigured()">Send</a>
               <a routerLink="/settings" routerLinkActive="active" *ngIf="walletService.isConfigured()">Settings</a>
               <a routerLink="/myrepresentatives" routerLinkActive="active" *ngIf="walletService.isConfigured()">My representatives</a>
@@ -112,22 +118,21 @@
 </ng-template>
 
 <ng-template #unlockWallet>
-  <div class="modal-header">
-    <h1 class="modal-title pull-left">Sign in</h1>
+  <div class="modal-body">
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
-  </div>
-  <div class="modal-body">
-    <div class="form-group">
-      <div class="input-group">
-        <input class="form-control" type="password" [(ngModel)]="unlockPassword" (keyup.enter)="unlockWalletConfirm()" placeholder="Enter your password" appAutofocus>
+    <div class="row text-center">
+        <div class="col-10 offset-1">
+            <div class="form-group text-center">
+              <h1 class="pt-5">Unlock Account</h1>
+              <div class="input-group pt-3 pb-3">
+                <input class="form-control pass-field text-center" type="password" [(ngModel)]="unlockPassword" (keyup.enter)="unlockWalletConfirm()" placeholder="Enter your password" appAutofocus>
+              </div>
+              <button class="btn btn-primary mb-5 w-100 pl-0 pr-0" type="button" (click)="unlockWalletConfirm()">UNLOCK</button>
+            </div>
       </div>
     </div>
     
-  </div>
-  <div class="modal-footer">
-    
-    <button class="btn btn-primary" type="button" (click)="unlockWalletConfirm()">UNLOCK</button>
   </div>
 </ng-template>
