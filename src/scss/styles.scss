@@ -1303,6 +1303,7 @@ pre {
     min-height: 41px;
     border: 1px solid #a8a6ae !important;
     padding-top: 8px !important;
+    border-radius: 0px !important;
 }
 
 .sendTokens .input-group-text.maxLink {
@@ -1779,7 +1780,7 @@ pre {
     .menu-sub-items a {
         float:right;
         line-height:80px;
-        padding:0px 35px 0px 0px; 
+        padding:0px 25px 0px 0px; 
         color:#595757;
         font-size: 14px;
         
