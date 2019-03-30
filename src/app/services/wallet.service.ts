@@ -13,6 +13,7 @@ import { PriceService } from './price.service';
 // import { LedgerService } from './ledger.service';
 import { NGXLogger } from 'ngx-logger';
 import { interval } from 'rxjs';
+import { tokenName } from '@angular/compiler';
 
 export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
@@ -141,6 +142,8 @@ export class WalletService {
 						continue;
 					}
 					pendingCount += pendingResult[account].length;
+					let walletAccount = this.wallet.accounts.find(a => a.id === account);
+					walletAccount.pendingCount = pendingResult[account].length;
 				}
 			}
 			this.wallet.pendingCount = pendingCount;
@@ -155,7 +158,7 @@ export class WalletService {
 				return; // Not for our wallet?
 			}
 
-			this.addPendingBlock(walletAccount.id, transaction.hash, new BigNumber(0), transaction.token);
+			this.addPendingBlock(walletAccount.id, transaction.hash, new BigNumber(0), transaction.token, transaction.tokenName);
 			await this.processPendingBlocks();
 		} else {
 			// Not a send to us, which means it was a block posted by us.  We shouldnt need to do anything...
@@ -715,7 +718,7 @@ export class WalletService {
 		return true;
 	}
 
-	addPendingBlock(accountID, blockHash, amount, tokenHash) {
+	addPendingBlock(accountID, blockHash, amount, tokenHash, tokenName) {
 		if (this.successfulBlocks.indexOf(blockHash) !== -1) {
 			return; // Already successful with this block
 		}
@@ -727,7 +730,8 @@ export class WalletService {
 			account: accountID,
 			hash: blockHash,
 			amount: amount,
-			token: tokenHash
+			token: tokenHash,
+			tokenName: tokenName
 		});
 	}
 
@@ -746,7 +750,7 @@ export class WalletService {
 			}
 
 			pendingResult[account].forEach(pending => {
-				this.addPendingBlock(account, pending.hash, pending.amount, pending.type);
+				this.addPendingBlock(account, pending.hash, pending.amount, pending.type, pending.tokenName);
 			});
 		}
 
@@ -756,7 +760,7 @@ export class WalletService {
 		}
 	}
 
-	async processPendingBlocks() {
+	async processPendingBlocks(tokenName = 'all') {
 		if (this.processingPending || this.wallet.locked || !this.pendingBlocks.length) {
 			return;
 		}
@@ -771,7 +775,16 @@ export class WalletService {
 			return; // Dispose of the block, no matching account
 		}
 
-		const newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
+		let newHash = null;
+
+		if (tokenName !== 'all') {
+			if (nextBlock.tokenName == tokenName) {
+				newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
+			}
+		} else {
+			newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
+		}
+
 		if (newHash) {
 			if (this.successfulBlocks.length >= 15) {
 				this.successfulBlocks.shift();
@@ -780,17 +793,12 @@ export class WalletService {
 
 			const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
 			this.notifications.sendSuccess(
-				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} QLC!`
+				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenName}!`
 			);
 
 			// await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
 			await this.reloadBalances();
-		} else {
-			if (this.isLedgerWallet()) {
-				return null; // Denied to receive, stop processing
-			}
-			return this.notifications.sendError(`There was a problem performing the receive transaction, try manually!`);
-		}
+		} 
 
 		this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
 		this.processingPending = false;
