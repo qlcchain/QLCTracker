@@ -1,17 +1,67 @@
-<app-nav></app-nav>
+<!-- ACCOUNTS -->
+<div class="container mt-0 mb-3 qlc-content-first">
+  <div class="row">
+    
+    <div class="col-12 pl-0 pr-0">
+      
+      <!-- TITLE -->
+      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+        <div class="content-title">
+          <h1>Tokens</h1>
+        </div>
+      </div>
+      
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+          
+          
+          <div class="container">
+            
+            <div class="row qlc-table-header">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">TOKEN NAME</div>
+                <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">SYMBOL</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">TOTAL SUPPLY</div>
+                <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">Decimals</div>
+                <div class="col-xl-4 col-lg-5 col-md-5 col-sm-6 col-7 d-none d-lg-block text-right">Owner</div> 
+            </div>
+            <div class="row qlc-table-row closed" *ngFor="let token of tokens">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">{{ token.tokenName }}</div>
+                <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">{{ token.tokenSymbol }}</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">{{ token.totalSupply }}</div>
+                <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">{{ token.decimals }}</div>
+                <div class="col-xl-4 col-lg-5 col-md-5 col-sm-6 col-7 d-none d-lg-block text-right text-truncate" [routerLink]="'/account/' + (token.owner)">{{ token.owner }}</div> 
+              <div class="container transaction-details"></div>
+            </div>
+          </div>
+          
+          
+        </div>
+      </div>
+      
+      
+      
+    </div>
+    
+  </div>
+</div>
 
+<div class="container mt-4 mb-4">
+  <div class="row">
+  </div>
+</div>
+
+<!--
 <div class="container mt-2 mb-5">
   <div class="row">
     
     <div class="col-12 pl-0 pr-0">
       
-      <!-- TITLE: TOKENS -->
       <div class="col-lg-12 mb-3 mt-4">
         <div class="content-title">
           <h1>Tokens</h1>
         </div>
       </div>
-      <!-- TOKEN LIST -->
       <div class="col-lg-12 mb-4">
         <div class="content-box-white">
 
@@ -21,8 +71,8 @@
               <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">TOKEN NAME</div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">SYMBOL</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">TOTAL SUPPLY</div>
-              <!-- <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">Price</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right">24h change</div> -->
+               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">Price</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right">24h change</div> 
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">CREATED ON</div>
             </div>
 
@@ -33,8 +83,8 @@
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN1</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">700000000.00</div>
-              <!-- <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> -->
+               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
             </div>
             
@@ -45,8 +95,8 @@
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN2</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">500000000.00</div>
-              <!-- <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> -->
+              <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
             </div>
             
@@ -57,8 +107,8 @@
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN3</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">800000000.00</div>
-              <!-- <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> -->
+               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
             </div>
 
@@ -69,8 +119,8 @@
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN4</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">900000000.00</div>
-              <!-- <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> -->
+               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
             </div>
 
@@ -81,8 +131,8 @@
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN5</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">400000000.00</div>
-              <!-- <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> -->
+               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
             </div>
             
@@ -99,8 +149,8 @@
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QLC</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">600000000.00</div>
-              <!-- <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> -->
+               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">8M&nbsp;ago</div>
             </div>
             
@@ -122,3 +172,4 @@
     
   </div>
 </div>
+-->
