@@ -271,4 +271,15 @@ export class ApiService {
 		
 		return Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === tokenHash)[0] : null;
 	}
+
+
+	// sms
+
+	async phoneBlocks(phoneNumber:string): Promise<{ result: any; error?: string }> {
+		const result = await this.c.buildinLedger.phoneBlocks(phoneNumber);
+		if (result === null) 
+			this.reconnect();
+
+		return result;
+	}
 }

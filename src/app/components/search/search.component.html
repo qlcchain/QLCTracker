@@ -1,0 +1,109 @@
+<!-- ACCOUNTS -->
+<div class="container mt-0 mb-3 qlc-content-first">
+    <div class="row">
+      
+      <div class="col-12 pl-0 pr-0">
+        
+        <!-- TITLE -->
+        <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+          <div class="content-title">
+            <h1>Search:</h1>
+            <h1>{{ search_text }}</h1>
+          </div>
+        </div>
+        
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+            <div class="content-box-white">
+              
+              
+              <div class="container">
+                <div class="row" *ngIf="phoneBlocks.send.length == 0 && phoneBlocks.receive.length == 0">
+                  <div class="col-12">
+                      <h1 class="mt-3">Error no match found.</h1>
+                  </div>
+                </div>
+                <div class="row" *ngIf="phoneBlocks.send.length > 0">
+                  <div class="col-12">
+                      <h1 class="mt-3">Send</h1>
+                  </div>
+                </div>
+                <div class="row qlc-table-header" *ngIf="phoneBlocks.send.length > 0">
+                  <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Account / Transaction ID</div>
+                  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
+                  <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
+                </div>
+                
+                <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of phoneBlocks.send">
+
+                  <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 pb-0 text-truncate">
+                    <span class="text-color-lightgrey">{{transaction.type == 'Send' ? 'to' : 'from'}}: </span> 
+                    <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)">{{ transaction.link_as_account || transaction.address }}</a>
+                    <a [routerLink]="'/transaction/' + transaction.hash"><br>
+                      <span class="text-tiny">{{ transaction.hash }}</span>
+                    </a><br>
+                    Sender: {{ transaction.senderNumber }}, Receiver: {{ transaction.receiverNumber }}
+                  </div>
+                  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
+                    transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'
+                  }}">
+                  <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
+                  <br><span class="text-color-grey">{{ transaction.tokenName }}</span>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                  {{ transaction.timestamp * 1000 | date: 'short' }}
+                </div>
+                <div class="container transaction-details">
+                  
+                </div>
+              </div>
+              <div class="row" *ngIf="phoneBlocks.receive.length > 0">
+                <div class="col-12">
+                    <h1 class="mt-3">Receive</h1>
+                </div>
+              </div>
+              <div class="row qlc-table-header" *ngIf="phoneBlocks.receive.length > 0">
+                <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Account / Transaction ID</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
+              </div>
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of phoneBlocks.receive">
+
+                  <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 pb-0 text-truncate">
+                    <span class="text-color-lightgrey">{{transaction.type == 'Send' ? 'to' : 'from'}}: </span> 
+                    <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)">{{ transaction.link_as_account || transaction.address }}</a>
+                    <a [routerLink]="'/transaction/' + transaction.hash"><br>
+                      <span class="text-tiny">{{ transaction.hash }}</span>
+                    </a><br>
+                    Sender: {{ transaction.senderNumber }}, Receiver: {{ transaction.receiverNumber }}
+                  </div>
+                  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
+                    transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'
+                  }}">
+                  <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
+                  <br><span class="text-color-grey">{{ transaction.tokenName }}</span>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                  {{ transaction.timestamp * 1000 | date: 'short' }}
+                </div>
+                <div class="container transaction-details">
+                  
+                </div>
+              </div>
+            </div>
+            
+            
+          </div>
+        </div>
+        
+        
+        
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="container mt-4 mb-4">
+    <div class="row">
+    </div>
+  </div>

@@ -40,6 +40,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { MyaccountsComponent } from './components/myaccounts/myaccounts.component';
 import { SendComponent } from './components/send/send.component';
 import { FiatPipe } from './pipes/fiat.pipe';
+import { SearchComponent } from './components/search/search.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -67,7 +68,8 @@ export function createTranslateLoader(http: HttpClient) {
     AutofocusDirective,
     MyaccountsComponent,
     SendComponent,
-    FiatPipe
+    FiatPipe,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

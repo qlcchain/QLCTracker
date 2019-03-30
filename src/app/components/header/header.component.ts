@@ -187,6 +187,8 @@ export class HeaderComponent implements OnInit {
       this.router.navigate(['/account/'+this.search_text]);
     } else if(this.search_text.length === 64) {
       this.router.navigate(['/transaction/'+this.search_text]);
+    } else {
+      this.router.navigate(['/search/'+btoa(this.search_text)]);
     }
   }
   openModal(template: TemplateRef<any>) {

@@ -14,6 +14,7 @@ import { CreatewalletComponent } from './components/createwallet/createwallet.co
 import { ImportWalletComponent } from './components/import-wallet/import-wallet.component';
 import { MyaccountsComponent } from './components/myaccounts/myaccounts.component';
 import { SendComponent } from './components/send/send.component';
+import { SearchComponent } from './components/search/search.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'myaccounts', component: MyaccountsComponent },
   { path: 'send', component: SendComponent },
   { path: 'send/:account', component: SendComponent },
+  { path: 'search/:hash', component: SearchComponent },
   { path: '**', component: HomeComponent },
 ];
 
