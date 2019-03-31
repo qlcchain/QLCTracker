@@ -20,15 +20,15 @@
             
             <div class="row qlc-table-header">
               <div class="col-xl-8 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate">Address</div>
-              <div class="col-xl-4 col-lg-5 col-md-6 col-sm-7 d-none d-sm-block text-right">Balance</div>
+              <div class="col-xl-4 col-lg-5 col-md-6 col-sm-7 col-6 text-right">Balances</div>
               <!--<div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right">Last transaction</div>-->
             </div>
             <div class="row qlc-table-row closed" *ngFor="let account of accounts">
               <div class="col-xl-8 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate">
                 <a [routerLink]="'/account/' + (account.account)">{{ account.account }}</a>
               </div>
-              <div class="col-xl-4 col-lg-5 col-md-6 col-sm-7 d-none d-sm-block text-right">
-                <span data-toggle="tooltip" data-placement="top" title="89,090.90 $" *ngFor="let token of account.tokens">{{ token.balance | qlc | number }} {{ token.tokenInfo.tokenSymbol }}</span><br>
+              <div class="col-xl-4 col-lg-5 col-md-6 col-sm-7 col-6 text-right">
+                <span data-toggle="tooltip" data-placement="top" title="0.00 $" *ngFor="let token of account.tokens" style="display:block;padding:0px;margin:0px;min-height:auto;margin-bottom:4px;">{{ token.balance | qlc | currency:'':'':'1.2-8' }} {{ token.tokenInfo.tokenSymbol }}<img src="assets/img/token-{{ token.tokenInfo.tokenSymbol | lowercase }}.png" class="icon-token" style="width:18px;margin-top:-2px;"></span>
               </div>
               <!--<div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right" *ngFor="let token of account.tokens">{{ token.modified * 1000 | date: 'short' }}</div>-->
               <div class="container transaction-details"></div>
