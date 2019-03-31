@@ -86,7 +86,11 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('QLC')" type="submit" class="btn btn-primary btn-purple btn-icon-receive w-100 pl-2 pr-2">RECEIVE QLC <span class="superlight">({{ walletAccount.pendingCount }} Pending)</span></button>
+                                    <button (click)="receive('QLC')" type="submit" class="btn btn-primary btn-purple btn-icon-receive w-100 pl-2 pr-2">RECEIVE QLC <span class="superlight">
+                                        (<span *ngIf="checkIfPending('QLC')">
+                                            {{ walletAccount.pendingPerTokenCount['QLC'] }}
+                                        </span>
+                                        <span *ngIf="!checkIfPending('QLC')">0</span> Pending)</span></button>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +125,7 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('QSMS')" type="submit" class="btn btn-primary btn-blue2 btn-icon-receive w-100 pl-2 pr-2">RECEIVE QSMS <span class="superlight">(0 Pending)</span></button>
+                                    <button (click)="receive('QSMS')" type="submit" class="btn btn-primary btn-blue2 btn-icon-receive w-100 pl-2 pr-2">RECEIVE QSMS <span class="superlight">(<span *ngIf="checkIfPending('QSMS')">{{ walletAccount.pendingPerTokenCount['QSMS'] }}</span><span *ngIf="!checkIfPending('QSMS')">0</span> Pending)</span></button>
                                 </div>
                             </div>
                         </div>
@@ -155,7 +159,7 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('QGAS')" type="submit" class="btn btn-primary btn-darkgrey btn-icon-receive w-100 pl-2 pr-2">RECEIVE QGAS <span class="superlight">({{ walletAccount.pendingCount }} Pending)</span></button>
+                                    <button (click)="receive('QGAS')" type="submit" class="btn btn-primary btn-darkgrey btn-icon-receive w-100 pl-2 pr-2">RECEIVE QGAS <span class="superlight">(<span *ngIf="checkIfPending('QGAS')">{{ walletAccount.pendingPerTokenCount['QGAS'] }}</span><span *ngIf="!checkIfPending('QGAS')">0</span> Pending)</span></button>
                                 </div>
                             </div>
                         </div>

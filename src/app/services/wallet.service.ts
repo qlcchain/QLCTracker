@@ -27,6 +27,7 @@ export interface WalletAccount {
 	balances: any;
 	// pending: BigNumber;
 	pendingCount: number;
+	pendingPerTokenCount: any;
 	// balanceRaw: BigNumber;
 	// pendingRaw: BigNumber;
 	// balanceFiat: number;
@@ -80,8 +81,10 @@ export class WalletService {
 	processingPending = false;
 	pendingBlocks = [];
 	successfulBlocks = [];
+	blocksCount = 0;
 
 	private pendingRefreshInterval$ = interval(10000);
+	private blocksCountInterval$ = interval(10000);
 
 	constructor(
 		private util: UtilService,
@@ -148,6 +151,18 @@ export class WalletService {
 			}
 			this.wallet.pendingCount = pendingCount;
 		});
+
+		this.blocksCountInterval$.subscribe(async () => {
+			this.refreshBlocks();
+		});
+	}
+
+	async refreshBlocks() {
+		const blocksCount = await this.api.blocksCount();
+
+		if (blocksCount.result) {
+			this.blocksCount = blocksCount.result;
+		}
 	}
 
 	async processStateBlock(transaction) {
@@ -466,6 +481,7 @@ export class WalletService {
 			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
 			pendingCount: 0,
+			pendingPerTokenCount: [],
 			balances: null,
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
@@ -624,6 +640,7 @@ export class WalletService {
 			balances: null,
 			// pending: new BigNumber(0),
 			pendingCount: 0,
+			pendingPerTokenCount: [],
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,

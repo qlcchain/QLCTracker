@@ -39,7 +39,8 @@ export class MyaccountComponent implements OnInit {
 	accountId = '';
 
   walletAccount = {
-    pendingCount: 0
+    pendingCount: 0,
+    pendingPerTokenCount: 0
   } ;
   
 	modalRef: BsModalRef;
@@ -57,6 +58,7 @@ export class MyaccountComponent implements OnInit {
   isNaN = isNaN;
 
   processingPending = false;
+  processingPendingBlocks = [];
   
   msg1 = '';
 	msg2 = '';
@@ -219,8 +221,13 @@ export class MyaccountComponent implements OnInit {
 					continue;
         }
         let walletAccount = this.wallet.accounts.find(a => a.id === account);
-				walletAccount.pendingCount = pendingResult[account].length;
+        walletAccount.pendingCount = pendingResult[account].length;
+        walletAccount.pendingPerTokenCount = [];
 				pendingResult[account].forEach(pending => {
+          if (!walletAccount.pendingPerTokenCount[pending.tokenName])
+            walletAccount.pendingPerTokenCount[pending.tokenName] = 0;
+
+          walletAccount.pendingPerTokenCount[pending.tokenName] += 1;
 					this.pendingBlocks.push({
             account: pending.source,
             receiveAccount: account,
@@ -232,6 +239,14 @@ export class MyaccountComponent implements OnInit {
 				});
 			}
 		}
+  }
+
+  checkIfPending(token) {
+    if (typeof(this.walletAccount.pendingPerTokenCount[token]) != 'undefined')
+      return true;
+    else
+      return false;
+
   }
 
 
@@ -329,6 +344,7 @@ export class MyaccountComponent implements OnInit {
 
   async receive(token) {
     await this.loadPending();
+    this.processingPendingBlocks = this.pendingBlocks;
     this.processPendingBlocks(token);
   }
 
@@ -337,14 +353,14 @@ export class MyaccountComponent implements OnInit {
       this.notificationService.sendWarning(this.msg2);
       return;
 		}
-		if (this.processingPending || this.wallet.locked || !this.pendingBlocks.length) {
+		if (this.processingPending || this.wallet.locked || !this.processingPendingBlocks.length) {
 			return;
 		}
     this.processingPending = true;
 
-    const nextBlock = this.pendingBlocks[0];
+    const nextBlock = this.processingPendingBlocks[0];
 		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
-			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
+			return setTimeout(() => this.processPendingBlocks(tokenName), 1500); // Block has already been processed
 		}
 		const walletAccount = await this.walletService.getWalletAccount(nextBlock.receiveAccount);
 		if (!walletAccount) {
@@ -376,10 +392,10 @@ export class MyaccountComponent implements OnInit {
 			await this.loadAccount();
 		} 
 
-		this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+		this.processingPendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
 		this.processingPending = false;
 
-		setTimeout(() => this.processPendingBlocks(), 1500);
+		setTimeout(() => this.processPendingBlocks(tokenName), 1500);
 	}
 
 }

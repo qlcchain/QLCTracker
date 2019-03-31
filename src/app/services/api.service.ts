@@ -151,14 +151,6 @@ export class ApiService {
 		}
 	}
 
-	async blockCount(): Promise<{ count: number; unchecked: number }> {
-		try {
-			return await this.c.request(methods.ledger.blocksCount);
-		} catch (err) {
-			return err;
-		}
-	}
-
 	async process(block): Promise<{ result: string; error?: string }> {
 		try {
 			return await this.c.request(methods.ledger.process, block);
