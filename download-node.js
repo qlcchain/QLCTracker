@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const download = require('download');
 const chmod = require('chmod');
 

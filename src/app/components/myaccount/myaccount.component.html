@@ -93,12 +93,12 @@
                     </div>
                     
                     
-                    <!-- BALANCE Q-SMS -->
+                    <!-- BALANCE QSMS -->
                     <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
                         <div class="content-box-white h-auto mt-2 pb-2">
                             <div class="container">
                                 <div class="row qlc-table-header-white">
-                                    <div class="col-12">Q-SMS Balance</div>
+                                    <div class="col-12">QSMS Balance</div>
                                 </div>
                             </div>
                             <div class="container">
@@ -108,8 +108,8 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['Q-SMS']">{{ accountMeta.balances['Q-SMS'].balance | qlc }}</div>
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['Q-SMS'])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QSMS']">{{ accountMeta.balances['QSMS'].balance | qlc }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QSMS'])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
                                             <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
@@ -121,13 +121,13 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('Q-SMS')" type="submit" class="btn btn-primary btn-blue2 btn-icon-receive w-100 pl-2 pr-2">RECEIVE Q-SMS <span class="superlight">(0 Pending)</span></button>
+                                    <button (click)="receive('QSMS')" type="submit" class="btn btn-primary btn-blue2 btn-icon-receive w-100 pl-2 pr-2">RECEIVE QSMS <span class="superlight">(0 Pending)</span></button>
                                 </div>
                             </div>
                         </div>
                     </div>     
                     
-                    <!-- BALANCE Q-GAS -->
+                    <!-- BALANCE QGAS -->
                     <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
                         <div class="content-box-white h-auto mt-2 pb-2">
                             <div class="container">
