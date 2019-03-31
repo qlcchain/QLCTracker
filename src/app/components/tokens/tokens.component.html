@@ -26,7 +26,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-7 text-right">Owner</div> 
             </div>
             <div class="row qlc-table-row closed" *ngFor="let token of tokens">
-                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-5"><img src="../../../assets/img/token-{{ token.tokenName | lowercase }}.png" class="table-token"> {{ token.tokenName }}</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-5"><img src="assets/img/token-{{ token.tokenName | lowercase }}.png" class="table-token"> {{ token.tokenName }}</div>
                 <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block">{{ token.tokenSymbol }}</div>
                 <div class="col-xl-2 col-lg-2 col-md-3 col-sm-5 col-2 d-none d-sm-block text-right">{{ token.totalSupply | qlc | currency:'':'':'1.0-0' }}</div>
                 <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block text-right">{{ token.decimals }}</div>
