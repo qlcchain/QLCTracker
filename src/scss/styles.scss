@@ -1324,7 +1324,7 @@ pre {
     left: 18px !important;
     padding-left: 14px !important;
     border: none !important;
-    background: transparent !important;
+    /*background: transparent !important;*/
 }
 .input-group-prepend .input-group-text {
     padding-top: 9px !important;
@@ -1429,9 +1429,15 @@ pre {
     background: url('../assets/img/icons/copy-grey.svg') no-repeat center center;
     background-size: 100% auto;
 }
+.modal-content {
+    border: 0px;
+}
 
-
-
+.sendTokens .toaccount {
+    min-height:36px;
+    margin-top:2px !important;
+    background: #fff !important;
+}
 
 
 
