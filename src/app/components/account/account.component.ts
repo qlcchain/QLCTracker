@@ -74,9 +74,6 @@ export class AccountComponent implements OnInit {
 	async loadAccountDetails() {
 		this.accountId = this.router.snapshot.params.account;
 		try {
-			
-			
-			console.log(this.accountId);
 			const tokenMap = {};
 			const tokens = await this.api.tokens();
 			if (!tokens.error) {
@@ -85,7 +82,6 @@ export class AccountComponent implements OnInit {
 				});
 			}
 			const accountInfo = await this.api.accountInfo(this.accountId);
-			console.log(accountInfo);
 			this.accountMeta = {};
 			if (!accountInfo.error) {
 				const am = accountInfo.result;
@@ -96,8 +92,6 @@ export class AccountComponent implements OnInit {
 				}
 				this.accountMeta = am;
 			}
-			console.log(tokens);
-			console.log(this.accountMeta);
 			
 			this.pendingBlocks = [];
 			this.pendingSum = 0;
@@ -112,7 +106,6 @@ export class AccountComponent implements OnInit {
 					}
 					
 					pendingResult[account].forEach(pending => {
-						console.log(pending)
 						this.pendingBlocks.push({
 							account: pending.source,
 							amount: pending.amount,
@@ -124,7 +117,6 @@ export class AccountComponent implements OnInit {
 						this.pendingSum += parseInt(pending.amount)
 					});
 				}
-				console.log(this.pendingBlocks);
 			}
 			// }
 			
@@ -137,21 +129,8 @@ export class AccountComponent implements OnInit {
 					this.accountMeta.pending = pendingRaw;
 				}
 				
-				// Set fiat values?
-				// this.accountMeta.balanceRaw = new BigNumber(this.accountMeta.balance || 0).mod(this.qlc);
-				// this.accountMeta.pendingRaw = new BigNumber(this.accountMeta.pending || 0).mod(this.qlc);
-				// this.accountMeta.balanceFiat = this.util.qlc
-				// 	.rawToMqlc(this.accountMeta.balance || 0)
-				// 	.times(this.price.price.lastPrice)
-				// 	.toNumber();
-				// this.accountMeta.pendingFiat = this.util.qlc
-				// 	.rawToMqlc(this.accountMeta.pending || 0)
-				// 	.times(this.price.price.lastPrice)
-				// 	.toNumber();
 				this.accountHistory = [];
 				await this.getAccountHistory(this.accountId);
-				console.log(this.accountHistory);
-				console.log(this.pendingBlocks);
 				const accountBlocksCount = await this.api.accountBlocksCount(this.accountId);
 				this.accountBlocksCount = accountBlocksCount.result;
 
@@ -182,7 +161,6 @@ export class AccountComponent implements OnInit {
 					} else {
 						const link_as_account = await this.api.accountForPublicKey(block.link);
 						if (!link_as_account.error && typeof(link_as_account.result) != 'undefined') {
-							console.log(link_as_account.result);
 							block.link_as_account = link_as_account.result;
 						}
 					}
@@ -190,8 +168,6 @@ export class AccountComponent implements OnInit {
 				}
 				this.accountHistory = this.accountHistory.filter(h => h.type !== 'Change');
 			}
-			console.log('accountHistory');
-			console.log(this.accountHistory);
 		}
 		openModal(template: TemplateRef<any>) {
 			this.modalRef = this.modalService.show(template);

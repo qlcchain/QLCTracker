@@ -9,11 +9,15 @@ export class QlcPipe implements PipeTransform {
 	QLC = 100000000; // 10^8
 
   transform(value: any, args?: any): any {
+    if (value == 'NaN' || value == NaN || value == undefined) {
+      value = 0;
+    }
     let decimals = 2
     if (args) {
       const opts = args.split(',');
       decimals = opts[0];
     }
+    
     
     return `${(value / this.QLC).toFixed(decimals)}`;
   }
