@@ -34,7 +34,7 @@ export class ApiService {
 			const returns = await this.c.buildinLedger.blocksCount();
 
 			if (returns.result) {
-				if ( returns.result.count == 2) {
+				if ( returns.result.count < 5) {
 					this.node.setSynchronizing();
 					this.connect();
 				} else {
@@ -51,8 +51,8 @@ export class ApiService {
 		});
 	}
 
-	async reconnect() {
-		console.log('reconnect');
+	async reconnect(error = 'error') {
+		console.log('reconnect ' + error);
 		this.node.setOffline('ERROR - connection problem. Reconnecting.');
 		this.connect();
 	}
@@ -99,7 +99,7 @@ export class ApiService {
 	async accountsPending(accounts: string[], count: number = 50): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.accountsPending(accounts,count);
 		if (!result.result && !result.error) 
-			this.reconnect();
+			this.reconnect('accountsPending');
 		return result;
 	}
 
@@ -169,8 +169,8 @@ export class ApiService {
 
 	async accountBlocksCount(account): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.accountBlocksCount(account);
-		if (!result.result && !result.error) 
-			this.reconnect();
+		if (typeof(result.result) != 'number' && !result.error) 
+			this.reconnect('accountBlocksCount');
 		return result;
 	}
 
@@ -211,7 +211,7 @@ export class ApiService {
 	async blocks(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.blocks(count,offset);
 		if (!result.result && !result.error) 
-			this.reconnect();
+			this.reconnect('blocks');
 
 		return result;
 	}
@@ -243,7 +243,7 @@ export class ApiService {
 	async tokenInfoByName(tokenName): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.tokenInfoByName(tokenName);
 		if (!result.result && !result.error) 
-			this.reconnect();
+			this.reconnect('tokenInfoByName');
 		return result;
 	}
 	
@@ -278,7 +278,7 @@ export class ApiService {
 	async phoneBlocks(phoneNumber:string): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.phoneBlocks(phoneNumber);
 		if (!result.result && !result.error) 
-			this.reconnect();
+			this.reconnect('phoneBlocks');
 
 		return result;
 	}

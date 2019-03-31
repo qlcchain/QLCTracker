@@ -199,9 +199,13 @@ export class MyaccountComponent implements OnInit {
 
     const qrCode = await QRCode.toDataURL(`${this.accountId}`);
     this.qrCodeImage = qrCode;
+
     
     const accountBlocksCount = await this.api.accountBlocksCount(this.accountId);
-			this.accountBlocksCount = accountBlocksCount.result;
+    if (typeof(accountBlocksCount.result) == 'number')
+      this.accountBlocksCount = accountBlocksCount.result;
+      
+    
   }
 
   async loadPending() {
