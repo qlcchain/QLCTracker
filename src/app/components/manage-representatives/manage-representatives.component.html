@@ -1,14 +1,173 @@
-<div class="container mt-0 qlc-content-first">
-	<div class="row">
-		<div class="col-12 pl-0 pr-0">
-			<div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
-				<div class="content-title">
-					<h1>{{ 'APP_SETTINGS.app_settings_title' | translate }}</h1>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="container mt-0 qlc-content-first pl-0 pr-0 mb-5 pb-5" *ngIf="activePanel == 0">
+    <div class="row">
+  
+  
+      <!-- REPRESENTATIVES -->
+      <div class="col-12">
+  
+        <!-- TITLE -->
+        <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+          <button type="submit" class="btn btn-primary content-header float-right" (click)="activePanel = 1;">
+            {{ 'REPRESENTATIVES_LIST.representatives_list_button' | translate }}
+          </button>
+          <div class="content-title">
+            <h1>{{ 'REPRESENTATIVES_LIST.representatives_list_title' | translate }}</h1>
+          </div>
+        </div>
+        
+      </div>
+  
+  
+      <!-- LIST -->
+      <div class="col-lg-12 mb-0 mt-2 pl-4 pr-4">
+
+          <div class="container">
+
+            <div class="row qlc-table-header">
+              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-2 pl-4">{{ 'REPRESENTATIVES_LIST.name' | translate }}</div>
+              <div class="col-xl-5 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate">{{ 'REPRESENTATIVES_LIST.account_id' | translate }}</div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 text-right"></div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 text-right">{{ 'REPRESENTATIVES_LIST.options' | translate }}</div>
+            </div>
+
+            <div class="row qlc-table-row closed"  *ngFor="let representative of representatives$ | async;" [attr.data-account]="representative.id">
+              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-2 pl-4">
+                  <span class="icon online" *ngIf="representative.online" tooltip="{{ 'REPRESENTATIVES_LIST.online' | translate }}" container="body"></span>
+                  <span class="icon offline" *ngIf="!representative.online" tooltip="{{ 'REPRESENTATIVES_LIST.offline' | translate }}" container="body"></span>
+                  <a (click)="editEntry(representative)"  tooltip="{{ 'REPRESENTATIVES_LIST.edit_rep' | translate }}">{{ representative.name }}</a>
+              </div>
+              <div class="col-xl-5 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate">
+                  <span *ngIf="representative.trusted" class="icon trusted" tooltip="Representative marked as trusted" container="body"></span>
+                  <span *ngIf="representative.warn" class="icon avoid" tooltip="Representative marked as avoid" container="body"></span>
+                  <a [routerLink]="'/account/' + representative.id" class="address" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}" container="body">{{ representative.id }}</a>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 text-right">
+                  <a ngxClipboard [cbContent]="representative.id" (cbOnSuccess)="copied()" tooltip="{{ 'COPY_TO_CLIPBOARD' | translate }}" class="icon copy" container="body"></a>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 text-right">
+                  <a (click)="deleteRepresentative(representative.id)" tooltip="{{ 'REPRESENTATIVES_LIST.delete_rep' | translate }}" class="icon delete" container="body"></a>
+                  <div *ngIf="!(representatives$ | async).length" class="row align-items-center rowContent">
+                    <div class="col-12 text-center">
+                      {{ 'REPRESENTATIVES_LIST.no_reps1' | translate }} <a (click)="activePanel = 1">{{ 'REPRESENTATIVES_LIST.no_reps2' | translate }}</a>.
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+          </div>
+
+      </div>
+
+      <!-- CLICK TO CHANGE TEXT -->
+      <div class="col-12 mt-0" *ngIf="!(representatives$ | async).length">
+        <!-- TITLE -->
+        <div class="col-lg-12 mt-0 pl-md-4 pr-md-4">
+
+          <div class="row qlc-table-row closed">
+            <div class="col-12">
+              <div class="text-center">
+                  {{ 'REPRESENTATIVES_LIST.no_reps1' | translate }} <a (click)="activePanel = 1">{{ 'REPRESENTATIVES_LIST.no_reps2' | translate }}</a>.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEXT -->
+      <div class="col-12 mt-2">
+        <!-- TITLE -->
+        <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+            <div class="col-12 pt-4 pl-0">	
+              <h6>{{ 'REPRESENTATIVES_LIST.representatives_list_text' | translate }}</h6>
+            </div>
+        </div>
+      </div>
+
+      
+
+  </div>
 </div>
+
+
+
+
+<div class="container mt-0 qlc-content-first pl-0 mb-5 pb-5" *ngIf="activePanel == 1">
+    <div class="row">
+
+
+        <!-- ADD REP -->
+        <div class="col-12">
+
+          <!-- TITLE -->
+          <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+            <div class="content-title">
+              <h1>{{ 'REPRESENTATIVES_LIST.create_new_representative' | translate }}</h1>
+            </div>
+          </div>
+
+          <div class="col-12 pr-2 pl-2 pt-2">
+            <div class="content-box-white">
+
+                    <div class="col-12 pl-4 pt-4 pb-4 pr-4">
+                        <div class="row align-items-top">
+                          <div class="col-md-2 text-truncate dataName form-label-custom-2 pb-4">{{ 'REPRESENTATIVES_LIST.account_id' | translate }}</div>
+                          <div class="col-md-10 text-left text-truncate pt-1">
+                            <div class="form-group">
+                              <input type="text" class="form-control" onfocus="this.placeholder = ''" placeholder="{{ 'REPRESENTATIVES_LIST.account_id_placeholder' | translate }}" [(ngModel)]="newRepAccount" >
+                            </div></div>
+                          </div>
+                          <div class="row align-items-top">
+                            <div class="col-md-2 text-truncate dataName form-label-custom-2 pb-4">{{ 'REPRESENTATIVES_LIST.name' | translate }}</div>
+                            <div class="col-md-10 text-left text-truncate pt-1">
+                              <div class="form-group">
+                                  <input type="text" class="form-control" onfocus="this.placeholder = ''" placeholder="{{ 'REPRESENTATIVES_LIST.name_placeholder' | translate }}"  [(ngModel)]="newRepName" (keyup.enter)="saveNewRepresentative()">
+                              </div></div>
+                            </div>
+                            <div class="row align-items-top">
+                              <div class="col-md-2 text-truncate dataName form-label-custom-2 pb-4">{{ 'REPRESENTATIVES_LIST.representative_flags' | translate }}</div>
+                              <div class="col-md-10 text-left text-truncate pt-2 pb-5">
+                                <div class="form-group">
+                                  <input class="form-check-input" type="checkbox" value="" id="trusted_check" [(ngModel)]="newRepTrusted" style="margin-left:0px;">
+                                  <label class="form-check-label" for="trusted_check" tooltip="{{ 'REPRESENTATIVES_LIST.trusted_check_tooltip' | translate }}" container="body" style="margin-left:24px;">
+                                    {{ 'REPRESENTATIVES_LIST.trusted_check' | translate }}
+                                  </label>
+                                </div>
+                                <div class="form-group">
+                                  <input class="form-check-input" type="checkbox" value="" id="avoid_check" [(ngModel)]="newRepWarn"style="margin-left:0px;">
+                                  <label class="form-check-label" for="avoid_check" tooltip="{{ 'REPRESENTATIVES_LIST.avoid_check_tooltip' | translate }}" container="body" style="margin-left:24px;">
+                                    {{ 'REPRESENTATIVES_LIST.avoid_check' | translate }}
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row align-items-top rowAmount">
+                                <div class="col-md-2 text-truncate dataName"></div>
+                                <div class="col-lg-2 col-md-4 col-sm-6 col-12 pr-md-2 text-center text-truncate mobile-break">
+                                  <button type="submit" class="btn btn-primary btn-danger" (click)="cancelNewRep()">{{ 'CANCEL' | translate }}</button>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-12 pl-md-2 text-left text-truncate">
+                                  <button type="submit" class="btn btn-primary" (click)="saveNewRepresentative()">{{ 'REPRESENTATIVES_LIST.save_new_representative' | translate }}</button>
+                                </div>                              
+                            </div>
+                          </div>
+                  </div>
+            </div>
+
+         </div>
+
+
+
+
+
+
+    </div>
+</div>
+
+
+
+
+
+<!--
 <div class="container" *ngIf="activePanel == 0">
   <div class="row">
     <div class="col-12 pl-0 pr-0">
@@ -58,7 +217,8 @@
     </div>
   </div>
 </div>
-
+-->
+<!--
 <div class="container" *ngIf="activePanel == 1">
   <div class="row">
     <div class="col-12 px-0">
@@ -120,5 +280,5 @@
     </div>
   </div>
 </div>
-
+-->
 

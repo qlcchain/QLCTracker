@@ -1396,6 +1396,65 @@ pre {
     background-color:#005cbf;
 }
 
+.icon {
+    display:inline-block;
+    width:18px;
+    height:18px;
+    background: #ea2525;
+    margin-right: 8px;
+    vertical-align: middle;
+    margin-top:-4px;
+}
+.icon.avoid {
+    background: url('../assets/img/icons/qlc-icon-status-avoid.svg') no-repeat center center;
+    background-size: 100% auto;
+}
+.icon.trusted {
+    background: url('../assets/img/icons/qlc-icon-status-trusted.svg') no-repeat center center;
+    background-size: 100% auto;
+}
+.icon.online {
+    background: url('../assets/img/icons/qlc-icon-status-online.svg') no-repeat center center;
+    background-size: 100% auto;
+}
+.icon.offline {
+    background: url('../assets/img/icons/qlc-icon-status-offline.svg') no-repeat center center;
+    background-size: 100% auto;
+}
+.icon.delete {
+    background: url('../assets/img/icons/qlc-icon-delete-red.svg') no-repeat center center;
+    background-size: 100% auto;
+}
+.icon.copy {
+    background: url('../assets/img/icons/copy-grey.svg') no-repeat center center;
+    background-size: 100% auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* RWD OVERRIDES */
 
