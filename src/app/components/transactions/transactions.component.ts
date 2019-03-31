@@ -176,7 +176,5 @@ export class TransactionsComponent implements OnInit {
 			}
 			//this.transactions = this.transactions.filter(h => h.type !== 'change');
 		}
-		const atransactions = await this.api.blocks(100);
-		console.log(atransactions.result.length);
 	}
 }

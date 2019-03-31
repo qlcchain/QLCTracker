@@ -393,6 +393,23 @@ export class SendComponent implements OnInit {
 			this.selectedToken = '';
 		}
 		this.resetRaw();
+  }
+  tokenBalance(token) {
+    if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
+      const tokenData = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === token);
+      return tokenData.balance;
+		} else {
+			return 0.00;
+		}
+  }
+  selectTokenIcon(token) {
+		if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
+      this.selectedTokenSymbol = token;
+			this.selectedToken = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === token);
+		} else {
+			this.selectedToken = '';
+		}
+		this.resetRaw();
 	}
 
 	selectAccount() {
@@ -402,7 +419,7 @@ export class SendComponent implements OnInit {
 			selectedAccount.accountMeta.tokens !== undefined &&
 			selectedAccount.accountMeta.tokens.length > 0
 				? selectedAccount.accountMeta.tokens
-				: [];
+        : [];
 		this.selectedToken = this.accountTokens !== undefined && this.accountTokens.length > 0 ? this.accountTokens[0] : [];
 		this.selectedTokenSymbol =
 			this.selectedToken !== undefined && this.selectedToken.tokenInfo !== undefined

@@ -53,7 +53,7 @@
 
 						<!-- BALANCES -->
 						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-1 order-2">
-							<div class="content-box-white h-auto mt-2 pb-2 balance-box active">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenName == 'QLC'" (click)="selectTokenIcon('QLC')">
 								<div class="container">
 									<div class="row qlc-table-header-white">
 										<div class="col-12">QLC Balance</div>
@@ -67,7 +67,7 @@
 										</div>
 										<div class="col-9 pr-0 pl-0">
 											<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-												<div class="col-12 pb-0">{{ selectedToken.balance | qlc: settings.settings.displayDenomination }}</div>
+												<div class="col-12 pb-0">{{ tokenBalance('QLC') | qlc: settings.settings.displayDenomination  | currency:'':'':'1.2-8' }}</div>
 											</div>
 											<div class="row qlc-table-row-white sub-page pt-0">
 												<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
@@ -80,7 +80,7 @@
 
 						<!-- BALANCES -->
 						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-2 order-3">
-							<div class="content-box-white h-auto mt-2 pb-2 balance-box">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenName == 'QSMS'">
 								<div class="container">
 									<div class="row qlc-table-header-white">
 										<div class="col-12">QSMS Balance</div>
@@ -107,7 +107,7 @@
 
 						<!-- BALANCES -->
 						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-3 order-4">
-							<div class="content-box-white h-auto mt-2 pb-2 balance-box">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenName == 'QGAS'" (click)="selectTokenIcon('QGAS')">
 								<div class="container">
 									<div class="row qlc-table-header-white">
 										<div class="col-12">QGAS Balance</div>
@@ -121,7 +121,7 @@
 										</div>
 										<div class="col-9 pr-0 pl-0">
 											<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-												<div class="col-12 pb-0">0.00</div>
+												<div class="col-12 pb-0">{{ tokenBalance('QGAS') | qlc: settings.settings.displayDenomination  | currency:'':'':'1.2-8' }}</div>
 											</div>
 											<div class="row qlc-table-row-white sub-page pt-0">
 												<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
@@ -219,7 +219,7 @@
 																<div class="col-md-9 ">
 																	<div class="row">
 																		<div class="col-6 pr-0 balance">
-																			{{ selectedToken.balance | qlc: settings.settings.displayDenomination }}
+																			{{ selectedToken.balance | qlc: settings.settings.displayDenomination | currency:'':'':'1.2-8' }}
 																		</div>
 																		<div class="col-6 pl-0 text-right fiat">(-)</div>
 																	</div>
