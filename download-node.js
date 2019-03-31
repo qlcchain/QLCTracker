@@ -7,7 +7,7 @@ const gitrev = '3a4ae9c';
 
 let dir = 'extra/win32/x64';
 if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
+    fs.ensureDirSync(dir);
 }
 console.log('download win32 x64 binary');
 download('https://github.com/qlcchain/go-qlc/releases/download/'+version+'/gqlc-windows-amd64-'+version+'-'+gitrev+'.exe').then(data => {
@@ -22,7 +22,7 @@ download('https://github.com/qlcchain/go-qlc/releases/download/'+version+'/gqlct
 // add chmod
 dir = 'extra/darwin/x64/';
 if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
+    fs.ensureDirSync(dir);
 }
 console.log('download macOS x64 binary');
 download('https://github.com/qlcchain/go-qlc/releases/download/'+version+'/gqlc-darwin-amd64-'+version+'-'+gitrev).then(data => {
@@ -40,7 +40,7 @@ download('https://github.com/qlcchain/go-qlc/releases/download/'+version+'/gqlct
 // add chmod
 dir = 'extra/linux/x64/';
 if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
+    fs.ensureDirSync(dir);
 }
 console.log('download linux x64 binary');
 download('https://github.com/qlcchain/go-qlc/releases/download/'+version+'/gqlc-linux-amd64-'+version+'-'+gitrev).then(data => {
