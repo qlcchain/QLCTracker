@@ -92,11 +92,11 @@
                     </div>
                     <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
                         <div class="content-box-white">
-                            <div class="col-12 px-0 text-center py-3">
-                                {{ 'CREATE_NEW_CREATED.create_new_created_text' | translate }}
+                            <div class="col-12 px-0 text-center py-3 pt-5 pb-4">
+                                <strong>{{ 'CREATE_NEW_CREATED.create_new_created_text' | translate }}</strong>
                             </div>
-                            <div class="row align-items-top">
-                                <div class="col-xl-6">
+                            <div class="row align-items-top pl-5 pr-5">
+                                <div class="col-xl-6 pr-md-3">
                                     <div class="col-12 defaultTable tableQLC content">
                                         <div class="row align-items-center rowTitles">
                                             <div class="col-12 pb-3">
@@ -104,7 +104,7 @@
                                             </div>
                                         </div>
                                         <div class="row align-items-center rowDefault">
-                                            <div class="col-12 pb-3">
+                                            <div class="col-12 pb-3 seed-txt pb-4">
                                                 {{ newWalletMnemonic }}
                                             </div>
                                         </div>
@@ -115,7 +115,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-6">
+                                <div class="col-xl-6 pl-md-3">
                                     <div class="col-12 defaultTable tableQLC content">
                                         <div class="row align-items-center rowTitles">
                                             <div class="col-12 pb-3">
@@ -123,12 +123,12 @@
                                             </div>
                                         </div>
                                         <div class="row align-items-center rowDefault">
-                                            <div class="col-12 pb-3">
+                                            <div class="col-12 pb-3 seed-txt" style="word-wrap: break-word;">
                                                 {{ newWalletSeed }}
                                             </div>
                                         </div>
-                                        <div class="row align-items-center rowButtons">
-                                            <div class="col-12 align-self-end">
+                                        <div class="row align-items-center rowButtons pb-3 mb-3">
+                                            <div class="col-12 align-self-end pb-5 mb-0">
                                                 <a tooltip="{{ 'CREATE_NEW_CREATED.copy_seed' | translate }}" ngxClipboard [cbContent]="newWalletSeed" (cbOnSuccess)="copied()" class="icon-text-link" ><span class="icon copy light"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
                                             </div>
                                         </div>
@@ -138,20 +138,20 @@
                             
                             
                             
-                            <div class="row defaultTable content">
+                            <div class="row defaultTable content pt-4">
                                 <div class="col-12 pb-3">
                                     <div class="row align-items-center rowContent autoHP">
                                         <div class="col-12 px-0 pb-1 text-center boldbig" [innerHtml]="'CREATE_NEW_CREATED.warning1' | translate">
                                             
                                         </div>
-                                        <div class="col-12 px-0 pb-3 text-center boldbig">
+                                        <div class="col-12 px-0 pb-3 text-center boldbig pt-4">
                                             {{ 'CREATE_NEW_CREATED.warning2' | translate }}
                                         </div>
                                     </div>
                                     
-                                    <div class="row align-items-center justify-content-center rowDefault rowButtons">
-                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8 col-12 px-0 px-sm-2 text-left text-truncate mobile-break">
-                                            <a (click)="confirmNewSeed()"><button type="submit" class="btn btn-danger">{{ 'CREATE_NEW_CREATED.create_new_created_button' | translate }}</button></a>
+                                    <div class="row align-items-center justify-content-center rowDefault rowButtons pt-4">
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-5">
+                                            <a (click)="confirmNewSeed()"><button type="submit" class="btn btn-primary pl-0 pr-0 btn-danger w-100">{{ 'CREATE_NEW_CREATED.create_new_created_button' | translate }}</button></a>
                                         </div>
                                     </div>
                                 </div>
