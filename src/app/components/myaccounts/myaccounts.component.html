@@ -34,7 +34,7 @@
 				<div class="container">
 
 				<div class="row qlc-table-header-blue">
-					<div class="col-12">Address</div>
+					<div class="col-12">Address <span *ngIf="addressBookModel != ''">({{ addressBookModel }})</span></div>
 				</div>
 				<div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer">
           <div class="col-12 text-break pr-3" 
@@ -60,7 +60,7 @@
 						</div>
 						<div class="col-9 pr-0 pl-0">
 							<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                <div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QLC']">{{ account.balances['QLC'].balance | qlc }} QLC</div>
+                <div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QLC']">{{ account.balances['QLC'].balance | qlc | currency:'':'':'1.2-8' }} QLC</div>
                 <div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QLC'])">NaN QLC</div>
 							</div>
 							<div class="row qlc-table-row-white sub-page pt-0">
@@ -77,7 +77,7 @@
 						</div>
 						<div class="col-9 pr-0 pl-0">
 							<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                <div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QSMS']">{{ account.balances['QLC'].balance | qlc }} QSMS</div>
+                <div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QSMS']">{{ account.balances['QLC'].balance | qlc | currency:'':'':'1.2-8' }} QSMS</div>
                 <div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QSMS'])">NaN QSMS</div>
 							</div>
 							<div class="row qlc-table-row-white sub-page pt-0">
@@ -94,7 +94,7 @@
 						</div>
 						<div class="col-9 pr-0 pl-0">
 							<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                  <div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QGAS']">{{ account.balances['QGAS'].balance | qlc }} QGAS</div>
+                  <div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QGAS']">{{ account.balances['QGAS'].balance | qlc | currency:'':'':'1.2-8' }} QGAS</div>
                   <div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QGAS'])">NaN QGAS</div>
 							</div>
 							<div class="row qlc-table-row-white sub-page pt-0">

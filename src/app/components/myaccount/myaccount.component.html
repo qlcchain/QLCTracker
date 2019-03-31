@@ -81,7 +81,7 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QLC']">{{ accountMeta.balances['QLC'].balance | qlc }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QLC']">{{ accountMeta.balances['QLC'].balance | qlc | currency:'':'':'1.2-8' }}</div>
                                             <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QLC'])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
@@ -120,7 +120,7 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QSMS']">{{ accountMeta.balances['QSMS'].balance | qlc }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QSMS']">{{ accountMeta.balances['QSMS'].balance | qlc | currency:'':'':'1.2-8' }}</div>
                                             <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QSMS'])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
@@ -154,7 +154,7 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QGAS']">{{ accountMeta.balances['QGAS'].balance | qlc }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QGAS']">{{ accountMeta.balances['QGAS'].balance | qlc | currency:'':'':'1.2-8' }}</div>
                                             <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QGAS'])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
@@ -243,7 +243,7 @@
             </div>
             <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let pending of pendingBlocks">
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
-                  <span class="qlc-icon icon-receive" title="Receive"></span>
+                  <span class="qlc-icon icon-Receive" title="Receive"></span>
                   <span class="d-none d-sm-none d-md-inline-block">
                     <span class="text-color-lightgrey">State</span><br>
                     <span class="text-bold-grey">Receive</span>
