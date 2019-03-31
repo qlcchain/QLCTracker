@@ -1,0 +1,87 @@
+<div class="container mt-0 qlc-content-first">
+    <div class="row">
+        <div class="col-12 pl-0 pr-0 pb-2">
+            
+            <!-- TITLE -->
+            <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+                <div class="content-title">
+                    <h1>{{ 'IMPORT_ADDRESS_BOOK.import_address_book_title' | translate }}</h1>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="container addressbook">
+	<div class="row">
+		<div class="col-12 pl-0 pr-0">
+			<h1>{{ 'IMPORT_ADDRESS_BOOK.import_address_book_title' | translate }}</h1>
+		</div>
+	</div>
+	<div *ngIf="activePanel == 'error'" class="row defaultTable content">
+		<div class="col-12 text-center">
+			<b>{{ 'IMPORT_ADDRESS_BOOK.error_title' | translate }}</b
+			><br />
+			{{ 'IMPORT_ADDRESS_BOOK.error_text' | translate }}
+		</div>
+	</div>
+
+	<div *ngIf="activePanel == 'imported'" class="row defaultTable content">
+		<div class="col-12 text-center">
+			<b>{{ 'IMPORT_ADDRESS_BOOK.imported_title' | translate }}</b
+			><br />
+			{{ 'IMPORT_ADDRESS_BOOK.imported_text' | translate }}
+		</div>
+		<div class="col-12 px-0 ">
+			<div class="row justify-content-center buttons">
+				<div class="col-xl-3 col-lg-4 col-10">
+					<a routerLink="/address-book"
+						><button type="submit" class="btn btn-primary">
+							{{ 'IMPORT_ADDRESS_BOOK.imported_button' | translate }}
+						</button></a
+					>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row defaultTable content" *ngIf="activePanel == 'import'">
+		<div class="col-12">
+			<div class="row align-items-center rowDefault">
+				<div class="col-12 text-center">
+					<span class="import-warning" *ngIf="conflictingEntries">
+						{{ conflictingEntries }} {{ 'IMPORT_ADDRESS_BOOK.label_exist' | translate }}
+					</span>
+					<span class="import-warning" *ngIf="newEntries">
+						{{ newEntries }} {{ 'IMPORT_ADDRESS_BOOK.label_new' | translate }}
+					</span>
+					<span class="import-warning" *ngIf="existingEntries">
+						{{ existingEntries }} {{ 'IMPORT_ADDRESS_BOOK.label_modified' | translate }}
+					</span>
+				</div>
+			</div>
+			<div class="row align-items-center rowTitles">
+				<div class="col-3 pl-0">{{ 'IMPORT_ADDRESS_BOOK.new_label' | translate }}</div>
+				<div class="col-3 pr-2 pr-md-0">{{ 'IMPORT_ADDRESS_BOOK.current_label' | translate }}</div>
+				<div class="col-6 px-0 ">{{ 'IMPORT_ADDRESS_BOOK.account' | translate }}</div>
+			</div>
+			<div class="row align-items-center rowContent" *ngFor="let entry of importData">
+				<div class="col-3 pl-0 text-truncate name">{{ entry.name }}</div>
+				<div class="col-3 pr-2 pr-md-0 text-truncate name">{{ entry.originalName }}</div>
+				<div class="col-6 px-0 text-truncate">{{ entry.account }}</div>
+			</div>
+			<div class="row align-items-center align-items-center rowButtons">
+				<div class="col-md-2 px-0 text-truncate dataName"></div>
+				<div class="col-lg-2 col-md-4 col-sm-6 col-12 px-0 pr-md-2 text-center text-truncate mobile-break">
+					<button type="submit" class="btn btn-danger" routerLink="/manage-wallet">{{ 'CANCEL' | translate }}</button>
+				</div>
+				<div class="col-lg-3 col-md-4 col-sm-6 col-12 px-0 pl-md-2 text-left text-truncate">
+					<button type="submit" class="btn btn-primary" (click)="confirmImport()">
+						{{ 'IMPORT_ADDRESS_BOOK.import' | translate }}
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
