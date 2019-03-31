@@ -225,6 +225,19 @@
 		"export_address_book_text2": "Scan the QR code on any device to load your QLC Chain wallet!<br><br>If you do not have a QR code scanner, you can also import your wallet by using the URL below.",
 		"export_address_book_copied": "Address book export copied to clipboard!"
 	},
+	"MANAGE_WALLET_WARNINGS": {
+		"msg1": "Passwords do not match",
+		"msg2": "Password cannot be empty",
+		"msg3": "Wallet must be unlocked",
+		"msg4": "Wallet password successfully updated",
+		"msg5": "Wallet must be unlocked",
+		"msg6": "Wallet seed copied to clipboard!",
+		"msg7": "Address books with 25 or more entries need to use the file export method.",
+		"msg8": "Address book export downloaded!",
+		"msg9": "Wallet export downloaded!",
+		"msg10": "Bad import data, make sure you selected a QLCWallet Address Book export",
+		"msg11": "Unable to parse import data, make sure you selected the right file!"
+	},
 	"CONFIGURE_APP_WARNINGS": {
 		"msg1": "QLC (1 Mqlc)",
 		"msg2": "kqlc (0.001 Mqlc)",
@@ -341,6 +354,30 @@
 		"msg5": "Node returned an error",
 		"msg6": "Transaction denied on Ledger device",
 		"msg7": "Waiting for confirmation on Ledger Device..."
+	},
+	"IMPORT_ADDRESS_BOOK": {
+		"import_address_book_title": "Import Address Book",
+		"error_title": "Bad Import Data",
+		"error_text": "There was an issue reading the import data for your address book.  Double check the address and try again.",
+		"confirm": "Confirm Import",
+		"label_exist": "Labels already exist and will have their name changed.",
+		"label_new": "New labels will be added.",
+		"label_modified": "Labels already exist and will not be modified.",
+		"new_label": "New Label",
+		"current_label": "Current Label",
+		"account": "Account",
+		"cancel": "Cancel",
+		"import": "Import Address Book",
+		"imported_title": "Address Book Imported",
+		"imported_text": "Your address book has been successfully imported!",
+		"imported_button": "View Address Book"
+	},
+	"IMPORT_ADDRESS_BOOK_WARNINGS": {
+		"msg1": "No import data found.  Check your link and try again.",
+		"msg2": "Bad import data.  Check your link and try again.",
+		"msg3": "Unable to decode import data.  Check your link and try again.",
+		"msg4": "Successfully imported",
+		"msg5": "address book entries"
 	},
 	"CANCEL": "Cancel",
 	"OK": "Ok",

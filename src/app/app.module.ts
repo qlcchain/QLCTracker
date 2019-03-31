@@ -45,6 +45,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { MyrepresentativesComponent } from './components/myrepresentatives/myrepresentatives.component';
 import { SqueezePipe } from './pipes/squeeze.pipe';
 import { ManageRepresentativesComponent } from './components/manage-representatives/manage-representatives.component';
+import { ImportAddressBookComponent } from './components/import-address-book/import-address-book.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -77,7 +78,8 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsComponent,
     MyrepresentativesComponent,
     SqueezePipe,
-    ManageRepresentativesComponent
+    ManageRepresentativesComponent,
+    ImportAddressBookComponent
   ],
   imports: [
     BrowserModule,

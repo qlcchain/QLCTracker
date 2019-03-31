@@ -18,6 +18,7 @@ import { SearchComponent } from './components/search/search.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { MyrepresentativesComponent } from './components/myrepresentatives/myrepresentatives.component';
 import { ManageRepresentativesComponent } from './components/manage-representatives/manage-representatives.component';
+import { ImportAddressBookComponent } from './components/import-address-book/import-address-book.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -45,6 +46,7 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent },
   { path: 'myrepresentatives', component: MyrepresentativesComponent },
   { path: 'manage-representatives', component: ManageRepresentativesComponent },
+  { path: 'import-address-book', component: ImportAddressBookComponent },
   
   { path: '**', component: HomeComponent },
 ];
