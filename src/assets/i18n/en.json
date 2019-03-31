@@ -379,6 +379,8 @@
 		"msg4": "Successfully imported",
 		"msg5": "address book entries"
 	},
+	"NO_WALLET_CONFIGURED": "You don't have a wallet configured, ",
+	"NO_WALLET_CONFIGURED_CLICK": "click here to create or import one",
 	"CANCEL": "Cancel",
 	"OK": "Ok",
     "LOADING": "Loading",

@@ -143,7 +143,7 @@
 									<div *ngIf="!accounts.length" class="row defaultTable content">
 										<div class="col-12 text-center">
 											{{ 'NO_WALLET_CONFIGURED' | translate
-											}}<a routerLink="/configure-wallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+											}}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
 										</div>
 									</div>
 									<div *ngIf="accounts.length" class="row defaultTable sendTokens">
@@ -319,7 +319,7 @@
 	<div *ngIf="!accounts.length" class="row defaultTable content">
 		<div class="col-12 text-center">
 			{{ 'NO_WALLET_CONFIGURED' | translate
-			}}<a routerLink="/configure-wallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+			}}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
 		</div>
 	</div>
 	<div *ngIf="accounts.length" class="row defaultTable sendTokens">

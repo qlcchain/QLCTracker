@@ -23,7 +23,7 @@
     <div *ngIf="!accounts.length" class="row defaultTable content">
         <div class="col-12 text-center">
           {{ 'NO_WALLET_CONFIGURED' | translate
-          }}<a routerLink="/configure-wallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+          }}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
         </div>
       </div>
 	<div class="row">
@@ -154,7 +154,7 @@
 	<div *ngIf="!accounts.length" class="row defaultTable content">
 		<div class="col-12 text-center">
 			{{ 'NO_WALLET_CONFIGURED' | translate
-			}}<a routerLink="/configure-wallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+			}}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
 		</div>
 	</div>
 	<div *ngFor="let account of accounts" class="row defaultTable account">
