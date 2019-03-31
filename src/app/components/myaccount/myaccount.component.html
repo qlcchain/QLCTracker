@@ -132,18 +132,18 @@
                         <div class="content-box-white h-auto mt-2 pb-2">
                             <div class="container">
                                 <div class="row qlc-table-header-white">
-                                    <div class="col-12">Q-GAS Balances</div>
+                                    <div class="col-12">QGAS Balances</div>
                                 </div>
                             </div>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-3 mt-3">
-                                        <img src="assets/img/token-gas.png" class="w-100 icon-token">
+                                        <img src="assets/img/token-qgas.png" class="w-100 icon-token">
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['Q-GAS']">{{ accountMeta.balances['Q-GAS'].balance | qlc }}</div>
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['Q-GAS'])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QGAS']">{{ accountMeta.balances['QGAS'].balance | qlc }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QGAS'])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
                                             <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
@@ -155,14 +155,14 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('Q-GAS')" type="submit" class="btn btn-primary btn-darkgrey btn-icon-receive w-100 pl-2 pr-2">RECEIVE Q-GAS <span class="superlight">(0 Pending)</span></button>
+                                    <button (click)="receive('QGAS')" type="submit" class="btn btn-primary btn-darkgrey btn-icon-receive w-100 pl-2 pr-2">RECEIVE QGAS <span class="superlight">({{ walletAccount.pendingCount }} Pending)</span></button>
                                 </div>
                             </div>
                         </div>
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="claim('Q-GAS')" type="submit" class="btn btn-primary btn-green btn-icon-qlc w-100 pl-2 pr-0">CLAIM Q-GAS <span class="superlight">(0)</span></button>
+                                    <button (click)="claim('QGAS')" type="submit" class="btn btn-primary btn-green btn-icon-qlc w-100 pl-2 pr-0">CLAIM QGAS <span class="superlight">(0)</span></button>
                                 </div>
                             </div>
                         </div>
