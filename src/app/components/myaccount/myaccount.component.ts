@@ -141,7 +141,6 @@ export class MyaccountComponent implements OnInit {
       this.accountId = this.wallet.accounts[0].accountMeta.account;
 
     this.walletAccount = this.wallet.accounts.find(a => a.id === this.accountId);
-    console.log(this.walletAccount);
     this.addressBookEntry = this.addressBook.getAccountName(this.accountId);
 		this.addressBookModel = this.addressBookEntry || '';
 		const tokenMap = {};

@@ -63,7 +63,6 @@ export class RepresentativesComponent implements OnInit {
   }
 
 	setPage(page) {
-    console.log(page);
     this.activePage = page;
     this.offSet = page*this.pageSize-this.pageSize;
     this.loadData();

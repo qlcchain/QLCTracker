@@ -94,7 +94,6 @@ export class AccountsComponent implements OnInit {
 		if (this.pages[1] && this.pages[1] != 2) {
 			this.pages[1] = '...';
     }
-    console.log(pages);
   }
 
   setPage(page) {
@@ -118,7 +117,6 @@ export class AccountsComponent implements OnInit {
     const accounts = await this.api.accounts(this.pageSize,this.offSet);
 
     const tokenMap = {};
-    let displayAccounts = [];
 		const tokens = await this.api.tokens();
 		if (!tokens.error) {
 			tokens.result.forEach(token => {
@@ -136,10 +134,6 @@ export class AccountsComponent implements OnInit {
         this.accounts.push(accountInfo.result);
       })
     }
-    
-
-    //this.accounts = displayAccounts;
-    console.log(this.accounts);
   }
 
 }

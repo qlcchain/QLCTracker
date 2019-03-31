@@ -76,7 +76,6 @@ export class TokensComponent implements OnInit {
     
 
     this.tokens = tokens.result;
-    console.log(this.tokens);
   }
 
 }

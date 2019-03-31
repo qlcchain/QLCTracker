@@ -35,6 +35,12 @@ npm run sms:build-desktop
 Then run
 
 ```bash
+node download-node.js
+```
+
+to download the latest QLC node and 
+
+```bash
 npm run desktop:dev
 ```
 
