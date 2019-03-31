@@ -20,39 +20,17 @@
             
             <div class="row qlc-table-header">
               <div class="col-xl-8 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate">Address</div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 d-none d-sm-block text-right">Balance</div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right">Created</div>
+              <div class="col-xl-4 col-lg-5 col-md-6 col-sm-7 d-none d-sm-block text-right">Balance</div>
+              <!--<div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right">Last transaction</div>-->
             </div>
-            <!--
-              <div class="row qlc-table-row closed">
-                <div class="col-xl-8 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate"><a href="index_02_details_account.html"><span class="text-blue">Montnets1</span> - qlc_3sxmrax3ggd33rx6jdzxy5c4qadh847eyst8ffjq679d3or3snbah75aojet</a></div>
-                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 d-none d-sm-block text-right"><span data-toggle="tooltip" data-placement="top" title="260,090.45 $">1.250.000.00</span></div>
-                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right">Jan 28, 2019 22:50:35</div>
-                <div class="container transaction-details"></div>
-              </div>
-              
-              <div class="row qlc-table-row closed">
-                <div class="col-xl-8 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate"><a href="index_02_details_account.html"><span class="text-blue">Montnets2</span> - qlc_t8ffjq679d3or33sxmrax3ggd33rx6jdzxy5c4qadh847eyssnbah75aojet</a></div>
-                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 d-none d-sm-block text-right"><span data-toggle="tooltip" data-placement="top" title="190,090.45 $">998.000.00</span></div>
-                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right">Jan 28, 2019 22:50:35</div>
-                <div class="container transaction-details"></div>
-              </div>
-              
-              <div class="row qlc-table-row closed">
-                <div class="col-xl-8 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate"><a href="index_02_details_account.html">qlc_x6jdzxy5c4qadh847eyst3sxmrax3ggd33r8ffjq679d3or3snbah75aojet</a></div>
-                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 d-none d-sm-block text-right"><span data-toggle="tooltip" data-placement="top" title="89,090.90 $">500.000.00</span></div>
-                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right">Jan 28, 2019 22:50:35</div>
-                <div class="container transaction-details"></div>
-              </div>
-            -->  
             <div class="row qlc-table-row closed" *ngFor="let account of accounts">
               <div class="col-xl-8 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate">
-                <a [routerLink]="'/account/' + (account)">{{ account }}</a>
+                <a [routerLink]="'/account/' + (account.account)">{{ account.account }}</a>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 d-none d-sm-block text-right">
-                
+              <div class="col-xl-4 col-lg-5 col-md-6 col-sm-7 d-none d-sm-block text-right">
+                <span data-toggle="tooltip" data-placement="top" title="89,090.90 $" *ngFor="let token of account.tokens">{{ token.balance | qlc | number }} {{ token.tokenInfo.tokenSymbol }}</span><br>
               </div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right">N/A</div>
+              <!--<div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right" *ngFor="let token of account.tokens">{{ token.modified * 1000 | date: 'short' }}</div>-->
               <div class="container transaction-details"></div>
             </div>
           </div>

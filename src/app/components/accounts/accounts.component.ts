@@ -108,6 +108,7 @@ export class AccountsComponent implements OnInit {
   }
 
   async loadAccounts() {
+    this.accounts = [];
     const accountsCreated = await this.api.accountsCount();
     
 		if (!accountsCreated.error) {
@@ -117,6 +118,7 @@ export class AccountsComponent implements OnInit {
     const accounts = await this.api.accounts(this.pageSize,this.offSet);
 
     const tokenMap = {};
+    let displayAccounts = [];
 		const tokens = await this.api.tokens();
 		if (!tokens.error) {
 			tokens.result.forEach(token => {
@@ -124,17 +126,19 @@ export class AccountsComponent implements OnInit {
 			});
     }
     if (!accounts.error && accounts.result) {
-      /*accounts.result.forEach(am => {
-        for (const token of am.tokens) {
+      accounts.result.forEach(async am => {
+        let accountInfo = await this.api.accountInfo(am);
+        for (const token of accountInfo.result.tokens) {
           if (tokenMap.hasOwnProperty(token.type)) {
             token.tokenInfo = tokenMap[token.type];
           }
         }
-      })*/
+        this.accounts.push(accountInfo.result);
+      })
     }
     
 
-    this.accounts = accounts.result;
+    //this.accounts = displayAccounts;
     console.log(this.accounts);
   }
 
