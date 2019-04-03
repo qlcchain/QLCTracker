@@ -112,8 +112,8 @@
                 </span>
               </div>
               <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{transaction.type == 'Send' ? 'to' : 'from'}}: </span> 
-                <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)">{{ transaction.link_as_account || transaction.address }}</a>
+                <span class="text-color-lightgrey" *ngIf="transaction.type != 'ContractSend' && transaction.type != 'ContractReward' && transaction.type != 'Change'">{{transaction.type == 'Send' ? 'to' : 'from'}}: </span> 
+                <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)" *ngIf="transaction.type != 'ContractSend' && transaction.type != 'ContractReward' && transaction.type != 'Change'">{{ transaction.link_as_account || transaction.address }}</a>
                 <a [routerLink]="'/transaction/' + transaction.hash"><br>
                   <span class="text-tiny">{{ transaction.hash }}</span>
                 </a>

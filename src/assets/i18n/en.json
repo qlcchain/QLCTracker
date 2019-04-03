@@ -379,6 +379,18 @@
 		"msg4": "Successfully imported",
 		"msg5": "address book entries"
 	},
+	"ACCOUNT_DETAILS_WARNINGS": {
+		"msg1": "Wallet must be unlocked",
+		"msg2": "Account ID is not a valid account",
+		"msg3": "Error changing representative, please try again",
+		"msg4": "Successfully changed representative",
+		"msg5": "Successfully removed address book entry!",
+		"msg6": "Saved address book entry!",
+		"msg7": "Successfully copied to clipboard!"
+	},
+	"SERVICE_WARNINGS_ADDRESS_BOOK": {
+		"msg1": "Name already exists in the address book"
+	},
 	"NO_WALLET_CONFIGURED": "You don't have a wallet configured, ",
 	"NO_WALLET_CONFIGURED_CLICK": "click here to create or import one",
 	"CANCEL": "Cancel",

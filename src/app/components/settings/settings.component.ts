@@ -119,8 +119,7 @@ export class SettingsComponent implements OnInit {
 	powOptions = [
 		{ name: 'Best Option Available', value: 'best' },
 		{ name: 'Client Side - WebGL (Chrome/Firefox)', value: 'clientWebGL' },
-		{ name: 'Client Side - CPU', value: 'clientCPU' },
-		{ name: 'Server', value: 'server' }
+		{ name: 'Client Side - CPU', value: 'clientCPU' }
 	];
 	selectedPoWOption = this.powOptions[0].value;
 
@@ -229,8 +228,7 @@ export class SettingsComponent implements OnInit {
 		this.powOptions = [
 			{ name: 'Best Option Available', value: 'best' },
 			{ name: 'Client Side - WebGL (Chrome/Firefox)', value: 'clientWebGL' },
-			{ name: 'Client Side - CPU', value: 'clientCPU' },
-			{ name: 'Server', value: 'server' }
+			{ name: 'Client Side - CPU', value: 'clientCPU' }
 		];
 
 		this.blockOptions = [{ name: this.msg21, value: false }, { name: this.msg22, value: true }];
@@ -248,18 +246,19 @@ export class SettingsComponent implements OnInit {
 		const matchingDenomination = this.denominations.find(d => d.value === settings.displayDenomination);
 		this.selectedDenomination = matchingDenomination.value || this.denominations[0].value;
 
-		const matchingStorage = this.storageOptions.find(d => d.value === settings.walletStore);
+		const matchingStorage = this.storageOptions.find(d => d.value == settings.walletStore);
 		this.selectedStorage = matchingStorage.value || this.storageOptions[0].value;
 
-		const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value === settings.lockInactivityMinutes);
+    const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value == settings.lockInactivityMinutes);
+
 		this.selectedInactivityMinutes = matchingInactivityMinutes
 			? matchingInactivityMinutes.value
-			: this.inactivityOptions[4].value;
+      : this.inactivityOptions[4].value;
 
-		const matchingLockOption = this.lockOptions.find(d => d.value === settings.lockOnClose);
+		const matchingLockOption = this.lockOptions.find(d => d.value == settings.lockOnClose);
 		this.selectedLockOption = matchingLockOption ? matchingLockOption.value : this.lockOptions[0].value;
 
-		const matchingPowOption = this.powOptions.find(d => d.value === settings.powSource);
+		const matchingPowOption = this.powOptions.find(d => d.value == settings.powSource);
 		this.selectedPoWOption = matchingPowOption ? matchingPowOption.value : this.powOptions[0].value;
 	}
 
@@ -278,7 +277,7 @@ export class SettingsComponent implements OnInit {
 			displayDenomination: this.selectedDenomination,
 			lang: newLang
 		};
-		// console.log(newSettings);
+		console.log(newSettings);
 		this.appSettings.setAppSettings(newSettings);
 		this.notifications.sendSuccess(this.msg23);
 
