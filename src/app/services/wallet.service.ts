@@ -35,6 +35,13 @@ export interface WalletAccount {
 	addressBookName: string | null;
 	accountMeta: any;
 }
+export interface NeoWallet {
+	id: string;
+	index: number;
+	balances: any;
+	addressBookName: string | null;
+	encryptedwif: string;
+}
 export interface FullWallet {
 	type: WalletType;
 	seedBytes: any;
@@ -48,6 +55,7 @@ export interface FullWallet {
 	// balanceFiat: number;
 	// pendingFiat: number;
 	accounts: WalletAccount[];
+	neowallets: NeoWallet[];
 	accountsIndex: number;
 	locked: boolean;
 	password: string;
@@ -73,6 +81,7 @@ export class WalletService {
 		// balanceFiat: 0,
 		// pendingFiat: 0,
 		accounts: [],
+		neowallets: [],
 		accountsIndex: 0,
 		locked: false,
 		password: ''
@@ -213,10 +222,7 @@ export class WalletService {
 			this.wallet.locked = walletJson.locked;
 			this.wallet.password = walletJson.password || null;
 		}
-		if (walletType === 'ledger') {
-			// Check ledger status?
-		}
-
+		
 		this.wallet.accountsIndex = walletJson.accountsIndex || 0;
 
 		if (walletJson.accounts && walletJson.accounts.length) {
@@ -232,14 +238,30 @@ export class WalletService {
 				await this.loadAccountsFromIndex(); // Need to have the seed to reload any accounts if they are not stored
 			}
 		}
+		if (walletJson.neowallets && walletJson.neowallets.length) {
+			walletJson.neowallets.forEach(async account => await this.loadNeoWalletAccount(account));
+		}
 
 		await this.reloadBalances(true);
 
-		if (walletType === 'ledger') {
-			// this.ledgerService.loadLedger(true);
-		}
-
 		return this.wallet;
+	}
+
+	
+
+	async loadNeoWalletAccount(account) {
+		const addressBookName = this.addressBook.getAccountName(account.id);
+
+		const newAccount: NeoWallet = {
+			id: account.id,
+			index: account.index,
+			addressBookName,
+			balances: [],
+			encryptedwif: account.encryptedwif
+		};
+		this.wallet.neowallets.push(newAccount);
+		this.saveWalletExport();
+		return newAccount;
 	}
 
 	async loadImportedWallet(seed, password, accountsIndex = 1) {
@@ -598,7 +620,7 @@ export class WalletService {
 					if (token.type === this.api.qlcTokenHash) {
 						account.balance = new BigNumber(token.balance);
 					}
-					this.logger.debug(JSON.stringify(token));
+					//this.logger.debug(JSON.stringify(token));
 				}
 				account.accountMeta = am;
 			}
@@ -845,11 +867,9 @@ export class WalletService {
 		const data: any = {
 			type: this.wallet.type,
 			accounts: this.wallet.accounts.map(a => ({ id: a.id, index: a.index })),
+			neowallets: this.wallet.neowallets.map(a => ({ id: a.id, index: a.index, encryptedwif: a.encryptedwif })),
 			accountsIndex: this.wallet.accountsIndex
 		};
-
-		if (this.wallet.type === 'ledger') {
-		}
 
 		if (this.wallet.type === 'seed') {
 			data.seed = this.wallet.seed;

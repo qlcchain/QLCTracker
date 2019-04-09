@@ -46,6 +46,10 @@ import { MyrepresentativesComponent } from './components/myrepresentatives/myrep
 import { SqueezePipe } from './pipes/squeeze.pipe';
 import { ManageRepresentativesComponent } from './components/manage-representatives/manage-representatives.component';
 import { ImportAddressBookComponent } from './components/import-address-book/import-address-book.component';
+import { NeoImportComponent } from './components/neo-import/neo-import.component';
+import { NeoCreateComponent } from './components/neo-create/neo-create.component';
+import { MyneowalletComponent } from './components/myneowallet/myneowallet.component';
+import { SendneoComponent } from './components/sendneo/sendneo.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -79,7 +83,11 @@ export function createTranslateLoader(http: HttpClient) {
     MyrepresentativesComponent,
     SqueezePipe,
     ManageRepresentativesComponent,
-    ImportAddressBookComponent
+    ImportAddressBookComponent,
+    NeoImportComponent,
+    NeoCreateComponent,
+    MyneowalletComponent,
+    SendneoComponent
   ],
   imports: [
     BrowserModule,

@@ -19,6 +19,10 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { MyrepresentativesComponent } from './components/myrepresentatives/myrepresentatives.component';
 import { ManageRepresentativesComponent } from './components/manage-representatives/manage-representatives.component';
 import { ImportAddressBookComponent } from './components/import-address-book/import-address-book.component';
+import { NeoCreateComponent } from './components/neo-create/neo-create.component';
+import { NeoImportComponent } from './components/neo-import/neo-import.component';
+import { MyneowalletComponent } from './components/myneowallet/myneowallet.component';
+import { SendneoComponent } from './components/sendneo/sendneo.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -47,7 +51,11 @@ const routes: Routes = [
   { path: 'myrepresentatives', component: MyrepresentativesComponent },
   { path: 'manage-representatives', component: ManageRepresentativesComponent },
   { path: 'import-address-book', component: ImportAddressBookComponent },
-  
+  { path: 'create-neo-wallet', component: NeoCreateComponent },
+  { path: 'import-neo-wallet', component: NeoImportComponent },
+  { path: 'myneowallet/:wallet', component: MyneowalletComponent },
+  { path: 'sendneo', component: SendneoComponent },
+  { path: 'sendneo/:wallet', component: SendneoComponent },
   { path: '**', component: HomeComponent },
 ];
 

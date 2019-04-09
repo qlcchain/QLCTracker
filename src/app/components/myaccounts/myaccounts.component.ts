@@ -7,6 +7,8 @@ import { AppSettingsService } from '../../services/app-settings.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import { QLCBlockService } from 'src/app/services/qlc-block.service';
 import { UtilService } from 'src/app/services/util.service';
+import { NeoWalletService } from 'src/app/services/neo-wallet.service';
+import BigNumber from 'bignumber.js';
 
 @Component({
   selector: 'app-myaccounts',
@@ -15,6 +17,7 @@ import { UtilService } from 'src/app/services/util.service';
 })
 export class MyaccountsComponent implements OnInit {
 	accounts = this.walletService.wallet.accounts;
+	neowallets = this.walletService.wallet.neowallets;
 	wallet = this.walletService.wallet;
   isLedgerWallet = this.walletService.isLedgerWallet();
   
@@ -41,6 +44,7 @@ export class MyaccountsComponent implements OnInit {
 
 	constructor(
 		private walletService: WalletService,
+		public neoService: NeoWalletService,
 		private api: ApiService,
 		private notificationService: NotificationService,
 		private addressBook: AddressBookService,
@@ -101,7 +105,20 @@ export class MyaccountsComponent implements OnInit {
       this.accounts[i].pendingCount = pendingCount;
 			
 		}
-		// walletAccount.account_info = await this.api.accountInfo(accountID);
+		for (let i = 0; i < this.neowallets.length; i++) {
+			this.neowallets[i].balances = [];
+			this.neowallets[i].addressBookName = this.addressBook.getAccountName(this.neowallets[i].id);
+			const balance:any = await this.neoService.getBalance(this.neowallets[i].id);
+			for (const asset of balance.assetSymbols) {
+				this.neowallets[i].balances[asset] = new BigNumber(balance.assets[asset].balance).toFixed();
+			}
+			for (const token of balance.tokenSymbols) {
+				let newTokenBalance = new BigNumber(balance.tokens[token]).toFixed();
+				if (newTokenBalance == 'NaN')
+					newTokenBalance = '0';
+				this.neowallets[i].balances[token] = newTokenBalance;
+			}
+		}
 	}
 
 	async createAccount() {

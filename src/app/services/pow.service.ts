@@ -29,7 +29,7 @@ export class PowService {
 	 * Determine the best PoW Method available for this browser
 	 */
 	determineBestPoWMethod(): PoWSource {
-		this.logger.debug(this.deviceService.getDeviceInfo());
+		//this.logger.debug(this.deviceService.getDeviceInfo());
 		if (this.deviceService.isDesktop()) {
 			if (this.hasWebGLSupport()) {
 				return 'clientWebGL';
@@ -183,7 +183,7 @@ export class PowService {
 		do {
 			work = PoW(hash);
 		} while (work === '0000000000000000');
-		this.logger.debug(`Synchronous CPU: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds`);
+		//this.logger.debug(`Synchronous CPU: Found work (${work}) for ${hash} after ${(Date.now() - start) / 1000} seconds`);
 
 		response.resolve(work);
 		return response.promise;
@@ -228,10 +228,10 @@ export class PowService {
 				hash,
 				(work, n) => {
 					// tslint:disable-next-line:max-line-length
-					this.logger.debug(
+					/*this.logger.debug(
 						`WebGL Worker: Found work (${work}) for ${hash} after ${(Date.now() - start) /
 							1000} seconds [${n} iterations]`
-					);
+					);*/
 					response.resolve(work);
 				},
 				n => {}

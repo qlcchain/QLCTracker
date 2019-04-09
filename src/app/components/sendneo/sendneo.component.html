@@ -1,0 +1,483 @@
+<div class="send-screen-1" *ngIf="activePanel == 'send'">
+
+
+
+	<!-- SEND FORM -->
+	<div class="container mt-0 qlc-content-first">
+		<div class="row">
+			<div class="col-12 pl-0 pr-0 pb-2">
+				<!-- LATEST TRANSACTIONS -->
+				<div class="container">
+						<div class="row">
+							<!-- TITLE -->
+							<div class="col-md-6 col-12 mt-2 pl-md-2 pr-md-2">
+								<div class="content-title">
+									<h1 class="neo">Send from NEO wallet - {{ neoService.getNetwork() }}</h1>
+								</div>
+							</div>
+							<div class="col-md-3 col-12 pl-md-2 pr-md-2">
+								<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background-light" (click)="loadBalances()">
+									Refresh
+								</button>
+							</div>
+							<div class="col-md-3 col-12 pl-md-2 pr-md-2">
+									<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background-light" routerLink="/myaccounts">
+										Back to my Wallets
+									</button>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container accounts">
+		<div class="row">
+
+			<!-- ADDRESS -->
+			<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+				<div class="content-box-blue h-100 pb-3 neo-background">
+					<div class="container">
+
+					<div class="row qlc-table-header-blue neo-background">
+						<div class="col-12 white">Address</div>
+					</div>
+					<div class="row qlc-table-row-blue row-text-mid mt-3 neo-background">
+						<div class="col-12 text-break pr-3">{{ fromAccountID }}</div>
+					</div>
+					
+					</div>
+				</div>
+			</div>
+
+
+			<!-- BALANCES -->
+			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3">
+					<div class="container pl-0 pr-0">
+						<div class="row pl-0 pr-0">
+
+						<!-- BALANCES -->
+						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-1 order-2">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenSymbol == 'NEO'" (click)="selectTokenIcon('NEO')">
+								<div class="container">
+									<div class="row qlc-table-header-white">
+										<div class="col-12">NEO Balance</div>
+									</div>
+								</div>
+								<!-- QLC -->
+								<div class="container">
+									<div class="row">
+										<div class="col-3 mt-3">
+											<img src="assets/img/token-neo.png" class="w-100 icon-token">
+										</div>
+										<div class="col-9 pr-0 pl-0">
+											<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+												<div class="col-12 pb-0">{{ tokenBalance('NEO') | currency:'':'':'1.2-8' }}</div>
+											</div>
+											<div class="row qlc-table-row-white sub-page pt-0">
+												<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- BALANCES -->
+						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-2 order-3">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenSymbol == 'GAS'" (click)="selectTokenIcon('GAS')">
+								<div class="container">
+									<div class="row qlc-table-header-white">
+										<div class="col-12">GAS Balance</div>
+									</div>
+								</div>
+								<!-- QLC -->
+								<div class="container">
+									<div class="row">
+										<div class="col-3 mt-3">
+											<img src="assets/img/token-gas.png" class="w-100 icon-token">
+										</div>
+										<div class="col-9 pr-0 pl-0">
+											<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+												<div class="col-12 pb-0">{{ tokenBalance('GAS') | currency:'':'':'1.2-8' }}</div>
+											</div>
+											<div class="row qlc-table-row-white sub-page pt-0">
+												<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- BALANCES -->
+						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-3 order-4">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenSymbol == 'QLC'" (click)="selectTokenIcon('QLC')">
+								<div class="container">
+									<div class="row qlc-table-header-white">
+										<div class="col-12">QLC Balance</div>
+									</div>
+								</div>
+								<!-- QLC -->
+								<div class="container">
+									<div class="row">
+										<div class="col-3 mt-3">
+											<img src="assets/img/token-qlc.png" class="w-100 icon-token">
+										</div>
+										<div class="col-9 pr-0 pl-0">
+											<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+												<div class="col-12 pb-0">{{ tokenBalance('QLINK TOKEN') | currency:'':'':'1.2-8' }}</div>
+											</div>
+											<div class="row qlc-table-row-white sub-page pt-0">
+												<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
+						<!-- SEND FORM -->
+						<div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+							<div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+
+								<div class="container ml-1 pr-3 pl-3">
+
+									<div *ngIf="!neowallets.length" class="row defaultTable content">
+										<div class="col-12 text-center">
+											{{ 'NO_WALLET_CONFIGURED' | translate
+											}}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+										</div>
+									</div>
+									<div *ngIf="neowallets.length" class="row defaultTable sendTokens">
+										<div class="col-12">
+											
+											<div class="row rowContent mb-5">
+												<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'SEND_TOKENS_TAB.amount' | translate }}</div>
+												<div class="col-md-10">
+													<div class="row align-items-top">
+														<div class="col-md-6 pb-3 pb-md-0">
+															<div class="input-group">
+																<div class="input-group-prepend">
+																	<div class="input-group-text ">
+																		{{ selectedToken.tokenSymbol ? selectedToken.tokenSymbol : '' }}
+																	</div>
+																</div>
+																<input
+																	type="text"
+																	class="form-control inlineForm"
+																	[(ngModel)]="amount"
+																	placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}"
+																	onfocus="this.placeholder = ''"
+																	(change)="checkAmount()"
+																	style="height: 42px !important;"
+																/>
+																<div class="input-group-append">
+																	<a (click)="setMaxAmount()" class="neo">
+																		<div class="input-group-text maxLink neo">{{ 'SEND_TOKENS_TAB.max' | translate }}</div>
+																	</a>
+																</div>
+															</div>
+														</div>
+														<div class="col-md-6 d-block d-md-none pb-3 pb-md-0">
+															<div class="input-group">
+																<div class="input-group-prepend"><div class="input-group-text">USD/$</div></div>
+																<input
+																	type="text"
+																	class="form-control inlineForm2"
+																	[(ngModel)]="amountFiat"
+																	placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}"
+																	onfocus="this.placeholder = ''"
+																/>
+															</div>
+														</div>
+														<div class="col-md-6 pt-2 pt-md-0">
+															<div class="row align-items-top">
+																<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'TOKEN' | translate }}</div>
+																<div class="col-md-9">
+																	<div class="form-group">
+																		<select class="custom-select" [(ngModel)]="selectedTokenSymbol" (change)="selectToken()">
+																			<option *ngFor="let token of accountTokens" [value]="token.tokenSymbol">{{
+																				token.tokenSymbol
+																			}}</option>
+																		</select>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row align-items-top pt-3 pt-md-2">
+														<div class="col-md-6 d-none d-md-block">
+															<div class="input-group">
+																<div class="input-group-prepend"><div class="input-group-text">USD/$</div></div>
+																<input
+																	type="text"
+																	class="form-control inlineForm2"
+																	placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}"
+																/>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<div class="row align-items-top">
+																<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'BALANCE' | translate }}</div>
+																<div class="col-md-9 ">
+																	<div class="row">
+																		<div class="col-6 pr-0 balance">
+																			{{ selectedToken.balance | currency:'':'':'1.2-8' }}
+																		</div>
+																		<div class="col-6 pl-0 text-right fiat">(-)</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+											<div class="row">
+												<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">
+													{{ 'SEND_TOKENS_TAB.from_account' | translate }}
+												</div>
+												<div class="col-md-10">
+													<div class="form-group">
+														<select class="custom-select" [(ngModel)]="fromAccountID" (change)="selectAccount()">
+															<option *ngFor="let account of neowallets" [value]="account.id"
+																>{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }}</option
+															>
+														</select>
+													</div>
+												</div>
+											</div>
+
+											
+											<div class="row">
+												<div class="col-md-2 dataName pb-3 pb-md-0 form-label-custom-2">
+													{{ 'SEND_TOKENS_TAB.to_account' | translate }}
+												</div>
+												<div class="col-md-10 text-left text-truncate">
+													<div class="form-group">
+														<select
+															class="custom-select contacts"
+															[(ngModel)]="bookContact"
+															(change)="selectFromBook()"
+															[ngClass]="{ success: toAccountStatus === 2, dangerRight: toAccountStatus === 0 }"
+														>
+															<option *ngFor="let book of (addressBookResults$ | async)" [value]="book.account"
+																>{{ book.name }} {{ book.account }}</option
+															>
+														</select>
+														<input
+															type="text"
+															class="form-control toaccount"
+															placeholder="{{ 'SEND_TOKENS_TAB.to_account_placeholder' | translate }}"
+															onfocus="this.placeholder = ''"
+															(blur)="validateDestination()"
+															[(ngModel)]="toAccountID"
+															[ngClass]="{ success: toAccountStatus === 2, dangerLeft: toAccountStatus === 0 }"
+														/>
+													</div>
+												</div>
+											</div>
+
+
+											<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3">
+												<div class="col-md-2"></div>
+												<div class="col-lg-5 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+													<button type="submit" class="btn btn-primary neo-background-light" (click)="sendTransaction()" style="min-width:100%;">
+														{{ 'SEND_TOKENS_TAB.send' | translate }}
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>		
+
+</div>
+<!-- END SEND FORM-->
+
+
+
+
+
+
+
+
+
+<div class="send-screen-2" *ngIf="activePanel == 'confirm'">
+		<!-- SEND FORM -->
+		<div class="container mt-0 qlc-content-first">
+			<div class="row">
+				<div class="col-12 pl-0 pr-0">
+					
+					<!-- TITLE -->
+					<div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+						<div class="content-title">
+							<h1>{{ 'SEND_TOKENS_TAB.confirm_transaction' | translate }}</h1>
+						</div>
+					</div>
+	
+				</div>
+			</div>
+		</div>
+	
+
+		<div class="container">
+			<div class="row confirmTransaction">
+	
+				<!-- ADDRESS -->
+				<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+					<div class="content-box-white h-auto pb-5">
+						<div class="container mb-3">
+	
+
+									<div class="row align-items-center fromText pt-5">
+										<div class="col-12 text-label">{{ 'SEND_TOKENS_TAB.you_are_about_to_send' | translate }}</div>
+									</div>
+									<div class="row align-items-center ">
+										<div class="col-12 sum">
+											<span>{{ amount }} {{ selectedTokenSymbol }}</span>
+										</div>
+									</div>
+									<div class="row align-items-center">
+										<div class="col-12 ">
+											<span class="fiatsum">{{ amountFiat | fiat: settings.settings.displayCurrency }}</span>
+											<span class="fiatrate"
+												> @ {{ price.price.lastPrice | fiat: settings.settings.displayCurrency }} / {{ selectedTokenSymbol }}</span
+											>
+										</div>
+									</div>
+									<div class="row transfer">
+										<div class="col-lg-6 text-center pt-4 pb-4">
+											<div class="text-label pb-2">{{ 'SEND_TOKENS_TAB.from_account' | translate }}</div>
+											<div class="pl-5 pr-5 text-truncate pt-1 pb-1">
+												<a [routerLink]="'/account/' + fromAccountID" class="name"
+													><span *ngIf="fromAddressBook">{{ fromAddressBook }}</span
+													><span *ngIf="!fromAddressBook">{{ fromAccountID }}</span></a
+												>
+											</div>
+											<div class="pl-5 pr-5 pb-4">
+												<a [routerLink]="'/account/' + fromAccountID" class="address">{{ fromAccountID }}</a>
+											</div>
+											<div class="pt-2 text-bold negative_change">-{{ amount }} {{ selectedTokenSymbol }}</div>
+											<div class="text-label pb-3">{{ 'SEND_TOKENS_TAB.amount_to_send' | translate }}</div>
+										</div>
+										<div class="col-lg-6 text-center pt-4 pb-4">
+											<div class="text-label pb-2">{{ 'SEND_TOKENS_TAB.to_account' | translate }}</div>
+											<div class="pl-5 pr-5 text-truncate pt-1 pb-1">
+												<a [routerLink]="'/account/' + toAccountID" class="name"
+													><span *ngIf="toAddressBook">{{ toAddressBook }}</span
+													><span *ngIf="!toAddressBook">{{ toAccountID }}</span></a
+												>
+											</div>
+											<div class="pl-5 pr-5 pb-4">
+												<a [routerLink]="'/account/' + toAccountID" class="address">{{ toAccountID }}</a>
+											</div>
+											<div class="pt-2 text-bold positive_change">+{{ amount }} {{ selectedTokenSymbol }}</div>
+											<div class="text-label pb-3">{{ 'SEND_TOKENS_TAB.amount_to_receive' | translate }}</div>
+										</div>
+									</div>
+				
+									<div class="row align-items-center justify-content-center rowDefault rowButtons pl-4 pr-4">
+										<div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 pr-sm-2 text-left text-truncate mobile-break mb-2">
+											<button type="submit" class="btn-primary btn-red btn-danger w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="activePanel = 'send'">
+												{{ 'CANCEL' | translate }}
+											</button>
+										</div>
+										<div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-2">
+											<button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" *ngIf="!confirmingTransaction" (click)="confirmTransaction()">
+												{{ 'SEND_TOKENS_TAB.confirm_send' | translate }}
+											</button>
+											<button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" *ngIf="confirmingTransaction">
+												{{ 'LOADING' | translate }}
+											</button>
+										</div>
+									</div>
+
+
+
+
+						
+						
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+</div>
+
+<div class="send-screen-2" *ngIf="activePanel == 'success'">
+	<!-- SEND FORM -->
+	<div class="container mt-0 qlc-content-first">
+		<div class="row">
+			<div class="col-12 pl-0 pr-0">
+				
+				<!-- TITLE -->
+				<div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+					<div class="content-title">
+						<h1>Transaction successful</h1>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<div class="container">
+		<div class="row confirmTransaction">
+
+			<!-- ADDRESS -->
+			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+				<div class="content-box-white h-auto pb-5">
+					<div class="container mb-3">
+
+
+								<div class="row align-items-center fromText pt-5">
+									<div class="col-12 text-label">Transaction hash</div>
+								</div>
+								<div class="row align-items-center ">
+									<div class="col-12 sum">
+										<span><a href="https://neoscan.io/transaction/{{newHashId}}" target="_blank" >{{ newHashId }}</a></span>
+									</div>
+								</div>
+			
+								<div class="row align-items-center justify-content-center rowDefault rowButtons pl-4 pr-4 mt-5">
+									<div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 pr-sm-2 text-left text-truncate mobile-break mb-2">
+										<button type="submit" class="btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="activePanel = 'send'">
+											Back to send
+										</button>
+									</div>
+									<div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-2">
+										<button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" routerLink="/myaccounts">
+											My wallets
+										</button>
+									</div>
+								</div>
+
+
+
+
+					
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
