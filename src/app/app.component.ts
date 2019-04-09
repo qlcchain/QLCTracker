@@ -48,10 +48,10 @@ export class AppComponent {
 				this.walletService.lockWallet();
 			}
 		});
+    await this.walletService.loadStoredWallet();
     this.settings.loadAppSettings();
 		this.addressBook.loadAddressBook();
 		this.workPool.loadWorkCache();
-    await this.walletService.loadStoredWallet();
   }
   
 }
