@@ -50,6 +50,7 @@ import { NeoImportComponent } from './components/neo-import/neo-import.component
 import { NeoCreateComponent } from './components/neo-create/neo-create.component';
 import { MyneowalletComponent } from './components/myneowallet/myneowallet.component';
 import { SendneoComponent } from './components/sendneo/sendneo.component';
+import { StakingCreateComponent } from './components/staking-create/staking-create.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -87,7 +88,8 @@ export function createTranslateLoader(http: HttpClient) {
     NeoImportComponent,
     NeoCreateComponent,
     MyneowalletComponent,
-    SendneoComponent
+    SendneoComponent,
+    StakingCreateComponent
   ],
   imports: [
     BrowserModule,

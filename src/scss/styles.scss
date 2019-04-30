@@ -1069,11 +1069,11 @@ a.qlc-top-mainnet-red:hover {
     color: #fff;
     font-size: 12px;
     text-align: center;
-    background-color: #00479d;
+    background-color: #595757;
     border-radius: 0;
 }
 .bs-tooltip-top .arrow::before, .bs-tooltip-auto[x-placement^="top"] .arrow::before {
-    border-top-color: #00479d;
+    border-top-color: #595757;
 }
 .table-button-expand {
     display: block;
@@ -1444,8 +1444,20 @@ pre {
 }
 
 
-
-
+.btn-primary.button-newaccount {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.qlc-stake-explainer {
+    font-size: 13px;
+    line-height: 20px;
+    color:#fff;
+    padding-left:25px;
+}
+.qlc-stake-explainer p {
+    padding-bottom:13px;
+    margin:0px;
+}
 
 
 

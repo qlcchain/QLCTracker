@@ -164,7 +164,7 @@
 	"ACCOUNTS": {
 		"title": "Accounts",
 		"title_button": "ADD NEW ACCOUNT",
-		"title_button_wallet": "ADD NEW WALLET",
+		"title_button_wallet": "ADD NEW QLC CHAIN WALLET",
 		"token": "Token",
 		"quantity": "Quantity",
 		"price": "Price",
