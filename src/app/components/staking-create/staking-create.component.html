@@ -1,0 +1,334 @@
+<div class="stake-screen-1">
+
+
+
+	<!-- SEND FORM -->
+	<div class="container mt-0 qlc-content-first">
+		<div class="row">
+			<div class="col-12 pl-0 pr-0 pb-2">
+				<!-- LATEST TRANSACTIONS -->
+				<div class="container">
+						<div class="row">
+							<!-- TITLE -->
+							<div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+								<div class="content-title">
+									<h1>New Staking</h1>
+								</div>
+							</div>
+							<div class="col-md-3 col-12 pl-md-2 pr-md-2">
+									<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/mystakings">
+										Back to my Stakings
+									</button>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+  </div>
+  
+
+  <div class="container accounts">
+		<div class="row">
+
+			<!-- FORM -->
+			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3">
+					<div class="container pl-0 pr-0">
+						<div class="row pl-0 pr-0">
+
+
+						<div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+							<div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+
+								<div class="container ml-1 pr-3 pl-3">
+
+									<div class="row defaultTable sendTokens">
+										<div class="col-12">
+
+                      <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-14px;">
+                          STAKING TYPE
+                        </div>
+                        <div class="col-md-9 text-left">
+                          <div class="form-group">
+                            <input type="radio" name="stakingtype" value="1" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> For Vote</label>
+                            <input type="radio" name="stakingtype" value="2" id="s2"><label for="s2" style="padding-left:10px;padding-right:30px;"> For Confidant</label>
+                            <input type="radio" name="stakingtype" value="3" id="s3"><label for="s3" style="padding-left:10px;padding-right:30px;"> For Minting</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          STAKE FROM
+                        </div>
+                        <div class="col-md-9 text-left">
+                          <div class="form-group">
+                            <select
+                              class="custom-select adresses"
+                            >
+                              <option value="AHR08asf9uz97asd9679a6s79f69"
+                              >F01 - AHR08asf9uz97asd9679a6s79f69</option
+                              >
+                              <option value="AHR08asf9uz97asd9679a6s79f69"
+                              >F02 - R0AH8asf9uz97asd9679a6s79f69</option
+                              >
+                            </select>
+                            <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to stake QLC from</p>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          STAKE TO
+                        </div>
+                        <div class="col-md-9 text-left">
+                          <div class="form-group">
+                            <select
+                              class="custom-select adresses"
+                            >
+                              <option value="AHR08asf9uz97asd9679a6s79f69"
+                              >qlc_1zbo12u3kj522j53jl235l23k5lk124pi734ljv73z4d6kjglg</option
+                              >
+                              <option value="AHR08asf9uz97asd9679a6s79f69"
+                              >Q001_Name - qlc_3kj522j53jl235l23k5lk124pi734ljv73z4d6kjglg1zbo12u</option
+                              >
+                            </select>
+                            <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a QLC Chain address you want to receive your QGAS to</p>
+                          </div>
+                        </div>
+                      </div>
+  
+
+
+											
+											<div class="row rowContent mb-5 mt-4" style="border-bottom: 1px solid #edeef4;">
+												<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">AMOUNT TO STAKE</div>
+												<div class="col-md-9">
+													<div class="row align-items-top">
+														<div class="col-md-6 pb-3 pb-md-0">
+															<div class="input-group">
+																<div class="input-group-prepend">
+																	<div class="input-group-text ">
+																		QLC
+																	</div>
+																</div>
+																<input
+																	type="text"
+																	class="form-control inlineForm"
+																	
+																	placeholder="2000"
+																	onfocus="this.placeholder = ''"
+																	style="height: 42px !important;"
+																/>
+																<div class="input-group-append">
+																	<a (click)="setMaxAmount()">
+																		<div class="input-group-text maxLink">Max</div>
+																	</a>
+																</div>
+                              </div>
+                              <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum stake amount is 2,000 QLC</p>
+														</div>
+
+                            <div class="col-md-6">
+                              <div class="row align-items-top">
+                                <div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">AVAILABLE BALANCE</div>
+                                <div class="col-md-6 ">
+                                    <div class="text-right fiat pr-1" style="color:#595757;"><strong>22,000.00 QLC</strong></div>
+                                </div>
+                              </div>
+                            </div>
+
+													</div>
+													
+												</div>
+											</div>
+
+
+                      <div class="row rowContent mb-4 mt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">STAKING PERIOD</div>
+                        <div class="col-md-9">
+                          <div class="row align-items-top">
+                            <div class="col-md-6 pb-3 pb-md-0">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text ">
+                                    Days
+                                  </div>
+                                </div>
+                                <input
+                                  type="text"
+                                  class="form-control inlineForm"
+                                  
+                                  placeholder="90"
+                                  onfocus="this.placeholder = ''"
+                                  style="height: 42px !important;"
+                                />
+                                <div class="input-group-append">
+                                  <div class="input-group-text maxLink">&nbsp;</div>
+                                </div>
+                              </div>
+                              <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum period is 90 days</p>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="row align-items-top">
+                                <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">STAKING WILL END ON</div>
+                                <div class="col-md-5 ">
+                                    <div class="text-right fiat pr-1" style="color:#595757;"><strong>16.08.2019</strong></div>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                          
+                        </div>
+                      </div>
+
+                      
+                      
+                      <div class="issue-token">
+
+                            <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+                              <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                                TOKEN NAME
+                              </div>
+                              <div class="col-md-9 text-left mb-3">
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Token name"
+                                    onfocus="this.placeholder = ''"
+                                    style="height: 42px !important;"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                                TOKEN SYMBOL
+                              </div>
+                              <div class="col-md-9 text-left mb-3">
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="XYZ"
+                                    onfocus="this.placeholder = ''"
+                                    style="height: 42px !important;"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                                TOKEN SUPPLY
+                              </div>
+                              <div class="col-md-9 text-left mb-3">
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="100000000"
+                                    onfocus="this.placeholder = ''"
+                                    style="height: 42px !important;"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-5">
+                                TOKEN DECIMALS
+                              </div>
+                              <div class="col-md-9 text-left mb-3">
+                                <div class="input-group">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="8"
+                                    onfocus="this.placeholder = ''"
+                                    style="height: 42px !important;"
+                                  />
+                                </div>
+                              </div>                        
+                            </div>
+
+                      </div>
+
+
+
+											<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
+												<div class="col-md-3"></div>
+												<div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+													<button type="submit" class="btn btn-primary" style="min-width:100%;">
+														INVOKE STAKING
+													</button>
+												</div>
+											</div>
+                    </div>
+                    
+
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+      </div>
+      
+
+      
+			<!-- EXPLAINER -->
+			<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+				<div class="content-box-blue h-100 pb-3">
+					<div class="container">
+
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">ABOUT STAKING TYPES</div>
+            </div>
+            <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer">
+              <p style="width:100%;"><strong>FOR VOTE</strong></p>
+              <p>
+                <span style="color:#7ca7e5;">Minimum volume:</span> 1 QLC<br>
+                <span style="color:#7ca7e5;">Minimum period:</span> 10 days<br>
+                <span style="color:#7ca7e5;">Rewards: </span> ???<br>
+              </p>
+              <p>
+                <span style="color:#7ca7e5;">One or two lines for extra explainers. What, how, why, when ...?</span>
+              </p>
+
+
+              <p style="width:100%;"><strong>FOR CONFIDANT STATION</strong><br></p>
+              <p>
+                <span style="color:#7ca7e5;">Minimum volume:</span> 2,000 QLC<br>
+                <span style="color:#7ca7e5;">Minimum period:</span> 90 days<br>
+                <span style="color:#7ca7e5;">Rewards: </span> % QGAS<br>
+              </p>
+              <p>
+                <span style="color:#7ca7e5;">Get 20% discount when purchasing a Confidand Station Unit</span>
+              </p>
+
+
+              <p style="width:100%;"><strong>FOR MINTING</strong><br></p>
+              <p>
+                <span style="color:#7ca7e5;">Minimum volume:</span> 500,000 QLC<br>
+                <span style="color:#7ca7e5;">Minimum period:</span> 180 days<br>
+                <span style="color:#7ca7e5;">Rewards: </span> %QGAS<br>
+              </p>
+              <p>
+                <span style="color:#7ca7e5;">Something about minting...</span>
+              </p>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+
+		</div>
+	</div>		
+
+
+
+</div>
