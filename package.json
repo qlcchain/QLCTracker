@@ -12,6 +12,7 @@
 		"e2e": "ng e2e",
 		"sms:dev": "ng serve",
 		"sms:dev-testnet": "ng serve --configuration=testnet",
+		"sms:build-testnet": "ng build --configuration=testnet",
 		"sms:build": "ng build --configuration=production",
 		"sms:build-desktop": "ng build --configuration=desktop --base-href ./",
 		"sms:build-desktop-testnet": "ng build --configuration=desktop-testnet --base-href ./",
