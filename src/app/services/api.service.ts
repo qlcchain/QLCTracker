@@ -266,11 +266,26 @@ export class ApiService {
 
 
 	// sms
-
 	async phoneBlocks(phoneNumber:string): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.phoneBlocks(phoneNumber);
 		if (!result.result && !result.error) 
 			this.reconnect('phoneBlocks');
+
+		return result;
+	}
+
+	async messageHash(message:string): Promise<{ result: any; error?: string }> {
+		const result = await this.c.buildinLedger.messageHash(message);
+		if (!result.result && !result.error) 
+			this.reconnect('messageHash');
+
+		return result;
+	}
+
+	async messageBlocks(messageHash:string): Promise<{ result: any; error?: string }> {
+		const result = await this.c.buildinLedger.messageBlocks(messageHash);
+		if (!result.result && !result.error) 
+			this.reconnect('messageBlocks');
 
 		return result;
 	}

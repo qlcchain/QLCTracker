@@ -5,7 +5,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { UtilService } from 'src/app/services/util.service';
+import { Base64 } from 'js-base64';
 
 declare var particlesJS: any;
 declare var jQuery: any;
@@ -40,8 +40,7 @@ export class HeaderComponent implements OnInit {
     private notificationService: NotificationService,
     private trans: TranslateService,
     private router: Router,
-    private modalService: BsModalService,
-    private util: UtilService
+    private modalService: BsModalService
   ) 
   { 
     this.loadLang();
@@ -190,7 +189,7 @@ export class HeaderComponent implements OnInit {
     } else if(this.search_text.length === 64) {
       this.router.navigate(['/transaction/'+this.search_text]);
     } else {
-      const b64Encoded = this.util.b64.encodeUnicode(this.search_text);
+      const b64Encoded = Base64.encodeURI(this.search_text);
       this.router.navigate(['/search/'+b64Encoded]);
     }
   }

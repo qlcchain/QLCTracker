@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, ChildActivationEnd } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { NodeService } from 'src/app/services/node.service';
 import { timer } from 'rxjs';
-import { UtilService } from 'src/app/services/util.service';
+import { Base64 } from 'js-base64';
 
 @Component({
   selector: 'app-search',
@@ -22,12 +22,15 @@ export class SearchComponent implements OnInit {
     send: []
   }
 
+  messageBlocks = [];
+
+
+
   constructor(
     private route: ActivatedRoute,
 		private router: Router,
 		private api: ApiService,
-    private node: NodeService,
-    private util: UtilService
+    private node: NodeService
   ) { }
 
   ngOnInit() {
@@ -64,24 +67,38 @@ export class SearchComponent implements OnInit {
   } 
   
   async search() {
-    const phoneNumber = this.util.b64.decodeUnicode(this.route.snapshot.params.hash);
+    const phoneNumber = Base64.decode(this.route.snapshot.params.hash);
     this.search_text = phoneNumber;
     this.phoneBlocks = {
       receive: [],
       send: []
     };
+    this.messageBlocks = [];
     const phoneBlocks = await this.api.phoneBlocks(this.search_text);
     if (!phoneBlocks.error) {
       this.phoneBlocks = phoneBlocks.result;
     }
     this.phoneBlocks.send.forEach(element => {
-      element.senderNumber = this.util.b64.decodeUnicode(element.sender)
-      element.receiverNumber = this.util.b64.decodeUnicode(element.receiver)
+      element.senderNumber = Base64.decode(element.sender)
+      element.receiverNumber = Base64.decode(element.receiver)
     });
     this.phoneBlocks.receive.forEach(element => {
-      element.senderNumber = this.util.b64.decodeUnicode(element.sender)
-      element.receiverNumber = this.util.b64.decodeUnicode(element.receiver)
+      element.senderNumber = Base64.decode(element.sender)
+      element.receiverNumber = Base64.decode(element.receiver)
     });
+
+    const messageHashRequest = await this.api.messageHash(this.search_text);
+    if (!messageHashRequest.error) {
+      const messageHash = messageHashRequest.result;
+      const messageBlocks = await this.api.messageBlocks(messageHash);
+      if (!messageBlocks.error) {
+        this.messageBlocks = messageBlocks.result;
+        this.messageBlocks.forEach(element => {
+          element.senderNumber = Base64.decode(element.sender)
+          element.receiverNumber = Base64.decode(element.receiver)
+        });
+      }
+    }
   }
 
 }
