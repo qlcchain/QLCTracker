@@ -5,7 +5,7 @@
 export const environment = {
     production: false,
     desktop: false,
-    apiUrl: 'http://127.0.0.1:19735'
+    apiUrl: 'https://rpc-test.qlcchain.online'
 };
 
 /*
