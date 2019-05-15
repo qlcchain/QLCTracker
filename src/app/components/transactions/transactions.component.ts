@@ -95,20 +95,20 @@ export class TransactionsComponent implements OnInit {
 		var pages = this.transactionsCount/this.pageSize;
     if (this.transactionsCount%this.pageSize != 0) {
       pages = Math.floor(this.transactionsCount/this.pageSize)+1;
-    }
+		}
 		this.allPages = pages;
 		if (pages < 7)
 			displayPages = pages;
 		
 		this.pages = Array(displayPages).fill(0).map((pages,i)=>i+1) ;
 
-		if (this.activePage > 3 && this.activePage < pages -3) {
+		if (pages > 5 && this.activePage > 3 && this.activePage < pages -3) {
 			this.pages[1] = this.activePage -2;
 			this.pages[2] = this.activePage -1;
 			this.pages[3] = this.activePage;
 			this.pages[4] = this.activePage +1;
 			this.pages[5] = this.activePage +2;
-		} else if (this.activePage > 3 && this.activePage >= pages -3) {
+		} else if (pages > 5 && this.activePage > 3 && this.activePage >= pages -3) {
 			this.pages[1] = pages -5;
 			this.pages[2] = pages -4;
 			this.pages[3] = pages -3;
