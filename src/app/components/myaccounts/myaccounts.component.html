@@ -1,21 +1,27 @@
-<!-- LATEST TRANSACTIONS -->
+<!-- QLC WALLETS -->
 <div class="container mt-0 qlc-content-first">
-	<div class="row">
-		<div class="col-12 pl-0 pr-0">
-			
-			<!-- TITLE -->
-			<div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
-				<div class="content-title">
-					<h1>My QLC Chain Wallets</h1>
-				</div>
-			</div>
-			<!--<button type="submit" class="btn btn-primary content-header" (click)="createAccount()" *ngIf="accounts.length">
-				{{ 'ACCOUNTS.title_button' | translate }}
-			</button>-->
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-12 pl-0 pr-0">
+            <div class="container">
+                    <div class="row">
+                        <!-- TITLE -->
+                        <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+                            <div class="content-title">
+								<h1 style="display:inline-block;">My Wallets</h1>
+								<span style="width:16px;height:16px;background:#2069c2;display:inline-block;margin-left:26px;margin-right:8px;"></span><span style="padding-bottom:4px;">QLC-Chain Wallets</span>
+								<span style="width:16px;height:16px;background:#8BC34A;display:inline-block;margin-left:16px;margin-right:8px;"></span> NEP-5 Wallets
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-12 pl-2 pr-2">
+							<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/mystakings" *ngIf="accounts.length">
+								MY STAKINGS
+							</button>
+						</div>
+                    </div>
+                </div>
+        </div>
+    </div>
 </div>
-
 
 
 <div class="container accounts pb-5 mb-5">
@@ -127,7 +133,7 @@
 	
 	
 	
-	
+<!--
 </div>
 <div class="row">
 	<div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
@@ -137,6 +143,8 @@
 	</div>
 </div>
 <div class="row">
+-->	
+
 	<!-- ADDRESS -->
 	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let neowallet of neowallets" >
 		<div class="content-box-blue h-auto pb-3 neo-background-light" style="min-height: 172px;">
