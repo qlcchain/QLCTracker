@@ -31,7 +31,7 @@
 		<div class="row">
 
 			<!-- FORM -->
-			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3">
+			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3" [formGroup]="stakingForm" >
 					<div class="container pl-0 pr-0">
 						<div class="row pl-0 pr-0">
 
@@ -50,9 +50,9 @@
                         </div>
                         <div class="col-md-9 text-left">
                           <div class="form-group">
-                            <input type="radio" name="stakingtype" value="1" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> For Vote</label>
-                            <input type="radio" name="stakingtype" value="2" id="s2"><label for="s2" style="padding-left:10px;padding-right:30px;"> For Confidant</label>
-                            <input type="radio" name="stakingtype" value="3" id="s3"><label for="s3" style="padding-left:10px;padding-right:30px;"> For Minting</label>
+                            <input type="radio" name="stakingType" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> For Vote</label>
+                            <input type="radio" name="stakingType" formControlName="stakingType" value="1" id="s2"><label for="s2" style="padding-left:10px;padding-right:30px;"> For Confidant</label>
+                            <input type="radio" name="stakingType" formControlName="stakingType" value="2" id="s3"><label for="s3" style="padding-left:10px;padding-right:30px;"> For Minting</label>
                           </div>
                         </div>
                       </div>
@@ -63,15 +63,9 @@
                         </div>
                         <div class="col-md-9 text-left">
                           <div class="form-group">
-                            <select
-                              class="custom-select adresses"
-                            >
-                              <option value="AHR08asf9uz97asd9679a6s79f69"
-                              >F01 - AHR08asf9uz97asd9679a6s79f69</option
-                              >
-                              <option value="AHR08asf9uz97asd9679a6s79f69"
-                              >F02 - R0AH8asf9uz97asd9679a6s79f69</option
-                              >
+                            <select class="custom-select" formControlName="fromNEOWallet" (change)="selectAccount()">
+                              <option *ngFor="let account of neowallets" [value]="account.id"
+                                >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances['QLINK TOKEN'] != undefined)? ' ('+account.balances['QLINK TOKEN'] + ' QLC)' : '') }} </option>
                             </select>
                             <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to stake QLC from</p>
                           </div>
@@ -85,15 +79,9 @@
                         </div>
                         <div class="col-md-9 text-left">
                           <div class="form-group">
-                            <select
-                              class="custom-select adresses"
-                            >
-                              <option value="AHR08asf9uz97asd9679a6s79f69"
-                              >qlc_1zbo12u3kj522j53jl235l23k5lk124pi734ljv73z4d6kjglg</option
-                              >
-                              <option value="AHR08asf9uz97asd9679a6s79f69"
-                              >Q001_Name - qlc_3kj522j53jl235l23k5lk124pi734ljv73z4d6kjglg1zbo12u</option
-                              >
+                            <select class="custom-select" formControlName="toQLCWallet">
+                              <option *ngFor="let account of accounts" [value]="account.id"
+                                >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }}</option>
                             </select>
                             <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a QLC Chain address you want to receive your QGAS to</p>
                           </div>
@@ -117,8 +105,8 @@
 																<input
 																	type="text"
 																	class="form-control inlineForm"
-																	
-																	placeholder="2000"
+                                  formControlName="amounToStake"
+																	placeholder="{{ stakingTypes[this.stakingForm.value.stakingType].minAmount }}"
 																	onfocus="this.placeholder = ''"
 																	style="height: 42px !important;"
 																/>
@@ -128,14 +116,14 @@
 																	</a>
 																</div>
                               </div>
-                              <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum stake amount is 2,000 QLC</p>
+                              <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum stake amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount | currency:'':'':'1.2-8' }} QLC</p>
 														</div>
 
                             <div class="col-md-6">
                               <div class="row align-items-top">
                                 <div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">AVAILABLE BALANCE</div>
                                 <div class="col-md-6 ">
-                                    <div class="text-right fiat pr-1" style="color:#595757;"><strong>22,000.00 QLC</strong></div>
+                                    <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.availableQLCBalance | currency:'':'':'1.2-8' }} QLC</strong></div>
                                 </div>
                               </div>
                             </div>
@@ -160,23 +148,23 @@
                                 <input
                                   type="text"
                                   class="form-control inlineForm"
-                                  
-                                  placeholder="90"
+                                  formControlName="durationInDays"
+                                  placeholder="{{ stakingTypes[this.stakingForm.value.stakingType].minTime }}"
                                   onfocus="this.placeholder = ''"
-                                  style="height: 42px !important;"
+                                  style="height: 42px !important;" (change)="setDuration()"
                                 />
                                 <div class="input-group-append">
                                   <div class="input-group-text maxLink">&nbsp;</div>
                                 </div>
                               </div>
-                              <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum period is 90 days</p>
+                              <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum period is {{ stakingTypes[this.stakingForm.value.stakingType].minTime }} days</p>
                             </div>
 
                             <div class="col-md-6">
                               <div class="row align-items-top">
                                 <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">STAKING WILL END ON</div>
                                 <div class="col-md-5 ">
-                                    <div class="text-right fiat pr-1" style="color:#595757;"><strong>16.08.2019</strong></div>
+                                    <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.endDate | date: 'dd.MM.yyyy' }}</strong></div>
                                 </div>
                               </div>
                             </div>
@@ -188,7 +176,7 @@
 
                       
                       
-                      <div class="issue-token">
+                      <div class="issue-token" *ngIf="this.stakingForm.value.stakingType == 2">
 
                             <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
                               <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
@@ -198,6 +186,7 @@
                                 <div class="input-group">
                                   <input
                                     type="text"
+                                    formControlName="tokenName"
                                     class="form-control"
                                     placeholder="Token name"
                                     onfocus="this.placeholder = ''"
@@ -213,6 +202,7 @@
                                 <div class="input-group">
                                   <input
                                     type="text"
+                                    formControlName="tokenSymbol"
                                     class="form-control"
                                     placeholder="XYZ"
                                     onfocus="this.placeholder = ''"
@@ -228,6 +218,7 @@
                                 <div class="input-group">
                                   <input
                                     type="text"
+                                    formControlName="tokenSupply"
                                     class="form-control"
                                     placeholder="100000000"
                                     onfocus="this.placeholder = ''"
@@ -243,6 +234,7 @@
                                 <div class="input-group">
                                   <input
                                     type="text"
+                                    formControlName="tokenDecimals"
                                     class="form-control"
                                     placeholder="8"
                                     onfocus="this.placeholder = ''"
