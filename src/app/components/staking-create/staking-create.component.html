@@ -1,4 +1,4 @@
-<div class="stake-screen-1">
+<div class="stake-screen-1" *ngIf='step == 1'>
 
 
 
@@ -250,7 +250,7 @@
 											<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
 												<div class="col-md-3"></div>
 												<div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
-													<button type="submit" class="btn btn-primary" style="min-width:100%;">
+													<button (click)="step = 2" type="submit" class="btn btn-primary" style="min-width:100%;">
 														REVIEW & INVOKE STAKING
 													</button>
 												</div>
@@ -326,21 +326,7 @@
 
 
 
-
-
-<!-- BREAK FOR SCREENSHOT ;) -->
-<div style="width:100%;height:1000px;display:block;"></div>
-<!-- BREAK FOR SCREENSHOT ;) -->
-
-
-
-
-
-
-
-
-
-<div class="stake-screen-1">
+<div class="stake-screen-1"  *ngIf='step == 2'>
 
 
 
@@ -357,7 +343,7 @@
 								</div>
 							</div>
 							<div class="col-md-3 col-12 pl-md-2 pr-md-2">
-									<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/mystakings">
+									<button (click)="step = 1" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0">
 										CHANGE / EDIT
 									</button>
 							</div>
@@ -390,7 +376,7 @@
                           STAKING TYPE
                         </div>
                         <div class="col-md-9 text-left pb-3">
-                          For Vote
+                          {{ stakingTypes[stakingForm.value.stakingType].name }}
                         </div>
                       </div>
 
@@ -399,7 +385,7 @@
                           STAKE FROM
                         </div>
                         <div class="col-md-9 pb-3 text-left">
-                          AU9mFUnAK7WmDyZoYmRKhhgVWEfMCyqbvM
+                          {{ stakingForm.value.fromNEOWallet }}
                         </div>
                       </div>
 
@@ -409,7 +395,7 @@
                           STAKE TO
                         </div>
                         <div class="col-md-9 pb-3 text-left">
-                          qlc_3kj522j53jl235l23k5lz324pi734ljv73z4d6kjglg1zbo12u
+                          {{ stakingForm.value.toQLCWallet }}
                         </div>
                       </div>
 
@@ -419,7 +405,7 @@
                           AMOUNT TO STAKE
                         </div>
                         <div class="col-md-9 pb-3 text-left">
-                          10,000.00 QLC
+                          {{ stakingForm.value.amounToStake  | currency:'':'':'1.2-8' }} QLC
                         </div>
                       </div>
   
@@ -428,15 +414,15 @@
                           STAKING PERIOD
                         </div>
                         <div class="col-md-9 pb-3 text-left">
-                          10 Days (Until 16.08.2019)
-                        </div>
+                          {{ stakingForm.value.durationInDays }} Days (Until {{ this.stakingForm.value.endDate | date: 'dd.MM.yyyy' }})
+                        </div> 
                       </div>
 
                       
 											<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
 												<div class="col-md-3"></div>
 												<div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
-													<button type="submit" class="btn btn-primary" style="min-width:100%;">
+													<button (click)="confirmInvoke()" type="submit" class="btn btn-primary" style="min-width:100%;">
 														CONFIRM AND INVOKE NOW
 													</button>
 												</div>
@@ -493,19 +479,9 @@
 
 
 
-<!-- BREAK FOR SCREENSHOT ;) -->
-<div style="width:100%;height:1000px;display:block;"></div>
-<!-- BREAK FOR SCREENSHOT ;) -->
 
 
-
-
-
-
-
-
-
-<div class="stake-screen-1">
+<div class="stake-screen-1"  *ngIf='step == 3'>
 
 
 
@@ -579,22 +555,7 @@
 
 
 
-
-
-
-<!-- BREAK FOR SCREENSHOT ;) -->
-<div style="width:100%;height:1000px;display:block;"></div>
-<!-- BREAK FOR SCREENSHOT ;) -->
-
-
-
-
-
-
-
-
-
-<div class="stake-screen-1">
+<div class="stake-screen-1" *ngIf="step == 4">
 
 
 
@@ -673,16 +634,6 @@
 </div>
 
 
-
-
-
-
-
-
-
-<!-- BREAK FOR SCREENSHOT ;) -->
-<div style="width:100%;height:1000px;display:block;"></div>
-<!-- BREAK FOR SCREENSHOT ;) -->
 
 
 
