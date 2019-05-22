@@ -173,7 +173,74 @@
                         </div>
                       </div>
 
-                      
+
+
+                      <div class="issue-confidant mb-4 mt-4">
+
+                        <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                            YOUR EMAIL
+                          </div>
+                          <div class="col-md-9 text-left mb-3">
+                            <div class="input-group">
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Your E-mail (used to place the order)"
+                                onfocus="this.placeholder = ''"
+                                style="height: 42px !important;"
+                              />
+                            </div>
+                          </div>
+
+                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                            ORDER NUMBER
+                          </div>
+                          <div class="col-md-9 text-left mb-3">
+                            <div class="input-group">
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Confidant Order Number"
+                                onfocus="this.placeholder = ''"
+                                style="height: 42px !important;"
+                              />
+                            </div>
+                          </div>
+
+                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                            MAC ADDRESS
+                          </div>
+                          <div class="col-md-9 text-left mb-4">
+                            <div class="input-group">
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Your Confidant Mac Address"
+                                onfocus="this.placeholder = ''"
+                                style="height: 42px !important;"
+                              />
+                            </div>
+                          </div>
+
+
+                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                             
+                          </div>
+                          <div class="col-md-9 text-left mb-1">
+                            <div class="input-group">
+                              <span class="ownership-check" class="w-100"><p><img src="../../../assets/img/loading-blue.gif" style="height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Verifying Ownership...</p></span>
+                              <span class="ownership-success" class="w-100"><p><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmed.</p></span>
+                              <span class="ownership-fail" class="w-100"><p><img src="../../../assets/img/qlc-icon-staking-fail-red.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmation Failed. <em>Change the values and try again.</em></p></span>
+                            </div>
+                          </div>
+
+                       
+                        </div>
+
+                      </div>
+
+
                       
                       <div class="issue-token" *ngIf="this.stakingForm.value.stakingType == 2">
 
@@ -330,7 +397,7 @@
 
 
 
-	<!-- REVIEW -->
+	<!-- REVIEW A -->
 	<div class="container mt-0 qlc-content-first">
 		<div class="row">
 			<div class="col-12 pl-0 pr-0 pb-2">
@@ -357,7 +424,7 @@
   <div class="container accounts">
 		<div class="row">
 
-			<!-- INFO -->
+			<!-- STAKING A -->
 			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3">
 					<div class="container pl-0 pr-0">
 						<div class="row pl-0 pr-0">
@@ -418,6 +485,77 @@
                         </div> 
                       </div>
 
+                      <div class="review-confidant">
+
+                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                              YOUR EMAIL
+                            </div>
+                            <div class="col-md-9 pb-3 text-left">
+                              some@email.com
+                            </div>
+                          </div>
+
+                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                              ORDER NUMBER
+                            </div>
+                            <div class="col-md-9 pb-3 text-left">
+                              2132358z2oi5hlk153glkuu15glku45g
+                            </div>
+                          </div>
+
+                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                              MAC ADDRESS
+                            </div>
+                            <div class="col-md-9 pb-3 text-left">
+                              00-14-22-01-23-45
+                            </div>
+                          </div>
+
+                      </div>
+
+                      <div class="review-mintage">
+
+                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                              TOKEN NAME
+                            </div>
+                            <div class="col-md-9 pb-3 text-left">
+                              My New Token
+                            </div>
+                          </div>
+
+                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                              TOKEN SYMBOL
+                            </div>
+                            <div class="col-md-9 pb-3 text-left">
+                              XYZ
+                            </div>
+                          </div>
+
+                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                              TOKEN SUPPLY
+                            </div>
+                            <div class="col-md-9 pb-3 text-left">
+                              100,000,000
+                            </div>
+                          </div>
+
+                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                              TOKEN DECIMALS
+                            </div>
+                            <div class="col-md-9 pb-3 text-left">
+                              8
+                            </div>
+                          </div>
+
+                      </div>
+
                       
 											<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
 												<div class="col-md-3"></div>
@@ -453,13 +591,34 @@
             <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
               <hr style="height:1px;width:100%;border:none;background:#7ca7e5;display:block;" />
 
-              <p style="width:100%;" class="mt-2"><strong>FOR VOTING/MINING NODE</strong></p>
-              <p>
-                <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Amount:</span> 1 QLC<br>
-                <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Staking Period:</span> 10 days<br>
-                <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Voting Earning per day:</span> <br>Your staked amount/whole network staked amount x 8,302 QGAS<br>
-                <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Mining Earning per day:</span> <br>Miners to share the pool of 8219 QGAS<br>Miner Earning = Voting + Mining Earning<br><span style="color:#7ca7e5;"><em><br>*Stake 1 million QLC or above is entitled to be a mining node, or run a mining pool</em></span><br>
-              </p>
+              <div class="explainer-voting">
+                <p style="width:100%;" class="mt-2"><strong>FOR VOTING/MINING NODE</strong></p>
+                <p>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Amount:</span> 1 QLC<br>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Staking Period:</span> 10 days<br>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Voting Earning per day:</span> <br>Your staked amount/whole network staked amount x 8,302 QGAS<br>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Mining Earning per day:</span> <br>Miners to share the pool of 8219 QGAS<br>Miner Earning = Voting + Mining Earning<br><span style="color:#7ca7e5;"><em><br>*Stake 1 million QLC or above is entitled to be a mining node, or run a mining pool</em></span><br>
+                </p>
+              </div>
+
+              <div class="explainer-confidant" style="opacity:0.4">
+                <p style="width:100%;" class="mt-2"><strong>FOR CONFIDANT STATION</strong><br></p>
+                <p>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Amount:</span> 2,000 QLC<br>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Staking Period:</span> 90 days<br>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Rewards: </span> Same as voting node - QGAS consumption<br><span style="color:#7ca7e5;"><em><br>*First three month promotional period QGAS consumption will be 0</em></span><br><br>
+                  Purchase a <a href="https://myconfidant.io" target="_blank" style="text-decoration: underline; color:#fff;">Confidant</a> with 20% discount with Crypto Payment
+                </p>
+              </div>
+
+              <div class="explainer-mintage" style="opacity:0.4">
+                <p style="width:100%;" class="mt-2"><strong>FOR TOKEN MINTAGE</strong><br></p>
+                <p>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Amount:</span> 500,000 QLC<br>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Staking Period:</span> 180 days<br>
+                  <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Rewards: </span> Same as voting node and entitled to issue a token<br>
+                </p>
+              </div>
 
             </div>
 
@@ -469,7 +628,8 @@
 
 
 		</div>
-	</div>		
+  </div>		
+  
 
 
 
@@ -609,6 +769,10 @@
   
                         <button type="submit" class="btn btn-primary" style="min-width:100%;">
                           BACK TO MY STAKINGS
+                        </button>
+
+                        <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;">
+                          INVOKE A NEW STAKING
                         </button>
 
                       </div>
