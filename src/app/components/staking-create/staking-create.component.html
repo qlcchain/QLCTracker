@@ -190,10 +190,23 @@
                       <div class="issue-confidant mb-4 mt-4">
 
                         <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
-                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+
+                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3 mt-2">
+  
+                          </div>
+                          <div class="col-md-9 text-left mb-2 mt-2">
+                            <p>
+                              <strong>Prove your ownership and unlock the staking</strong><br>
+                              Enter your E-mail address, used to purchase your Confidant Station. <br>
+                              Click on "Send Confirmation Code" and check your Inbox.<br>
+                              You will receive a security code that will prove you're the owner.
+                            </p>
+                          </div>
+
+                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4">
                             YOUR EMAIL
                           </div>
-                          <div class="col-md-9 text-left mb-3">
+                          <div class="col-md-9 text-left mb-4">
                             <div class="input-group">
                               <input
                                 type="text"
@@ -205,36 +218,38 @@
                             </div>
                           </div>
 
-                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
-                            ORDER NUMBER
+                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
+                          <div class="col-md-4 text-left mb-4">
+                            <button type="submit" class="btn btn-primary" style="min-width:100%;">
+                              SEND SECURITY CODE
+                            </button>
                           </div>
-                          <div class="col-md-9 text-left mb-3">
+
+                        </div>
+                        
+                        <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+
+                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3 mt-4">
+                            SECURITY CODE
+                          </div>
+                          <div class="col-md-6 text-left mb-3 mt-4">
                             <div class="input-group">
                               <input
                                 type="text"
                                 class="form-control"
-                                placeholder="Confidant Order Number"
+                                placeholder="Security code (sent to your email)"
                                 onfocus="this.placeholder = ''"
                                 style="height: 42px !important;"
                               />
                             </div>
-                          </div>
+                          </div>  
+                          <div class="col-md-3 text-left mb-3 mt-4">
+                              <button type="submit" class="btn btn-primary" style="min-width:100%; min-height:42px;">
+                                CONFIRM CODE
+                              </button>
+                          </div>                          
 
-                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
-                            MAC ADDRESS
-                          </div>
-                          <div class="col-md-9 text-left mb-4">
-                            <div class="input-group">
-                              <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Your Confidant Mac Address"
-                                onfocus="this.placeholder = ''"
-                                style="height: 42px !important;"
-                              />
-                            </div>
-                          </div>
-
+                          
 
                           <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
                              
@@ -243,7 +258,7 @@
                             <div class="input-group">
                               <span class="ownership-check" class="w-100"><p><img src="../../../assets/img/loading-blue.gif" style="height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Verifying Ownership...</p></span>
                               <span class="ownership-success" class="w-100"><p><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmed.</p></span>
-                              <span class="ownership-fail" class="w-100"><p><img src="../../../assets/img/qlc-icon-staking-fail-red.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmation Failed. <em>Change the values and try again.</em></p></span>
+                              <span class="ownership-fail" class="w-100"><p><img src="../../../assets/img/qlc-icon-staking-fail-red.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmation Failed. <em>Enter your security code and try again.</em></p></span>
                             </div>
                           </div>
 
@@ -252,6 +267,30 @@
 
                       </div>
 
+                      <div class="issue-mac-addresses">
+
+                          <div class="row pt-0 mb-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                              YOUR CONFIDANTS
+                            </div>
+                            <div class="col-md-9 text-left mb-3 pt-2 mt-2">
+                              <p>Select the Confidant Stations you want to stake for:</p>
+                            </div>
+
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                              
+                            </div>
+                            <div class="col-md-9 text-left mb-3">
+                                <div class="form-group">
+                                    <input type="checkbox" name="confidant1" value="20:30:40:FA:CC:50" id="c1"><label for="c1" style="padding-left:10px;padding-right:30px;"> Confidant #1: 20:30:40:FA:CC:50</label><br>
+                                    <input type="checkbox" name="confidant2" value="FA:CC:50:20:40:30" id="c2"><label for="c2" style="padding-left:10px;padding-right:30px;"> Confidant #2: FA:CC:50:20:40:30</label><br>
+                                    <input type="checkbox" name="confidant3" value="50:20:FA:CC:30:40" id="c3"><label for="c3" style="padding-left:10px;padding-right:30px;"> Confidant #3: 50:20:FA:CC:30:40</label><br>
+                                  </div>
+                            </div>
+                      
+                          </div>
+
+                    </div>
 
                       
                       <div class="issue-token">
@@ -320,7 +359,7 @@
 
                       </div>
 
-
+                      
 
 											<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
 												<div class="col-md-3"></div>
@@ -515,24 +554,6 @@
                             </div>
                             <div class="col-md-9 pb-3 text-left">
                               some@email.com
-                            </div>
-                          </div>
-
-                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                              ORDER NUMBER
-                            </div>
-                            <div class="col-md-9 pb-3 text-left">
-                              2132358z2oi5hlk153glkuu15glku45g
-                            </div>
-                          </div>
-
-                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                              MAC ADDRESS
-                            </div>
-                            <div class="col-md-9 pb-3 text-left">
-                              00-14-22-01-23-45
                             </div>
                           </div>
 
