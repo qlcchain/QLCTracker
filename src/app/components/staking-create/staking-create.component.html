@@ -175,7 +175,7 @@
 
 
 
-                      <div class="issue-confidant mb-4 mt-4">
+                      <div class="issue-confidant mb-4 mt-4" *ngIf="this.stakingForm.value.stakingType == 1">
 
                         <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
                           <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
@@ -485,7 +485,7 @@
                         </div> 
                       </div>
 
-                      <div class="review-confidant">
+                      <div class="review-confidant" *ngIf="this.stakingForm.value.stakingType == 1">
 
                           <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
                             <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
@@ -516,7 +516,7 @@
 
                       </div>
 
-                      <div class="review-mintage">
+                      <div class="review-mintage" *ngIf="this.stakingForm.value.stakingType == 2">
 
                           <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
                             <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
@@ -767,11 +767,11 @@
                     <div class="row">
                       <div class="col-md-4 offset-md-4 mb-4">
   
-                        <button type="submit" class="btn btn-primary" style="min-width:100%;">
+                        <button type="submit" class="btn btn-primary" style="min-width:100%;" routerLink="/mystakings" >
                           BACK TO MY STAKINGS
                         </button>
 
-                        <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;">
+                        <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;" (click)="step=1">
                           INVOKE A NEW STAKING
                         </button>
 
