@@ -25,6 +25,7 @@ import { MyneowalletComponent } from './components/myneowallet/myneowallet.compo
 import { SendneoComponent } from './components/sendneo/sendneo.component';
 import { MystakingsComponent } from './components/mystakings/mystakings.component';
 import { StakingCreateComponent } from './components/staking-create/staking-create.component';
+import { StakingRevokeComponent } from './components/staking-revoke/staking-revoke.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -60,7 +61,8 @@ const routes: Routes = [
   { path: 'sendneo/:wallet', component: SendneoComponent },
   { path: 'mystakings', component: MystakingsComponent },
   { path: 'staking-create', component: StakingCreateComponent },
-  { path: '**', component: HomeComponent },
+  { path: 'staking-revoke', component: StakingRevokeComponent },
+  { path: '**', component: HomeComponent }
 ];
 
 @NgModule({
