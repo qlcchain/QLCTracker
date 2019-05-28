@@ -112,16 +112,16 @@
                 </span>
               </div>
               <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey" *ngIf="transaction.type != 'ContractSend' && transaction.type != 'ContractReward' && transaction.type != 'Change'">{{transaction.type == 'Send' ? 'to' : 'from'}}: </span> 
-                <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)" *ngIf="transaction.type != 'ContractSend' && transaction.type != 'ContractReward' && transaction.type != 'Change'">{{ transaction.link_as_account || transaction.address }}</a>
+                <span class="text-color-lightgrey" *ngIf="transaction.type != 'Change'">{{transaction.type == 'Send' ? 'to' : 'from'}}: </span> 
+                <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)" *ngIf="transaction.type != 'Change'">{{ transaction.link_as_account || transaction.address }}</a>
                 <a [routerLink]="'/transaction/' + transaction.hash"><br>
                   <span class="text-tiny">{{ transaction.hash }}</span>
                 </a>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
-                transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'
+                transaction.type == 'Send' || transaction.type == 'ContractSend' ? 'text-color-red' : 'text-color-green'
               }}">
-                <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' || transaction.type == 'ContractSend' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
                 <br><span class="text-color-grey">{{ transaction.tokenName }}</span>
               </div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
