@@ -128,8 +128,8 @@ export class MyneowalletComponent implements OnInit {
     this.addressBookModel = this.addressBookEntry || '';
 
 		const balance:any = await this.neoService.getNeoScanBalance(this.walletId);
-		console.log('balance');
-		console.log(balance);
+		//console.log('balance');
+		//console.log(balance);
 		for (const asset of balance) {
 			this.walletAccount.balances[asset.asset_hash] = { 
 				amount : new BigNumber(asset.amount).toFixed(),
@@ -143,7 +143,6 @@ export class MyneowalletComponent implements OnInit {
 
     const transactions = await this.neoService.getLastTransactions(this.walletId);
     this.walletHistory = transactions.entries;
-
     const qrCode = await QRCode.toDataURL(`${this.walletId}`);
     this.qrCodeImage = qrCode;
   }

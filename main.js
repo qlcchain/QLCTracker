@@ -103,22 +103,18 @@ async function run() {
 	}
 	platform = process.platform;
 	// start gqlc
-	let configTemp = '';
 	if (isDev) {
 		console.log('Running in development');
 		if (platform == 'win32') {
-			configTemp = path.join(global.resourcesPath, '../../../../extra/config.json');
 			global.resourcesPath = path.resolve(global.resourcesPath, '../../../../extra/', process.platform, process.arch);
 		} else {
 			appPath = app.getAppPath();
 			global.resourcesPath = path.resolve(appPath, 'extra', process.platform, process.arch);
-			configTemp = path.join(appPath, 'extra/config.json');
 		}
 	} else {
 		console.log('Running in production');
-		configTemp = path.join(global.resourcesPath, 'config.json');
 	}
-	console.log(`path: ${global.resourcesPath}, config template ${configTemp}`);
+	console.log(`path: ${global.resourcesPath}`);
 	console.log(`path: ` + toExecutableName('gqlc'));
 
 	const cmd = path.join(global.resourcesPath, toExecutableName('gqlc'));
@@ -131,32 +127,10 @@ async function run() {
 	console.log(`prepare gqlc data dir ${configDir}`);
 
 	const config = path.join(configDir, 'qlc_wallet.json');
-	console.log(configDir);
-	console.log(config);
-	async function prepare_config() {
-		if (!fs.existsSync(config)) {
-			//read config template to set dataDir and save it to wallet user data dir
-			let rawdata = fs.readFileSync(configTemp);
-			let cfg = JSON.parse(rawdata);
-			cfg.dataDir = configDir;
-			//generate p2p Id
-			await PeerId.create({ bits: 2048 }, (err, id) => {
-				if (err) {
-					throw err;
-				}
-				pid = id.toJSON();
-				cfg.p2p.identity.peerId = pid.id;
-				cfg.p2p.identity.privateKey = pid.privKey;
-			});
-			console.log(`read config temp from resource ${configTemp}`);
-			let data = JSON.stringify(cfg, null, 4);
-			fs.writeFileSync(config, data);
-		}
-	}
-	await prepare_config();
+	console.log(`${configDir}, ${config}`);
 
 	console.log(`start qglc ${cmd}`);
-	const child = crossSpawn(cmd, ['--config', config], {
+	const child = crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
 		windowsHide: true,
 		stdio: ['ignore', 'pipe', 'pipe']
 	});

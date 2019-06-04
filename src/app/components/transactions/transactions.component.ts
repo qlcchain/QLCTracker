@@ -95,7 +95,7 @@ export class TransactionsComponent implements OnInit {
 		var pages = this.transactionsCount/this.pageSize;
     if (this.transactionsCount%this.pageSize != 0) {
       pages = Math.floor(this.transactionsCount/this.pageSize)+1;
-    }
+		}
 		this.allPages = pages;
 		if (pages < 7)
 			displayPages = pages;
