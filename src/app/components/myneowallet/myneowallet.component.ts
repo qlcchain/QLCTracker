@@ -123,26 +123,27 @@ export class MyneowalletComponent implements OnInit {
       this.walletId = this.wallet.accounts[0].accountMeta.account;
 
     this.walletAccount = this.wallet.neowallets.find(a => a.id === this.walletId);
-    //console.log(this.walletAccount);
+
     this.addressBookEntry = this.addressBook.getAccountName(this.walletId);
     this.addressBookModel = this.addressBookEntry || '';
 
-    const balance:any = await this.neoService.getBalance(this.walletId);
-    for (const asset of balance.assetSymbols) {
-      this.walletAccount.balances[asset] = new BigNumber(balance.assets[asset].balance).toFixed();
-    }
-    for (const token of balance.tokenSymbols) {
-      const newTokenBalance = new BigNumber(balance.tokens[token]).toFixed();
-
-      this.walletAccount.balances[token] = newTokenBalance;
+		const balance:any = await this.neoService.getNeoScanBalance(this.walletId);
+		console.log('balance');
+		console.log(balance);
+		for (const asset of balance) {
+			this.walletAccount.balances[asset.asset_hash] = { 
+				amount : new BigNumber(asset.amount).toFixed(),
+				asset: asset.asset,
+				asset_symbol: asset.asset_symbol
+			}
 		}
 		
+		console.log(this.walletAccount.balances);
 		this.claimableGas = await this.neoService.getClaimAmount(this.walletId);
 
     const transactions = await this.neoService.getLastTransactions(this.walletId);
     this.walletHistory = transactions.entries;
-    //console.log(this.walletHistory);
-    
+
     const qrCode = await QRCode.toDataURL(`${this.walletId}`);
     this.qrCodeImage = qrCode;
   }
@@ -196,6 +197,5 @@ export class MyneowalletComponent implements OnInit {
 		this.walletService.saveWalletExport();
 		this.router.navigate(['myaccounts/']);
 	}
-  
 
 }

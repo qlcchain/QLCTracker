@@ -61,6 +61,11 @@ export class TokensComponent implements OnInit {
 
 		if (!tokens.error) {
 			tokens.result.forEach(token => {
+        if (token.tokenSymbol != 'QLC' && token.tokenSymbol != 'QGAS') {
+          token.image = 'none';
+        } else {
+          token.image = token.tokenSymbol;
+        }
 				tokenMap[token.tokenId] = token;
 			});
     }

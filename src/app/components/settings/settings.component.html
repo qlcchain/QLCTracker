@@ -346,7 +346,7 @@
                                   <div class="row align-items-center rowContent autoHP" *ngIf="!wallet.locked">
                                     <div class="col-12 px-0 pb-2">
                                         {{ 'MANAGE_WALLET.backup_wallet_text2' | translate }}<br>
-                                      <a ngxClipboard [cbContent]="seedMnemonic()" (cbOnSuccess)="notifications.sendSuccess('Wallet mnemonic copied to clipboard!')">{{ 'MANAGE_WALLET.click_here' | translate }}</a> {{ 'MANAGE_WALLET.backup_wallet_text3' | translate }}
+                                      <a ngxClipboard [cbContent]="seedMnemonic()" (cbOnSuccess)="notifications.sendSuccess('Wallet mnemonic copied to clipboard!')" style="font-weight: bold; text-decoration: underline;">{{ 'MANAGE_WALLET.click_here' | translate }}</a> {{ 'MANAGE_WALLET.backup_wallet_text3' | translate }}
                   
                   
                                     </div>
@@ -355,7 +355,7 @@
                                   <div class="row align-items-center rowContent autoHP" *ngIf="!wallet.locked">
                                     <div class="col-12 px-0 py-2">
                                         {{ 'MANAGE_WALLET.backup_wallet_text4' | translate }}<br>
-                                      <a ngxClipboard [cbContent]="wallet.seed" (cbOnSuccess)="notifications.sendSuccess('Wallet seed copied to clipboard!')">{{ 'MANAGE_WALLET.click_here' | translate }}</a> {{ 'MANAGE_WALLET.backup_wallet_text3' | translate }}
+                                      <a ngxClipboard [cbContent]="wallet.seed" (cbOnSuccess)="notifications.sendSuccess('Wallet seed copied to clipboard!')" style="font-weight: bold; text-decoration: underline;">{{ 'MANAGE_WALLET.click_here' | translate }}</a> {{ 'MANAGE_WALLET.backup_wallet_text3' | translate }}
                                     </div>
                                   </div>
                                 </div>

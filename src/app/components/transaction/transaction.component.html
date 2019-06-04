@@ -71,7 +71,7 @@
                           <div class="col-12">Amount</div>
                       </div>
                       <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
-                          <div class="col-12">{{ transaction.amount | qlc }}</div>
+                          <div class="col-12">{{ transaction.amount | qlc: transaction.tokenInfo.decimals }}</div>
                       </div>
                   </div>
               </div>

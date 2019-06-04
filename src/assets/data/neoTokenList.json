@@ -602,7 +602,7 @@
         "networks": {
             "1": {
                 "name": "Qlink Token",
-                "hash": "0d821bd7b6d53f5c2b40e217c6defc8bbe896cf5",
+                "hash": "b9d7ea3062e6aeeb3e8ad9548220c4ba1361d263",                 
                 "decimals": 8,
                 "totalSupply": 600000003
             }

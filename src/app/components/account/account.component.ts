@@ -105,16 +105,21 @@ export class AccountComponent implements OnInit {
 						continue;
 					}
 					
+					
 					pendingResult[account].forEach(pending => {
+						if (tokenMap.hasOwnProperty(pending.type)) {
+							pending.tokenInfo = tokenMap[pending.type];
+						}
 						this.pendingBlocks.push({
 							account: pending.source,
 							amount: pending.amount,
 							token: pending.tokenName,
 							timestamp: pending.timestamp,
 							//addressBookName: this.addressBook.getAccountName(pending.source) || null,
+							tokenInfo: pending.tokenInfo,
 							hash: pending.hash
 						});
-						this.pendingSum += parseInt(pending.amount)
+						this.pendingSum += Number(pending.amount)
 					});
 				}
 			}
@@ -150,6 +155,13 @@ export class AccountComponent implements OnInit {
 			
 			this.accountHistory = [];
 			if (!accountHistory.error) {
+				const tokenMap = {};
+				const tokens = await this.api.tokens();
+				if (!tokens.error) {
+					tokens.result.forEach(token => {
+						tokenMap[token.tokenId] = token;
+					});
+				}
 				const historyResult = accountHistory.result;
 				for (const block of historyResult) {
 					// For Open and receive blocks, we need to look up block info to get originating account
@@ -163,6 +175,9 @@ export class AccountComponent implements OnInit {
 						if (!link_as_account.error && typeof(link_as_account.result) != 'undefined') {
 							block.link_as_account = link_as_account.result;
 						}
+					}
+					if (tokenMap.hasOwnProperty(block.token)) {
+						block.tokenInfo = tokenMap[block.token];
 					}
 					this.accountHistory.push(block);
 				}

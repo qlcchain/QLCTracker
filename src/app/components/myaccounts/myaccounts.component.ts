@@ -20,6 +20,7 @@ export class MyaccountsComponent implements OnInit {
 	neowallets = this.walletService.wallet.neowallets;
 	wallet = this.walletService.wallet;
   isLedgerWallet = this.walletService.isLedgerWallet();
+	activeSlideIndex = 0;
   
   pendingBlocks = [];
   successfulBlocks = [];
@@ -82,16 +83,31 @@ export class MyaccountsComponent implements OnInit {
 	}
 
 	async loadBalances() {
+		const tokenMap = {};
+		const tokens = await this.api.tokens();
+		if (!tokens.error) {
+			tokens.result.forEach(token => {
+				tokenMap[token.tokenId] = token;
+			});
+		}
 		for (let i = 0; i < this.accounts.length; i++) {
 			const am = await this.api.accountInfo(this.accounts[i].id);
 			if (!am.error) {
-        let accountMeta = [];
+				let accountMeta = [];
+				let otherTokens = [];
         if (am.result.tokens && Array.isArray(am.result.tokens)) {
           am.result.tokens.forEach(token => {
-            accountMeta[token.tokenName] = token;
+						accountMeta[token.tokenName] = token;
+						if (tokenMap.hasOwnProperty(token.type)) {
+							token.tokenInfo = tokenMap[token.type];
+						}
+						if (token.tokenInfo.tokenSymbol != 'QLC' && token.tokenInfo.tokenSymbol != 'QGAS') {
+							otherTokens.push(token);
+						}
           });
         }
-        this.accounts[i].balances = accountMeta;
+				this.accounts[i].balances = accountMeta;
+				this.accounts[i].otherTokens = otherTokens;
       }
       const pending = await this.api.accountsPending([this.accounts[i].id]);
       let pendingCount = 0;
@@ -108,16 +124,16 @@ export class MyaccountsComponent implements OnInit {
 		for (let i = 0; i < this.neowallets.length; i++) {
 			this.neowallets[i].balances = [];
 			this.neowallets[i].addressBookName = this.addressBook.getAccountName(this.neowallets[i].id);
-			const balance:any = await this.neoService.getBalance(this.neowallets[i].id);
-			for (const asset of balance.assetSymbols) {
-				this.neowallets[i].balances[asset] = new BigNumber(balance.assets[asset].balance).toFixed();
+
+			const balance:any = await this.neoService.getNeoScanBalance(this.neowallets[i].id);
+			for (const asset of balance) {
+				this.neowallets[i].balances[asset.asset_hash] = { 
+					amount : new BigNumber(asset.amount).toFixed(),
+					asset: asset.asset,
+					asset_symbol: asset.asset_symbol
+				}
 			}
-			for (const token of balance.tokenSymbols) {
-				let newTokenBalance = new BigNumber(balance.tokens[token]).toFixed();
-				if (newTokenBalance == 'NaN')
-					newTokenBalance = '0';
-				this.neowallets[i].balances[token] = newTokenBalance;
-			}
+			
 		}
 	}
 

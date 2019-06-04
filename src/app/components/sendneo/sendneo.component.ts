@@ -32,7 +32,8 @@ export class SendneoComponent implements OnInit {
   };
 	accountTokens: any = [];
 	selectedToken: any = [];
-	selectedTokenSymbol = '';
+	selectedTokenHash = '';
+	selectedWalletBalances = [];
 	addressBookResults$ = new BehaviorSubject([]);
 	showAddressBook = false;
 	addressBookMatch = '';
@@ -136,7 +137,7 @@ export class SendneoComponent implements OnInit {
 		for (let i = 0; i < this.neowallets.length; i++) {
 			this.neowallets[i].balances = [];
 			this.neowallets[i].addressBookName = this.addressBookService.getAccountName(this.neowallets[i].id);
-			const balance:any = await this.neoService.getBalance(this.neowallets[i].id);
+			/*const balance:any = await this.neoService.getBalance(this.neowallets[i].id);
 			for (const asset of balance.assetSymbols) {
 				this.neowallets[i].balances[asset] = new BigNumber(balance.assets[asset].balance).toFixed();
       }
@@ -145,6 +146,17 @@ export class SendneoComponent implements OnInit {
 				if (newTokenBalance == 'NaN')
 					newTokenBalance = '0';
         this.neowallets[i].balances[token] = newTokenBalance;
+			}*/
+			const balance:any = await this.neoService.getNeoScanBalance(this.neowallets[i].id);
+			console.log('balance');
+			console.log(balance);
+			for (const asset of balance) {
+				this.neowallets[i].balances[asset.asset_hash] = { 
+					amount : new BigNumber(asset.amount).toFixed(),
+					asset: asset.asset,
+					asset_symbol: asset.asset_symbol,
+					asset_hash: asset.asset_hash
+				}
 			}
 		}
 		this.selectAccount();
@@ -326,7 +338,7 @@ export class SendneoComponent implements OnInit {
 			const newHash = await this.neoService.send(
 				this.fromAccountID,
 				this.toAccountID,
-				this.selectedToken.tokenSymbol,
+				this.selectedToken.asset_hash,
 				this.amount
 			);
 			//console.log('hash >>>> ');
@@ -334,7 +346,7 @@ export class SendneoComponent implements OnInit {
 			if (newHash) {
 				this.newHashId = newHash.txid;
 				this.activePanel = 'success';
-				this.notificationService.sendSuccess(this.msg11 + ` ${this.amount} ${this.selectedToken.tokenSymbol}!`);
+				this.notificationService.sendSuccess(this.msg11 + ` ${this.amount} ${this.selectedToken.asset_symbol}!`);
 				this.amount = null;
 				this.amountFiat = null;
 				this.resetRaw();
@@ -360,7 +372,7 @@ export class SendneoComponent implements OnInit {
 		if (!walletAccount) {
 			return;
 		}
-		const maxAmount = this.selectedToken.balance;
+		const maxAmount = this.selectedToken.amount;
 		this.amount = maxAmount;
 		//this.syncFiatPrice();
 	}
@@ -371,8 +383,8 @@ export class SendneoComponent implements OnInit {
 	}
 
 	selectToken() {
-		if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
-			this.selectedToken = this.accountTokens.find(a => a.tokenSymbol === this.selectedTokenSymbol);
+		if (this.selectedWallet.balances !== undefined && Object.values(this.selectedWallet.balances).length > 0) {
+			this.selectedToken = Object.values(this.selectedWallet.balances).find(a => a.asset_hash === this.selectedTokenHash);
 		} else {
 			this.selectedToken = '';
 		}
@@ -381,20 +393,25 @@ export class SendneoComponent implements OnInit {
   tokenBalance(token) {
     //console.log(token + this.selectedWallet.balances.length);
     if (this.selectedWallet !== undefined && this.selectedWallet.balances) {
-      if (this.selectedWallet.balances[token])
+      /*if (this.selectedWallet.balances[token])
         return this.selectedWallet.balances[token];
       else
-        return 0.00;
+				return 0.00;*/
+//console.log(token);
+			if (this.selectedWallet.balances[this.neoService.tokenList[token].networks['1'].hash])
+        return this.selectedWallet.balances[this.neoService.tokenList[token].networks['1'].hash].amount;
+      else
+				return 0.00;
+				
 		} else {
 			return 0.00;
 		}
   }
   selectTokenIcon(token) {
-		if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
-      console.log('selected token icon' + token);
-      const selectedToken = this.accountTokens.find(a => a.tokenSymbol === token);
+		if (this.selectedWallet.balances !== undefined) {
+			const selectedToken = Object.values(this.selectedWallet.balances).find(a => a.asset_hash === this.neoService.tokenList[token].networks['1'].hash);
       if (selectedToken) {
-        this.selectedTokenSymbol = token;
+        this.selectedTokenHash = selectedToken.asset_hash;
         this.selectedToken = selectedToken;
       }
 		} 
@@ -405,7 +422,7 @@ export class SendneoComponent implements OnInit {
     const selectedWallet = this.neowallets.find(a => a.id === this.fromAccountID);
     this.selectedWallet = selectedWallet;
     this.accountTokens = [];
-    const balance:any = await this.neoService.getBalance(this.selectedWallet.id);
+    /*const balance:any = await this.neoService.getBalance(this.selectedWallet.id);
     for (const token of balance.tokenSymbols) {
       let newTokenBalance = new BigNumber(balance.tokens[token]).toFixed();
       if (newTokenBalance == 'NaN')
@@ -424,12 +441,27 @@ export class SendneoComponent implements OnInit {
       this.selectedWallet.balances[token] = newTokenBalance;
       const tokenSymbol = token;
       this.accountTokens.push({ tokenSymbol: tokenSymbol, balance: newTokenBalance });
-    }
-		this.selectedToken = this.accountTokens !== undefined && this.accountTokens.length > 0 ? this.accountTokens[0] : [];
-		this.selectedTokenSymbol =
+		}*/
+		const balance:any = await this.neoService.getNeoScanBalance(this.selectedWallet.id);
+		for (const asset of balance) {
+			this.selectedWallet.balances[asset.asset_hash] = { 
+				amount : new BigNumber(asset.amount).toFixed(),
+				asset: asset.asset,
+				asset_symbol: asset.asset_symbol,
+				asset_hash: asset.asset_hash
+			}
+		}
+		this.selectedWalletBalances = this.selectedWallet.balances !== undefined && Object.values(this.selectedWallet.balances).length > 0 ? Object.values(this.selectedWallet.balances) : [];
+		//this.selectedToken = this.accountTokens !== undefined && this.accountTokens.length > 0 ? this.accountTokens[0] : [];
+		this.selectedToken = this.selectedWallet.balances !== undefined && Object.values(this.selectedWallet.balances).length > 0 ? Object.values(this.selectedWallet.balances)[0] : [];
+		/*this.selectedTokenHash =
 			this.selectedToken !== undefined && this.selectedToken.tokenSymbol !== undefined
 				? this.selectedToken.tokenSymbol
-				: '';
+				: '';*/
+		this.selectedTokenHash =
+		this.selectedToken !== undefined && this.selectedToken.asset_hash !== undefined
+			? this.selectedToken.asset_hash
+			: '';	
 
 		this.resetRaw();
 	}

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +13,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { NavComponent } from './components/nav/nav.component';
 import { HeaderComponent } from './components/header/header.component';
 import { TransactionsComponent } from './components/transactions/transactions.component';
@@ -52,6 +53,9 @@ import { MyneowalletComponent } from './components/myneowallet/myneowallet.compo
 import { SendneoComponent } from './components/sendneo/sendneo.component';
 import { StakingCreateComponent } from './components/staking-create/staking-create.component';
 import { MystakingsComponent } from './components/mystakings/mystakings.component';
+import { StakingRevokeComponent } from './components/staking-revoke/staking-revoke.component';
+import { AmountValidatorDirective } from './directives/amount-validator.directive';
+import { ModalUnlockComponent } from './components/modal-unlock/modal-unlock.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -91,19 +95,24 @@ export function createTranslateLoader(http: HttpClient) {
     MyneowalletComponent,
     SendneoComponent,
     StakingCreateComponent,
-    MystakingsComponent
+    MystakingsComponent,
+    StakingRevokeComponent,
+    AmountValidatorDirective,
+    ModalUnlockComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     ClipboardModule,
 		TooltipModule.forRoot(),
 		BsDropdownModule.forRoot(),
 		CollapseModule.forRoot(),
 		ModalModule.forRoot(),
     AlertModule.forRoot(),
+    CarouselModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,
@@ -113,7 +122,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     DeviceDetectorModule.forRoot(),
     LoggerModule.forRoot({
-			serverLoggingUrl: `${environment.apiUrl}/logs`,
+			serverLoggingUrl: `${environment.rpcUrl}/logs`,
 			level: NgxLoggerLevel.DEBUG,
 			serverLogLevel: NgxLoggerLevel.ERROR
 		})
@@ -125,6 +134,9 @@ export function createTranslateLoader(http: HttpClient) {
     multi: true
   }
 ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ModalUnlockComponent    
+  ]
 })
 export class AppModule { }

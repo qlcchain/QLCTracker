@@ -11,6 +11,8 @@ export class WorkPoolService {
 	cacheLength = 25;
 	workCache = [];
 
+	retryCount = 0;
+
 	constructor(private pow: PowService, private notifications: NotificationService) {}
 
 	public workExists(hash) {
@@ -52,7 +54,11 @@ export class WorkPoolService {
 		}
 		const work = await this.pow.getPow(hash);
 		if (!work) {
-			this.notifications.sendWarning(`Failed to retrieve work for ${hash}.  Try a different PoW method.`);
+			if (this.retryCount < 5) {
+				this.notifications.sendWarning(`Failed to retrieve work for ${hash}.  Retrying.`);
+				return this.getWork(hash);
+			}
+			this.notifications.sendWarning(`Failed to retrieve work for ${hash}.  Try again later.`);
 			return null;
 		}
 

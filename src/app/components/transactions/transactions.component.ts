@@ -102,13 +102,13 @@ export class TransactionsComponent implements OnInit {
 		
 		this.pages = Array(displayPages).fill(0).map((pages,i)=>i+1) ;
 
-		if (this.activePage > 3 && this.activePage < pages -3) {
+		if (pages > 5 && this.activePage > 3 && this.activePage < pages -3) {
 			this.pages[1] = this.activePage -2;
 			this.pages[2] = this.activePage -1;
 			this.pages[3] = this.activePage;
 			this.pages[4] = this.activePage +1;
 			this.pages[5] = this.activePage +2;
-		} else if (this.activePage > 3 && this.activePage >= pages -3) {
+		} else if (pages > 5 && this.activePage > 3 && this.activePage >= pages -3) {
 			this.pages[1] = pages -5;
 			this.pages[2] = pages -4;
 			this.pages[3] = pages -3;
@@ -156,20 +156,32 @@ export class TransactionsComponent implements OnInit {
 
 		this.transactions = [];
 		if (!transactions.error) {
+			const tokenMap = {};
+			const tokens = await this.api.tokens();
+			if (!tokens.error) {
+				tokens.result.forEach(token => {
+					tokenMap[token.tokenId] = token;
+				});
+			}
 			const historyResult = transactions.result;
 			for (const block of historyResult) {
 				const blockInfo = await this.api.blocksInfo([block.link]);
 				// For Open and receive blocks, we need to look up block info to get originating account
-				if (block.type === 'Open' || block.type === 'Receive') {
+				if (block.type === 'Open' || block.type === 'Receive' || block.type === 'ContractReward') {
 					const preBlock = await this.api.blocksInfo([block.link]);
 					if (!preBlock.error && typeof(preBlock.result[0]) != 'undefined' && preBlock.result.length > 0 ) {
 						block.link_as_account = preBlock.result[0].address;
 					}
+				} else if (block.type === 'ContractSend') {
+					block.link_as_account = block.address;
 				} else {
           const link_as_account = await this.api.accountForPublicKey(block.link);
           if (!link_as_account.error && typeof(link_as_account.result) != 'undefined') {
             block.link_as_account = link_as_account.result;
           }
+				}
+				if (tokenMap.hasOwnProperty(block.token)) {
+					block.tokenInfo = tokenMap[block.token];
 				}
 				this.transactions.push(block);
 			}

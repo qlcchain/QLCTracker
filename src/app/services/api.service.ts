@@ -9,11 +9,13 @@ import Client from 'qlc.js/client';
 import { methods } from 'qlc.js/common';
 import { timer } from 'rxjs';
 
+import  uuid from 'uuid/v4';
+
 @Injectable({
 	providedIn: 'root'
 })
 export class ApiService {
-	rpcUrl = environment.apiUrl;
+	rpcUrl = environment.rpcUrl;
 	alive = true;
 	connectTimer = null;
 	
@@ -274,4 +276,47 @@ export class ApiService {
 
 		return result;
 	}
+
+	// rewards 
+
+	private async request(action, data): Promise<any> {
+		data.jsonrpc = '2.0';
+		data.method = action;
+		data.id = uuid();
+
+		return await this.http
+			.post(this.rpcUrl, data)
+			.toPromise()
+			.then(res => {
+				return res;
+			})
+			.catch(err => {
+				if (err.status === 500 || err.status === 0) {
+				}
+				throw err;
+			});
+	}
+	
+
+	async getTotalRewards(txid: string): Promise<{ result: any; error?: string }> {
+		return await this.request('rewards_getTotalRewards', { params: [txid] });
+	}
+
+	async getReceiveRewardBlock(txid: string): Promise<{ result: any; error?: string }> {
+		return await this.request('rewards_getReceiveRewardBlock', { params: [txid] });
+	}
+
+	async getConfidantRewardsDetail(account: string): Promise<{ result: any; error?: string }> {
+		return await this.request('rewards_getConfidantRewordsDetail', { params: [account] });
+	}
+
+	async getConfidantRewards(account: string): Promise<{ result: any; error?: string }> {
+		return await this.request('rewards_getConfidantRewards', { params: [account] });
+	}
+	
+	async getTotalPledgeAmount(): Promise<{ result: any; error?: string }> {
+		return await this.request('pledge_getTotalPledgeAmount', { params: [] });
+	}
+
+	
 }

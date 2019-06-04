@@ -24,7 +24,7 @@
                                         {{ 'CONFIGURE_WALLET.configure_wallet_text' | translate }}
                                     </p>
                                 </div>
-                                <div class="col-12 px-0 ">
+                                <div class="col-12 px-0 pt-0">
                                     <div class="row justify-content-center buttons">
                                         <div class="col-xl-3 col-lg-4 col-10">
                                             <a (click)="setPanel(11)"><button type="submit" class="btn btn-primary btn-blue mt-1">{{ 'CONFIGURE_WALLET.configure_wallet_button_import' | translate }}</button></a>
@@ -43,8 +43,18 @@
                 <!-- create new wallet text start -->
                 <div class="row" *ngIf="activePanel == 1">
                     <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                        <div class="content-title">
-                            <h1>{{ 'CREATE_NEW_WALLET.create_new_wallet_title' | translate }}</h1>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="content-title">
+                                    <h1>{{ 'CREATE_NEW_WALLET.create_new_wallet_title' | translate }}</h1>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 col-12 pb-2 pt-0 mt-0">
+                                <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" (click)="activePanel=0" style="margin-top:-7px !important;">
+                                    BACK
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -140,10 +150,10 @@
                             
                             
                             
-                            <div class="row defaultTable content pt-4">
+                            <div class="row defaultTable content pt-5">
                                 <div class="col-12 pb-3">
                                     <div class="row align-items-center rowContent autoHP">
-                                        <div class="col-12 px-0 pb-1 text-center boldbig" [innerHtml]="'CREATE_NEW_CREATED.warning1' | translate">
+                                        <div class="col-12 px-0 pb-1 text-center boldbig text-color-red" [innerHtml]="'CREATE_NEW_CREATED.warning1' | translate" style="font-weight: bold;">
                                             
                                         </div>
                                         <div class="col-12 px-0 pb-3 text-center boldbig pt-4">
@@ -159,7 +169,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
                 <!-- new wallet created end -->
                 
@@ -256,8 +266,18 @@
 
                         <!-- TITLE -->
                         <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                            <div class="content-title">
-                                <h1>{{ 'IMPORT.import_title' | translate }}</h1>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="content-title">
+                                        <h1>{{ 'IMPORT.import_title' | translate }}</h1>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 col-12 pb-2 pt-0 mt-0">
+                                    <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" (click)="activePanel=0" style="margin-top:-7px !important;">
+                                        BACK
+                                    </button>
+                                </div>
                             </div>
                         </div>
   

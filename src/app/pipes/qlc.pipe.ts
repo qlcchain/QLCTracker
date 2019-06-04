@@ -13,13 +13,18 @@ export class QlcPipe implements PipeTransform {
       value = 0;
     }
     let decimals = 2
-    if (args) {
-      const opts = args.split(',');
-      decimals = opts[0];
+    if (args != undefined) {
+      //const opts = args.split(',');
+      //decimals = args;
+      if (args == 0) {
+        this.QLC = 1;
+      } else {
+        this.QLC = Math.pow(10,args);
+      }
     }
     
     
-    return `${(value / this.QLC).toFixed(decimals)}`;
+    return `${(value / this.QLC).toFixed(args)}`;
   }
 
 }

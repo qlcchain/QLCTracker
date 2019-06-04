@@ -356,6 +356,20 @@ a:focus, button:focus {
     display:none;
 }
 
+.lock-icon {
+    display: block;
+    position: absolute;
+    width:14px;
+    height:14px;
+    background: transparent url('../assets/img/qlc-icon-lock-green.svg') no-repeat bottom right;
+    background-size: 100% 100%;
+    margin-top: -62px;
+    margin-left: 45px;
+}
+.lock-icon.locked {
+    background: transparent url('../assets/img/qlc-icon-lock-red.svg') no-repeat bottom right;
+    background-size: 100% 100%;
+}
 
 /* TEXTS */
 
@@ -804,50 +818,64 @@ div[class*="col-"] a:hover {
     vertical-align: middle;
     margin-top:-4px;
 }
-.icon-Send {
+.icon-Send, .icon-send {
     background: url("../assets/img/qlc-icon-send-red.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-Receive {
+.icon-Receive, .icon-receive {
     background: url("../assets/img/qlc-icon-receive-green.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-Open {
+.icon-Open, .icon-open {
     background: url("../assets/img/qlc-icon-open-purple.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-Change {
+.icon-Change, .icon-change {
     background: url("../assets/img/qlc-icon-change-blue.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-Block {
+.icon-Block, .icon-block {
     background: url("../assets/img/qlc-icon-block-purple.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-Staking {
+.icon-Staking, .icon-staking {
     background: url("../assets/img/qlc-icon-staking-blue.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
     width: 20px;
 }
-.icon-Reward {
+.icon-Reward, .icon-reward {
     background: url("../assets/img/qlc-icon-reward-green.svg") no-repeat left 4px;
+    background-size: 16px 16px;
+    vertical-align: top !important;
+    height: 100%;
+    width: 20px;
+}
+.icon-ContractSend, .icon-contractsend {
+    background: url("../assets/img/qlc-icon-contract-send.svg") no-repeat left 4px;
+    background-size: 16px 16px;
+    vertical-align: top !important;
+    height: 100%;
+    width: 20px;
+}
+.icon-ContractReward, .icon-contractreward {
+    background: url("../assets/img/qlc-icon-contract-reward.svg") no-repeat left 4px;
     background-size: 16px 16px;
     vertical-align: top !important;
     height: 100%;
@@ -1162,6 +1190,10 @@ pre {
 .menu-myaccount:hover {
     text-decoration: none !important;
     color:#7fb0ec !important;
+}
+.neo-background .menu-myaccount:hover {
+    text-decoration: none !important;
+    color:#a5ce74 !important;
 }
 .menu-icon-send {
     background: url('../assets/img/qlc-icon-send-white.svg') no-repeat 10px center;
@@ -1618,6 +1650,116 @@ pre {
 .menu-sub-items, .menu-sub-items.menu-sub-items-currency, .menu-sub-items.menu-sub-items-account, .menu-sub-items.menu-sub-items-language {
     width: calc(100% - 30px);
 }
+.lock-icon {
+    margin-left: 36px;
+}
+
+
+
+/* loader */
+
+#noTrespassingOuterBarG{
+	height:30px;
+	width:100%;
+    border:none;
+    border-radius:30px;
+	overflow:hidden;
+	background-color:rgb(32,105,194);
+    margin:auto;
+    
+}
+
+.noTrespassingBarLineG{
+	background-color:rgb(0,71,157);
+	float:left;
+	width:25px;
+	height:210px;
+	margin-right:42px;
+	margin-top:-49px;
+	transform:rotate(-45deg);
+		-o-transform:rotate(-45deg);
+		-ms-transform:rotate(-45deg);
+		-webkit-transform:rotate(-45deg);
+		-moz-transform:rotate(-45deg);
+}
+
+.noTrespassingAnimationG{
+	width:800px;
+	animation-name:noTrespassingAnimationG;
+		-o-animation-name:noTrespassingAnimationG;
+		-ms-animation-name:noTrespassingAnimationG;
+		-webkit-animation-name:noTrespassingAnimationG;
+		-moz-animation-name:noTrespassingAnimationG;
+	animation-duration:1.905s;
+		-o-animation-duration:1.905s;
+		-ms-animation-duration:1.905s;
+		-webkit-animation-duration:1.905s;
+		-moz-animation-duration:1.905s;
+	animation-iteration-count:infinite;
+		-o-animation-iteration-count:infinite;
+		-ms-animation-iteration-count:infinite;
+		-webkit-animation-iteration-count:infinite;
+		-moz-animation-iteration-count:infinite;
+	animation-timing-function:linear;
+		-o-animation-timing-function:linear;
+		-ms-animation-timing-function:linear;
+		-webkit-animation-timing-function:linear;
+		-moz-animation-timing-function:linear;
+}
+
+
+
+@keyframes noTrespassingAnimationG{
+	0%{
+		margin-left:0px;
+	}
+
+	100%{
+		margin-left:-67px;
+	}
+}
+
+@-o-keyframes noTrespassingAnimationG{
+	0%{
+		margin-left:0px;
+	}
+
+	100%{
+		margin-left:-67px;
+	}
+}
+
+@-ms-keyframes noTrespassingAnimationG{
+	0%{
+		margin-left:0px;
+	}
+
+	100%{
+		margin-left:-67px;
+	}
+}
+
+@-webkit-keyframes noTrespassingAnimationG{
+	0%{
+		margin-left:0px;
+	}
+
+	100%{
+		margin-left:-67px;
+	}
+}
+
+@-moz-keyframes noTrespassingAnimationG{
+	0%{
+		margin-left:0px;
+	}
+
+	100%{
+		margin-left:-67px;
+	}
+}
+
+
 /*.content-box-white, .content-box-purple, .content-box-blue {
     padding-left:15px;
     padding-right:15px;
@@ -1673,6 +1815,64 @@ pre {
 }
 */
 
+.form-control {
+    min-height: 41px;
+    padding-top: 8px !important;
+}
+.sendTokens .inlineForm, 
+.sendTokens .inlineForm2 {
+    padding-top: 12px !important;
+}
+.sendTokens .input-group-text.maxLink {
+    padding-top: 12px;
+    padding-bottom: 8px;
+}
+.input-group-prepend {
+    border-right: 1px solid #c9c7d0 !important;
+}
+
+.carousel-item {
+    /* Force to always be block */
+    display: block !important;
+    z-index: 1;
+    position: absolute;
+    transform: translateX(100%);
+    opacity: 0;
+    transition:all  0.6s;
+    visibility: hidden;
+}
+
+.carousel-item.active {
+    position: relative;
+    transform: translateX(0);
+    visibility: visible ;
+    opacity: 1;
+}
+.carousel-indicators {
+    display: none !important;
+}
+.carousel-control.carousel-control-prev {
+    left:auto !important;
+    right:34px !important;
+    width:20px !important;
+    height:35px !important;
+    top: -27px !important;
+}
+.carousel-control.carousel-control-next {
+    left:auto !important;
+    right:12px !important;
+    width:20px !important;
+    height:35px !important;
+    top: -27px !important;
+}
+.carousel-control-prev-icon {
+    background: transparent url('../assets/img/qlc-icon-arrow-left-darkgrey.svg') no-repeat center center;
+    background-size: 20px 20px;
+}
+.carousel-control-next-icon {
+    background: transparent url('../assets/img/qlc-icon-arrow-right-darkgrey.svg') no-repeat center center;
+    background-size: 20px 20px;
+}
 
 /* SM Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
@@ -1737,8 +1937,10 @@ pre {
         background-size: 16px 16px;
         display: inline-block;
     }
-    
-    
+      
+    .lock-icon {
+        margin-left: 36px;
+    }
 }
 
 /* MD Medium devices (tablets, 768px and up) */
@@ -1823,6 +2025,9 @@ pre {
     }
     .menu-sub-items, .menu-sub-items.menu-sub-items-currency, .menu-sub-items.menu-sub-items-account, .menu-sub-items.menu-sub-items-language {
         width: 706px;
+    }
+    .lock-icon {
+        margin-left: 45px;
     }
     
     

@@ -66,55 +66,113 @@
 					</div>
 					<div class="col-9 pr-0 pl-0">
 						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QLC']">{{ account.balances['QLC'].balance | qlc | currency:'':'':'1.2-8' }} QLC</div>
+							<div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QLC']">{{ account.balances['QLC'].balance | qlc:8 | currency:'':'':'1.2-8' }} QLC</div>
 							<div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QLC'])">NaN QLC</div>
 						</div>
 						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- QSMS -->
-			<div class="container">
-				<div class="row">
-					<div class="col-3 mt-3">
-						<img src="assets/img/token-sms2.png" class="w-100 icon-token">
-					</div>
-					<div class="col-9 pr-0 pl-0">
-						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QSMS']">{{ account.balances['QLC'].balance | qlc | currency:'':'':'1.2-8' }} QSMS</div>
-							<div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QSMS'])">NaN QSMS</div>
-						</div>
-						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<!-- QGAS -->
-			<div class="container">
-				<div class="row">
+			<div class="container pb-0 mb-0">
+				<div class="row pb-0 mb-0">
 					<div class="col-3 mt-3">
 						<img src="assets/img/token-qgas.png" class="w-100 icon-token">
 					</div>
 					<div class="col-9 pr-0 pl-0">
 						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QGAS']">{{ account.balances['QGAS'].balance | qlc | currency:'':'':'1.2-8' }} QGAS</div>
+							<div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QGAS']">{{ account.balances['QGAS'].balance | qlc:8 | currency:'':'':'1.2-8' }} QGAS</div>
 							<div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QGAS'])">NaN QGAS</div>
 						</div>
 						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<!-- OTHERS -->
+			<div class="container" *ngIf="account.otherTokens.length > 0">
+				<div class="row mt-0 pt-0">
+					<div class="col-12 mt-0 pl-0 pr-0 ml-0 mr-0">
+						
+
+							<div class="container pt-0 mt-0">
+								<div class="row qlc-table-header-white pt-0 mt-0">
+									<div class="col-12 pt-0 mt-0">Other token Balances ({{ account.otherTokens.length }})</div>
+								</div>
+							</div>
+							<div class="container">
+								<div class="row">
+
+										<carousel [interval]="3000" class="w-100">
+											
+											<slide *ngFor="let token of account.otherTokens">
+												<div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
+													<div class="col-3 pr-3 pt-1">
+														<img src="assets/img/token-none.png" class="w-100 icon-token" style="padding-right:2px;">
+													</div>
+													<div class="col-9 pr-0 pl-0 mb-2 pb-0">
+														<div class="row qlc-table-row-white row-text-mid mt-0 pb-1">
+															<div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">{{ token.tokenInfo.tokenSymbol }} ({{ token.tokenInfo.tokenName }})</span></div>
+															<div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">{{ token.balance | qlc: token.tokenInfo.decimals | currency:'':'':'1.0-'+token.tokenInfo.decimals}}</div>
+														</div>
+													</div>
+												</div>
+											</slide>
+											
+										</carousel>
+
+								</div>
+							</div>
+
+
+					</div>
+				</div>
+			</div>
+
+			<!-- OTHERS EMPTY -->
+			<div class="container" *ngIf="account.otherTokens.length == 0">
+				<div class="row mt-0 pt-0">
+					<div class="col-12 mt-0 pl-0 pr-0 ml-0 mr-0">
+						
+
+							<div class="container pt-0 mt-0">
+								<div class="row qlc-table-header-white pt-0 mt-0">
+									<div class="col-12 pt-0 mt-0">Other token Balances (0)</div>
+								</div>
+							</div>
+							<div class="container" style="padding-bottom:1px !important;">
+								<div class="row pt-1">
+
+										<div class="col-3 mt-3">
+											<img src="assets/img/token-none.png" class="w-100 icon-token">
+										</div>
+										<div class="col-9 pr-0 pl-0">
+											<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+												<div class="col-12 pb-0">NaN</div>
+											</div>
+											<div class="row qlc-table-row-white sub-page pt-0 pb-2 mb-2">
+												<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+											</div>
+										</div>
+
+								</div>
+							</div>
+
+
+					</div>
+				</div>
+			</div>
+
+
 		</div>
 		
 		<div class="container mt-2">
 			<div class="row">
 				<div class="col-12 pl-0 pr-0">
-					<button (click)="receive(account.id)" type="submit" class="btn btn-primary w-100 pl-2 pr-2">RECEIVE ({{ account.pendingCount }} Pending)</button>
+					<button (click)="receive(account.id)" type="submit" class="btn btn-primary w-100 pl-2 pr-2"><span class="superlight">({{ account.pendingCount }} Pending)</span></button>
 				</div>
 			</div>
 		</div>
@@ -131,19 +189,7 @@
 	</div>
 	<!-- // END NEW WALLET BUTTON -->
 	
-	
-	
-<!--
-</div>
-<div class="row">
-	<div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
-		<div class="content-title ">
-			<h1 class="neo">My NEO Wallets - {{ neoService.getNetwork() }}</h1>
-		</div>
-	</div>
-</div>
-<div class="row">
--->	
+
 
 	<!-- ADDRESS -->
 	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let neowallet of neowallets" >
@@ -177,11 +223,11 @@
 					</div>
 					<div class="col-9 pr-0 pl-0">
 						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances['NEO']">{{ neowallet.balances['NEO'] | currency:'':'':'1.2-8' }} NEO</div>
-							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances['NEO'])">NaN NEO</div>
+							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} NEO</div>
+							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash])">NaN NEO</div>
 						</div>
 						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
 						</div>
 					</div>
 				</div>
@@ -194,11 +240,11 @@
 					</div>
 					<div class="col-9 pr-0 pl-0">
 						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances['GAS']">{{ neowallet.balances['GAS'] | currency:'':'':'1.2-8' }} GAS</div>
-							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances['GAS'])">NaN GAS</div>
+							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} GAS</div>
+							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash])">NaN GAS</div>
 						</div>
 						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
 						</div>
 					</div>
 				</div>
@@ -211,8 +257,8 @@
 					</div>
 					<div class="col-9 pr-0 pl-0">
 						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances['QLINK TOKEN']">{{ neowallet.balances['QLINK TOKEN'] | currency:'':'':'1.2-8' }} QLC</div>
-							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances['QLINK TOKEN'])">NaN QLC</div>
+							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} QLC</div>
+							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash])">NaN QLC</div>
 						</div>
 						<div class="row qlc-table-row-white sub-page pt-0">
 							<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
@@ -240,92 +286,3 @@
 
 
 
-
-
-
-<!--
-	
-	<div class="container accounts" style="display:block;">
-		<div class="row">
-			<div class="col-12 px-0">
-				<h1>{{ 'ACCOUNTS.title' | translate }}</h1>
-				<button type="submit" class="btn btn-primary content-header" (click)="createAccount()" *ngIf="accounts.length">
-					{{ 'ACCOUNTS.title_button' | translate }}
-				</button>
-			</div>
-		</div>
-		<div *ngIf="!accounts.length" class="row defaultTable content">
-			<div class="col-12 text-center">
-				{{ 'NO_WALLET_CONFIGURED' | translate
-			}}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
-		</div>
-	</div>
-	<div *ngFor="let account of accounts" class="row defaultTable account">
-		<div class="col-12">
-			<div class="row align-items-center accountHeader">
-				<div class="col-12 px-0" *ngIf="account.editName">
-					<div class="editNameButtons">
-						<div class="row">
-							<div class="col-md-8 col-12 py-3 py-md-0 pr-md-1">
-								<input type="text" class="form-control" [(ngModel)]="account.addressBookName" />
-							</div>
-							<div class="col-md-2 col-12 px-md-1">
-								<button class="btn btn-primary" type="button" (click)="editNameCancel(account)">
-									{{ 'CANCEL' | translate }}
-								</button>
-							</div>
-							<div class="col-md-2 col-12 py-3 py-md-0 pl-md-1">
-								<button class="btn btn-danger" type="button" (click)="editNameSave(account)">
-									{{ 'OK' | translate }}
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-10 col-sm-9 col-7 pl-0 text-truncate" *ngIf="!account.editName">
-					<a
-					[routerLink]="'/myaccount/' + account.id"
-					tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}"
-					container="body"
-					>
-					<span *ngIf="account.addressBookName" class="name pr-2">{{ account.addressBookName }}</span>
-					<span class="address">{{ account.id }}</span>
-				</a>
-			</div>
-			<div class="col-lg-2 col-sm-3 col-5 pr-0 text-right options" *ngIf="!account.editName">
-				<a
-				ngxClipboard
-				[cbContent]="account.id"
-				(cbOnSuccess)="copied()"
-				class="icon copy"
-				tooltip="{{ 'COPY_ADDRESS' | translate }}"
-				></a
-				><a class="icon edit" tooltip="{{ 'EDIT_NAME' | translate }}" (click)="editName(account)">{{ 'EDIT_NAME' | translate }}</a
-					><a [routerLink]="'/send/' + account.id" class="icon send" tooltip="{{ 'SEND_TOKENS' | translate }}">{{ 'SEND_TOKENS' | translate }}</a>
-				</div>
-			</div>
-			<div class="row align-items-center rowTitles">
-				<div class="col-md-4 pl-0 col-6">{{ 'ACCOUNTS.token' | translate }}</div>
-				<div class="col-lg-2 pr-0 col-md-4 col-6 text-right">{{ 'ACCOUNTS.quantity' | translate }}</div>
-				<div class="col-2 price text-right">{{ 'ACCOUNTS.price' | translate }}</div>
-				<div class="col-2 pricechange text-right">{{ 'ACCOUNTS.24H' | translate }}</div>
-				<div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">{{ 'ACCOUNTS.total_value' | translate }}</div>
-			</div>
-			<div class="row align-items-center rowContent" *ngFor="let balance of account.accountMeta.tokens">
-				<div class="col-md-4 pl-0 col-6 text-truncate">
-					<span class="tokenIcon {{ balance.token | lowercase }}"></span> {{ balance.tokenName }}
-				</div>
-				<div class="col-lg-2 pr-0 col-md-4 col-6 text-right">
-					{{ balance.balance || 0 | qlc: settings.settings.displayDenomination }} {{ balance.symbol }}
-				</div>
-				<div class="col-2 price text-right">-</div>
-				<div class="col-2 pricechange text-right no_change">-</div>
-				<div class="col-lg-2 pr-0 col-md-4 totalvalue text-right">-</div>
-			</div>
-			
-			<div class="row align-items-center rowFooter accountFooter"><div class="col-12 pl-0 pr-0 text-right">-</div></div>
-		</div>
-	</div>
-</div>
-
--->

@@ -58,7 +58,7 @@
 
 						<!-- BALANCES -->
 						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-1 order-2">
-							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenSymbol == 'NEO'" (click)="selectTokenIcon('NEO')">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.asset_symbol == 'NEO'" (click)="selectTokenIcon('NEO')">
 								<div class="container">
 									<div class="row qlc-table-header-white">
 										<div class="col-12">NEO Balance</div>
@@ -75,7 +75,7 @@
 												<div class="col-12 pb-0">{{ tokenBalance('NEO') | currency:'':'':'1.2-8' }}</div>
 											</div>
 											<div class="row qlc-table-row-white sub-page pt-0">
-												<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+												<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
 											</div>
 										</div>
 									</div>
@@ -85,7 +85,7 @@
 
 						<!-- BALANCES -->
 						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-2 order-3">
-							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenSymbol == 'GAS'" (click)="selectTokenIcon('GAS')">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.asset_symbol == 'GAS'" (click)="selectTokenIcon('GAS')">
 								<div class="container">
 									<div class="row qlc-table-header-white">
 										<div class="col-12">GAS Balance</div>
@@ -102,7 +102,7 @@
 												<div class="col-12 pb-0">{{ tokenBalance('GAS') | currency:'':'':'1.2-8' }}</div>
 											</div>
 											<div class="row qlc-table-row-white sub-page pt-0">
-												<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+												<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
 											</div>
 										</div>
 									</div>
@@ -112,7 +112,7 @@
 
 						<!-- BALANCES -->
 						<div class="col-md-4 col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-0 order-md-3 order-4">
-							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.tokenSymbol == 'QLC'" (click)="selectTokenIcon('QLC')">
+							<div class="content-box-white h-auto mt-2 pb-2 balance-box" [class.active]="selectedToken.asset_symbol == 'QLC'" (click)="selectTokenIcon('QLC')">
 								<div class="container">
 									<div class="row qlc-table-header-white">
 										<div class="col-12">QLC Balance</div>
@@ -126,10 +126,10 @@
 										</div>
 										<div class="col-9 pr-0 pl-0">
 											<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-												<div class="col-12 pb-0">{{ tokenBalance('QLINK TOKEN') | currency:'':'':'1.2-8' }}</div>
+												<div class="col-12 pb-0">{{ tokenBalance('QLC') | currency:'':'':'1.2-8' }}</div>
 											</div>
 											<div class="row qlc-table-row-white sub-page pt-0">
-												<div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+												<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
 											</div>
 										</div>
 									</div>
@@ -162,7 +162,7 @@
 															<div class="input-group">
 																<div class="input-group-prepend">
 																	<div class="input-group-text ">
-																		{{ selectedToken.tokenSymbol ? selectedToken.tokenSymbol : '' }}
+																		{{ selectedToken.asset_symbol ? selectedToken.asset_symbol : '' }}
 																	</div>
 																</div>
 																<input
@@ -184,7 +184,7 @@
 														<div class="col-md-6 d-block d-md-none pb-3 pb-md-0">
 															<div class="input-group">
 																<div class="input-group-prepend"><div class="input-group-text">USD/$</div></div>
-																<input
+																<input disabled
 																	type="text"
 																	class="form-control inlineForm2"
 																	[(ngModel)]="amountFiat"
@@ -198,9 +198,9 @@
 																<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">{{ 'TOKEN' | translate }}</div>
 																<div class="col-md-9">
 																	<div class="form-group">
-																		<select class="custom-select" [(ngModel)]="selectedTokenSymbol" (change)="selectToken()">
-																			<option *ngFor="let token of accountTokens" [value]="token.tokenSymbol">{{
-																				token.tokenSymbol
+																		<select class="custom-select" [(ngModel)]="selectedTokenHash" (change)="selectToken()">
+																			<option *ngFor="let token of selectedWalletBalances" [value]="token.asset_hash">{{
+																				token.asset_symbol
 																			}}</option>
 																		</select>
 																	</div>
@@ -225,7 +225,7 @@
 																<div class="col-md-9 ">
 																	<div class="row">
 																		<div class="col-6 pr-0 balance">
-																			{{ selectedToken.balance | currency:'':'':'1.2-8' }}
+																			{{ selectedToken.amount | currency:'':'':'1.2-8' }}
 																		</div>
 																		<div class="col-6 pl-0 text-right fiat">(-)</div>
 																	</div>

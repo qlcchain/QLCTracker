@@ -9,11 +9,16 @@
 				<div class="container">
 						<div class="row">
 							<!-- TITLE -->
-							<div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+							<div class="col-md-6 col-12 mt-2 pl-md-2 pr-md-2">
 								<div class="content-title">
 									<h1>New Staking</h1>
 								</div>
 							</div>
+              <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+                <button type="submit" (click)="recover = !recover" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
+                  Recover
+                </button>
+              </div>
 							<div class="col-md-3 col-12 pl-md-2 pr-md-2">
 									<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/mystakings">
 										Back to my Stakings
@@ -24,9 +29,72 @@
 			</div>
 		</div>
   </div>
+
+  
   
 
   <div class="container accounts">
+      <div class="row">
+  
+        <!-- FORM -->
+        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3" >
+            <div class="container pl-0 pr-0">
+              <div class="row pl-0 pr-0">
+  
+  
+              <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4" [formGroup]="recoverForm" *ngIf="recover == 1">
+                <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+  
+                    <div class="row pt-0 mt-4" style="border-bottom: 1px solid #edeef4;">
+  
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4 mt-4">
+                          RECOVER TXID
+                        </div>
+                        <div class="col-md-9 text-left mb-4 mt-4">
+                          <div class="input-group">
+                            <input
+                              type="text"
+                              class="form-control form-my-border"
+                              placeholder="NEO txid"
+                              onfocus="this.placeholder = ''"
+                              style="height: 42px !important;"
+                              formControlName="recover_txid"
+                            />
+                          </div>
+                          
+                          <span *ngFor="let validation of recover_validation_messages.recover_txid">
+                            <span class="error-message" *ngIf="recoverForm.get('recover_txid').hasError(validation.type) && (recoverForm.get('recover_txid').dirty || recoverForm.get('recover_txid').touched)">{{validation.message}}<br></span>
+                          </span>
+                          <h5 class="pt-3" *ngFor="let step of recoverSteps">{{ step.msg }}</h5>
+                        </div>
+                        
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
+                        <div class="col-md-4 text-left mb-4">
+                          <button (click)="checkTxid()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="checkingTxid == 1 || recoverForm.get('recover_txid').status != 'VALID' ">
+                            CHECK TXID
+                          </button>
+                        </div>
+                        <div class="col-md-5 pt-3" *ngIf="checkingTxid == 1">
+                          <span class="security-email-sending" class="w-100"><p><img src="../../../assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Checking txid ...</p></span>  
+                        </div>
+
+
+                        <div class="col-md-4 text-left mb-4" *ngIf="continueInvoke == 1">
+                          <button (click)="continueInvokeProccess()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="continueInvoke == 0">
+                            CONTINUE INVOKE
+                          </button>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+  
+
+  <div class="container accounts" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1)">
 		<div class="row">
 
 			<!-- FORM -->
@@ -49,24 +117,138 @@
                         </div>
                         <div class="col-md-9 text-left">
                           <div class="form-group">
-                            <input type="radio" name="stakingType" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> For Vote</label>
-                            <input type="radio" name="stakingType" formControlName="stakingType" value="1" id="s2"><label for="s2" style="padding-left:10px;padding-right:30px;"> For Confidant</label>
-                            <input type="radio" name="stakingType" formControlName="stakingType" value="2" id="s3"><label for="s3" style="padding-left:10px;padding-right:30px;"> For Minting</label>
+                            <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> For Voting/Mining Node</label>
+                            <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="1" id="s2" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[1].minAmount)"><label for="s2" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[1].minAmount)"> For Confidant</label>
+                            <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="2" id="s3" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"><label for="s3" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"> For Token Mintage</label>
                           </div>
                         </div>
                       </div>
 
+                      <div class="issue-confidant mb-4 mt-4" *ngIf="this.stakingForm.value.stakingType == 1">
+
+                          <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+  
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3 mt-2">
+    
+                            </div>
+                            <div class="col-md-9 text-left mb-2 mt-2">
+                              <p>
+                                <strong>Prove your ownership and unlock the staking</strong><br>
+                                Enter your E-mail address, used to purchase your Confidant Station. <br>
+                                Click on "Send Confirmation Code" and check your Inbox.<br>
+                                You will receive a security code that will prove you're the owner.
+                              </p>
+                            </div>
+  
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4">
+                              YOUR EMAIL
+                            </div>
+                            <div class="col-md-9 text-left mb-4">
+                              <div class="input-group">
+                                <input
+                                  type="text"
+                                  class="form-control form-my-border"
+                                  placeholder="Your E-mail (used to place the order)"
+                                  onfocus="this.placeholder = ''"
+                                  style="height: 42px !important;"
+                                  formControlName="email_address"
+                                />
+                              </div>
+                            </div>
+  
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
+                            <div class="col-md-4 text-left mb-4">
+                              <button (click)="sendSecurityCode()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="sendingSecurityCode != 0">
+                                SEND SECURITY CODE
+                              </button>
+                            </div>
+                            <div class="col-md-5 pt-3">
+                              <span class="security-email-sending" class="w-100" *ngIf="sendingSecurityCode == 1"><p><img src="../../../assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Sending security code...</p></span>  
+                              <span class="security-email-sent" class="w-100" *ngIf="sendingSecurityCode == 2"><p><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Code sent. Check your Inbox (Spam Folder)</p></span>
+                            </div>
+  
+                          </div>
+                          
+                          <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+  
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3 mt-4">
+                              SECURITY CODE
+                            </div>
+                            <div class="col-md-6 text-left mb-3 mt-4">
+                              <div class="input-group">
+                                <input
+                                  type="text"
+                                  class="form-control form-my-border"
+                                  placeholder="Security code (sent to your email)"
+                                  onfocus="this.placeholder = ''"
+                                  style="height: 42px !important;"
+                                  formControlName="security_code"
+                                />
+                              </div>
+                            </div>  
+                            <div class="col-md-3 text-left mb-3 mt-4">
+                                <button (click)="checkSecurityCode()" type="submit" class="btn btn-primary" style="min-width:100%; min-height:42px;">
+                                  CONFIRM CODE
+                                </button>
+                            </div>                          
+  
+                            
+  
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                               
+                            </div>
+                            <div class="col-md-9 text-left mb-1">
+                              <div class="input-group">
+                                <span class="ownership-check" class="w-100" *ngIf="confidantConfirmed == 3"><p><img src="../../../assets/img/loading-blue.gif" style="height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Verifying Ownership...</p></span>
+                                <span class="ownership-success" class="w-100" *ngIf="confidantConfirmed == 1"><p><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmed.</p></span>
+                                <span class="ownership-fail" class="w-100" *ngIf="confidantConfirmed == 2"><p><img src="../../../assets/img/qlc-icon-staking-fail-red.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmation Failed. <em>Enter your security code and try again.</em></p></span>
+                              </div>
+                            </div>
+  
+                         
+                          </div>
+  
+                          <div class="issue-mac-addresses" *ngIf="confidantConfirmed == 1">
+  
+                              <div class="row pt-0 mb-4" style="border-bottom: 1px solid #edeef4;">
+                                <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                                  YOUR CONFIDANTS
+                                </div>
+                                <div class="col-md-9 text-left mb-3 pt-2 mt-2">
+                                  <p>Select the Confidant Stations you want to stake for:</p>
+                                </div>
+    
+                                <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
+                                  
+                                </div>
+                                <div class="col-md-9 text-left mb-3">
+                                    <div class="form-group"> 
+                                      <div *ngFor="let confidant of confidants;let i = index">
+                                          <input type="checkbox" (click)="addMacAdd(confidant.mac_address)" name="confidant{{ confidant.index }}" value="{{ confidant.mac_address }}" id="c{{ confidant.index }}"><label for="c{{ confidant.index }}" style="padding-left:10px;padding-right:30px;"> Confidant #{{ confidant.index }}: {{ confidant.mac_address }}</label><br>
+                                      </div>
+                                    </div>
+                                </div>
+                          
+                              </div>
+    
+                        </div>
+  
+                        </div>
+<div *ngIf="this.stakingForm.value.stakingType != 1 || (this.stakingForm.value.stakingType == 1 && confidantConfirmed == 1 && macaddresses.length > 0)">
                       <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
                         <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
                           STAKE FROM
                         </div>
                         <div class="col-md-9 text-left">
-                          <div class="form-group">
+                          <div class="form-group" *ngIf="recover == 0">
                             <select class="custom-select" formControlName="fromNEOWallet" (change)="selectAccount()">
                               <option *ngFor="let account of neowallets" [value]="account.id"
                                 >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances['QLINK TOKEN'] != undefined)? ' ('+account.balances['QLINK TOKEN'] + ' QLC)' : '') }} </option>
                             </select>
                             <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to stake QLC from</p>
+                          </div>
+                          <div class="form-group" *ngIf="recover == 1">
+                            {{ stakingForm.value.fromNEOWallet }}
                           </div>
                         </div>
                       </div>
@@ -77,12 +259,15 @@
                           STAKE TO
                         </div>
                         <div class="col-md-9 text-left">
-                          <div class="form-group">
+                          <div class="form-group" *ngIf="recover == 0">
                             <select class="custom-select" formControlName="toQLCWallet">
                               <option *ngFor="let account of accounts" [value]="account.id"
                                 >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }}</option>
                             </select>
                             <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a QLC Chain address you want to receive your QGAS to</p>
+                          </div>
+                          <div class="form-group" *ngIf="recover == 1">
+                            {{ stakingForm.value.toQLCWallet }}
                           </div>
                         </div>
                       </div>
@@ -93,7 +278,7 @@
 											<div class="row rowContent mb-5 mt-4" style="border-bottom: 1px solid #edeef4;">
 												<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">AMOUNT TO STAKE</div>
 												<div class="col-md-9">
-													<div class="row align-items-top">
+													<div class="row align-items-top" *ngIf="recover == 0">
 														<div class="col-md-6 pb-3 pb-md-0">
 															<div class="input-group">
 																<div class="input-group-prepend">
@@ -106,13 +291,15 @@
 																	class="form-control inlineForm"
                                   formControlName="amounToStake"
 																	placeholder="{{ stakingTypes[this.stakingForm.value.stakingType].minAmount }}"
-																	onfocus="this.placeholder = ''"
+                                  onfocus="this.placeholder = ''"
+                                  (change)="checkIfMinAmount()"
 																	style="height: 42px !important;"
 																/>
 																<div class="input-group-append">
-																	<a (click)="setMaxAmount()">
+																	<!--<a (click)="setMaxAmount()">
 																		<div class="input-group-text maxLink">Max</div>
-																	</a>
+                                  </a>-->
+                                  <div class="input-group-text maxLink">&nbsp;</div>
 																</div>
                               </div>
                               <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum stake amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount | currency:'':'':'1.2-8' }} QLC</p>
@@ -127,7 +314,10 @@
                               </div>
                             </div>
 
-													</div>
+                          </div>
+                          <div class="form-group" *ngIf="recover == 1">
+                            {{ stakingForm.value.amounToStake | currency:'':'':'1.2-8' }} QLC
+                          </div>
 													
 												</div>
 											</div>
@@ -136,7 +326,7 @@
                       <div class="row rowContent mb-4 mt-4" style="border-bottom: 1px solid #edeef4;">
                         <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">STAKING PERIOD</div>
                         <div class="col-md-9">
-                          <div class="row align-items-top">
+                          <div class="row align-items-top" *ngIf="recover == 0">
                             <div class="col-md-6 pb-3 pb-md-0">
                               <div class="input-group">
                                 <div class="input-group-prepend">
@@ -161,7 +351,7 @@
 
                             <div class="col-md-6">
                               <div class="row align-items-top">
-                                <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">STAKING WILL END ON</div>
+                                <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">OPTION TO REVOKE ON<br><br>You can continue to receive Q-Gas if you don't revoke</div>
                                 <div class="col-md-5 ">
                                     <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.endDate | date: 'dd.MM.yyyy' }}</strong></div>
                                 </div>
@@ -169,116 +359,23 @@
                             </div>
 
                           </div>
+                          <div class="form-group" *ngIf="recover == 1">
+                            <div class="row align-items-top">
+                              <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">OPTION TO REVOKE ON<br><br>You can continue to receive Q-Gas if you don't revoke</div>
+                              <div class="col-md-5 ">
+                                  <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ stakingForm.value.endDate | date: 'dd.MM.yyyy'  }}</strong></div>
+                              </div>
+                            </div>
+                          </div>
                           
                         </div>
                       </div>
 
-
-
-                      <div class="issue-confidant mb-4 mt-4" *ngIf="this.stakingForm.value.stakingType == 1">
-
-                        <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
-
-                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3 mt-2">
-  
-                          </div>
-                          <div class="col-md-9 text-left mb-2 mt-2">
-                            <p>
-                              <strong>Prove your ownership and unlock the staking</strong><br>
-                              Enter your E-mail address, used to purchase your Confidant Station. <br>
-                              Click on "Send Confirmation Code" and check your Inbox.<br>
-                              You will receive a security code that will prove you're the owner.
-                            </p>
-                          </div>
-
-                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4">
-                            YOUR EMAIL
-                          </div>
-                          <div class="col-md-9 text-left mb-4">
-                            <div class="input-group">
-                              <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Your E-mail (used to place the order)"
-                                onfocus="this.placeholder = ''"
-                                style="height: 42px !important;"
-                              />
-                            </div>
-                          </div>
-
-                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
-                          <div class="col-md-4 text-left mb-4">
-                            <button type="submit" class="btn btn-primary" style="min-width:100%;">
-                              SEND SECURITY CODE
-                            </button>
-                          </div>
-
-                        </div>
-                        
-                        <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
-
-                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3 mt-4">
-                            SECURITY CODE
-                          </div>
-                          <div class="col-md-6 text-left mb-3 mt-4">
-                            <div class="input-group">
-                              <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Security code (sent to your email)"
-                                onfocus="this.placeholder = ''"
-                                style="height: 42px !important;"
-                              />
-                            </div>
-                          </div>  
-                          <div class="col-md-3 text-left mb-3 mt-4">
-                              <button type="submit" class="btn btn-primary" style="min-width:100%; min-height:42px;">
-                                CONFIRM CODE
-                              </button>
-                          </div>                          
-
-                          
-
-                          <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
-                             
-                          </div>
-                          <div class="col-md-9 text-left mb-1">
-                            <div class="input-group">
-                              <span class="ownership-check" class="w-100"><p><img src="../../../assets/img/loading-blue.gif" style="height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Verifying Ownership...</p></span>
-                              <span class="ownership-success" class="w-100"><p><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmed.</p></span>
-                              <span class="ownership-fail" class="w-100"><p><img src="../../../assets/img/qlc-icon-staking-fail-red.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmation Failed. <em>Enter your security code and try again.</em></p></span>
-                            </div>
-                          </div>
-
-                       
-                        </div>
-
-                      </div>
-
-                      <div class="issue-mac-addresses">
-
-                          <div class="row pt-0 mb-4" style="border-bottom: 1px solid #edeef4;">
-                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
-                              YOUR CONFIDANTS
-                            </div>
-                            <div class="col-md-9 text-left mb-3 pt-2 mt-2">
-                              <p>Select the Confidant Stations you want to stake for:</p>
-                            </div>
-
-                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
-                              
-                            </div>
-                            <div class="col-md-9 text-left mb-3">
-                                <div class="form-group">
-                                    <input type="checkbox" name="confidant1" value="20:30:40:FA:CC:50" id="c1"><label for="c1" style="padding-left:10px;padding-right:30px;"> Confidant #1: 20:30:40:FA:CC:50</label><br>
-                                    <input type="checkbox" name="confidant2" value="FA:CC:50:20:40:30" id="c2"><label for="c2" style="padding-left:10px;padding-right:30px;"> Confidant #2: FA:CC:50:20:40:30</label><br>
-                                    <input type="checkbox" name="confidant3" value="50:20:FA:CC:30:40" id="c3"><label for="c3" style="padding-left:10px;padding-right:30px;"> Confidant #3: 50:20:FA:CC:30:40</label><br>
-                                  </div>
-                            </div>
-                      
-                          </div>
 
                     </div>
+                      
+
+                      
 
                       
                       <div class="issue-token" *ngIf="this.stakingForm.value.stakingType == 2">
@@ -292,12 +389,17 @@
                                   <input
                                     type="text"
                                     formControlName="tokenName"
-                                    class="form-control"
+                                    class="form-control form-my-border"
                                     placeholder="Token name"
                                     onfocus="this.placeholder = ''"
+                                    (change)="checkTokenName()"
                                     style="height: 42px !important;"
                                   />
                                 </div>
+                                <span *ngFor="let validation of staking_validation_messages.tokenName">
+                                  <span class="error-message" *ngIf="stakingForm.get('tokenName').hasError(validation.type) && (stakingForm.get('tokenName').dirty || stakingForm.get('tokenName').touched)">{{validation.message}}<br></span>
+                                </span>
+                                <span class="error-message" *ngIf="invalidTokenName == 1">Invalid Token Name. Please choose a diffrent name.<br></span>
                               </div>
 
                               <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
@@ -308,12 +410,18 @@
                                   <input
                                     type="text"
                                     formControlName="tokenSymbol"
-                                    class="form-control"
+                                    class="form-control form-my-border"
                                     placeholder="XYZ"
                                     onfocus="this.placeholder = ''"
+                                    (change)="checkTokenSymbol()"
                                     style="height: 42px !important;"
                                   />
                                 </div>
+                                <span *ngFor="let validation of staking_validation_messages.tokenSymbol">
+                                  <span class="error-message" *ngIf="stakingForm.get('tokenSymbol').hasError(validation.type) && (stakingForm.get('tokenSymbol').dirty || stakingForm.get('tokenSymbol').touched)">{{validation.message}}<br></span>
+                                </span>
+                                <span class="error-message" *ngIf="invalidTokenSymbol == 1">Invalid Token Symbol. Please choose a diffrent symbol.<br></span>
+                                
                               </div>
 
                               <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-3">
@@ -324,12 +432,15 @@
                                   <input
                                     type="text"
                                     formControlName="tokenSupply"
-                                    class="form-control"
+                                    class="form-control form-my-border"
                                     placeholder="100000000"
                                     onfocus="this.placeholder = ''"
                                     style="height: 42px !important;"
                                   />
                                 </div>
+                                <span *ngFor="let validation of staking_validation_messages.tokenSupply">
+                                  <span class="error-message" *ngIf="stakingForm.get('tokenSupply').hasError(validation.type) && (stakingForm.get('tokenSupply').dirty || stakingForm.get('tokenSupply').touched)">{{validation.message}}<br></span>
+                                </span>
                               </div>
 
                               <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-5">
@@ -340,12 +451,15 @@
                                   <input
                                     type="text"
                                     formControlName="tokenDecimals"
-                                    class="form-control"
+                                    class="form-control form-my-border"
                                     placeholder="8"
                                     onfocus="this.placeholder = ''"
                                     style="height: 42px !important;"
                                   />
                                 </div>
+                                <span *ngFor="let validation of staking_validation_messages.tokenDecimals">
+                                  <span class="error-message" *ngIf="stakingForm.get('tokenDecimals').hasError(validation.type) && (stakingForm.get('tokenDecimals').dirty || stakingForm.get('tokenDecimals').touched)">{{validation.message}}<br></span>
+                                </span>
                               </div>                        
                             </div>
 
@@ -356,7 +470,7 @@
 											<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
 												<div class="col-md-3"></div>
 												<div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
-													<button (click)="step = 2" type="submit" class="btn btn-primary" style="min-width:100%;">
+													<button (click)="checkForm()" type="submit" class="btn btn-primary" style="min-width:100%;" *ngIf="this.stakingForm.value.stakingType != 1 || (this.stakingForm.value.stakingType == 1 && confidantConfirmed == 1 && macaddresses.length > 0)">
 														REVIEW & INVOKE STAKING
 													</button>
 												</div>
@@ -449,7 +563,7 @@
 								</div>
 							</div>
 							<div class="col-md-3 col-12 pl-md-2 pr-md-2">
-									<button (click)="step = 1" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0">
+									<button (click)="back()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0">
 										CHANGE / EDIT
 									</button>
 							</div>
@@ -531,9 +645,21 @@
                               YOUR EMAIL
                             </div>
                             <div class="col-md-9 pb-3 text-left">
-                              some@email.com
+                                {{ stakingForm.value.email_address }}
                             </div>
                           </div>
+
+                          <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                              FOR CONFIDANT/S
+                            </div>
+                            <div class="col-md-9 pb-3 text-left">
+                              <div *ngFor="let confidant of macaddresses">
+                                <span> Confidant #{{ confidant.index }}: {{ confidant.mac_address }}</span><br>
+                              </div>
+                            </div>
+                          </div>
+
 
                       </div>
 
@@ -544,7 +670,7 @@
                               TOKEN NAME
                             </div>
                             <div class="col-md-9 pb-3 text-left">
-                              My New Token
+                                {{ stakingForm.value.tokenName }}
                             </div>
                           </div>
 
@@ -553,7 +679,7 @@
                               TOKEN SYMBOL
                             </div>
                             <div class="col-md-9 pb-3 text-left">
-                              XYZ
+                                {{ stakingForm.value.tokenSymbol }}
                             </div>
                           </div>
 
@@ -562,7 +688,7 @@
                               TOKEN SUPPLY
                             </div>
                             <div class="col-md-9 pb-3 text-left">
-                              100,000,000
+                                {{ stakingForm.value.tokenSupply }}
                             </div>
                           </div>
 
@@ -571,7 +697,7 @@
                               TOKEN DECIMALS
                             </div>
                             <div class="col-md-9 pb-3 text-left">
-                              8
+                              {{ stakingForm.value.tokenDecimals }}
                             </div>
                           </div>
 
@@ -704,17 +830,21 @@
                   <div class="row">
                     <div class="col-md-6 offset-md-3 mt-5 mb-5">
 
-                      <div class="progress" style="height:32px;border-radius:100px;">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
-                          &nbsp;
+                      <div id="noTrespassingOuterBarG">
+                        <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
                         </div>
-                      </div> 
+                      </div>
 
                     </div>
                   </div>
                 </div>
 
                 <p style="color:#c10f0f;"><strong>Important:</strong> Don't leave or close this page!</p>
+
+                <h5 class="pt-3" *ngFor="let step of invokeSteps">{{ step.msg }}</h5>
+
 
 							</div>
 						</div>
@@ -792,7 +922,7 @@
                           BACK TO MY STAKINGS
                         </button>
 
-                        <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;" (click)="step=1">
+                        <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;" (click)="invokeNewStaking()">
                           INVOKE A NEW STAKING
                         </button>
 

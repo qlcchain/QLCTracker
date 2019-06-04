@@ -46,17 +46,17 @@
                                     <div class="col-12 text-break pr-3"><span *ngIf="addressBookModel != ''">{{ addressBookModel }} - </span>{{ walletId }} <a ngxClipboard [cbContent]="walletId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
                                     <div class="col-12 px-0" *ngIf="showEditName">
                                         <div class="editNameButtons">
-                                            <div class="row">
+                                            <div class="row pl-3 pr-3">
                                                 <div class="col-md-12 col-12 py-3">
                                                     <input type="text" class="form-control" [(ngModel)]="addressBookModel" />
                                                 </div>
                                                 <div class="col-md-4 col-12 ">
-                                                    <button class="btn btn-primary" type="button" (click)="editNameCancel()">
+                                                    <button class="btn btn-primary neo-background" type="button" (click)="editNameCancel()">
                                                         {{ 'CANCEL' | translate }}
                                                     </button>
                                                 </div>
                                                 <div class="col-md-4 col-12 py-3 py-md-0 ">
-                                                    <button class="btn btn-primary" type="button" (click)="editNameSave()">
+                                                    <button class="btn btn-primary neo-background" type="button" (click)="editNameSave()">
                                                         {{ 'OK' | translate }}
                                                     </button>
                                                 </div>
@@ -86,11 +86,11 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances != null && walletAccount.balances['NEO']">{{ walletAccount.balances['NEO'] | currency:'':'':'1.2-8' }}</div>
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances == null || (walletAccount.balances != null && !walletAccount.balances['NEO'])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances != null && walletAccount.balances[neoService.tokenList['NEO'].networks['1'].hash]">{{ walletAccount.balances[neoService.tokenList['NEO'].networks['1'].hash].amount | currency:'':'':'1.0-0' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances == null || (walletAccount.balances != null && !walletAccount.balances[neoService.tokenList['NEO'].networks['1'].hash])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
-                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -114,11 +114,11 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances != null && walletAccount.balances['QLINK TOKEN']">{{ walletAccount.balances['QLINK TOKEN'] | currency:'':'':'1.2-8' }}</div>
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances == null || (walletAccount.balances != null && !walletAccount.balances['QLINK TOKEN'])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances != null && walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash]">{{ walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash].amount | currency:'':'':'1.2-8' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances == null || (walletAccount.balances != null && !walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
-                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -141,11 +141,11 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances != null && walletAccount.balances['GAS']">{{ walletAccount.balances['GAS'] | currency:'':'':'1.2-8' }}</div>
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances == null || (walletAccount.balances != null && !walletAccount.balances['GAS'])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances != null && walletAccount.balances[neoService.tokenList['GAS'].networks['1'].hash]">{{ walletAccount.balances[neoService.tokenList['GAS'].networks['1'].hash].amount | currency:'':'':'1.2-8' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances == null || (walletAccount.balances != null && !walletAccount.balances[neoService.tokenList['GAS'].networks['1'].hash])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
-                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                                 <a routerLink="/sendneo/{{ walletId }}" class="menu-myaccount menu-icon-send pr-0">Send</a>
                                 <a (click)="openModal(qrCode)" class="menu-myaccount menu-icon-qrcode pr-0">Show QR Code</a>
                                 <a (click)="editName()" class="menu-myaccount menu-icon-rename pr-0">Rename Account</a>
-                                <a href="https://neoscan.io/address/{{ walletId }}" class="menu-myaccount menu-icon-details pr-0" target="_blank">Account Details</a>
+                                <a href="{{ neoService.getExplorer() }}/address/{{ walletId }}" class="menu-myaccount menu-icon-details pr-0" target="_blank">Account Details</a>
                                 <a (click)="deleteWallet()" class="menu-myaccount menu-icon-details pr-0" target="_blank">Delete wallet</a>
                             </div>
                         </div>
@@ -233,15 +233,15 @@
               </div>
               <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
                 <span class="text-color-lightgrey">{{history.type == 'Send' ? 'to' : 'from'}}: </span> 
-                <a href="https://neoscan.io/address/{{history.account}}" target="_blank" >{{ history.account }}</a>
-                <a href="https://neoscan.io/transaction/{{history.txid}}" target="_blank" ><br>
+                <a href="{{ neoService.getExplorer() }}/address/{{history.account}}" target="_blank" >{{ history.account }}</a>
+                <a href="{{ neoService.getExplorer() }}/transaction/{{history.txid}}" target="_blank" ><br>
                   <span class="text-tiny">{{ history.txid }}</span>
                 </a>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                 history.type == 'Send' ? 'text-color-red' : 'text-color-green'
               }}">
-                <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | currency:'':'':'1.2-8' }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="-">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | currency:'':'':'1.2-8' }}</span>
                 <br><span class="text-color-grey">{{ history.tokenName }}</span>
               </div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">

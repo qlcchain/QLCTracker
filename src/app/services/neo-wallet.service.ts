@@ -11,6 +11,7 @@ import BigNumber from 'bignumber.js';
 import { AddressBookService } from './address-book.service';
 import { timer } from 'rxjs';
 import { NotificationService } from './notification.service';
+import { sc, tx } from '@cityofzion/neon-core';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,15 @@ export class NeoWalletService {
 
   MIN_PASSPHRASE_LEN = 4
 
-  private apiAddress = 'https://api.neoscan.io/api/main_net';
-  private network = 'MainNet';
+  //private apiAddress = 'https://api.neoscan.io/api/main_net';
+  private apiAddress = 'https://neoscan-testnet.io/api/test_net';
+  //private network = 'MainNet';
+  private network = 'TestNet';
+  private neoscan = 'https://neoscan.io';
+  private neoscan_testnet = 'https://neoscan-testnet.io';
+
+  private smartContractScript =   '30f69798a129527b4996d6dd8e974cc15d51403d';
+  
   tokenList = [];
 
   claimingTimer = null;
@@ -40,19 +48,36 @@ export class NeoWalletService {
     return this.network;
   }
 
+  getExplorer() {
+    if (this.network == 'MainNet') {
+      return this.neoscan;
+    } else {
+      return this.neoscan_testnet;
+    }
+  }
+
   private async request(data): Promise<any> {
-		return await this.http
+    try {
+		const returnData = await this.http
 			.get(this.apiAddress + data)
 			.toPromise()
 			.then(res => {
 				return res;
 			})
-			.catch(err => {
+			.catch((err) => {
 				if (err.status === 500 || err.status === 0) {
 					// Hard error
-				}
+        }
+        if (err.status === 404) {
+          return err;
+        }
 				throw err;
-			});
+      });
+      
+      return returnData;
+    } catch (e) {
+      return e;
+    }
 	}
 
   async checkPrivateKey(wif) {
@@ -200,6 +225,12 @@ export class NeoWalletService {
 
   }
 
+  async getNeoScanBalance(address) {    
+    const balance = await this.request('/v1/get_balance/'+address);
+    //console.log(balance.balance);
+    return balance.balance;
+  }
+
   async getLastTransactions(address) {
     const lastTransactionsResults = await this.request('/v1/get_address_abstracts/'+address+'/0');
     const tokens = Object.keys(this.tokenList);
@@ -224,37 +255,47 @@ export class NeoWalletService {
     return null;
   }
 
+  async getTransaction(txid) {
+    const transactionResult = await this.request('/v1/get_transaction/'+txid);
+    return transactionResult;
+  }
+
   async getSendHashScript(token) {
     const hash = this.tokenList[token].networks[1].hash;
     return hash;
   }
 
-  async send(from,receivingAddress,token,amount) {
-    console.log(from);
-    console.log(receivingAddress);
-    console.log(token);
-    console.log(amount);
+  async send(from,receivingAddress,asset_hash,amount) {
+    //console.log(from);
+    //console.log(receivingAddress);
+    //console.log(asset_hash);
+    //console.log(amount);
 
     const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === from);
     const wif = await this.decrypt(selectedWallet.encryptedwif,this.walletService.wallet.password);
     
     const account = await new wallet.Account(wif);
-    console.log("\n\n--- From Address ---");
-    console.log(account);
+    //console.log("\n\n--- From Address ---");
+    //console.log(account);
 
     const apiProvider = await new api.neoscan.instance(this.network);
-    console.log("\n\n--- API Provider ---");
-    console.log(apiProvider);
+    //console.log("\n\n--- API Provider ---");
+    //console.log(apiProvider);
 
+    const token = Object.values(this.tokenList).find( a => a.networks[1].hash == asset_hash);
 
-    if (token == 'NEO' || token == 'GAS') {
+    //console.log(token);
+    
+  
+
+    if (token.symbol == 'NEO' || token.symbol == 'GAS') {
       let intent = null;
-      if (token == 'NEO')
+      if (token.symbol == 'NEO')
         intent = api.makeIntent({ NEO: new BigNumber(amount).toNumber() }, receivingAddress);
       else
         intent = api.makeIntent({ GAS: new BigNumber(amount).toNumber() }, receivingAddress);
 
-      console.log("\n\n--- Intents ---");
+      //console.log("\n\n--- Intents ---");
       intent.forEach(i => console.log(i));
 
       const config = {
@@ -262,15 +303,15 @@ export class NeoWalletService {
         account: account, // This is the address which the assets come from.
         intents: intent // This is where you want to send assets to.
       };
-      console.log(config);
+      //console.log(config);
       const returnAsset = await Neon.sendAsset(config)
       .then(config => {
-        console.log("\n\n--- Response ---");
-        console.log(config.response);
+        //console.log("\n\n--- Response ---");
+        //console.log(config.response);
         return config.response;
       })
       .catch(config => {
-        console.log(config);
+        //console.log(config);
         return config;
       });
       return returnAsset;
@@ -278,10 +319,14 @@ export class NeoWalletService {
 
 
 
-    const hash = this.tokenList[token].networks[1].hash;
-    const contractScriptHash = this.tokenList[token].networks[1].hash;
-
-    const numOfDecimals = this.tokenList[token].networks[1].decimals;
+    //const hash = this.tokenList[token].networks[1].hash;
+    //const contractScriptHash = this.tokenList[token].networks[1].hash;
+    const contractScriptHash = asset_hash;
+    let numOfDecimals = 8;
+    if (token.networks[1].decimals) {
+      numOfDecimals = token.networks[1].decimals;
+    }
+    //const numOfDecimals = this.tokenList[token].networks[1].decimals;
     const amtToSend = new BigNumber(amount).toFixed();
     const network = this.network;
     const additionalInvocationGas = 0;
@@ -294,13 +339,14 @@ export class NeoWalletService {
       receivingAddress,
       new u.Fixed8(amtToSend).div(Math.pow(10, 8 - numOfDecimals))
     );
-    console.log("\n\n--- Amount:  ---")
-    console.log(amtToSend);
+
+    //console.log("\n\n--- Amount:  ---")
+    //console.log(amtToSend);
     const builder = await generator();
-    console.log(builder);
+    //console.log(builder);
     const script = builder.str;
-    console.log("\n\n--- Invocation Script ---");
-    console.log(script);
+    //console.log("\n\n--- Invocation Script ---");
+    //console.log(script);
     const gas = additionalInvocationGas;
     const intent = additionalIntents;
 
@@ -312,20 +358,316 @@ export class NeoWalletService {
       gas: gas // Additional GAS for invocation.
     };
 
-    console.log(config);
+    //console.log(config);
 
     const returnToken = await Neon.doInvoke(config)
     .then(config => {
-      console.log("\n\n--- Response ---");
-      console.log(config.response);
+      //console.log("\n\n--- Response ---");
+      //console.log(config.response);
       return config.response;
     })
     .catch(config => {
-      console.log(config);
+      //console.log(config);
       return config;
     });
     return returnToken;
   
   }
+
+  async contractGetName(address) {
+    const apiProvider = await new api.neoscan.instance(this.network);
+    //console.log("\n\n--- API Provider ---");
+    //console.log(apiProvider);
+
+    const props = {
+      scriptHash: this.smartContractScript, // Scripthash for the contract
+      operation: 'name', // name of operation to perform.
+      args: [] // any optional arguments to pass in. If null, use empty array.
+    }
+    
+    const script = Neon.create.script(props);
+    //console.log("\n\n--- API Provider RPC Endpoint ---");
+    //console.log(await apiProvider.getRPCEndpoint());
+
+    await rpc.Query.invokeScript(script)
+    .execute(await apiProvider.getRPCEndpoint())
+    .then(res => {
+      //console.log(res) // You should get a result with state: "HALT, BREAK"
+      //console.log(res.result.stack);
+      //console.log('string ' + u.hexstring2str(res.result.stack[0].value));
+    });
+
+  }
+
+  async contractGetQlcContract(address) {
+    const apiProvider = await new api.neoscan.instance(this.network);
+    //console.log("\n\n--- API Provider ---");
+    //console.log(apiProvider);
+
+    const props = {
+      scriptHash: this.smartContractScript, // Scripthash for the contract
+      operation: 'qlcContract', // name of operation to perform.
+      args: [] // any optional arguments to pass in. If null, use empty array.
+    }
+    
+    const script = Neon.create.script(props);
+    //console.log("\n\n--- API Provider RPC Endpoint ---");
+    //console.log(await apiProvider.getRPCEndpoint());
+
+    await rpc.Query.invokeScript(script)
+    .execute(await apiProvider.getRPCEndpoint())
+    .then(res => {
+      //console.log(res) // You should get a result with state: "HALT, BREAK"
+      //console.log(res.result.stack);
+      //console.log('string ' + u.hexstring2str(res.result.stack[0].value));
+    });
+
+  }  
+
+  async contractLock(neoWalletAddress,qlcAmount,qlcWalletAddress,durationInDays) {
+    
+    console.log('contractLock')
+    /*console.log(neoWalletAddress)
+    console.log(qlcAmount)
+    console.log(qlcWalletAddress)
+    console.log(durationInDays)*/
+    const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === neoWalletAddress);
+    const wif = await this.decrypt(selectedWallet.encryptedwif,this.walletService.wallet.password);
+
+    const amountWithDecimals = new BigNumber(qlcAmount).multipliedBy(100000000);
+    
+    const account = await new wallet.Account(wif);
+    //console.log("\n\n--- From Address ---");
+    //console.log(account);
+
+    // multisig
+    const multisigAcct = wallet.Account.createMultiSig(2, [
+      account.publicKey,
+      '03f19ffa8acecb480ab727b0bf9ee934162f6e2a4308b59c80b732529ebce6f53d'
+    ]);
+
+    //console.log("\n\n--- Multi-sig ---");
+    //console.log(`My multi-sig address is ${multisigAcct.address}`);
+    //console.log(`My multi-sig scriptHash is ${multisigAcct.scriptHash}`);
+    //console.log(`My multi-sig verificationScript is ${multisigAcct.contract.script}`);
+    //console.log(multisigAcct);
+
+    const apiProvider = await new api.neoscan.instance(this.network);
+    //console.log("\n\n--- API Provider ---");
+    //console.log(apiProvider);
+
+    const invoke = {
+      scriptHash: this.smartContractScript, // Scripthash for the contract
+      operation: 'lock', // name of operation to perform.
+      args: [
+        sc.ContractParam.byteArray(neoWalletAddress,'address'), // neo address
+        sc.ContractParam.byteArray(multisigAcct.address,'address'), // multisig neo address
+        sc.ContractParam.byteArray(u.str2hexstring(qlcWalletAddress),'string'), // qlc address
+        sc.ContractParam.integer(amountWithDecimals.toNumber()), // qlc amount // check integer limit for big numbers !! should be 2,147,483,647 that's max 21 qlc ?
+        sc.ContractParam.integer(durationInDays), // lock time
+      ] 
+    }
+    //console.log(invoke);
+
+    
+    const script = await Neon.create.script(invoke);
+    //console.log(script);
+
+    const invokeConfig = {
+      api: apiProvider, // The API Provider that we rely on for balance and rpc information
+      account: account, // The sending Account
+      script: script // The Smart Contract invocation script
+    };
+
+    const returnTokeninvokeConfig = await Neon.doInvoke(invokeConfig)
+    .then(config2 => {
+      //console.log("\n\n--- Response ---");
+      //console.log(config2);
+      return config2.response;
+    })
+    .catch(err => {
+      //console.log(err);
+      return err;
+    });
+    const returnData = {
+      beneficial: qlcWalletAddress,
+      amount: amountWithDecimals.toNumber(),
+      multiSigAddress: multisigAcct.address,
+      publicKey: account.publicKey,
+      lockTxId : returnTokeninvokeConfig.txid
+    };
+    return returnData;
+    
+    
+  }  
+
+ 
+ async contractGetLockInfo(txid) {
+  const props = {
+    scriptHash: this.smartContractScript, 
+    operation: 'getLockInfo', 
+    args: [
+      sc.ContractParam.byteArray(txid,'string')
+    ] 
+  }
+  
+  const script = Neon.create.script(props);
+
+  let sb = new sc.ScriptBuilder(script);
+  console.log(sb.toScriptParams());
+
+  //await rpc.Query.invokeScript(script)
+  let returnData = await rpc.Query.invokeFunction(
+    this.smartContractScript,
+    'getLockInfo',
+    sc.ContractParam.byteArray(u.reverseHex(txid),'string')
+    )
+  .execute('https://test3.cityofzion.io')
+  .then(res => {
+    console.log(res) // You should get a result with state: "HALT, BREAK"
+    if (res.result.state == 'HALT, BREAK' || res.result.state == 'HALT') {
+      if (res.result.stack[0].value == '') {
+        const returnData = {
+          beneficial: 0,
+          amount: 0,
+          multiSigAddress: '',
+          neoAddress: '',
+          lockStart: '',
+          lockEnd: '',
+          publicKey: '',
+          lockTxId: '',
+          lockInfo: 'not_lock'
+        };
+        return returnData; 
+      }
+      const c = new wallet.Account(
+        u.reverseHex(res.result.stack[0].value[0].value)
+      );
+      const c2 = new wallet.Account(
+        u.reverseHex(res.result.stack[0].value[1].value)
+      );
+
+      //console.log('neo address ' + c.address);
+      //console.log('neo multi address ' + c2.address);
+      //console.log('qlc address ' + u.hexstring2str(res.result.stack[0].value[2].value));
+      //console.log('start lock ' + new Date(res.result.stack[0].value[3].value*1000));
+      //console.log('end lock ' + new Date(res.result.stack[0].value[4].value*1000));
+
+      let amount;
+      if (res.result.stack[0].value[5].type == 'Integer') {
+        amount = new BigNumber(res.result.stack[0].value[4].value).dividedBy(100000000).toFixed();  
+      } else if (res.result.stack[0].value[5].type == 'ByteArray') {
+        amount = u.Fixed8.fromReverseHex(res.result.stack[0].value[5].value);
+      }
+      const returnData = {
+        beneficial: u.hexstring2str(res.result.stack[0].value[2].value),
+        amount: new BigNumber(amount).multipliedBy(100000000).toNumber(),
+        multiSigAddress: c2.address,
+        neoAddress: c.address,
+        lockStart: new Date(res.result.stack[0].value[3].value*1000),
+        lockEnd: new Date(res.result.stack[0].value[4].value*1000),
+        publicKey: '',
+        lockTxId: '',
+        lockInfo: 'ok_lock'
+      };
+      return returnData;
+    } 
+    const returnData = {
+      beneficial: 0,
+      amount: 0,
+      multiSigAddress: '',
+      neoAddress: '',
+      lockStart: '',
+      lockEnd: '',
+      publicKey: '',
+      lockTxId: '',
+      lockInfo: 'not_txid'
+    };
+    return returnData;
+  });
+
+  if(returnData.neoAddress != '')   {
+    const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === returnData.neoAddress);
+    if (selectedWallet) {
+      const wif = await this.decrypt(selectedWallet.encryptedwif,this.walletService.wallet.password);
+      
+      const account = await new wallet.Account(wif);
+      returnData.publicKey = account.publicKey;
+    }
+  }
+  returnData.lockTxId = txid;
+  return returnData;
+}  
+
+async contractUnlockPrepare(pledge) {
+  // find the right neo wallet from multisig wallet
+  const multiSigWallet = pledge.multiSigAddress;
+
+    for (const neowallet of this.walletService.wallet.neowallets) {
+      const wif = await this.decrypt(neowallet.encryptedwif,this.walletService.wallet.password);
+      const account = await new wallet.Account(wif);
+
+      // multisig
+      const multisigAcct = wallet.Account.createMultiSig(2, [
+        account.publicKey,
+        '03f19ffa8acecb480ab727b0bf9ee934162f6e2a4308b59c80b732529ebce6f53d'
+      ]);
+
+      if (multisigAcct.address == multiSigWallet) {
+        const unlock = await this.contractUnlock(pledge,account);
+        return unlock;
+      }
+    }
+    
+}
+
+async contractUnlock(pledge,account) {
+
+  const multisigAcct = wallet.Account.createMultiSig(2, [
+    account.publicKey,
+    '03f19ffa8acecb480ab727b0bf9ee934162f6e2a4308b59c80b732529ebce6f53d'
+  ]);
+
+ 
+
+  const props = {
+    scriptHash: this.smartContractScript, 
+    operation: 'unlock', 
+    args: [
+      sc.ContractParam.byteArray(u.reverseHex(pledge.nep5TxId),'string')
+    ] 
+  }
+  
+  const script = Neon.create.script(props);
+
+  //let constructTx = await Neon.create.contractTx().addAttribute(32,script);
+
+  let constructTx = Neon.create.invocationTx();
+  constructTx.addAttribute(32,u.reverseHex(multisigAcct.scriptHash));
+  constructTx.script = script;
+  
+  const txHex = await constructTx.serialize(false);
+
+  const sig1 = await wallet.sign(txHex, account.privateKey);
+
+  //console.log(constructTx);
+  //console.log('unsignedRawTx');
+  //console.log(txHex);
+  //console.log('signature');
+  //console.log(sig1);
+  //console.log('txId ??');
+  //console.log(constructTx.hash);
+
+  return {
+    'unsignedRawTx': txHex,
+    'signature': sig1,
+    'publicKey': account.publicKey,
+    'unlockTxId': constructTx.hash
+  }
+ 
+}  
+
+
+
   
 }

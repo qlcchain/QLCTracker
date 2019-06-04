@@ -71,13 +71,13 @@ export class AccountsComponent implements OnInit {
 		
 		this.pages = Array(displayPages).fill(0).map((pages,i)=>i+1) ;
 
-		if (this.activePage > 3 && this.activePage < pages -3) {
+		if (pages > 5 && this.activePage > 3 && this.activePage < pages -3) {
 			this.pages[1] = this.activePage -2;
 			this.pages[2] = this.activePage -1;
 			this.pages[3] = this.activePage;
 			this.pages[4] = this.activePage +1;
 			this.pages[5] = this.activePage +2;
-		} else if (this.activePage > 3 && this.activePage >= pages -3) {
+		} else if (pages > 5 && this.activePage > 3 && this.activePage >= pages -3) {
 			this.pages[1] = pages -5;
 			this.pages[2] = pages -4;
 			this.pages[3] = pages -3;
@@ -120,6 +120,11 @@ export class AccountsComponent implements OnInit {
 		const tokens = await this.api.tokens();
 		if (!tokens.error) {
 			tokens.result.forEach(token => {
+        if (token.tokenSymbol != 'QLC' && token.tokenSymbol != 'QGAS') {
+          token.image = 'none';
+        } else {
+          token.image = token.tokenSymbol;
+        }
 				tokenMap[token.tokenId] = token;
 			});
     }

@@ -25,6 +25,7 @@ export interface WalletAccount {
 	index: number;
 	balance: BigNumber;
 	balances: any;
+	otherTokens: any;
 	// pending: BigNumber;
 	pendingCount: number;
 	pendingPerTokenCount: any;
@@ -147,6 +148,8 @@ export class WalletService {
 			let pendingCount = 0;
 			const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
 
+			let allAccounts = this.wallet.accounts;
+
 			if (!accountsPending.error) {
 				const pendingResult = accountsPending.result;
 				for (const account in pendingResult) {
@@ -156,8 +159,42 @@ export class WalletService {
 					pendingCount += pendingResult[account].length;
 					let walletAccount = this.wallet.accounts.find(a => a.id === account);
 					walletAccount.pendingCount = pendingResult[account].length;
+					walletAccount.pendingPerTokenCount = [];
+					pendingResult[account].forEach(pending => {
+						if (pending.tokenName != 'QLC' && pending.tokenName != 'QGAS') {
+							pending.tokenName = 'OTHER';
+						}
+						if (!walletAccount.pendingPerTokenCount[pending.tokenName])
+							walletAccount.pendingPerTokenCount[pending.tokenName] = 0;
+
+						walletAccount.pendingPerTokenCount[pending.tokenName] += 1;
+						this.pendingBlocks.push({
+							account: pending.source,
+							receiveAccount: account,
+							amount: pending.amount,
+							tokenName: pending.tokenName,
+							tokenSymbol: pending.tokenName,
+							timestamp: pending.timestamp,
+							hash: pending.hash
+						});
+					});
+					if (!this.isLocked()) {
+						this.loadPendingBlocksForWallet();
+					}
+					allAccounts = allAccounts.filter(function( obj ) {
+						return obj.id !== account;
+					});
 				}
 			}
+
+			allAccounts.forEach((data) => {
+				let walletAccount = this.wallet.accounts.find(a => a.id === data.id);
+				walletAccount.pendingPerTokenCount = [];
+				walletAccount.pendingCount = 0;
+			});
+
+
+
 			this.wallet.pendingCount = pendingCount;
 		});
 
@@ -505,6 +542,7 @@ export class WalletService {
 			pendingCount: 0,
 			pendingPerTokenCount: [],
 			balances: null,
+			otherTokens: [],
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,
@@ -660,6 +698,7 @@ export class WalletService {
 			keyPair: null,
 			balance: new BigNumber(0),
 			balances: null,
+			otherTokens: [],
 			// pending: new BigNumber(0),
 			pendingCount: 0,
 			pendingPerTokenCount: [],
@@ -767,10 +806,12 @@ export class WalletService {
 		}
 		this.pendingBlocks.push({
 			account: accountID,
+			receiveAccount: accountID,
 			hash: blockHash,
 			amount: amount,
 			token: tokenHash,
-			tokenName: tokenName
+			tokenName: tokenName,
+			tokenSymbol: tokenName
 		});
 	}
 
@@ -778,6 +819,7 @@ export class WalletService {
 		if (!this.wallet.accounts.length) {
 			return;
 		}
+		console.log('loadPendingBlocksForWallet')
 		const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
 		if (accountsPending.error) {
 			return;
@@ -807,10 +849,16 @@ export class WalletService {
 
 		const nextBlock = this.pendingBlocks[0];
 		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
+			//console.log('Block has already been processed')
+			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+			this.processingPending = false;
 			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
 		}
-		const walletAccount = await this.getWalletAccount(nextBlock.account);
+		const walletAccount = await this.getWalletAccount(nextBlock.receiveAccount);
 		if (!walletAccount) {
+			//console.log('Dispose of the block, no matching account')
+			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+			this.processingPending = false;
 			return; // Dispose of the block, no matching account
 		}
 
@@ -832,7 +880,7 @@ export class WalletService {
 
 			const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
 			this.notifications.sendSuccess(
-				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenName}!`
+				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenSymbol}!`
 			);
 
 			// await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?

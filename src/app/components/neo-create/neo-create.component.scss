@@ -1,0 +1,28 @@
+.tableQLC {
+    background-color: #8bc34a !important;
+    padding: 30px;
+    margin: 0px;
+    width: 100%;
+    color:#ffffff;
+}
+.seed-txt {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 18px;
+}
+.btn-primary {
+    font-size: 12px;
+    padding: initial;
+}
+#import-from-file {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    -webkit-appearance: none;
+    opacity: 0;
+    cursor: pointer;
+}

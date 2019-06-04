@@ -1,17 +1,16 @@
 <div class="container mt-0 qlc-content-first">
-  <div class="row">
-    <div class="col-12 pl-0 pr-0">
-      <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
-        <div class="content-title">
-          <h1>Neo Wallet Create/Import</h1>
-        </div>
-      </div>
-    </div>
-  </div>
-  
   
   <div class="row" *ngIf="activePanel==0">
     
+    <div class="col-12 pl-0 pr-0">
+      <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+        <div class="content-title">
+          <h1>Create/Import NEO Wallet</h1>
+        </div>
+      </div>
+    </div>
+
+
     <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
       <div class="content-box-white">
         <div class="container">
@@ -84,80 +83,106 @@
     </div>
   </div>
 
+
+
+
   <div class="row" *ngIf="activePanel == 1">
-    <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-        <div class="content-box-white">
-            <div class="col-12 px-0 text-center pt-5 content-title"><h2 class="title-grey">New neo wallet created!</h2></div>
-            <div class="col-12 px-0 text-center py-3 pt-5 pb-4">
-                <strong>Below is your private key and private key encrypted with SMS billing wallet password</strong>
-            </div>
-            <div class="row align-items-top pl-5 pr-5">
-                <div class="col-xl-6 pr-md-3">
-                    <div class="col-12 defaultTable tableQLC content">
-                        <div class="row align-items-center rowTitles">
-                            <div class="col-12 pb-3">
-                                Private key
-                            </div>
-                        </div>
-                        <div class="row align-items-center rowDefault">
-                            <div class="col-12 pb-3 seed-txt pb-4">
-                                {{ newWalletPrivateKey }}
-                            </div>
-                        </div>
-                        <div class="row align-items-center rowButtons">
-                            <div class="col-12">
-                                <a tooltip="Copy private key" ngxClipboard [cbContent]="newWalletPrivateKey" (cbOnSuccess)="copied()" class="icon-text-link"><span class="icon copy light"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
-                            </div>
-                        </div>
+
+      <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+          <div class="content-title">
+              <h1>New NEO wallet created!</h1>
+          </div>
+      </div>
+      <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white" *ngIf="newWalletPrivateKey == '' && newWalletEncryptedKey == ''">
+            <div class="col-12 text-center pt-5">
+              <h3>Generating key. Please wait.</h3>
+
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-6 offset-md-3 mt-5 mb-5">
+
+                    <div id="noTrespassingOuterBarG">
+                      <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
+                        <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                        <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                      </div>
                     </div>
+
+                  </div>
                 </div>
-                <div class="col-xl-6 pl-md-3">
-                    <div class="col-12 defaultTable tableQLC content">
-                        <div class="row align-items-center rowTitles">
-                            <div class="col-12 pb-3">
-                                Encrypted key
-                            </div>
-                        </div>
-                        <div class="row align-items-center rowDefault">
-                            <div class="col-12 pb-3 seed-txt" style="word-wrap: break-word;">
-                                {{ newWalletEncryptedKey }}
-                            </div>
-                        </div>
-                        <div class="row align-items-center rowButtons pb-3 mb-3">
-                            <div class="col-12 align-self-end pb-5 mb-0">
-                                <a tooltip="Copy encrypted key" ngxClipboard [cbContent]="newWalletEncryptedKey" (cbOnSuccess)="copied()" class="icon-text-link" ><span class="icon copy light"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+          </div>
+          <div class="content-box-white" *ngIf="newWalletPrivateKey != '' && newWalletEncryptedKey != ''">
+              <div class="col-12 px-0 text-center py-3 pt-5 pb-4">
+                  <strong>Below is your private key and encrypted key for your new wallet</strong>
+              </div>
+              <div class="row align-items-top pl-5 pr-5">
+                  <div class="col-xl-6 pr-md-3">
+                      <div class="col-12 defaultTable tableQLC content">
+                          <div class="row align-items-center rowTitles">
+                              <div class="col-12 pb-3">
+                                  Private key
+                              </div>
+                          </div>
+                          <div class="row align-items-center rowDefault">
+                              <div class="col-12 pb-3 seed-txt" style="word-wrap: break-word;">
+                                  {{ newWalletPrivateKey }}
+                              </div>
+                          </div>
+                          <div class="row align-items-center rowButtons">
+                              <div class="col-12">
+                                  <a tooltip="Copy private key" ngxClipboard [cbContent]="newWalletPrivateKey" (cbOnSuccess)="copied()" class="icon-text-link"><span class="icon copy light"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-xl-6 pl-md-3">
+                      <div class="col-12 defaultTable tableQLC content">
+                          <div class="row align-items-center rowTitles">
+                              <div class="col-12 pb-3">
+                                  Encrypted key
+                              </div>
+                          </div>
+                          <div class="row align-items-center rowDefault">
+                              <div class="col-12 pb-3 seed-txt" style="word-wrap: break-word;">
+                                  {{ newWalletEncryptedKey }}
+                              </div>
+                          </div>
+                          <div class="row align-items-center rowButtons">
+                              <div class="col-12">
+                                  <a tooltip="Copy encrypted key" ngxClipboard [cbContent]="newWalletEncryptedKey" (cbOnSuccess)="copied()" class="icon-text-link"><span class="icon copy light"></span> {{ 'COPY_TO_CLIPBOARD' | translate }}</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+              
+              
+              <div class="row defaultTable content pt-5">
+                  <div class="col-12 pb-3">
+                      <div class="row align-items-center rowContent autoHP">
+                          <div class="col-12 px-0 pb-1 text-center boldbig text-color-red" style="font-weight: bold;">
+                              Make sure to write down your private key and encrypted key or save it somewhere safe, and never share it with anyone!
+                          </div>
+                          <div class="col-12 px-0 pb-3 text-center boldbig pt-4">
+                              It is the only way to recover your funds in an emergency. There is no way to recover a private key if you loose it.
+                          </div>
+                      </div>
+                      
+                      <div class="row align-items-center justify-content-center rowDefault rowButtons pt-4">
+                          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-5">
+                              <a (click)="confirmNewWallet()"><button type="submit" [disabled]="alreadyImporting" class="btn btn-primary pl-0 pr-0 btn-danger w-100">I have saved my private/encrypted key</button></a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
             
-            
-            
-            <div class="row defaultTable content pt-4">
-                <div class="col-12 pb-3">
-                    <div class="row align-items-center rowContent autoHP">
-                        <div class="col-12 px-0 pb-1 text-center boldbig" [innerHtml]="'CREATE_NEW_CREATED.warning1' | translate">
-                            Make sure to write down your private/encrypted key or save it somewhere safe, and never share it with anyone!
-                        </div>
-                        <div class="col-12 px-0 pb-3 text-center boldbig pt-4">
-                            It is the only way to recover your funds in an emergency.
-                        </div>
-                        <div class="col-12 px-0 pb-3 text-center boldbig pt-4">
-                            There is no way to recover a private key if you loose it.
-                        </div>
-                    </div>
-                    
-                    <div class="row align-items-center justify-content-center rowDefault rowButtons pt-4">
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-5">
-                            <a (click)="confirmNewWallet()"><button type="submit" [disabled]="alreadyImporting" class="btn btn-primary pl-0 pr-0 btn-danger w-100">I have saved my private/encrypted key</button></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>                    
   </div>
+
+
 </div>
-
-

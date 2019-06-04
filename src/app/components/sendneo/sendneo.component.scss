@@ -127,7 +127,7 @@
 		font-weight: bold;
 		border-radius: 0;
 		border: 1px solid $textLight;
-		border-right: none;
+		/*border-right: none;*/
 		background: transparent;
 		width: 65px;
 		font-size: 13px;
@@ -170,6 +170,11 @@
 .confirm-subtitle {
 	display: block;
 	font-size: 10px;
+}
+
+.sendTokens .input-group-text.maxLink {
+    padding-top: 12px;
+    padding-bottom: 8px;
 }
 
 @media (max-width: 12450px) {
