@@ -62,7 +62,7 @@ const routes: Routes = [
   { path: 'mystakings', component: MystakingsComponent },
   { path: 'staking-create', component: StakingCreateComponent },
   { path: 'staking-revoke', component: StakingRevokeComponent },
-  { path: '**', component: HomeComponent },
+  { path: '**', component: HomeComponent }
 ];
 
 @NgModule({
