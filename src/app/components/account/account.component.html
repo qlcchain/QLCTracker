@@ -198,16 +198,16 @@
                 </span>
               </div>
               <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{history.type == 'Send' ? 'to' : 'from'}}: </span> 
+                <span class="text-color-lightgrey">{{history.type == 'Send' || history.type == 'ContractSend' ? 'to' : 'from'}}: </span> 
                 <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a>
                 <a [routerLink]="'/transaction/' + history.hash"><br>
                   <span class="text-tiny">{{ history.hash }}</span>
                 </a>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
-                history.type == 'Send' ? 'text-color-red' : 'text-color-green'
+                history.type == 'Send' || history.type == 'ContractSend' ? 'text-color-red' : 'text-color-green'
               }}">
-                <span data-toggle="tooltip" data-placement="top" title="" *ngIf="history.amount">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | qlc:history.tokenInfo.decimals | currency:'':'':'1.2-8' }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="" *ngIf="history.amount">{{history.type == 'Send' || history.type == 'ContractSend' ? '-' : '+'}} {{ history.amount | qlc:history.tokenInfo.decimals | currency:'':'':'1.2-8' }}</span>
                 <br><span class="text-color-grey">{{ history.tokenName }}</span>
               </div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
