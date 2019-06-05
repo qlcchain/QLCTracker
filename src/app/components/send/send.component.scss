@@ -29,10 +29,16 @@
 }
 
 .activeOther {
-	border-color: #495057;
+	/*border-color: #495057;
 	outline: 0;
 	box-shadow: 0 0 0 2px rgba(108, 69, 190, 0.2);
-	background-color: #c0378b
+	background-color: #c0378b*/
+}
+.otherSlide img {
+	opacity: 0.4;
+}
+.otherSlide .activeOther img {
+	opacity: 1;
 }
 
 
