@@ -603,21 +603,23 @@ async contractUnlockPrepare(pledge) {
   // find the right neo wallet from multisig wallet
   const multiSigWallet = pledge.multiSigAddress;
 
-    for (const neowallet of this.walletService.wallet.neowallets) {
-      const wif = await this.decrypt(neowallet.encryptedwif,this.walletService.wallet.password);
-      const account = await new wallet.Account(wif);
+  for (const neowallet of this.walletService.wallet.neowallets) {
+    const wif = await this.decrypt(neowallet.encryptedwif,this.walletService.wallet.password);
+    const account = await new wallet.Account(wif);
 
-      // multisig
-      const multisigAcct = wallet.Account.createMultiSig(2, [
-        account.publicKey,
-        '03f19ffa8acecb480ab727b0bf9ee934162f6e2a4308b59c80b732529ebce6f53d'
-      ]);
+    // multisig
+    const multisigAcct = wallet.Account.createMultiSig(2, [
+      account.publicKey,
+      '03f19ffa8acecb480ab727b0bf9ee934162f6e2a4308b59c80b732529ebce6f53d'
+    ]);
 
-      if (multisigAcct.address == multiSigWallet) {
-        const unlock = await this.contractUnlock(pledge,account);
-        return unlock;
-      }
+    if (multisigAcct.address == multiSigWallet) {
+      const unlock = await this.contractUnlock(pledge,account);
+      return unlock;
     }
+  }
+
+  return false;
     
 }
 

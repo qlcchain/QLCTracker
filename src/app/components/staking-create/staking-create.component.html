@@ -243,7 +243,7 @@
                           <div class="form-group" *ngIf="recover == 0">
                             <select class="custom-select" formControlName="fromNEOWallet" (change)="selectAccount()">
                               <option *ngFor="let account of neowallets" [value]="account.id"
-                                >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances['QLINK TOKEN'] != undefined)? ' ('+account.balances['QLINK TOKEN'] + ' QLC)' : '') }} </option>
+                                >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances[neoService.tokenList['QLC'].networks['1'].hash] != undefined)? ' ('+account.balances[neoService.tokenList['QLC'].networks['1'].hash].amount + ' QLC)' : '') }} </option>
                             </select>
                             <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to stake QLC from</p>
                           </div>
