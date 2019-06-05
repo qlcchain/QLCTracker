@@ -34,6 +34,8 @@ export class SendComponent implements OnInit {
 	hideFiat = 1;
 
 	otherTokens: any = [];
+	otherInterval = 3000;
+	activeSlideIndex = 1;
 
 	msg1 = '';
 	msg2 = '';
@@ -415,7 +417,13 @@ export class SendComponent implements OnInit {
 	selectToken() {
 		if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
 			this.selectedToken = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === this.selectedTokenSymbol);
-			console.log(this.selectedToken);
+			if (this.selectedTokenSymbol != 'QLC' && this.selectedTokenSymbol != 'QGAS') {
+				const selectedSlide = this.otherTokens.findIndex(a => a.tokenInfo.tokenSymbol === this.selectedTokenSymbol);
+				this.activeSlideIndex = selectedSlide;
+				this.otherInterval = 0;
+			} else {
+				this.otherInterval = 3000;
+			}
 		} else {
 			this.selectedToken = '';
 		}
@@ -431,7 +439,12 @@ export class SendComponent implements OnInit {
   }
   selectTokenIcon(token) {
 		if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
-      this.selectedTokenSymbol = token;
+			this.selectedTokenSymbol = token;
+			if (this.selectedTokenSymbol != 'QLC' && this.selectedTokenSymbol != 'QGAS') {
+				this.otherInterval = 0;
+			} else {
+				this.otherInterval = 3000;
+			}
 			this.selectedToken = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === token);
 		} else {
 			this.selectedToken = '';
