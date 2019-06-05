@@ -141,7 +141,7 @@ export class MystakingsComponent implements OnInit {
     }
     this.step = 3;
     this.invokeSteps.push({ msg: 'Continuing invoke.'});
-    this.invokeSteps.push({ msg: 'Checking TXID on NEO network.'});
+    this.invokeSteps.push({ msg: 'Checking TXID on NEO network.', checkimg: 1});
 
     this.confirmInvokeWaitForTXIDConfirm(pledge,walletAccount);
 
@@ -159,7 +159,7 @@ export class MystakingsComponent implements OnInit {
       const waitTimer = timer(20000).subscribe( async (data) => {
       console.log(transaction);
       console.log('txid confirmed');
-      this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.'});
+      this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.', checkimg: 1});
 
       const pledgeResult = (pType == 'mintage') 
                             ? await this.nep5api.mintagePledge(txid)
@@ -172,10 +172,10 @@ export class MystakingsComponent implements OnInit {
       const preparedPledge = pledgeResult.result;
       
       
-      this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...'});
+      this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...', checkimg: 1});
       const pledgetxid = await this.processInvokeBlock(preparedPledge,walletAccount.keyPair,txid);
       
-      this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result });
+      this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result, checkimg: 1 });
       this.step = 4;
       });
     } else {
@@ -206,7 +206,7 @@ export class MystakingsComponent implements OnInit {
       this.step = 0;
       return this.notifications.sendWarning('ERROR - Connected NEO wallet was not found.');
     }
-    this.revokeSteps.push({ msg: 'Revoke prepared.'});
+    this.revokeSteps.push({ msg: 'Revoke prepared.', checkimg: 1});
 
     //console.log(txData);
     //console.log('call contractUnlockPrepare end');
@@ -215,19 +215,19 @@ export class MystakingsComponent implements OnInit {
     if (pledge.pType == 'mintage') {
       this.revokeSteps.push({ msg: 'Calling withdraw.'});
       const withdrawBlock = await this.getMintageWithdraw(pledge,txData);
-      this.revokeSteps.push({ msg: 'Revoke processed.'});
+      this.revokeSteps.push({ msg: 'Revoke processed.', checkimg: 1});
       this.step = 2;
       return;
     }
-    this.revokeSteps.push({ msg: 'Preparing revoke block.'});
+    this.revokeSteps.push({ msg: 'Preparing revoke block.', checkimg: 1});
 
     const withdrawBlock = await this.getWithdraw(pledge);
     //console.log(withdrawBlock);
     //console.log('call getWithdraw end');
-    this.revokeSteps.push({ msg: 'Revoke block prepared. Processing ...'});
+    this.revokeSteps.push({ msg: 'Revoke block prepared. Processing ...', checkimg: 1});
 
     const txid = await this.processBlock(withdrawBlock.result,walletAccount.keyPair,pledge.nep5TxId,txData);
-    this.revokeSteps.push({ msg: 'Revoke processed. Waiting for TXID confirmation.'});
+    this.revokeSteps.push({ msg: 'Revoke processed. Waiting for TXID confirmation.', checkimg: 1});
 
     this.confirmRevokeWaitForTXIDConfirm(txData.unlockTxId);
   }
@@ -239,7 +239,7 @@ export class MystakingsComponent implements OnInit {
     console.log(txid);
     
     if (transaction.txid) {
-      this.revokeSteps.push({ msg: 'TXID confirmed.'});
+      this.revokeSteps.push({ msg: 'TXID confirmed.', checkimg: 1});
       this.step = 2;
     } else {
       //console.log('error repeating');

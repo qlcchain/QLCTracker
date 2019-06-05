@@ -844,9 +844,9 @@
                   </div>
                 </div>
 
-                <p style="color:#c10f0f;"><strong>Important:</strong> Don't leave or close this page!</p>
+                <p style="color:#c10f0f;" class="pb-3"><strong>Important:</strong> Don't leave or close this page!</p>
 
-                <h5 class="pt-3" *ngFor="let step of invokeSteps">{{ step.msg }}</h5>
+                <p class="pt-0 pb-0" *ngFor="let step of invokeSteps"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="../../assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
 
 
 							</div>

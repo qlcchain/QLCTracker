@@ -454,7 +454,7 @@ export class StakingCreateComponent implements OnInit {
       this.invokeSteps.push({ msg: 'Locking '+ this.stakingForm.value.amounToStake +' QLC on NEO network.'});
       txData = await this.contractLock();
     }
-    this.invokeSteps.push({ msg: 'TXID received. Preparing pledge.'});
+    this.invokeSteps.push({ msg: 'TXID received. Preparing pledge.', checkimg: 1});
     let pType = 'vote';
     if (this.stakingForm.value.stakingType == 1) {
       pType = 'network';
@@ -466,7 +466,7 @@ export class StakingCreateComponent implements OnInit {
                             : await this.getPreparePledge(txData,pType)
                             ;
 
-    this.invokeSteps.push({ msg: 'Pledge prepared. Waiting for TXID confirmation.'});
+    this.invokeSteps.push({ msg: 'Pledge prepared. Waiting for TXID confirmation.', checkimg: 1});
 
     
 
@@ -485,7 +485,7 @@ export class StakingCreateComponent implements OnInit {
     const walletAccount = await this.walletService.getWalletAccount(pledge.beneficial);
     this.step = 3;
     this.invokeSteps.push({ msg: 'Continuing invoke.'});
-    this.invokeSteps.push({ msg: 'Checking TXID on NEO network.'});
+    this.invokeSteps.push({ msg: 'Checking TXID on NEO network.', checkimg: 1});
 
     this.confirmInvokeWaitForTXIDConfirmByPledge(pledge,walletAccount);
 
@@ -504,7 +504,7 @@ export class StakingCreateComponent implements OnInit {
       const waitTimer = timer(20000).subscribe( async (data) => {
       console.log(transaction);
       console.log('txid confirmed');
-      this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.'});
+      this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.', checkimg: 1});
 
       const pledgeResult = (pType == 'mintage') 
                             ? await this.nep5api.mintagePledge(txid)
@@ -523,7 +523,7 @@ export class StakingCreateComponent implements OnInit {
       this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...'});
       const pledgetxid = await this.processBlock(preparedPledge,walletAccount.keyPair,txid);
       
-      this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result });
+      this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result, checkimg: 1 });
       this.step = 4;
       });
     } else {
@@ -550,7 +550,7 @@ export class StakingCreateComponent implements OnInit {
     if (transaction.txid) {
       const waitTimer = timer(20000).subscribe( async (data) => {
         
-      this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.'});
+      this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.', checkimg: 1});
 
       const pledgeResult = (pType == 'mintage') 
                             ? await this.nep5api.mintagePledge(txid)
@@ -565,10 +565,10 @@ export class StakingCreateComponent implements OnInit {
       }
       const pledge = pledgeResult.result;
             
-      this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...'});
+      this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...', checkimg: 1});
       const pledgetxid = await this.processBlock(pledge,walletAccount.keyPair,txid);
       
-      this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result });
+      this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result, checkimg: 1 });
       this.step = 4;
       if (pType == 'network') {
         const setMac = await this.confidantApi.confirmMacAddresses(this.stakingForm.value.email_address, this.stakingForm.value.security_code, this.macaddresses, this.stakingForm.value.toQLCWallet, this.stakingForm.value.fromNEOWallet, txid);
