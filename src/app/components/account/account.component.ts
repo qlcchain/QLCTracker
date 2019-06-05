@@ -78,6 +78,11 @@ export class AccountComponent implements OnInit {
 			const tokens = await this.api.tokens();
 			if (!tokens.error) {
 				tokens.result.forEach(token => {
+					if (token.tokenSymbol != 'QLC' && token.tokenSymbol != 'QGAS') {
+						token.image = 'none';
+					} else {
+						token.image = token.tokenSymbol;
+					}
 					tokenMap[token.tokenId] = token;
 				});
 			}
@@ -92,6 +97,7 @@ export class AccountComponent implements OnInit {
 				}
 				this.accountMeta = am;
 			}
+			console.log(this.accountMeta);
 			
 			this.pendingBlocks = [];
 			this.pendingSum = 0;

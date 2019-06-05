@@ -48,41 +48,15 @@
 
                       <carousel [interval]="3000" class="w-100">
                         
-                        <slide>
+                        <slide *ngFor="let token of accountMeta.tokens">
                           <div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
                             <div class="col-3 pr-3 pt-1">
-                              <img src="assets/img/token-qlc.png" class="w-100 icon-token" style="padding-right:2px;">
+                              <img src="assets/img/token-{{ token.tokenInfo.image | lowercase }}.png" class="w-100 icon-token" style="padding-right:2px;">
                             </div>
                             <div class="col-9 pr-0 pl-0 mb-2 pb-0">
                               <div class="row qlc-table-row-white row-text-mid mt-0 pb-1">
-                                <div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">QLC</span></div>
-                                <div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">{{ accountMeta.coinBalance | qlc:8 | currency:'':'':'1.2-8' }}</div>
-                              </div>
-                            </div>
-                          </div>
-                        </slide>
-                        <slide>
-                          <div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
-                            <div class="col-3 pr-3 pt-1">
-                              <img src="assets/img/token-qgas.png" class="w-100 icon-token" style="padding-right:2px;">
-                            </div>
-                            <div class="col-9 pr-0 pl-0 mb-2 pb-0">
-                              <div class="row qlc-table-row-white row-text-mid mt-0 pb-1">
-                                <div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">QGAS</span></div>
-                                <div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">999,999,999.99999999</div>
-                              </div>
-                            </div>
-                          </div>
-                        </slide>
-                        <slide>
-                          <div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
-                            <div class="col-3 pr-3 pt-1">
-                              <img src="assets/img/token-none.png" class="w-100 icon-token" style="padding-right:2px;">
-                            </div>
-                            <div class="col-9 pr-0 pl-0 mb-2 pb-0">
-                              <div class="row qlc-table-row-white row-text-mid mt-0 pb-1">
-                                <div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">ZZ</span></div>
-                                <div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">1,000,000.00</div>
+                                <div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">{{ token.tokenInfo.tokenSymbol }}</span></div>
+                                <div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">{{ token.balance | qlc: token.tokenInfo.decimals | currency:'':'':'1.2-8' }}</div>
                               </div>
                             </div>
                           </div>
