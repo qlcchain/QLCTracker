@@ -50,26 +50,26 @@
 		"ledger_button_refresh": "Refresh Ledger Status"
 	},
 	"CONFIGURE_WALLET": {
-		"configure_wallet_title": "Configure Wallet",
-		"configure_wallet_warning": "<b>You already have a wallet configured</b><br>Before going any further, be 100% certain you have backed up the seed to your current wallet!<br>Without it, <b>any funds you have will become completely unrecoverable!</b>",
-		"configure_wallet_text": "Choose an option below to configure your wallet",
-		"configure_wallet_button_import": "IMPORT AN EXISTING WALLET",
-		"configure_wallet_button_create": "CREATE NEW WALLET"
+		"configure_wallet_title": "Configure Account",
+		"configure_wallet_warning": "<b>You already have an account configured</b><br>Before going any further, be 100% certain you have backed up the seed to your current account!<br>Without it, <b>any funds you have will become completely unrecoverable!</b>",
+		"configure_wallet_text": "Choose an option below to configure your account",
+		"configure_wallet_button_import": "IMPORT AN EXISTING ACCOUNT",
+		"configure_wallet_button_create": "CREATE NEW ACCOUNT"
 	},
 	"CREATE_NEW_WALLET": {
-        "create_new_wallet_title": "Create new wallet",
+        "create_new_wallet_title": "Create new account",
         "create_new_wallet_warning": "Read carefully before prodeeding!",
-		"create_new_wallet_text1": "When you create a new wallet, a new QLC Chain Wallet seed will be generated which can be used to create brand new accounts on the QLC Chain network. Your QLC Wallet seed is the master key to all of your accounts and any money inside of them!",
+		"create_new_wallet_text1": "When you create a new account, a new QLC Chain Account seed will be generated which can be used to create brand new wallets on the QLC Chain network. Your QLC Account seed is the master key to all of your wallets and any money inside of them!",
 		"create_new_wallet_text2": "Make sure you back up your seed, write it down, and keep it incredibly safe! ",
         "create_new_wallet_text3": "There is NO way to recover it after creation, and all funds inside WILL be lost without it!",
         "create_new_wallet_agree": "I agree and I understand everything",
-		"create_new_wallet_button": "Create new wallet"
+		"create_new_wallet_button": "Create new account"
 	},
 	"CREATE_NEW_CREATED": {
-		"create_new_created_title": "New Wallet Created!",
-		"create_new_created_text": "Your new QLC Chain Wallet has been created! Below is the mnemonic phrase and seed for your wallet, you can use whichever you prefer.",
-		"mnemonic": "Wallet Mnemonic Phrase",
-		"seed": "Wallet Seed",
+		"create_new_created_title": "New Account Created!",
+		"create_new_created_text": "Your new QLC Chain Account has been created! Below is the mnemonic phrase and seed for your account, you can use whichever you prefer.",
+		"mnemonic": "Account Mnemonic Phrase",
+		"seed": "Account Seed",
 		"warning1": "Make sure to <span class='warning'>write down your mnemonic phrase/seed</span> or save it somewhere safe, and never share it with anyone!",
 		"warning2": "It is the master key to all of your accounts, and the only way to recover your funds in an emergency.",
 		"create_new_created_button": "I HAVE SAVED MY SEED/MNEMONIC",
@@ -77,20 +77,20 @@
 		"copy_mnemonic": "Copy Mnemonic To Clipboard"
 	},
 	"SET_WALLET_PASSWORD": {
-		"set_wallet_password_title": "Set Wallet Password",
+		"set_wallet_password_title": "Set Account Password",
 		"set_wallet_password_text": "The last step is to set a new password for your wallet. Your password is used to encrypt the sensitive parts of your wallet when it is locked, which disables sending, receiving, creating accounts, and other operations.",
-		"password": "SET YOUR WALLET PASSWORD",
+		"password": "SET YOUR ACCOUNT PASSWORD",
 		"password_placeholder": "Enter your password",
-		"confirm": "REPEAT YOUR WALLET PASSWORD",
+		"confirm": "REPEAT YOUR ACCOUNT PASSWORD",
 		"confirm_placeholder": "Repeat Password",
-		"set_wallet_password_button": "SET WALLET PASSWORD",
-		"warning": "If you lose your password, you can always restore your wallet using your seed."
+		"set_wallet_password_button": "SET ACCOUNT PASSWORD",
+		"warning": "If you lose your password, you can always restore your account and wallets using your seed."
 	},
 	"WALLET_CONFIGURED": {
-		"wallet_configured_title": "Wallet Configured!",
-		"wallet_configured_text": "Your wallet has been configured and you are ready to send and receive QLC Chain Tokens!",
+		"wallet_configured_title": "Account Configured!",
+		"wallet_configured_text": "Your account has been configured and you are ready to send and receive QLC Chain Tokens!",
 		"wallet_configured_button": "VIEW ACCOUNT",
-		"warning": "If you lose your password, you can always restore your wallet using your seed.",
+		"warning": "If you lose your password, you can always restore your account using your seed.",
 		"warning_ledger": "Press the Ledger status bar on the left side to reload your Ledger when connecting or disconnecting it."
     },
     "WALLET_WARNINGS": {
@@ -262,11 +262,11 @@
 		"msg21": "Legacy Blocks",
 		"msg22": "State Blocks",
 		"msg23": "App settings successfully updated!",
-		"msg24": "<p style='text-align: center;'>You are about to delete all locally cached Proof of Work values<br><br><b>Are you sure?</b></p>",
+		"msg24": "<h1>Warning</h1><p style='text-align: center;' class='pt-4'>You are about to delete all locally cached Proof of Work values<br><br><b>Are you sure?</b></p>",
 		"msg25": "Successfully cleared the work cache!",
-		"msg26": "<p style='text-align: center;'>You are about to delete all of your wallet data!<br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
+		"msg26": "<h1>Warning</h1><p style='text-align: center;' class='pt-4'>You are about to delete all of your wallet data!<br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
 		"msg27": "Successfully deleted all wallet data!",
-		"msg28": "<p style='text-align: center;'>You are about to delete ALL of your data.<br>This includes all of your wallet data, your address book, and your application settings!<br><br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
+		"msg28": "<h1>Warning</h1><p style='text-align: center;' class='pt-4'>You are about to delete ALL of your data.<br>This includes all of your wallet data, your address book, and your application settings!<br><br><b>Make sure you have your seed backed up!!</b><br><br><b>Are you sure?</b></p>",
 		"msg29": "Successfully deleted ALL locally stored data!"
 	},
 	"REPRESENTATIVES": {

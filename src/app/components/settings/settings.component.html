@@ -116,29 +116,29 @@
 
         <!-- ADVANCED POPUPS -->
         <ng-template #clearWorkCatche>
-          <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg24' | translate">
+          <div class="modal-body text-center pt-4" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg24' | translate">
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
-            <button class="btn btn-danger" type="button" (click)="clearWorkCache()">{{ 'OK' | translate }}</button>
+          <div class="modal-footer pb-4 pl-4 pr-4">
+            <button class="btn btn-primary w-50 pl-0 pr-0" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+            <button class="btn btn-primary btn-danger w-50 pl-0 pr-0" type="button" (click)="clearWorkCache()">{{ 'OK' | translate }}</button>
           </div>
         </ng-template>
         
         <ng-template #clearWalletData>
-          <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg26' | translate">
+          <div class="modal-body text-center pt-4" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg26' | translate">
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
-            <button class="btn btn-danger" type="button" (click)="clearAllWalletData()">{{ 'OK' | translate }}</button>
+          <div class="modal-footer pb-4 pl-4 pr-4">
+            <button class="btn btn-primary w-100 pl-0 pr-0" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+            <button class="btn btn-primary btn-danger w-100 pl-0 pr-0" type="button" (click)="clearAllWalletData()">{{ 'OK' | translate }}</button>
           </div>
         </ng-template>
         
         <ng-template #clearAllData>
-          <div class="modal-body text-center" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg28' | translate">
+          <div class="modal-body text-center pt-4" [innerHTML]="'CONFIGURE_APP_WARNINGS.msg28' | translate">
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
-            <button class="btn btn-danger" type="button" (click)="clearAll()">{{ 'OK' | translate }}</button>
+          <div class="modal-footer pb-4 pl-4 pr-4">
+            <button class="btn btn-primary w-100 pl-0 pr-0" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+            <button class="btn btn-primary btn-danger w-100 pl-0 pr-0" type="button" (click)="clearAll()">{{ 'OK' | translate }}</button>
           </div>
         </ng-template>
       

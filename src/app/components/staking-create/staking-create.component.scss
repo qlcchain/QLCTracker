@@ -227,3 +227,7 @@
 		color: $textLight;
 	}
 }
+
+.ng-invalid.ng-invalid-ignore, .ng-invalid.ng-touched.ng-invalid-ignore, .ng-invalid-ignore, .ng-touched.ng-invalid-ignore, .ng-dirty.ng-invalid-ignore {
+    border: none !important;
+}

@@ -37,15 +37,15 @@
       <div class="row">
   
         <!-- FORM -->
-        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3" >
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" >
             <div class="container pl-0 pr-0">
               <div class="row pl-0 pr-0">
   
   
-              <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4" [formGroup]="recoverForm" *ngIf="recover == 1">
+              <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4 ng-invalid-ignore" [formGroup]="recoverForm" *ngIf="recover == 1">
                 <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
   
-                    <div class="row pt-0 mt-4" style="border-bottom: 1px solid #edeef4;">
+                    <div class="row pt-1 mt-4 pl-4 pr-4">
   
                         <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4 mt-4">
                           RECOVER TXID
@@ -63,7 +63,7 @@
                           </div>
                           
                           <span *ngFor="let validation of recover_validation_messages.recover_txid">
-                            <span class="error-message" *ngIf="recoverForm.get('recover_txid').hasError(validation.type) && (recoverForm.get('recover_txid').dirty || recoverForm.get('recover_txid').touched)">{{validation.message}}<br></span>
+                            <span class="error-message pt-2" *ngIf="recoverForm.get('recover_txid').hasError(validation.type) && (recoverForm.get('recover_txid').dirty || recoverForm.get('recover_txid').touched)" style="color:#c10f0f;">{{validation.message}}<br></span>
                           </span>
                           <h5 class="pt-3" *ngFor="let step of recoverSteps">{{ step.msg }}</h5>
                         </div>
@@ -98,7 +98,7 @@
 		<div class="row">
 
 			<!-- FORM -->
-			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3" [formGroup]="stakingForm" >
+			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" [formGroup]="stakingForm" >
 					<div class="container pl-0 pr-0">
 						<div class="row pl-0 pr-0">
 
@@ -233,8 +233,9 @@
     
                         </div>
   
-                        </div>
-<div *ngIf="this.stakingForm.value.stakingType != 1 || (this.stakingForm.value.stakingType == 1 && confidantConfirmed == 1 && macaddresses.length > 0)">
+                      </div>
+
+                  <div *ngIf="this.stakingForm.value.stakingType != 1 || (this.stakingForm.value.stakingType == 1 && confidantConfirmed == 1 && macaddresses.length > 0)">
                       <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
                         <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
                           STAKE FROM
@@ -351,20 +352,22 @@
 
                             <div class="col-md-6">
                               <div class="row align-items-top">
-                                <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">OPTION TO REVOKE ON<br><br>You can continue to receive Q-Gas if you don't revoke</div>
+                                <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">OPTION TO REVOKE ON</div>
                                 <div class="col-md-5 ">
                                     <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.endDate | date: 'dd.MM.yyyy' }}</strong></div>
                                 </div>
+                                <div class="col-12"><p style="text-transform: none !important;color:#595757;font-weight:normal;font-size: 11px;padding-top:19px;">You can continue to receive Q-Gas if you don't revoke</p></div>
                               </div>
                             </div>
 
                           </div>
                           <div class="form-group" *ngIf="recover == 1">
                             <div class="row align-items-top">
-                              <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">OPTION TO REVOKE ON<br><br>You can continue to receive Q-Gas if you don't revoke</div>
+                              <div class="col-md-7 dataName pb-3 pb-md-0 form-label-custom-2">OPTION TO REVOKE ON</div>
                               <div class="col-md-5 ">
                                   <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ stakingForm.value.endDate | date: 'dd.MM.yyyy'  }}</strong></div>
                               </div>
+                              <div class="col-12"><p style="text-transform: none !important;color:#595757;font-weight:normal;font-size: 11px;padding-top:19px;">You can continue to receive Q-Gas if you don't revoke</p></div>
                             </div>
                           </div>
                           
