@@ -121,7 +121,7 @@
 										
 											<carousel [interval]="otherInterval" class="w-100" style="margin-top:-4px;margin-bottom:3px;">
 												
-												<slide *ngFor="let token of otherTokens">
+												<slide class="otherSlide" *ngFor="let token of otherTokens">
 													<div class="row pt-3 pl-3 pr-3 mb-2 pb-1" (click)="selectTokenIcon(token.tokenInfo.tokenSymbol)" [class.activeOther]="selectedToken.tokenInfo.tokenSymbol == token.tokenInfo.tokenSymbol">
 														<div class="col-3 pr-3 pt-1">
 															<img src="assets/img/token-none.png" class="w-100 icon-token" style="padding-right:2px;">
