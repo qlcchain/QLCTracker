@@ -89,8 +89,8 @@ export class StakingCreateComponent implements OnInit {
 
   stakingForm = new FormGroup({
     stakingType: new FormControl('0'),
-    fromNEOWallet: new FormControl(''),
-    toQLCWallet: new FormControl(''),
+    fromNEOWallet: new FormControl('',Validators.required),
+    toQLCWallet: new FormControl('',Validators.required),
     availableQLCBalance: new FormControl('0'),
     endDate: new FormControl(''),
     amounToStake: new FormControl(''),
@@ -254,13 +254,17 @@ export class StakingCreateComponent implements OnInit {
     this.markFormGroupTouched(this.stakingForm);
     if (this.stakingForm.value.stakingType == 0) {
       if (this.stakingForm.get('amounToStake').status == 'VALID' &&
-          this.stakingForm.get('durationInDays').status == 'VALID' 
+          this.stakingForm.get('durationInDays').status == 'VALID' &&
+          this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
+          this.stakingForm.get('toQLCWallet').status == 'VALID' 
       ) {
         this.step = 2;
-      }
+      } 
     } else if (this.stakingForm.value.stakingType == 1) {
       if (this.stakingForm.get('amounToStake').status == 'VALID' &&
-          this.stakingForm.get('durationInDays').status == 'VALID' 
+          this.stakingForm.get('durationInDays').status == 'VALID' &&
+          this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
+          this.stakingForm.get('toQLCWallet').status == 'VALID' 
       ) {
         this.step = 2;
       }
@@ -384,16 +388,24 @@ export class StakingCreateComponent implements OnInit {
 
     this.stakingForm.get('availableQLCBalance').setValue((selectedNEOWallet.balances[this.neoService.tokenList['QLC'].networks['1'].hash] != undefined? selectedNEOWallet.balances[this.neoService.tokenList['QLC'].networks['1'].hash].amount : 0));
         
-
+    this.checkIfMinAmount();
 
 		
   }
 
   checkIfMinAmount() {
+    console.log('checkIfMinAmount');
     const minAmount = this.stakingForm.value.stakingType == 1 ? this.stakingTypes[this.stakingForm.value.stakingType].minAmount*this.macaddresses.length : this.stakingTypes[this.stakingForm.value.stakingType].minAmount;
     if (this.stakingForm.value.amounToStake < minAmount) {
       this.stakingForm.get('amounToStake').setValue(minAmount);
     }
+    console.log(new BigNumber(this.stakingForm.value.amounToStake).toNumber())
+    console.log(new BigNumber(this.stakingForm.value.availableQLCBalance).toNumber());
+    if (new BigNumber(this.stakingForm.value.amounToStake).isGreaterThan(new BigNumber(this.stakingForm.value.availableQLCBalance))) {
+      this.stakingForm.get('amounToStake').setValue(new BigNumber(this.stakingForm.value.availableQLCBalance).toFixed(0));
+    }
+
+    
   }
 
   addMacAdd(mac_address) {
@@ -433,9 +445,10 @@ export class StakingCreateComponent implements OnInit {
     if (this.stakingForm.value.durationInDays<this.stakingTypes[this.stakingForm.value.stakingType].minTime) {
       this.stakingForm.get('durationInDays').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minTime);
     }
-    if (this.stakingForm.value.amounToStake<this.stakingTypes[this.stakingForm.value.stakingType].minAmount) {
+    //if (this.stakingForm.value.amounToStake<this.stakingTypes[this.stakingForm.value.stakingType].minAmount) {
       this.stakingForm.get('amounToStake').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minAmount);
-    }
+    //}
+    this.checkIfMinAmount();
     now.setDate(now.getDate() + Number(this.stakingForm.value.durationInDays));
     this.stakingForm.get('endDate').setValue(now);
   }

@@ -94,7 +94,7 @@ export class WalletService {
 	blocksCount = 0;
 
 	private pendingRefreshInterval$ = interval(10000);
-	private blocksCountInterval$ = interval(10000);
+	private blocksCountInterval$ = interval(90000);
 
 	constructor(
 		private util: UtilService,
