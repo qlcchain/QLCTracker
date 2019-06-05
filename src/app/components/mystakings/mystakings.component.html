@@ -90,12 +90,14 @@
                       <div style="display:inline-block;vertical-align:top;padding:0px;font-family: 'Lato', Gotham, 'Helvetica Neue', Helvetica, Arial, 'sans-serif'; font-size: 12px; text-transform: uppercase; font-weight: 700;">WITHDRAW<br>COMPLETE</div>
                   </span>
                   <span *ngIf="pledge.state == 'WithdrawProcess'">
-                    <div style="display:inline-block;vertical-align: top;padding:0px;padding-right:8px;"><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px;margin-top:-2px;margin-right:0px;"></div>
-                    <div style="display:inline-block;vertical-align:top;padding:0px;font-family: 'Lato', Gotham, 'Helvetica Neue', Helvetica, Arial, 'sans-serif'; font-size: 12px; text-transform: uppercase; font-weight: 700;">WITHDRAW<br>PROCESS</div>
+                    <button (click)="continueRevoke(i)" type="submit" class="btn btn-primary w-75 float-right pl-0 pr-0" style="min-width:auto !important;">
+                      CONTINUE REVOKE
+                    </button>
                   </span>
                   <span *ngIf="pledge.state == 'WithdrawStart'">
-                    <div style="display:inline-block;vertical-align: top;padding:0px;padding-right:8px;"><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px;margin-top:-2px;margin-right:0px;"></div>
-                    <div style="display:inline-block;vertical-align:top;padding:0px;font-family: 'Lato', Gotham, 'Helvetica Neue', Helvetica, Arial, 'sans-serif'; font-size: 12px; text-transform: uppercase; font-weight: 700;">WITHDRAW<br>START</div>
+                    <button (click)="continueRevoke(i)" type="submit" class="btn btn-primary w-75 float-right pl-0 pr-0" style="min-width:auto !important;">
+                      CONTINUE REVOKE
+                    </button>
                   </span>
                   <!--<div *ngIf="dateNow >= pledge.withdrawTime * 1000">-->
                     <button *ngIf="dateNow >= pledge.withdrawTime * 1000 && pledge.state != 'WithdrawDone' && pledge.state != 'WithdrawProcess' && pledge.state != 'WithdrawStart' && pledge.state != 'PledgeProcess' && pledge.state != 'PledgeStart'" (click)="revoke(i)" type="submit" class="btn btn-primary w-75 float-right pl-0 pr-0" style="min-width:auto !important;">
