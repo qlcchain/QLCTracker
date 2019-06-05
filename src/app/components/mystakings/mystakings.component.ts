@@ -120,6 +120,18 @@ export class MystakingsComponent implements OnInit {
 
   }
 
+  async continueRevoke(index) {
+    this.revokeSteps = [];
+    const pledge = this.pledges[index];
+    console.log(pledge);
+    const walletAccount = await this.walletService.getWalletAccount(pledge.beneficial);
+		if (this.walletService.walletIsLocked()) {
+			return this.notifications.sendWarning('ERROR wallet locked');
+    }
+    this.revokeSteps.push({ msg: 'Continuing revoke.'});
+    this.revoke(index);
+  }
+
   async continueInvoke(index) {
     this.invokeSteps = [];
     const pledge = this.pledges[index];
@@ -210,9 +222,27 @@ export class MystakingsComponent implements OnInit {
     this.revokeSteps.push({ msg: 'Revoke block prepared. Processing ...'});
 
     const txid = await this.processBlock(withdrawBlock.result,walletAccount.keyPair,pledge.nep5TxId,txData);
-    this.revokeSteps.push({ msg: 'Revoke processed.'});
-    this.step = 2;
+    this.revokeSteps.push({ msg: 'Revoke processed. Waiting for TXID confirmation.'});
+
+    this.confirmRevokeWaitForTXIDConfirm(txData.unlockTxId);
+  }
+
+  async confirmRevokeWaitForTXIDConfirm(txid) {
+
+    const transaction = await this.neoService.getTransaction(txid);
+    console.log('txid is ');
+    console.log(txid);
     
+    if (transaction.txid) {
+      this.revokeSteps.push({ msg: 'TXID confirmed.'});
+      this.step = 2;
+    } else {
+      //console.log('error repeating');
+      // wait for neoscan to confirm transaction
+      const waitTimer = timer(5000).subscribe( (data) => {
+        this.confirmRevokeWaitForTXIDConfirm(txid);
+      });
+    }
   }
   
 
