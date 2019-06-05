@@ -12,6 +12,7 @@ import { AddressBookService } from './address-book.service';
 import { timer } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { sc, tx } from '@cityofzion/neon-core';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,14 +21,11 @@ export class NeoWalletService {
 
   MIN_PASSPHRASE_LEN = 4
 
-  //private apiAddress = 'https://api.neoscan.io/api/main_net';
-  private apiAddress = 'https://neoscan-testnet.io/api/test_net';
-  //private network = 'MainNet';
-  private network = 'TestNet';
-  private neoscan = 'https://neoscan.io';
-  private neoscan_testnet = 'https://neoscan-testnet.io';
+  private apiAddress = environment.neoScanApi[environment.neoNetwork];
+  private network = environment.neonNetwork[environment.neoNetwork];
+  private neoscan = environment.neoScan[environment.neoNetwork];
 
-  private smartContractScript =   '30f69798a129527b4996d6dd8e974cc15d51403d';
+  private smartContractScript = environment.neoSmartContract[environment.neoNetwork];
   
   tokenList = [];
 
@@ -39,7 +37,7 @@ export class NeoWalletService {
     private addressBook: AddressBookService,
     private notificationService: NotificationService
   ) {
-    const tokenList = require('../../assets/data/neoTokenList.json');
+    const tokenList = require('../../assets/data/neoTokenList_'+environment.neoNetwork+'.json');
     this.tokenList = tokenList;
     console.log(tokenList);
    }
@@ -49,11 +47,7 @@ export class NeoWalletService {
   }
 
   getExplorer() {
-    if (this.network == 'MainNet') {
-      return this.neoscan;
-    } else {
-      return this.neoscan_testnet;
-    }
+    return this.neoscan;
   }
 
   private async request(data): Promise<any> {
@@ -503,6 +497,7 @@ export class NeoWalletService {
 
  
  async contractGetLockInfo(txid) {
+  const apiProvider = await new api.neoscan.instance(this.network);
   const props = {
     scriptHash: this.smartContractScript, 
     operation: 'getLockInfo', 
@@ -522,7 +517,7 @@ export class NeoWalletService {
     'getLockInfo',
     sc.ContractParam.byteArray(u.reverseHex(txid),'string')
     )
-  .execute('https://test3.cityofzion.io')
+  .execute(await apiProvider.getRPCEndpoint())
   .then(res => {
     console.log(res) // You should get a result with state: "HALT, BREAK"
     if (res.result.state == 'HALT, BREAK' || res.result.state == 'HALT') {

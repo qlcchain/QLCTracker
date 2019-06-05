@@ -5,9 +5,40 @@
 export const environment = {
     production: false,
     desktop: false,
-    rpcUrl: 'https://rpc-test.qlcchain.online',
-    nep5Url: 'https://nep5-test.qlcchain.online'
+    qlcChainNetwork: 'test', // test or main
+    neoNetwork: 'test', // test or main
+    rpcUrl: {
+        'test' : 'https://rpc-test.qlcchain.online',
+        'main' : 'https://rpc.qlcchain.online'
+    },        
+    nep5Url: {
+        'test' : 'https://nep5-test.qlcchain.online',
+        'main' : 'https://nep5.qlcchain.online'
+    },
+    neoSmartContract: {
+        'test' : '30f69798a129527b4996d6dd8e974cc15d51403d',
+        'main' : '30f69798a129527b4996d6dd8e974cc15d51403d'
+    },
+    neoPublicKey: {
+        'test' : '03f19ffa8acecb480ab727b0bf9ee934162f6e2a4308b59c80b732529ebce6f53d',
+        'main' : '02c6e68c61480003ed163f72b41cbb50ded29d79e513fd299d2cb844318b1b8ad5'
+    },
+    neoScanApi: {
+        'test' : 'https://neoscan-testnet.io/api/test_net',
+        'main' : 'https://api.neoscan.io/api/main_net'
+    },
+    neoScan: {
+        'test' : 'https://neoscan-testnet.io',
+        'main' : 'https://neoscan.io'
+    },
+    neonNetwork: {
+        'test' : 'TestNet',
+        'main' : 'MainNet'
+    }
+
+
 };
+
 
 /*
 * For easier debugging in development mode, you can import the following file

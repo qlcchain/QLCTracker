@@ -7,7 +7,7 @@ import  uuid from 'uuid/v4';
   providedIn: 'root'
 })
 export class ApiNEP5Service {
-	nep5Url = environment.nep5Url;
+	nep5Url = environment.nep5Url[environment.qlcChainNetwork];
 
   constructor(private http: HttpClient) { }
 

@@ -283,7 +283,7 @@ export class SendComponent implements OnInit {
 		}
 
 		const from = await this.api.accountInfoByToken(this.fromAccountID, this.selectedToken.type);
-		console.log(from);
+		//console.log(from);
 		// let to = await this.api.accountInfoByToken(this.toAccountID, this.selectedToken.token_hash);
 		if (!from) {
 			return this.notificationService.sendError(this.msg4);
