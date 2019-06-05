@@ -338,7 +338,20 @@ export class StakingCreateComponent implements OnInit {
   async loadBalances() {
 		for (let i = 0; i < this.neowallets.length; i++) {
 			this.neowallets[i].balances = [];
-			this.neowallets[i].addressBookName = this.addressBookService.getAccountName(this.neowallets[i].id);
+      this.neowallets[i].addressBookName = this.addressBookService.getAccountName(this.neowallets[i].id);
+
+      const balance:any = await this.neoService.getNeoScanBalance(this.neowallets[i].id);
+
+      for (const asset of balance) {
+				this.neowallets[i].balances[asset.asset_hash] = { 
+					amount : new BigNumber(asset.amount).toFixed(),
+					asset: asset.asset,
+					asset_symbol: asset.asset_symbol,
+					asset_hash: asset.asset_hash
+				}
+			}
+      
+      /*
 			const balance:any = await this.neoService.getBalance(this.neowallets[i].id);
 			for (const asset of balance.assetSymbols) {
 				this.neowallets[i].balances[asset] = new BigNumber(balance.assets[asset].balance).toFixed();
@@ -348,7 +361,7 @@ export class StakingCreateComponent implements OnInit {
 				if (newTokenBalance == 'NaN')
 					newTokenBalance = '0';
         this.neowallets[i].balances[token] = newTokenBalance;
-			}
+			}*/
     }
     this.selectAccount();
     this.setDuration();
@@ -369,7 +382,7 @@ export class StakingCreateComponent implements OnInit {
 
     const selectedNEOWallet = this.neowallets.find(a => a.id === this.stakingForm.value.fromNEOWallet);
 
-    this.stakingForm.get('availableQLCBalance').setValue((selectedNEOWallet.balances['QLINK TOKEN'] != undefined? selectedNEOWallet.balances['QLINK TOKEN'] : 0));
+    this.stakingForm.get('availableQLCBalance').setValue((selectedNEOWallet.balances[this.neoService.tokenList['QLC'].networks['1'].hash] != undefined? selectedNEOWallet.balances[this.neoService.tokenList['QLC'].networks['1'].hash].amount : 0));
         
 
 
@@ -480,7 +493,7 @@ export class StakingCreateComponent implements OnInit {
 
   async confirmInvokeWaitForTXIDConfirmByPledge(pledge,walletAccount) {
     const txid = pledge.nep5TxId;
-    //const txid = 'da84d4302df1ec6f5e3782adde484ddf09f418432e18a5935a1f2360e64ab289';
+
     const transaction = await this.neoService.getTransaction(txid);
     console.log('txid is ');
     console.log(txid);

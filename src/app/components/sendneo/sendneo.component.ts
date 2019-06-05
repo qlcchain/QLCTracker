@@ -102,7 +102,6 @@ export class SendneoComponent implements OnInit {
 		}
 	}
 	load() {
-    console.log('send');
 		if (this.node.status === true) {
 			if (this.neowallets !== undefined && this.neowallets.length > 0) {
 				this.searchAddressBook();
@@ -148,8 +147,8 @@ export class SendneoComponent implements OnInit {
         this.neowallets[i].balances[token] = newTokenBalance;
 			}*/
 			const balance:any = await this.neoService.getNeoScanBalance(this.neowallets[i].id);
-			console.log('balance');
-			console.log(balance);
+			//console.log('balance');
+			//console.log(balance);
 			for (const asset of balance) {
 				this.neowallets[i].balances[asset.asset_hash] = { 
 					amount : new BigNumber(asset.amount).toFixed(),

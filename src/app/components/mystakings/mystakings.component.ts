@@ -201,6 +201,11 @@ export class MystakingsComponent implements OnInit {
 //console.log('call contractUnlockPrepare');
     this.revokeSteps.push({ msg: 'Preparing revoke.'});
     const txData = await this.neoService.contractUnlockPrepare(pledge);
+    if (txData === false) {
+      this.revokeSteps.push({ msg: 'ERROR - Connected NEO wallet was not found.'});
+      this.step = 0;
+      return this.notifications.sendWarning('ERROR - Connected NEO wallet was not found.');
+    }
     this.revokeSteps.push({ msg: 'Revoke prepared.'});
 
     //console.log(txData);

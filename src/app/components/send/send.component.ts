@@ -33,6 +33,8 @@ export class SendComponent implements OnInit {
 	addressBookMatch = '';
 	hideFiat = 1;
 
+	otherTokens: any = [];
+
 	msg1 = '';
 	msg2 = '';
 	msg3 = '';
@@ -135,13 +137,17 @@ export class SendComponent implements OnInit {
 		}
 
 		// fill account meta
-		for (const account of this.accounts) {
+		for (let account of this.accounts) {
 			const accountInfo = await this.api.accountInfo(account.id);
 			if (!accountInfo.error) {
-				const am = accountInfo.result;
-				for (const token of am.tokens) {
+				let am = accountInfo.result;
+				account.otherTokens = [];
+				for (let token of am.tokens) {
 					if (tokenMap.hasOwnProperty(token.type)) {
 						token.tokenInfo = tokenMap[token.type];
+						if (token.tokenInfo.tokenSymbol != 'QLC' && token.tokenInfo.tokenSymbol != 'QGAS') {
+							account.otherTokens.push(token);
+						}
 					}
 				}
 				account.accountMeta = am;
@@ -440,7 +446,15 @@ export class SendComponent implements OnInit {
 			selectedAccount.accountMeta.tokens !== undefined &&
 			selectedAccount.accountMeta.tokens.length > 0
 				? selectedAccount.accountMeta.tokens
-        : [];
+				: [];
+		this.otherTokens = [];
+		this.otherTokens =
+		selectedAccount !== undefined &&
+		selectedAccount.otherTokens !== undefined &&
+		selectedAccount.otherTokens.length > 0
+			? selectedAccount.otherTokens
+			: [];
+
 		this.selectedToken = this.accountTokens !== undefined && this.accountTokens.length > 0 ? this.accountTokens[0] : [];
 		this.selectedTokenSymbol =
 			this.selectedToken !== undefined && this.selectedToken.tokenInfo !== undefined

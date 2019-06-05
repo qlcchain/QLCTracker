@@ -349,14 +349,14 @@
 									</div>
 									<div class="row align-items-center ">
 										<div class="col-12 sum">
-											<span>{{ amount }} {{ selectedTokenSymbol }}</span>
+											<span>{{ amount }} {{ selectedToken.asset_symbol }}</span>
 										</div>
 									</div>
 									<div class="row align-items-center">
 										<div class="col-12 ">
 											<span class="fiatsum">{{ amountFiat | fiat: settings.settings.displayCurrency }}</span>
 											<span class="fiatrate"
-												> @ {{ price.price.lastPrice | fiat: settings.settings.displayCurrency }} / {{ selectedTokenSymbol }}</span
+												> @ {{ price.price.lastPrice | fiat: settings.settings.displayCurrency }} / {{ selectedToken.asset_symbol }}</span
 											>
 										</div>
 									</div>
@@ -372,7 +372,7 @@
 											<div class="pl-5 pr-5 pb-4">
 												<a [routerLink]="'/account/' + fromAccountID" class="address">{{ fromAccountID }}</a>
 											</div>
-											<div class="pt-2 text-bold negative_change">-{{ amount }} {{ selectedTokenSymbol }}</div>
+											<div class="pt-2 text-bold negative_change">-{{ amount }} {{ selectedToken.asset_symbol }}</div>
 											<div class="text-label pb-3">{{ 'SEND_TOKENS_TAB.amount_to_send' | translate }}</div>
 										</div>
 										<div class="col-lg-6 text-center pt-4 pb-4">
@@ -386,7 +386,7 @@
 											<div class="pl-5 pr-5 pb-4">
 												<a [routerLink]="'/account/' + toAccountID" class="address">{{ toAccountID }}</a>
 											</div>
-											<div class="pt-2 text-bold positive_change">+{{ amount }} {{ selectedTokenSymbol }}</div>
+											<div class="pt-2 text-bold positive_change">+{{ amount }} {{ selectedToken.asset_symbol }}</div>
 											<div class="text-label pb-3">{{ 'SEND_TOKENS_TAB.amount_to_receive' | translate }}</div>
 										</div>
 									</div>
