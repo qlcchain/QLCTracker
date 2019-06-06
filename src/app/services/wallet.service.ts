@@ -640,7 +640,7 @@ export class WalletService {
 
 		const tokenMap = {};
 		const tokens = await this.api.tokens();
-		if (!tokens.error) {
+		if (!tokens.error && tokens.result) {
 			tokens.result.forEach(token => {
 				tokenMap[token.tokenId] = token;
 			});
@@ -649,7 +649,7 @@ export class WalletService {
 		// fill account meta
 		for (const account of this.wallet.accounts) {
 			const accountInfo = await this.api.accountInfo(account.id);
-			if (!accountInfo.error) {
+			if (!accountInfo.error && accountInfo.result) {
 				const am = accountInfo.result;
 				for (const token of am.tokens) {
 					if (tokenMap.hasOwnProperty(token.type)) {

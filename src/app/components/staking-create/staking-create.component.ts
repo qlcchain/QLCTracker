@@ -416,14 +416,12 @@ export class StakingCreateComponent implements OnInit {
     this.stakingForm.get('amounToStake').markAsTouched();
   }
 
-  addMacAdd(mac_address) {
-    
-    const findMacAddress = this.macaddresses.find(o => o.mac_address === mac_address);
-    
-    if (findMacAddress) {
-      this.macaddresses.splice(findMacAddress,1);
+  async addMacAdd(mac_address) {
+    const findMacAddress = await this.macaddresses.findIndex(o => o.mac_address === mac_address);
+    if (findMacAddress != -1) {
+      await this.macaddresses.splice(findMacAddress,1);
     } else {
-      const findConfidant = this.confidants.find(o => o.mac_address === mac_address);
+      const findConfidant = await this.confidants.find(o => o.mac_address === mac_address);
       this.macaddresses.push(findConfidant);
     }
     
@@ -475,6 +473,10 @@ export class StakingCreateComponent implements OnInit {
     } else {
       this.invokeSteps.push({ msg: 'Locking '+ this.stakingForm.value.amounToStake +' QLC on NEO network.'});
       txData = await this.contractLock();
+    }
+    if (txData.lockTxId == undefined) {
+      this.invokeSteps.push({ msg: 'ERROR - No TXID received. Please try again later.'});
+      return;
     }
     this.invokeSteps.push({ msg: 'TXID received. Preparing pledge.', checkimg: 1});
     let pType = 'vote';
@@ -612,7 +614,11 @@ export class StakingCreateComponent implements OnInit {
 
 
   async contractLock() {
-    return await this.neoService.contractLock(this.stakingForm.value.fromNEOWallet,this.stakingForm.value.amounToStake,this.stakingForm.value.toQLCWallet,this.stakingForm.value.durationInDays);
+    const txData = await this.neoService.contractLock(this.stakingForm.value.fromNEOWallet,this.stakingForm.value.amounToStake,this.stakingForm.value.toQLCWallet,this.stakingForm.value.durationInDays);
+    if (txData.lockTxId == undefined) {
+      return this.contractLock();
+    }
+    return txData;
   }
   
   async getPreparePledge(txData,pType) {
@@ -626,7 +632,12 @@ export class StakingCreateComponent implements OnInit {
       publicKey: txData.publicKey,
       lockTxId: txData.lockTxId
     }
-    return await this.nep5api.prepareBenefitPledge(request1,request2);
+    const preparedPledge = await this.nep5api.prepareBenefitPledge(request1,request2);
+    if (!preparedPledge.result) {
+      return this.getPreparePledge(txData,pType);
+    } else {
+      return preparedPledge;
+    }
   }
 
   async getPrepareMintagePledge(txData) {
@@ -642,7 +653,12 @@ export class StakingCreateComponent implements OnInit {
       publicKey: txData.publicKey,
       lockTxId: txData.lockTxId
     }
-    return await this.nep5api.prepareMintagePledge(request1,request2);
+    const preparedPledge = await this.nep5api.prepareMintagePledge(request1,request2);
+    if (!preparedPledge.result) {
+      return this.getPrepareMintagePledge(txData);
+    } else {
+      return preparedPledge;
+    }
   }
 
 
