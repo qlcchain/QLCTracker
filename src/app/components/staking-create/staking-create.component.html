@@ -75,7 +75,7 @@
                           </button>
                         </div>
                         <div class="col-md-5 pt-3" *ngIf="checkingTxid == 1">
-                          <span class="security-email-sending" class="w-100"><p><img src="../../../assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Checking txid ...</p></span>  
+                          <span class="security-email-sending" class="w-100"><p><img src="/assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Checking txid ...</p></span>  
                         </div>
 
 
@@ -163,8 +163,8 @@
                               </button>
                             </div>
                             <div class="col-md-5 pt-3">
-                              <span class="security-email-sending" class="w-100" *ngIf="sendingSecurityCode == 1"><p><img src="../../../assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Sending security code...</p></span>  
-                              <span class="security-email-sent" class="w-100" *ngIf="sendingSecurityCode == 2"><p><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Code sent. Check your Inbox (Spam Folder)</p></span>
+                              <span class="security-email-sending" class="w-100" *ngIf="sendingSecurityCode == 1"><p><img src="/assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Sending security code...</p></span>  
+                              <span class="security-email-sent" class="w-100" *ngIf="sendingSecurityCode == 2"><p><img src="/assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Code sent. Check your Inbox (Spam Folder)</p></span>
                             </div>
   
                           </div>
@@ -199,9 +199,9 @@
                             </div>
                             <div class="col-md-9 text-left mb-1">
                               <div class="input-group">
-                                <span class="ownership-check" class="w-100" *ngIf="confidantConfirmed == 3"><p><img src="../../../assets/img/loading-blue.gif" style="height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Verifying Ownership...</p></span>
-                                <span class="ownership-success" class="w-100" *ngIf="confidantConfirmed == 1"><p><img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmed.</p></span>
-                                <span class="ownership-fail" class="w-100" *ngIf="confidantConfirmed == 2"><p><img src="../../../assets/img/qlc-icon-staking-fail-red.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmation Failed. <em>Enter your security code and try again.</em></p></span>
+                                <span class="ownership-check" class="w-100" *ngIf="confidantConfirmed == 3"><p><img src="/assets/img/loading-blue.gif" style="height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Verifying Ownership...</p></span>
+                                <span class="ownership-success" class="w-100" *ngIf="confidantConfirmed == 1"><p><img src="/assets/img/qlc-icon-staking-success-green.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmed.</p></span>
+                                <span class="ownership-fail" class="w-100" *ngIf="confidantConfirmed == 2"><p><img src="/assets/img/qlc-icon-staking-fail-red.svg" style="height:20px; width:auto; margin-right:8px;margin-top:-2px;"> Ownership Confirmation Failed. <em>Enter your security code and try again.</em></p></span>
                               </div>
                             </div>
   
@@ -847,7 +847,7 @@
 
                 <p style="color:#c10f0f;" class="pb-3"><strong>Important:</strong> Don't leave or close this page!</p>
 
-                <p class="pt-0 pb-0" *ngFor="let step of invokeSteps"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="../../assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
+                <p class="pt-0 pb-0" *ngFor="let step of invokeSteps"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="/assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
 
 
 							</div>
@@ -912,7 +912,7 @@
                   <div class="row">
                     <div class="col-md-6 offset-md-3 mt-5 mb-5">
 
-                      <img src="../../../assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;">
+                      <img src="/assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;">
 
                     </div>
                   </div>
