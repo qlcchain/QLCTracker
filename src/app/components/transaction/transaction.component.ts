@@ -11,86 +11,83 @@ import { NodeService } from 'src/app/services/node.service';
 })
 export class TransactionComponent implements OnInit {
 
-  
+
   transaction: any = {};
-	pendingBlocks = [];
-	pageSize = 25;
+  pendingBlocks = [];
+  pageSize = 25;
 
   accountMeta: any = {};
   transactionHash = '';
   transactionJSON = '';
 
   routerSub = null;
-  
+
 
   constructor(
     private router: ActivatedRoute,
-		private route: Router,
-		private api: ApiService,
-		private node: NodeService
+    private route: Router,
+    private api: ApiService,
+    private node: NodeService
   ) { }
 
   async ngOnInit() {
     this.routerSub = this.route.events.subscribe(event => {
-			if (event instanceof ChildActivationEnd) {
-				this.load(); // Reload the state when navigating to itself from the transactions page
-			}
+      if (event instanceof ChildActivationEnd) {
+        this.load(); // Reload the state when navigating to itself from the transactions page
+      }
     });
     this.load();
   }
 
   load() {
-		if (this.node.status === true) {
+    if (this.node.status === true) {
       this.loadTransactionDetails();
-		} else {
-			this.reload();
-		}
-	}
+    } else {
+      this.reload();
+    }
+  }
 
-	async reload() {
-		const source = timer(200);
-		const abc =  source.subscribe(async val => {
-				this.load();
-		});
-	} 
+  async reload() {
+    const source = timer(200);
+    const abc = source.subscribe(async val => {
+      this.load();
+    });
+  }
 
   async loadTransactionDetails() {
     this.transactionHash = this.router.snapshot.params.transaction;
 
     const tokenMap = {};
-		const tokens = await this.api.tokens();
-		if (!tokens.error) {
-			tokens.result.forEach(token => {
-				tokenMap[token.tokenId] = token;
-			});
-		}
-    
-    const transaction= await this.api.blocksInfo([this.transactionHash]);
-          
+    const tokens = await this.api.tokens();
+    if (!tokens.error) {
+      tokens.result.forEach(token => {
+        tokenMap[token.tokenId] = token;
+      });
+    }
+
+    const transaction = await this.api.blocksInfo([this.transactionHash]);
+
     this.transaction = transaction.result[0];
     console.log(this.transaction);
     this.transactionJSON = JSON.stringify(this.transaction, null, 4);
 
     if (tokenMap.hasOwnProperty(this.transaction.token)) {
-			this.transaction.tokenInfo = tokenMap[this.transaction.token];
-		}
+      this.transaction.tokenInfo = tokenMap[this.transaction.token];
+    }
 
     if (this.transaction.type == 'Open' || this.transaction.type == 'ContractReward') { // link is block hash
       const link_as_account = await this.api.blockAccount(this.transaction.link);
-      if (!link_as_account.error && typeof(link_as_account.result[0]) != 'undefined' && link_as_account.result.length > 0 ) {
+      if (!link_as_account.error && typeof (link_as_account.result[0]) != 'undefined' && link_as_account.result.length > 0) {
         this.transaction.link_as_account = this.transaction.address;
         this.transaction.address = link_as_account.result;
       }
-    } else if (this.transaction.type == 'ContractSend') {
-        this.transaction.link_as_account = this.transaction.address;
-        
     } else { // link is pub key
       const link_as_account = await this.api.accountForPublicKey(this.transaction.link);
-      if (!link_as_account.error && typeof(link_as_account.result[0]) != 'undefined' && link_as_account.result.length > 0 ) {
+      if (!link_as_account.error && typeof (link_as_account.result[0]) != 'undefined' && link_as_account.result.length > 0) {
         this.transaction.link_as_account = link_as_account.result;
       }
     }
-    
+
   }
 
 
