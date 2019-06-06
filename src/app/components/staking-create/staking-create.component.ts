@@ -435,6 +435,7 @@ export class StakingCreateComponent implements OnInit {
       Validators.minLength(1),
       minAmountValidator(this.stakingTypes[Number(this.stakingForm.value.stakingType)].minAmount*this.macaddresses.length)
     ]);
+    this.checkIfMinAmount();
   }
   
   setDuration() {
@@ -450,9 +451,9 @@ export class StakingCreateComponent implements OnInit {
       this.stakingForm.get('durationInDays').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minTime);
       this.stakingForm.get('amounToStake').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minAmount);
     }
-    if (this.stakingForm.value.durationInDays<this.stakingTypes[this.stakingForm.value.stakingType].minTime) {
+    //if (this.stakingForm.value.durationInDays<this.stakingTypes[this.stakingForm.value.stakingType].minTime) {
       this.stakingForm.get('durationInDays').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minTime);
-    }
+    //}
     //if (this.stakingForm.value.amounToStake<this.stakingTypes[this.stakingForm.value.stakingType].minAmount) {
       this.stakingForm.get('amounToStake').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minAmount);
     //}
