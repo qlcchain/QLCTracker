@@ -15,6 +15,8 @@ import { ApiConfidantService } from 'src/app/services/api-confidant.service';
 
 import { minAmountValidator } from '../../directives/amount-validator.directive';
 
+import { environment } from 'src/environments/environment';
+
 const nacl = window['nacl'];
 
 @Component({
@@ -43,27 +45,40 @@ export class StakingCreateComponent implements OnInit {
 
   accounts = this.walletService.wallet.accounts;
   neowallets = this.walletService.wallet.neowallets;
-  stakingTypes = [
-    {
+  stakingTypes;
+
+  staking = {
+    'main' : [{
       name: 'For Vote',
       minAmount : 1,
       minTime: 10
     },
     {
       name: 'For Confidant',
-      //minAmount : 2000,
+      minAmount : 2000,
+      minTime: 90
+    },
+    {
+      name: 'For Minting',
+      minAmount : 500000,
+      minTime: 180
+    }],
+    'test' : [{
+      name: 'For Vote',
+      minAmount : 1,
+      minTime: 10
+    },
+    {
+      name: 'For Confidant',
       minAmount : 10,
-      //minTime: 90
       minTime: 10
     },
     {
       name: 'For Minting',
-      //minAmount : 500000,
       minAmount : 20,
-      //minTime: 180
       minTime: 10
-    }
-  ];
+    }]
+  };
 
   msg3 = '';
 
@@ -170,8 +185,7 @@ export class StakingCreateComponent implements OnInit {
     private trans: TranslateService,
     private confidantApi: ApiConfidantService
   ) {
-    //this.testData = require('../../../assets/testResult.json');
-    //console.log(this.testData);
+    this.stakingTypes = this.staking[environment.neoNetwork];
   }
 
   ngOnInit() {
@@ -389,23 +403,17 @@ export class StakingCreateComponent implements OnInit {
     this.stakingForm.get('availableQLCBalance').setValue((selectedNEOWallet.balances[this.neoService.tokenList['QLC'].networks['1'].hash] != undefined? selectedNEOWallet.balances[this.neoService.tokenList['QLC'].networks['1'].hash].amount : 0));
         
     this.checkIfMinAmount();
-
-		
   }
 
   checkIfMinAmount() {
-    console.log('checkIfMinAmount');
     const minAmount = this.stakingForm.value.stakingType == 1 ? this.stakingTypes[this.stakingForm.value.stakingType].minAmount*this.macaddresses.length : this.stakingTypes[this.stakingForm.value.stakingType].minAmount;
     if (this.stakingForm.value.amounToStake < minAmount) {
       this.stakingForm.get('amounToStake').setValue(minAmount);
     }
-    console.log(new BigNumber(this.stakingForm.value.amounToStake).toNumber())
-    console.log(new BigNumber(this.stakingForm.value.availableQLCBalance).toNumber());
     if (new BigNumber(this.stakingForm.value.amounToStake).isGreaterThan(new BigNumber(this.stakingForm.value.availableQLCBalance))) {
       this.stakingForm.get('amounToStake').setValue(new BigNumber(this.stakingForm.value.availableQLCBalance).toFixed(0));
     }
-
-    
+    this.stakingForm.get('amounToStake').markAsTouched();
   }
 
   addMacAdd(mac_address) {
