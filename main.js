@@ -9,7 +9,7 @@ const crossSpawn = require('cross-spawn-with-kill');
 const signalExit = require('signal-exit');
 const isDev = require('electron-is-dev');
 const fs = require('fs-extra');
-const PeerId = require('peer-id');
+//const PeerId = require('peer-id');
 
 global.resourcesPath = process.resourcesPath;
 
@@ -129,36 +129,74 @@ async function run() {
 	const config = path.join(configDir, 'qlc_wallet.json');
 	console.log(`${configDir}, ${config}`);
 
-	console.log(`start qglc ${cmd}`);
-	const child = crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
-		windowsHide: true,
-		stdio: ['ignore', 'pipe', 'pipe']
-	});
+	async function prepare_config() {
+		if (!fs.existsSync(config)) { // check if config exsist
+			//read config template to set dataDir and save it to wallet user data dir
+			const tempchild = await crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
+				windowsHide: true,
+				stdio: ['ignore', 'pipe', 'pipe']
+			});
 
-	if (!child) {
-		const err = new Error('gqlc not started');
-		err.code = 'ENOENT';
-		err.path = cmd;
-		throw err;
+			var check = function(){  // wait until config is found and change rpcEnabled to true, restart
+				console.log('checking if file');
+				if(fs.existsSync(config)){
+					console.log('file found updating');
+					tempchild.kill();
+					let rawdata = fs.readFileSync(config);
+					let cfg = JSON.parse(rawdata);
+					cfg.rpc.rpcEnabled=true;
+					let data = JSON.stringify(cfg, null, 4);
+					fs.writeFileSync(config, data);
+					setTimeout(startChild, 2000);
+				}
+				else {
+					setTimeout(check, 3000); // check again
+				}
+			}
+			
+			await check();
+
+		} else {
+			startChild();
+		}
 	}
-	child.stdout.on('data', data => console.log('[node]', String(data).trim()));
-	child.stderr.on('data', data => console.log('[node]', String(data).trim()));
+	let child = {};
+	await prepare_config();
 
+	
+	function startChild() {
+		console.log(`start qglc ${cmd}`);
+		child = crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
+			windowsHide: true,
+			stdio: ['ignore', 'pipe', 'pipe']
+		});
+
+		if (!child) {
+			const err = new Error('gqlc not started');
+			err.code = 'ENOENT';
+			err.path = cmd;
+			throw err;
+		}
+		child.stdout.on('data', data => console.log('[node]', String(data).trim()));
+		child.stderr.on('data', data => console.log('[node]', String(data).trim()));
+
+		child.once('exit', () => {
+			removeExitHandler();
+			global.isNodeStarted = false;
+			console.log(`Node exiting (PID ${child.pid})`);
+			forceKill(child);
+		});
+	
+		child.once('exit', () => app.removeListener('will-quit', killHandler));
+	
+		child.once('loaded', () => {});
+	}
+	
 	//console.log(child);
 
 	const killHandler = () => child.kill();
 	const removeExitHandler = signalExit(killHandler);
-	child.once('exit', () => {
-		removeExitHandler();
-		global.isNodeStarted = false;
-		console.log(`Node exiting (PID ${child.pid})`);
-		forceKill(child);
-	});
-
-	child.once('exit', () => app.removeListener('will-quit', killHandler));
-
-	child.once('loaded', () => {});
-
+	
 	app.on('ready', () => {
 		// Once the app is ready, launch the wallet window
 		createWindow();
