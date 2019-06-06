@@ -45,3 +45,5 @@ Thumbs.db
 dist-desktop/
 
 docker-compose/
+extra/darwin/
+extra/linux/
