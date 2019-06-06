@@ -5,22 +5,22 @@
 export const environment = {
     production: false,
     desktop: false,
-    qlcChainNetwork: 'test', // test or main
-    neoNetwork: 'test', // test or main
+    qlcChainNetwork: 'main', // test or main
+    neoNetwork: 'main', // test or main
     rpcUrl: {
-        'test' : 'https://rpc-test.qlcchain.online',
-        'main' : 'https://rpc.qlcchain.online'
+        'test' : 'http://127.0.0.1:19735',
+        'main' : 'http://127.0.0.1:9735'
     },        
     nep5Url: {
-        'test' : 'https://nep5-test.qlcchain.online',
+        'test' : '',
         'main' : 'https://nep5.qlcchain.online'
     },
     neoSmartContract: {
-        'test' : '30f69798a129527b4996d6dd8e974cc15d51403d',
-        'main' : '30f69798a129527b4996d6dd8e974cc15d51403d'
+        'test' : '',
+        'main' : '3078aa0e095defba3f00e0af12810187ecfb586a'
     },
     neoPublicKey: {
-        'test' : '03f19ffa8acecb480ab727b0bf9ee934162f6e2a4308b59c80b732529ebce6f53d',
+        'test' : '',
         'main' : '02c6e68c61480003ed163f72b41cbb50ded29d79e513fd299d2cb844318b1b8ad5'
     },
     neoScanApi: {
