@@ -411,7 +411,7 @@ export class StakingCreateComponent implements OnInit {
       this.stakingForm.get('amounToStake').setValue(minAmount);
     }
     if (new BigNumber(this.stakingForm.value.amounToStake).isGreaterThan(new BigNumber(this.stakingForm.value.availableQLCBalance))) {
-      this.stakingForm.get('amounToStake').setValue(new BigNumber(this.stakingForm.value.availableQLCBalance).toFixed(0));
+      this.stakingForm.get('amounToStake').setValue(new BigNumber(this.stakingForm.value.availableQLCBalance).integerValue(BigNumber.ROUND_FLOOR));
     }
     this.stakingForm.get('amounToStake').markAsTouched();
   }
