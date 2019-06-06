@@ -1,6 +1,6 @@
 <!-- QLC WALLETS -->
 <div class="container mt-0 qlc-content-first">
-    <div class="row">
+    <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
         <div class="col-12 pl-0 pr-0">
             <div class="container">
                     <div class="row">
@@ -12,7 +12,7 @@
 								<span style="width:16px;height:16px;background:#8BC34A;display:inline-block;margin-left:16px;margin-right:8px;"></span> NEP-5 Wallets
                             </div>
                         </div>
-                        <div class="col-md-3 col-12 pl-2 pr-2">
+                        <div class="col-md-3 col-12 pl-2 pr-2 pb-md-2 pb-3">
 							<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/mystakings" *ngIf="accounts.length">
 								MY STAKINGS
 							</button>
@@ -32,7 +32,7 @@
 		}}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
 	</div>
 </div>
-<div class="row">
+<div class="row pl-md-0 pr-md-0 pl-sm-2 pl-0 pr-0">
 	
 	<!-- ADDRESS -->
 	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let account of accounts" >
@@ -182,7 +182,7 @@
 	
 	
 	<!-- NEW WALLET BUTTON -->
-	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pl-0 pt-0 pr-0 pb-0">
+	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0  pl-md-0 pr-md-0 pl-sm-2 pl-3 pr-3">
 		<button type="submit" class="btn btn-primary button-newaccount" (click)="createAccount()" *ngIf="accounts.length">
 			{{ 'ACCOUNTS.title_button_wallet' | translate }}
 		</button>
@@ -271,7 +271,7 @@
 	</div>
 	<!-- // END ADDRESS -->
 	
-	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pl-0 pt-0 pr-0 pb-0">
+	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0 pl-3 pr-3">
 		<button type="submit" class="btn btn-primary button-newaccount neo-background" [routerLink]="'/create-neo-wallet/'">
 			Add New NEO Wallet
 		</button>
