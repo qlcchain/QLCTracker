@@ -134,7 +134,7 @@
             <div class="col-12">TOTAL STAKING VOLUME</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12 pb-2" style="font-size:0.7em;">{{ totalPledgeAmount | qlc | currency:'':'':'1.2-8' }} QLC</div>
+            <div class="col-12 pb-2" style="font-size:0.7em;">{{ totalPledgeAmount | qlc:8 | currency:'':'':'1.2-8' }} QLC</div>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@
             <div class="col-12">YOUR CURRENT STAKING VOLUME</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12 pb-2" style="font-size:0.7em;">{{ myStakingVolume | qlc | currency:'':'':'1.2-8' }} QLC</div>
+            <div class="col-12 pb-2" style="font-size:0.7em;">{{ myStakingVolume | qlc:8 | currency:'':'':'1.2-8' }} QLC</div>
           </div>
         </div>
       </div>
@@ -160,7 +160,7 @@
             <div class="col-12">YOUR TOTAL STAKING EARNINGS</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12 pb-2" style="font-size:0.7em;">{{ myStakingEarnings | qlc | currency:'':'':'1.2-8' }} QGAS</div>
+            <div class="col-12 pb-2" style="font-size:0.7em;">{{ myStakingEarnings | qlc:8 | currency:'':'':'1.2-8' }} QGAS</div>
           </div>
         </div>
       </div>

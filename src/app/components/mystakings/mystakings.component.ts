@@ -78,20 +78,22 @@ export class MystakingsComponent implements OnInit {
       const pledges = await this.nep5api.pledgeInfoByBeneficial(account.id);
       if (pledges.result) {
         for(let element of pledges.result) {
-          const rewardsResult = await this.api.getTotalRewards(element.nep5TxId);
-          element.earnings = rewardsResult.result;
-          this.myStakingEarnings += element.earnings;
-          //const lockInfo = await this.nep5api.getLockInfo(element.nep5TxId);
-          //console.log(lockInfo.result);
-          //console.log(lockInfo.result.unLockTimestamp*1000);
-          if (element.state == 'PledgeDone') {
-            this.myStakingVolume += Number(element.amount);
-          }
-          
-          if (element.state == 'WithdrawDone') {
-            this.pledgesCompleted.push(element);
-          } else {
-            this.pledges.push(element);
+          if (element.nep5TxId) {
+            const rewardsResult = await this.api.getTotalRewards(element.nep5TxId);
+            element.earnings = rewardsResult.result;
+            this.myStakingEarnings += element.earnings;
+            //const lockInfo = await this.nep5api.getLockInfo(element.nep5TxId);
+            //console.log(lockInfo.result);
+            //console.log(lockInfo.result.unLockTimestamp*1000);
+            if (element.state == 'PledgeDone') {
+              this.myStakingVolume += Number(element.amount);
+            }
+            
+            if (element.state == 'WithdrawDone') {
+              this.pledgesCompleted.push(element);
+            } else {
+              this.pledges.push(element);
+            }
           }
         }
       }
