@@ -71,7 +71,7 @@ export class QLCBlockService {
 
 	async generateChange(walletAccount, representativeAccount, ledger = false) {
 		const changeBlock = await this.api.c.buildinLedger.generateChangeBlock(walletAccount.id, representativeAccount);
-		const processResponse = await this.procesBlock(changeBlock, walletAccount.keyPair);
+		const processResponse = await this.processBlock(changeBlock, walletAccount.keyPair);
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
@@ -91,7 +91,7 @@ export class QLCBlockService {
 		};
 
 		const sendBlock = await this.api.c.buildinLedger.generateSendBlock(blockData);
-		const processResponse = await this.procesBlock(sendBlock, walletAccount.keyPair);
+		const processResponse = await this.processBlock(sendBlock, walletAccount.keyPair);
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
@@ -105,15 +105,38 @@ export class QLCBlockService {
 	async generateReceive(walletAccount, sourceBlock, ledger = false) {
 		const srcBlockInfo = await this.api.blocksInfo([sourceBlock]);
 		if (srcBlockInfo && !srcBlockInfo.error && srcBlockInfo.result.length > 0) {
-			// console.log('find block info of ' + sourceBlock);
+			//console.log('find block info of ' + sourceBlock);
+			//console.log(srcBlockInfo.result);
 		} else {
 			// console.log('can not find block info of ' + sourceBlock);
 			return null;
 		}
+
 		const sendBlock = srcBlockInfo.result[0];
+		// Reward contract address
+		// qlc_3oinqggowa7f1rsjfmib476ggz6s4fp8578odjzerzztkrifqkqdz5zjztb3 
+		// ==> d614bb9d5e20ad063316ce091148e77c99136c6194d55c7ecc7ffa9620dbcaeb
+		if (sendBlock.type == 'ContractSend' && sendBlock.link == 'd614bb9d5e20ad063316ce091148e77c99136c6194d55c7ecc7ffa9620dbcaeb') {
+			// proccess reward block
+			const rewardReceiveBlock = await this.api.getReceiveRewardBlock(sourceBlock);
+			//console.log(rewardReceiveBlock);
+			const processResponse = await this.api.process(rewardReceiveBlock.result);
+			//console.log(processResponse);
+			return
+		}
+
+		// if (srcBlockInfo.result[0].address == 'qlc_3pj83yuemoegkn6ejskd8bustgunmfqpbhu3pnpa6jsdjf9isybzffwq7s4p' || srcBlockInfo.result[0].address == 'qlc_1kk5xst583y8hpn9c48ruizs5cxprdeptw6s5wm6ezz6i1h5srpz3mnjgxao') {
+		// 	// proccess reward block
+		// 	const rewardReceiveBlock = await this.api.getReceiveRewardBlock(sourceBlock);
+		// 	//console.log(rewardReceiveBlock);
+		// 	const processResponse = await this.api.process(rewardReceiveBlock.result); 
+		// 	//console.log(processResponse);
+
+		// 	return;
+		// }
 
 		const receiveBlock = await this.api.c.buildinLedger.generateReceiveBlock(sendBlock);
-		const processResponse = await this.procesBlock(receiveBlock, walletAccount.keyPair);
+		const processResponse = await this.processBlock(receiveBlock, walletAccount.keyPair);
 
 		if (processResponse && processResponse.result) {
 			const header = processResponse.result;
@@ -124,7 +147,7 @@ export class QLCBlockService {
 		}
 	}
 
-	async procesBlock(block, keyPair) {
+	async processBlock(block, keyPair) {
 		const blockHash = await this.api.blockHash(block);
 		const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
 		const signature = this.util.hex.fromUint8(signed);

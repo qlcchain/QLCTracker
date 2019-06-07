@@ -31,6 +31,11 @@ export class SendComponent implements OnInit {
 	addressBookResults$ = new BehaviorSubject([]);
 	showAddressBook = false;
 	addressBookMatch = '';
+	hideFiat = 1;
+
+	otherTokens: any = [];
+	otherInterval = 3000;
+	activeSlideIndex = 1;
 
 	msg1 = '';
 	msg2 = '';
@@ -134,13 +139,17 @@ export class SendComponent implements OnInit {
 		}
 
 		// fill account meta
-		for (const account of this.accounts) {
+		for (let account of this.accounts) {
 			const accountInfo = await this.api.accountInfo(account.id);
 			if (!accountInfo.error) {
-				const am = accountInfo.result;
-				for (const token of am.tokens) {
+				let am = accountInfo.result;
+				account.otherTokens = [];
+				for (let token of am.tokens) {
 					if (tokenMap.hasOwnProperty(token.type)) {
 						token.tokenInfo = tokenMap[token.type];
+						if (token.tokenInfo.tokenSymbol != 'QLC' && token.tokenInfo.tokenSymbol != 'QGAS') {
+							account.otherTokens.push(token);
+						}
 					}
 				}
 				account.accountMeta = am;
@@ -274,6 +283,7 @@ export class SendComponent implements OnInit {
 		}
 
 		const from = await this.api.accountInfoByToken(this.fromAccountID, this.selectedToken.type);
+		//console.log(from);
 		// let to = await this.api.accountInfoByToken(this.toAccountID, this.selectedToken.token_hash);
 		if (!from) {
 			return this.notificationService.sendError(this.msg4);
@@ -286,32 +296,49 @@ export class SendComponent implements OnInit {
 		// to.balanceBN = new BigNumber(to.balance || 0);
 		this.fromAccount = from;
 		// this.toAccount = to;
+		const tokenMap = {};
+		const tokens = await this.api.tokens();
+		if (!tokens.error) {
+			tokens.result.forEach(token => {
+				tokenMap[token.tokenId] = token;
+			});
+		}
+		if (tokenMap.hasOwnProperty(from.type)) {
+			from.tokenInfo = tokenMap[from.type];
+		}
+
+		const checkDP = new BigNumber(this.amount).dp();
+		if (checkDP > from.tokenInfo.decimals) {
+			const warnMessage = 'Too many decimal places. ' + from.tokenInfo.tokenSymbol + ' can have a maximum of ' + from.tokenInfo.decimals + ' decimal places.';
+			return this.notificationService.sendWarning(warnMessage);
+		}
 
 		// to be transfered amount
-		const rawAmount = this.getAmountBaseValue(this.amount || 0);
+		const rawAmount = new BigNumber(this.amount).multipliedBy(Math.pow(10,from.tokenInfo.decimals));
 		this.rawAmount = rawAmount.plus(this.amountRaw);
 
-		const qlcAmount = this.rawAmount.div(this.qlc);
+		const qlcAmount = this.rawAmount.div(Math.pow(10,from.tokenInfo.decimals));
 
 		if (this.amount < 0 || rawAmount.isLessThan(0)) {
 			return this.notificationService.sendWarning(this.msg6);
 		}
-		if (qlcAmount.isLessThan(1)) {
+		/*if (qlcAmount.isLessThan(1)) {
 			const warnMessage = this.msg7;
 			return this.notificationService.sendWarning(warnMessage);
-		}
+		}*/
+
 		if (from.balanceBN.minus(rawAmount).isLessThan(0)) {
-			return this.notificationService.sendError(this.msg8 + `${this.selectedToken.tokenInfo.tokenName}`);
+			return this.notificationService.sendError(this.msg8 + ` ${this.selectedToken.tokenInfo.tokenName}`);
 		}
 
 		// Determine a proper raw amount to show in the UI, if a decimal was entered
-		this.amountRaw = this.rawAmount.mod(this.qlc);
+		this.amountRaw = this.rawAmount.mod(Math.pow(10,from.tokenInfo.decimals));
 
 		// Determine fiat value of the amount
-		this.amountFiat = this.util.qlc
+		/*this.amountFiat = this.util.qlc
 			.rawToMqlc(rawAmount)
 			.times(this.price.price.lastPrice)
-			.toNumber();
+			.toNumber();*/
 
 		// Start precopmuting the work...
 		this.fromAddressBook = this.addressBookService.getAccountName(this.fromAccountID);
@@ -351,6 +378,7 @@ export class SendComponent implements OnInit {
 				this.fromAddressBook = '';
 				this.toAddressBook = '';
 				this.addressBookMatch = '';
+				this.loadBalances();
 			} else {
 				if (!this.walletService.isLedgerWallet()) {
 					const errMessage = this.msg12;
@@ -375,10 +403,10 @@ export class SendComponent implements OnInit {
 
 		const amountRaw = this.selectedToken.balance;
 
-		const tokenVal = this.util.qlc.rawToQlc(amountRaw);
-		const maxAmount = this.getAmountValueFromBase(this.util.qlc.qlcToRaw(tokenVal));
-		this.amount = maxAmount.toNumber();
-		this.syncFiatPrice();
+		const tokenVal = new BigNumber(amountRaw).dividedBy(Math.pow(10,this.selectedToken.tokenInfo.decimals)).toNumber();
+
+		this.amount = tokenVal;
+		//this.syncFiatPrice();
 	}
 
 	resetRaw() {
@@ -389,6 +417,13 @@ export class SendComponent implements OnInit {
 	selectToken() {
 		if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
 			this.selectedToken = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === this.selectedTokenSymbol);
+			if (this.selectedTokenSymbol != 'QLC' && this.selectedTokenSymbol != 'QGAS') {
+				const selectedSlide = this.otherTokens.findIndex(a => a.tokenInfo.tokenSymbol === this.selectedTokenSymbol);
+				this.activeSlideIndex = selectedSlide;
+				this.otherInterval = 0;
+			} else {
+				this.otherInterval = 3000;
+			}
 		} else {
 			this.selectedToken = '';
 		}
@@ -404,7 +439,12 @@ export class SendComponent implements OnInit {
   }
   selectTokenIcon(token) {
 		if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
-      this.selectedTokenSymbol = token;
+			this.selectedTokenSymbol = token;
+			if (this.selectedTokenSymbol != 'QLC' && this.selectedTokenSymbol != 'QGAS') {
+				this.otherInterval = 0;
+			} else {
+				this.otherInterval = 3000;
+			}
 			this.selectedToken = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === token);
 		} else {
 			this.selectedToken = '';
@@ -419,7 +459,15 @@ export class SendComponent implements OnInit {
 			selectedAccount.accountMeta.tokens !== undefined &&
 			selectedAccount.accountMeta.tokens.length > 0
 				? selectedAccount.accountMeta.tokens
-        : [];
+				: [];
+		this.otherTokens = [];
+		this.otherTokens =
+		selectedAccount !== undefined &&
+		selectedAccount.otherTokens !== undefined &&
+		selectedAccount.otherTokens.length > 0
+			? selectedAccount.otherTokens
+			: [];
+
 		this.selectedToken = this.accountTokens !== undefined && this.accountTokens.length > 0 ? this.accountTokens[0] : [];
 		this.selectedTokenSymbol =
 			this.selectedToken !== undefined && this.selectedToken.tokenInfo !== undefined

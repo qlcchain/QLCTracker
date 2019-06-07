@@ -14,6 +14,7 @@ import BigNumber from 'bignumber.js';
 import { AddressBookService } from 'src/app/services/address-book.service';
 import * as QRCode from 'qrcode';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ModalUnlockComponent } from '../modal-unlock/modal-unlock.component';
 
 @Component({
   selector: 'app-myaccount',
@@ -30,12 +31,14 @@ export class MyaccountComponent implements OnInit {
   pageSize = 10;
   accountBlocksCount = 0;
 	maxPageSize = 200;
+	activeSlideIndex = 0;
 
   routerSub = null;
 
   repLabel: any = '';
 	addressBookEntry: any = null;
 	accountMeta: any = {};
+	otherTokens: any = [];
 	accountId = '';
 
   walletAccount = {
@@ -68,7 +71,7 @@ export class MyaccountComponent implements OnInit {
 	msgEdit1 = '';
   msgEdit2 = '';
   
-  private refreshInterval$ = interval(1000);
+  private refreshInterval$ = interval(3000);
 
   constructor(
 		private router: ActivatedRoute,
@@ -76,7 +79,7 @@ export class MyaccountComponent implements OnInit {
 		private api: ApiService,
 		private repService: RepresentativeService,
 		private notifications: NotificationService,
-		private walletService: WalletService,
+		public walletService: WalletService,
     private util: UtilService,
     private node: NodeService,
 		public settings: AppSettingsService,
@@ -97,7 +100,7 @@ export class MyaccountComponent implements OnInit {
     
     this.refreshInterval$.subscribe(() => {
 			if (this.pendingBlocks.length !== this.walletAccount.pendingCount) {
-				this.loadPending();
+				this.loadAccount();
 			}
 		});
     this.loadLang();
@@ -117,6 +120,10 @@ export class MyaccountComponent implements OnInit {
 		this.trans.get('RECEIVE_WARNINGS.msg5').subscribe((res: string) => { this.msg5 = res;	});
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg5').subscribe((res: string) => {	this.msgEdit1 = res; });
 		this.trans.get('ACCOUNT_DETAILS_WARNINGS.msg6').subscribe((res: string) => {	this.msgEdit2 = res; });
+	}
+
+	showUnlock() {
+		this.modalRef = this.modalService.show(ModalUnlockComponent, {class: 'modal-lg'}); 
 	}
 
 	load() {
@@ -163,13 +170,17 @@ export class MyaccountComponent implements OnInit {
 			this.accountMeta = am;
     }
     
-    let accountMeta = [];
+		let accountMeta = [];
+		this.otherTokens = [];
     if (accountInfo.result && accountInfo.result.tokens && Array.isArray(accountInfo.result.tokens)) {
       accountInfo.result.tokens.forEach(token => {
-        accountMeta[token.tokenName] = token;
+				accountMeta[token.tokenName] = token;
+				if (token.tokenInfo.tokenSymbol != 'QLC' && token.tokenInfo.tokenSymbol != 'QGAS') {
+					this.otherTokens.push(token);
+				}
       });
     }
-    this.accountMeta.balances = accountMeta;
+		this.accountMeta.balances = accountMeta;
 
 		if (this.accountMeta && this.accountMeta.tokens) {
 			this.repLabel = null;
@@ -182,12 +193,8 @@ export class MyaccountComponent implements OnInit {
 			}
 		}
 
-		// If there is a pending balance, or the account is not opened yet, load pending transactions
-		// if ((!this.accountMeta.error && this.accountMeta.pending > 0) || this.accountMeta.error) {
 		await this.loadPending();
-		// }
 
-		// If the account doesnt exist, set the pending balance manually
 		if (this.accountMeta.error) {
 			const pendingRaw = this.pendingBlocks.reduce(
 				(prev: BigNumber, current: any) => prev.plus(new BigNumber(current.amount)),
@@ -210,9 +217,17 @@ export class MyaccountComponent implements OnInit {
   }
 
   async loadPending() {
+		//console.log('load Pending from myaccount');
     this.pendingBlocks = [];
     const accountPending = await this.api.accountsPending([this.accountId], 25);
 		if (!accountPending.error && accountPending.result) {
+			const tokenMap = {};
+			const tokens = await this.api.tokens();
+			if (!tokens.error) {
+				tokens.result.forEach(token => {
+					tokenMap[token.tokenId] = token;
+				});
+			}
 			const pendingResult = accountPending.result;
 
 			for (const account in pendingResult) {
@@ -223,6 +238,12 @@ export class MyaccountComponent implements OnInit {
         walletAccount.pendingCount = pendingResult[account].length;
         walletAccount.pendingPerTokenCount = [];
 				pendingResult[account].forEach(pending => {
+					if (tokenMap.hasOwnProperty(pending.type)) {
+						pending.tokenInfo = tokenMap[pending.type];
+					}
+					if (pending.tokenName != 'QLC' && pending.tokenName != 'QGAS') {
+						pending.tokenName = 'OTHER';
+					}
           if (!walletAccount.pendingPerTokenCount[pending.tokenName])
             walletAccount.pendingPerTokenCount[pending.tokenName] = 0;
 
@@ -233,6 +254,7 @@ export class MyaccountComponent implements OnInit {
 						amount: pending.amount,
 						tokenName: pending.tokenName,
 						timestamp: pending.timestamp,
+						tokenInfo: pending.tokenInfo,
 						hash: pending.hash
 					});
 				});
@@ -250,6 +272,7 @@ export class MyaccountComponent implements OnInit {
 
 
   async getAccountHistory(account, resetPage = true) {
+
 		if (resetPage) {
 			this.pageSize = 25;
 		}
@@ -258,23 +281,36 @@ export class MyaccountComponent implements OnInit {
 
 		this.accountHistory = [];
 		if (!accountHistory.error) {
+			const tokenMap = {};
+			const tokens = await this.api.tokens();
+			if (!tokens.error) {
+				tokens.result.forEach(token => {
+					tokenMap[token.tokenId] = token;
+				});
+			}
 			const historyResult = accountHistory.result;
 			for (const block of historyResult) {
 				// For Open and receive blocks, we need to look up block info to get originating account
-				if (block.type === 'Open' || block.type === 'Receive') {
+				if (block.type === 'Open' || block.type === 'Receive' || block.type === 'ContractReward') {
 					const preBlock = await this.api.blocksInfo([block.link]);
 					if (!preBlock.error) {
 						block.link_as_account = preBlock.result[0].address;
 					}
+				} else if (block.type === 'ContractSend') {
+					block.link_as_account = block.address;
 				} else {
 					block.link_as_account = this.util.account.getPublicAccountID(this.util.hex.toUint8(block.link));
+				}
+				if (tokenMap.hasOwnProperty(block.token)) {
+					block.tokenInfo = tokenMap[block.token];
 				}
 				this.accountHistory.push(block);
 			}
 			this.accountHistory = this.accountHistory.filter(h => h.type !== 'Change');
+			console.log(this.accountHistory);
 		}
   }
-  
+  //ContractReward
   async receivePending(pendingBlock) {
 		const sendBlock = pendingBlock.block;
 		if (!sendBlock) return;
@@ -365,6 +401,14 @@ export class MyaccountComponent implements OnInit {
 		if (!walletAccount) {
 			return; // Dispose of the block, no matching account
 		}
+
+		const tokenMap = {};
+			const tokens = await this.api.tokens();
+			if (!tokens.error) {
+				tokens.result.forEach(token => {
+					tokenMap[token.tokenId] = token;
+				});
+			}
 
 		let newHash = null;
 

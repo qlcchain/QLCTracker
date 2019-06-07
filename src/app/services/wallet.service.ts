@@ -25,6 +25,7 @@ export interface WalletAccount {
 	index: number;
 	balance: BigNumber;
 	balances: any;
+	otherTokens: any;
 	// pending: BigNumber;
 	pendingCount: number;
 	pendingPerTokenCount: any;
@@ -34,6 +35,13 @@ export interface WalletAccount {
 	// pendingFiat: number;
 	addressBookName: string | null;
 	accountMeta: any;
+}
+export interface NeoWallet {
+	id: string;
+	index: number;
+	balances: any;
+	addressBookName: string | null;
+	encryptedwif: string;
 }
 export interface FullWallet {
 	type: WalletType;
@@ -48,6 +56,7 @@ export interface FullWallet {
 	// balanceFiat: number;
 	// pendingFiat: number;
 	accounts: WalletAccount[];
+	neowallets: NeoWallet[];
 	accountsIndex: number;
 	locked: boolean;
 	password: string;
@@ -73,6 +82,7 @@ export class WalletService {
 		// balanceFiat: 0,
 		// pendingFiat: 0,
 		accounts: [],
+		neowallets: [],
 		accountsIndex: 0,
 		locked: false,
 		password: ''
@@ -84,7 +94,7 @@ export class WalletService {
 	blocksCount = 0;
 
 	private pendingRefreshInterval$ = interval(10000);
-	private blocksCountInterval$ = interval(10000);
+	private blocksCountInterval$ = interval(90000);
 
 	constructor(
 		private util: UtilService,
@@ -138,6 +148,8 @@ export class WalletService {
 			let pendingCount = 0;
 			const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
 
+			let allAccounts = this.wallet.accounts;
+
 			if (!accountsPending.error) {
 				const pendingResult = accountsPending.result;
 				for (const account in pendingResult) {
@@ -147,8 +159,42 @@ export class WalletService {
 					pendingCount += pendingResult[account].length;
 					let walletAccount = this.wallet.accounts.find(a => a.id === account);
 					walletAccount.pendingCount = pendingResult[account].length;
+					walletAccount.pendingPerTokenCount = [];
+					pendingResult[account].forEach(pending => {
+						if (pending.tokenName != 'QLC' && pending.tokenName != 'QGAS') {
+							pending.tokenName = 'OTHER';
+						}
+						if (!walletAccount.pendingPerTokenCount[pending.tokenName])
+							walletAccount.pendingPerTokenCount[pending.tokenName] = 0;
+
+						walletAccount.pendingPerTokenCount[pending.tokenName] += 1;
+						this.pendingBlocks.push({
+							account: pending.source,
+							receiveAccount: account,
+							amount: pending.amount,
+							tokenName: pending.tokenName,
+							tokenSymbol: pending.tokenName,
+							timestamp: pending.timestamp,
+							hash: pending.hash
+						});
+					});
+					if (!this.isLocked()) {
+						this.loadPendingBlocksForWallet();
+					}
+					allAccounts = allAccounts.filter(function( obj ) {
+						return obj.id !== account;
+					});
 				}
 			}
+
+			allAccounts.forEach((data) => {
+				let walletAccount = this.wallet.accounts.find(a => a.id === data.id);
+				walletAccount.pendingPerTokenCount = [];
+				walletAccount.pendingCount = 0;
+			});
+
+
+
 			this.wallet.pendingCount = pendingCount;
 		});
 
@@ -213,10 +259,7 @@ export class WalletService {
 			this.wallet.locked = walletJson.locked;
 			this.wallet.password = walletJson.password || null;
 		}
-		if (walletType === 'ledger') {
-			// Check ledger status?
-		}
-
+		
 		this.wallet.accountsIndex = walletJson.accountsIndex || 0;
 
 		if (walletJson.accounts && walletJson.accounts.length) {
@@ -232,14 +275,30 @@ export class WalletService {
 				await this.loadAccountsFromIndex(); // Need to have the seed to reload any accounts if they are not stored
 			}
 		}
+		if (walletJson.neowallets && walletJson.neowallets.length) {
+			walletJson.neowallets.forEach(async account => await this.loadNeoWalletAccount(account));
+		}
 
 		await this.reloadBalances(true);
 
-		if (walletType === 'ledger') {
-			// this.ledgerService.loadLedger(true);
-		}
-
 		return this.wallet;
+	}
+
+	
+
+	async loadNeoWalletAccount(account) {
+		const addressBookName = this.addressBook.getAccountName(account.id);
+
+		const newAccount: NeoWallet = {
+			id: account.id,
+			index: account.index,
+			addressBookName,
+			balances: [],
+			encryptedwif: account.encryptedwif
+		};
+		this.wallet.neowallets.push(newAccount);
+		this.saveWalletExport();
+		return newAccount;
 	}
 
 	async loadImportedWallet(seed, password, accountsIndex = 1) {
@@ -483,6 +542,7 @@ export class WalletService {
 			pendingCount: 0,
 			pendingPerTokenCount: [],
 			balances: null,
+			otherTokens: [],
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,
@@ -580,7 +640,7 @@ export class WalletService {
 
 		const tokenMap = {};
 		const tokens = await this.api.tokens();
-		if (!tokens.error) {
+		if (!tokens.error && tokens.result) {
 			tokens.result.forEach(token => {
 				tokenMap[token.tokenId] = token;
 			});
@@ -589,7 +649,7 @@ export class WalletService {
 		// fill account meta
 		for (const account of this.wallet.accounts) {
 			const accountInfo = await this.api.accountInfo(account.id);
-			if (!accountInfo.error) {
+			if (!accountInfo.error && accountInfo.result) {
 				const am = accountInfo.result;
 				for (const token of am.tokens) {
 					if (tokenMap.hasOwnProperty(token.type)) {
@@ -598,7 +658,7 @@ export class WalletService {
 					if (token.type === this.api.qlcTokenHash) {
 						account.balance = new BigNumber(token.balance);
 					}
-					this.logger.debug(JSON.stringify(token));
+					//this.logger.debug(JSON.stringify(token));
 				}
 				account.accountMeta = am;
 			}
@@ -638,6 +698,7 @@ export class WalletService {
 			keyPair: null,
 			balance: new BigNumber(0),
 			balances: null,
+			otherTokens: [],
 			// pending: new BigNumber(0),
 			pendingCount: 0,
 			pendingPerTokenCount: [],
@@ -745,10 +806,12 @@ export class WalletService {
 		}
 		this.pendingBlocks.push({
 			account: accountID,
+			receiveAccount: accountID,
 			hash: blockHash,
 			amount: amount,
 			token: tokenHash,
-			tokenName: tokenName
+			tokenName: tokenName,
+			tokenSymbol: tokenName
 		});
 	}
 
@@ -756,6 +819,7 @@ export class WalletService {
 		if (!this.wallet.accounts.length) {
 			return;
 		}
+		console.log('loadPendingBlocksForWallet')
 		const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
 		if (accountsPending.error) {
 			return;
@@ -785,10 +849,16 @@ export class WalletService {
 
 		const nextBlock = this.pendingBlocks[0];
 		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
+			//console.log('Block has already been processed')
+			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+			this.processingPending = false;
 			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
 		}
-		const walletAccount = await this.getWalletAccount(nextBlock.account);
+		const walletAccount = await this.getWalletAccount(nextBlock.receiveAccount);
 		if (!walletAccount) {
+			//console.log('Dispose of the block, no matching account')
+			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+			this.processingPending = false;
 			return; // Dispose of the block, no matching account
 		}
 
@@ -810,7 +880,7 @@ export class WalletService {
 
 			const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
 			this.notifications.sendSuccess(
-				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenName}!`
+				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenSymbol}!`
 			);
 
 			// await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
@@ -845,11 +915,9 @@ export class WalletService {
 		const data: any = {
 			type: this.wallet.type,
 			accounts: this.wallet.accounts.map(a => ({ id: a.id, index: a.index })),
+			neowallets: this.wallet.neowallets.map(a => ({ id: a.id, index: a.index, encryptedwif: a.encryptedwif })),
 			accountsIndex: this.wallet.accountsIndex
 		};
-
-		if (this.wallet.type === 'ledger') {
-		}
 
 		if (this.wallet.type === 'seed') {
 			data.seed = this.wallet.seed;

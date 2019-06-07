@@ -41,7 +41,7 @@
                                     <div class="col-12 text-break pr-3"><span *ngIf="addressBookModel != ''">{{ addressBookModel }} - </span>{{ accountId }} <a ngxClipboard [cbContent]="accountId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
                                     <div class="col-12 px-0" *ngIf="showEditName">
                                         <div class="editNameButtons">
-                                            <div class="row">
+                                            <div class="row pl-3 pr-3">
                                                 <div class="col-md-12 col-12 py-3">
                                                     <input type="text" class="form-control" [(ngModel)]="addressBookModel" />
                                                 </div>
@@ -81,11 +81,11 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QLC']">{{ accountMeta.balances['QLC'].balance | qlc | currency:'':'':'1.2-8' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QLC']">{{ accountMeta.balances['QLC'].balance | qlc:8 | currency:'':'':'1.2-8' }}</div>
                                             <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QLC'])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
-                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -94,7 +94,7 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('QLC')" type="submit" class="btn btn-primary btn-purple btn-icon-receive w-100 pl-2 pr-2">RECEIVE QLC <span class="superlight">
+                                    <button (click)="receive('QLC')" type="submit" class="btn btn-primary btn-purple btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">
                                         (<span *ngIf="checkIfPending('QLC')">
                                             {{ walletAccount.pendingPerTokenCount['QLC'] }}
                                         </span>
@@ -104,40 +104,6 @@
                         </div>
                     </div>
                     
-                    
-                    <!-- BALANCE QSMS -->
-                    <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
-                        <div class="content-box-white h-auto mt-2 pb-2">
-                            <div class="container">
-                                <div class="row qlc-table-header-white">
-                                    <div class="col-12">QSMS Balance</div>
-                                </div>
-                            </div>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-3 mt-3">
-                                        <img src="assets/img/token-sms2.png" class="w-100 icon-token">
-                                    </div>
-                                    <div class="col-9 pr-0 pl-0">
-                                        <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QSMS']">{{ accountMeta.balances['QSMS'].balance | qlc | currency:'':'':'1.2-8' }}</div>
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QSMS'])">NaN</div>
-                                        </div>
-                                        <div class="row qlc-table-row-white sub-page pt-0">
-                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container mt-3">
-                            <div class="row">
-                                <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('QSMS')" type="submit" class="btn btn-primary btn-blue2 btn-icon-receive w-100 pl-2 pr-2">RECEIVE QSMS <span class="superlight">(<span *ngIf="checkIfPending('QSMS')">{{ walletAccount.pendingPerTokenCount['QSMS'] }}</span><span *ngIf="!checkIfPending('QSMS')">0</span> Pending)</span></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>     
                     
                     <!-- BALANCE QGAS -->
                     <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
@@ -154,11 +120,11 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QGAS']">{{ accountMeta.balances['QGAS'].balance | qlc | currency:'':'':'1.2-8' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QGAS']">{{ accountMeta.balances['QGAS'].balance | qlc:8 | currency:'':'':'1.2-8' }}</div>
                                             <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QGAS'])">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
-                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">= 0.00 $</span></div>
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -167,18 +133,105 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('QGAS')" type="submit" class="btn btn-primary btn-darkgrey btn-icon-receive w-100 pl-2 pr-2">RECEIVE QGAS <span class="superlight">(<span *ngIf="checkIfPending('QGAS')">{{ walletAccount.pendingPerTokenCount['QGAS'] }}</span><span *ngIf="!checkIfPending('QGAS')">0</span> Pending)</span></button>
+                                    <button (click)="receive('QGAS')" type="submit" class="btn btn-primary btn-darkgrey btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(<span *ngIf="checkIfPending('QGAS')">{{ walletAccount.pendingPerTokenCount['QGAS'] }}</span><span *ngIf="!checkIfPending('QGAS')">0</span> Pending)</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- BALANCE OTHERS -->
+                    <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2" *ngIf="otherTokens.length > 0">
+                        <div class="content-box-white h-auto mt-2 pb-3">
+                            <div class="container">
+                                <div class="row qlc-table-header-white">
+                                    <div class="col-12">Other token Balances ({{ otherTokens.length }})</div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+
+                                        <carousel [interval]="3000" [(activeSlide)]="activeSlideIndex" class="w-100">
+                                            
+                                            <slide *ngFor="let token of otherTokens">
+                                                <div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
+                                                    <div class="col-3 pr-3 pt-1">
+                                                        <img src="assets/img/token-none.png" class="w-100 icon-token">
+                                                    </div>
+                                                    <div class="col-9 pr-0 pl-0 mb-2 pb-0">
+                                                        <div class="row qlc-table-row-white row-text-mid mt-0 pb-1">
+                                                            <div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">{{ token.tokenInfo.tokenSymbol }} ({{ token.tokenInfo.tokenName }})</span></div>
+                                                            <div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">{{ token.balance | qlc: token.tokenInfo.decimals | currency:'':'':'1.0-'+token.tokenInfo.decimals}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </slide>
+                                            
+                                        </carousel>
+
                                 </div>
                             </div>
                         </div>
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="claim('QGAS')" type="submit" class="btn btn-primary btn-green btn-icon-qlc w-100 pl-2 pr-0">CLAIM QGAS <span class="superlight">(0)</span></button>
+                                    <button (click)="receive('all')" type="submit" class="btn btn-primary btn-blue2 btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(<span *ngIf="checkIfPending('OTHER')">{{ walletAccount.pendingPerTokenCount['OTHER'] }}</span><span *ngIf="!checkIfPending('OTHER')">0</span> Pending)</span></button>
                                 </div>
                             </div>
                         </div>
-                    </div>  
+                    </div>
+
+
+                    <!-- BALANCE OTHERS EMPTY -->
+                    <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2" *ngIf="otherTokens.length == 0">
+                        <div class="content-box-white h-auto mt-2 pb-2">
+                            <div class="container">
+                                <div class="row qlc-table-header-white">
+                                    <div class="col-12">Other Token Balances (0)</div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-3 mt-3">
+                                        <img src="assets/img/token-none.png" class="w-100 icon-token">
+                                    </div>
+                                    <div class="col-9 pr-0 pl-0">
+                                        <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                                            <div class="col-12 pb-0">NaN</div>
+                                        </div>
+                                        <div class="row qlc-table-row-white sub-page pt-0">
+                                            <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container mt-3">
+                            <div class="row">
+                                <div class="col-12 pl-0 pr-0">
+                                    <button type="submit" class="btn btn-primary btn-blue btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(0 Pending)</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BALANCE OTHERS EMPTY -->
+                    <div class="col-12 pl-2 pr-2 mt-2">
+                        <div class="content-box-white h-auto mt-2">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 text-center pt-4 pb-1">
+                                        <p *ngIf="pendingBlocks.length > 0 && walletService.isLocked()">To receive your <span class="text-bold">{{ pendingBlocks.length }} pending transactions</span> just <a (click)="showUnlock()" style="text-decoration:underline;">unlock your wallet</a></p>
+                                        <p *ngIf="pendingBlocks.length > 0 && !walletService.isLocked()">To receive your <span class="text-bold">{{ pendingBlocks.length }} pending transactions</span> receiving. Please wait a moment.</p>
+                                        <p *ngIf="pendingBlocks.length == 0">You have no pending transactions.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
                 </div>
             </div>
             
@@ -237,7 +290,7 @@
 
             <div class="row qlc-table-header">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Account / Transaction ID</div>
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
             </div>
@@ -259,8 +312,8 @@
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                   pending.type == 'Send' ? 'text-color-red' : 'text-color-green'
                 }}">
-                  <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{pending.type == 'Send' ? '-' : '+'}} {{ pending.amount | qlc | currency:'':'':'1.2-8' }}</span>
-                  <br><span class="text-color-grey">{{ pending.tokenName }}</span>
+                  <span data-toggle="tooltip" data-placement="top" title="">{{pending.type == 'Send' ? '-' : '+'}} {{ pending.amount | qlc: pending.tokenInfo.decimals | currency:'':'':'1.0-'+pending.tokenInfo.decimals }}</span>
+                  <br><span class="text-color-grey">{{ pending.tokenInfo.tokenSymbol }}</span>
                 </div>
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
                   {{ pending.timestamp * 1000 | date: 'short' }}
@@ -304,7 +357,7 @@
 
             <div class="row qlc-table-header">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Account / Transaction ID</div>
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
             </div>
@@ -318,17 +371,17 @@
                 </span>
               </div>
               <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{history.type == 'Send' ? 'to' : 'from'}}: </span> 
+                <span class="text-color-lightgrey">{{history.type == 'Send' || history.type == 'ContractSend' ? 'to' : 'from'}}: </span> 
                 <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a>
                 <a [routerLink]="'/transaction/' + history.hash"><br>
                   <span class="text-tiny">{{ history.hash }}</span>
                 </a>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
-                history.type == 'Send' ? 'text-color-red' : 'text-color-green'
+                history.type == 'Send' || history.type == 'ContractSend' ? 'text-color-red' : 'text-color-green'
               }}">
-                <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | qlc | currency:'':'':'1.2-8' }}</span>
-                <br><span class="text-color-grey">{{ history.tokenName }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="">{{history.type == 'Send' || history.type == 'ContractSend' ? '-' : '+'}} {{ history.amount | qlc: history.tokenInfo.decimals | currency:'':'':'1.0-'+history.tokenInfo.decimals }}</span>
+                <br><span class="text-color-grey">{{ history.tokenInfo.tokenSymbol }}</span>
               </div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
                 {{ history.timestamp * 1000 | date: 'short' }}
@@ -371,235 +424,3 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <div class="container mt-0 pt-0 mt-0 mb-2 qlc-content-first">
-        <div class="row pt-0 mt-0">
-            
-            <div class="col-lg-6 pl-0 pr-0 pt-0">
-                
-                <div class="container mt-0 mb-4">
-                    <div class="row">
-                        
-                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                            <div class="content-title">
-                                <h1>Send messages</h1>
-                            </div>
-                        </div>
-                        
-                        <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                            <div class="content-box-white">
-                                <form>
-                                    <div class="container">
-                                        
-                                        <div class="row qlc-table-header-white pb-4">
-                                            <div class="col-12 pl-3 pb-0 pr-3">Message content</div>
-                                            <div class="col-12 pl-3 pt-2 pr-3"><textarea class="form-control h-120"></textarea></div>
-                                            <div class="col-12 pl-3 pb-0 pt-4 pr-3">Phone numbers (separate by commas)</div>
-                                            <div class="col-12 pl-3 pt-2 pr-3"><textarea class="form-control h-120"></textarea></div>
-                                            <div class="col-12 pl-3 pb-0 pt-4 pr-3">Campaign tag/key</div>
-                                            <div class="col-12 pl-3 pt-2 pr-3 pb-4"><input type="text" class="form-control" /></div>
-                                        </div>
-                                        <div class="row qlc-table-header pl-2">
-                                            <div class="col-6 pb-4 pr-3 pl-4">
-                                                Number of messages<br>
-                                                <div class="row-text-mid text-blue pt-2 pb-0 pl-0 text-lowercase"><span class="num-msg">0</span> messages</div>
-                                            </div>
-                                            <div class="col-6 pb-4 pr-3 pl-4">
-                                                Estimated price<br>
-                                                <div class="row-text-mid text-blue pt-2 pb-0 pl-0"><span class="num-price">0.00</span> QLCX</div>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="row qlc-table-row-white">
-                                            <div class="col-12 pl-4 pb-2 pr-3 pt-4 text-center">
-                                                <a href="index_01_list_transactions.html" class="btn btn-primary btn-blue mt-1">SEND MESSAGES</a>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="col-lg-6 pl-0 pr-0 pt-0">
-                
-                <div class="container mt-0 mb-4">
-                    <div class="row">
-                        
-                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                            <div class="content-title">
-                                <h1>Account details</h1>
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
-                            <div class="content-box-white">
-                                <div class="container">
-                                    <div class="row qlc-table-header-white">
-                                        <div class="col-12">Account balance</div>
-                                    </div>
-                                    <div class="row qlc-table-row-white row-text-mid mt-3 mb-0 pb-0">
-                                        <div class="col-12 pb-1">{{ accountMeta.coinBalance | qlc }} QLC</div>
-                                    </div>
-                                    <div class="row qlc-table-row-white sub-page pt-0">
-                                        <div class="col-12 text-wrap pt-1"><span class="text-blue">= 8,210.25 $</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
-                            <div class="content-box-white">
-                                <div class="container">
-                                    <div class="row qlc-table-header-white">
-                                        <div class="col-12">Total costs</div>
-                                    </div>
-                                    <div class="row qlc-table-row-white row-text-mid mt-3 mb-0 pb-0">
-                                        <div class="col-12 pb-1">1,205 QLCX</div>
-                                    </div>
-                                    <div class="row qlc-table-row-white sub-page pt-0">
-                                        <div class="col-12 text-wrap pt-1"><span class="text-blue">= 488.50 $</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
-                            <div class="content-box-blue">
-                                <div class="container">
-                                    <div class="row qlc-table-header-blue">
-                                        <div class="col-12">Number of campaigns</div>
-                                    </div>
-                                    <div class="row qlc-table-row-blue row-text-mid mt-3 mb-2">
-                                        <div class="col-12">47</div>
-                                    </div>
-                                    <div class="row qlc-table-header-darkblue">
-                                        <div class="col-12"><a href="index_01_list_transactions.html"><span class="qlc-icon icon-arrow-right-bluelight"></span>All campaigns</a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-lg-6 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
-                            <div class="content-box-blue">
-                                <div class="container">
-                                    <div class="row qlc-table-header-blue">
-                                        <div class="col-12">Total messages sent</div>
-                                    </div>
-                                    <div class="row qlc-table-row-blue row-text-mid mt-3 mb-2">
-                                        <div class="col-12">2,410</div>
-                                    </div>
-                                    <div class="row qlc-table-header-darkblue">
-                                        <div class="col-12"><a href="index_01_list_transactions.html"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2 mt-4">
-                            <div class="content-title">
-                                <h1>Pending messages</h1>
-                            </div>
-                        </div>
-                        
-                        <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                            <div class="content-box-white">
-                                
-                                <div class="container">
-                                    
-                                    <div class="row qlc-table-header">
-                                        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate">Transaction ID</div>
-                                        <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 d-none d-sm-block">Phone number</div>
-                                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-4 col-8 pr-4 text-right">Time</div>
-                                    </div>
-                                    
-                                    <div class="row qlc-table-row closed" *ngFor="let pending of pendingBlocks">
-                                        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a [routerLink]="'/transaction/' + pending.hash">{{ pending.hash }}</a></div>
-                                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">N/A</div>
-                                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">{{ pending.timestamp | date: 'short' }}</span></div>
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
-                            <div class="content-title">
-                                <h1>Settled messages</h1>
-                            </div>
-                        </div>
-                        a
-                        <div class="col-lg-12 mt-2 mb-4 pl-md-2 pr-md-2">
-                            <div class="content-box-white">
-                                
-                                <div class="container">
-                                    
-                                    <div class="row qlc-table-header">
-                                        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate">Transaction ID</div>
-                                        <div class="col-xl-3 col-lg-3 col-md-2 col-sm-4 d-none d-sm-block">Phone number</div>
-                                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-4 col-8 pr-4 text-right">Time</div>
-                                    </div>
-                                    
-                                    <div class="row qlc-table-row closed" *ngFor="let history of accountHistory">
-                                        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-4 text-truncate"><a  routerLink="/transaction/{{ history.hash }}">{{ history.hash }}</a></div>
-                                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">N/A</div>
-                                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-8 pr-4 text-right"><span class="text-color-lightgrey">{{ history.timestamp * 1000 | date: 'short' }}</span></div>
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                        
-                    </div>
-                </div>
-                
-            </div>
-            
-        </div>
-    </div>
-    
-    
-    <div class="container mt-4 mb-4">
-        <div class="row">
-        </div>
-    </div>
-    
--->

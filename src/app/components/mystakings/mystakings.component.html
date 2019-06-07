@@ -1,0 +1,650 @@
+<!-- STAKINGS LIST -->
+<div class="container mt-0 qlc-content-first" *ngIf="step == 0">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0">
+        <div class="container">
+                <div class="row">
+                  <!-- TITLE -->
+                  <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
+                    <div class="content-title">
+                      <h1 style="display:inline-block;">My Stakings</h1>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+                    <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" routerLink="/myaccounts">
+                      BACK TO MY WALLETS
+                    </button>
+                  </div>
+                  <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+                    <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 ml-xl-2 ml-lg-4 ml-md-5 ml-0 w-100" routerLink="/staking-create">
+                      INVOKE NEW STAKING
+                    </button>
+                  </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="row">
+      
+      <div class="col-12 pl-0 pr-0 pt-2">
+        
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+            
+            
+            <div class="container">
+              
+              <div class="row qlc-table-header pr-4">
+                <div class="col-xl-2 col-lg-2 order-lg-1 col-md-4 order-md-1 col-sm-3 order-sm-3 col-6 order-1 pl-4">Staking<br>Type</div>
+                <div class="col-xl-4 col-lg-4 order-lg-2 d-lg-block col-md-9 d-md-none col-sm-12 order-sm-5 d-sm-none col-7 d-none order-6 text-truncate">Accounts /<br>Invocation Hash</div>
+                <div class="col-xl-1 col-lg-1 order-lg-3 col-md-2 order-md-2 col-sm-3 order-sm-3 col-4 pr-sm-0 order-3 text-left text-sm-right pl-4">Staking<br>Amount</div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 col-md-2 order-md-3 col-sm-3 order-sm-3 col-4 pr-sm-0 order-4 text-right">Earnings<br>(VOTING)</div>
+                <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-4 col-sm-3 order-sm-3 col-4 pr-sm-0 order-5 text-right pr-0">Earnings<br>(MINING)</div>
+                <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-4 d-md-block col-sm-3 order-sm-3 d-sm-none col-6 pr-sm-0 order-2 text-right pr-0">Option to<br>Revoke on</div>
+                <div class="col-xl-2 col-lg-2 order-lg-6 d-lg-block col-md-3 order-md-5 d-md-none col-sm-6 order-sm-4 d-sm-none col-12 d-none order-7 pr-sm-0 pr-0 text-right">Revoke<br>Staking</div>                
+              </div>
+
+              <div class="row qlc-table-row qlc-table-row-twolines closed pr-4" *ngFor="let pledge of pledges;let i = index">
+                <div class="col-xl-2 col-lg-2 order-lg-1 col-md-4 order-md-1 col-sm-3 order-sm-1 col-8 order-1 pl-4 pb-0 pr-0">
+                  <span class="qlc-icon icon-Staking d-sm-none d-md-inline-block" title="Staking"></span>
+                  <span class="d-inline-block">
+                    <span class="text-bold-grey" *ngIf="pledge.pType == 'vote'">Voting/<br>Mining Node</span>
+                    <span class="text-bold-grey" *ngIf="pledge.pType == 'network'">Confidant</span>
+                    <span class="text-bold-grey" *ngIf="pledge.pType == 'mintage'">Mintage</span>
+                    
+                  </span>
+                </div>
+                <div class="col-xl-4 col-lg-4 order-lg-2 pl-lg-2 col-md-8 order-md-6 pl-md-4 col-sm-8 order-sm-5 pl-sm-4 col-12 pl-4 order-6 pb-0 text-truncate">
+                  <span class="text-color-lightgrey" >From: </span> 
+                  <a href="{{ neoService.getExplorer() }}/address/{{pledge.multiSigAddress}}" target="_blank" >{{ pledge.multiSigAddress }}</a><br>
+                  <span class="text-color-lightgrey" >To: </span> 
+                  <a routerLink="/myaccount/{{ pledge.beneficial }}" >{{ pledge.beneficial }}</a><br>
+                  <!-- <a (click)="neoService.contractGetLockInfo(pledge.nep5TxId)">Check</a>-->
+                  <a href="{{ neoService.getExplorer() }}/transaction/{{pledge.nep5TxId}}" target="_blank">
+                    <span class="text-tiny">{{ pledge.nep5TxId }}</span> 
+                  </a>
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-3 col-md-2 order-md-2 col-sm-3 order-sm-2 col-4 order-3 pb-0 pr-sm-0 pl-4 pr-0 text-sm-right text-left text-blue">
+                  <span data-toggle="tooltip" data-placement="top" title="">{{ pledge.amount | qlc:8 | currency:'':'':'1.2-8' }}</span>
+                  <br><span class="text-color-grey">QLC</span>
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 col-md-2 order-md-3 col-sm-3 order-sm-3 col-4 order-4 pb-0 pr-sm-0 pr-0 text-right text-color-green">
+                  <span data-toggle="tooltip" data-placement="top" title="">{{ pledge.earnings | qlc:8 | currency:'':'':'1.2-8' }}</span>
+                  <br><span class="text-color-grey">QGAS</span>
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-4 col-sm-3 order-sm-4 col-4 order-5 pb-0 pr-sm-0 pr-0 text-right text-color-green">
+                  <span data-toggle="tooltip" data-placement="top" title="">/</span>
+                  <br><span class="text-color-grey">QGAS</span>
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-5 col-sm-4 order-sm-6 col-4 order-2 pb-0 pr-sm-0 pr-0 text-right">
+                  <span>
+                    {{ pledge.withdrawTime * 1000 | date: 'dd/MM/yy' }}<br>{{ pledge.withdrawTime * 1000 | date: 'H:mm:ss' }}<br>
+                    <span class="text-color-lightgrey" >-</span>
+                  </span>
+                </div>
+                <div class="col-xl-2 col-lg-2 order-lg-6 col-md-4 order-md-7 offset-md-0 col-sm-4 offset-sm-8 order-sm-7 col-12 order-7 pb-0 pr-sm-0 pr-0 text-right">
+                  <span *ngIf="pledge.state == 'WithdrawDone'">
+                      <div style="display:inline-block;vertical-align: top;padding:0px;padding-right:8px;"><img src="/assets/img/qlc-icon-staking-success-green.svg" style="height:20px;margin-top:-2px;margin-right:0px;"></div>
+                      <div style="display:inline-block;vertical-align:top;padding:0px;font-family: 'Lato', Gotham, 'Helvetica Neue', Helvetica, Arial, 'sans-serif'; font-size: 12px; text-transform: uppercase; font-weight: 700;">WITHDRAW<br>COMPLETE</div>
+                  </span>
+                  <span *ngIf="pledge.state == 'WithdrawProcess'">
+                    <button (click)="continueRevoke(i)" type="submit" class="btn btn-primary w-75 float-right pl-0 pr-0" style="min-width:auto !important;">
+                      CONTINUE REVOKE
+                    </button>
+                  </span>
+                  <span *ngIf="pledge.state == 'WithdrawStart'">
+                    <button (click)="continueRevoke(i)" type="submit" class="btn btn-primary w-75 float-right pl-0 pr-0" style="min-width:auto !important;">
+                      CONTINUE REVOKE
+                    </button>
+                  </span>
+                  <!--<div *ngIf="dateNow >= pledge.withdrawTime * 1000">-->
+                    <button *ngIf="dateNow >= pledge.withdrawTime * 1000 && pledge.state != 'WithdrawDone' && pledge.state != 'WithdrawProcess' && pledge.state != 'WithdrawStart' && pledge.state != 'PledgeProcess' && pledge.state != 'PledgeStart'" (click)="revoke(i)" type="submit" class="btn btn-primary w-75 float-right pl-0 pr-0" style="min-width:auto !important;">
+                      REVOKE
+                    </button>
+                    <button *ngIf="dateNow < pledge.withdrawTime * 1000 && pledge.state != 'WithdrawDone' && pledge.state != 'PledgeProcess' && pledge.state != 'PledgeStart'" disabled type="submit" class="btn btn-primary w-75 float-right pl-0 pr-0" style="min-width:auto !important;">
+                      REVOKE
+                    </button>
+                    <button *ngIf="pledge.state == 'PledgeProcess' || pledge.state == 'PledgeStart'" (click)="continueInvoke(i)" type="submit" class="btn btn-primary w-75 float-right pl-0 pr-0" style="min-width:auto !important;">
+                      CONTINUE INVOKE
+                    </button>
+                  <!--</div>-->
+                </div>
+              
+               </div>
+      
+
+          </div>
+          
+          
+        </div>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  <div class="row pb-4">
+
+    <div class="col-lg-4 col-md-4 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+      <div class="content-box-blue bg-blue-tokens">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">TOTAL STAKING VOLUME</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 pb-2" style="font-size:0.7em;">{{ totalPledgeAmount | qlc:8 | currency:'':'':'1.2-8' }} QLC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+      <div class="content-box-blue bg-blue-tokens">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">YOUR CURRENT STAKING VOLUME</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 pb-2" style="font-size:0.7em;">{{ myStakingVolume | qlc:8 | currency:'':'':'1.2-8' }} QLC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+      <div class="content-box-blue bg-blue-voting">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">YOUR TOTAL STAKING EARNINGS</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 pb-2" style="font-size:0.7em;">{{ myStakingEarnings | qlc:8 | currency:'':'':'1.2-8' }} QGAS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+</div>
+
+
+
+
+<!-- STAKINGS EARNINGS -->
+<div class="container" *ngIf="step == 0">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0">
+          <div class="container">
+                  <div class="row">
+                    <!-- TITLE -->
+                    <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+                      <div class="content-title pb-2">
+                        <h1>My Rewards</h1>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-12 pl-2 pr-2 pb-3">
+                      
+                    </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  
+    <div class="row">
+        
+        <div class="col-12 pl-0 pr-0 pt-2">
+          
+          <!-- LIST -->
+          <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+            <div class="content-box-white">
+              
+              
+              <div class="container">
+                
+                <div class="row qlc-table-header pr-4">
+                  <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-5 pl-4">Type</div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-4 pr-sm-0">Account/Wallet</div>
+                  <div class="col-xl-4 col-lg-4 col-md-3 col-sm-4 col-3 pr-sm-0 text-right">Amount</div>
+                </div>
+                
+                <div class="row qlc-table-row qlc-table-row-twolines closed pr-4" *ngFor="let reward of rewards">
+                    <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-5 pl-4 pb-0">
+                      <span class="qlc-icon icon-Reward" title="Reward"></span>
+                      <span class="d-inline-block">
+                        <span class="text-bold-grey">Confidant ISO</span>
+                      </span>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 pl-md-2 col-sm-5 col-4 pb-0 pl-sm-4 pr-sm-0 pl-4 text-left text-truncate">
+                      <!--From: <a routerLink="/account/{{ reward.from }}" >{{ reward.from }}</a><br>
+                      To: <a routerLink="/account/{{ reward.to }}" >{{ reward.to }}</a>-->
+                      <a routerLink="/myaccount/{{ reward.account }}" >{{ reward.account }}</a>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-3 pb-0 pr-sm-0 text-right text-color-green">
+                      <span data-toggle="tooltip" data-placement="top" title="+9.00 $">+{{ reward.amount | qlc | currency:'':'':'1.2-8' }}</span>
+                      <br><span class="text-color-grey">QGAS</span>
+                    </div>
+                </div>
+  
+            </div>
+            
+            
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+</div>
+
+<!-- STAKINGS EARNINGS -->
+<div class="container" *ngIf="step == 0 && pledgesCompleted.length > 0">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0">
+        <div class="container">
+                <div class="row">
+                  <!-- TITLE -->
+                  <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+                    <div class="content-title pb-2">
+                      <h1>Completed Stakings</h1>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-12 pl-2 pr-2 pb-3">
+                    
+                  </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="row">
+      
+    <div class="col-12 pl-0 pr-0 pt-2">
+      
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+          
+          
+          <div class="container">
+            
+            <div class="row qlc-table-header pr-4">
+              <div class="col-xl-2 col-lg-2 order-lg-1 col-md-4 order-md-1 col-sm-3 order-sm-3 col-6 order-1 pl-4">Staking<br>Type</div>
+              <div class="col-xl-4 col-lg-4 order-lg-2 d-lg-block col-md-9 d-md-none col-sm-12 order-sm-5 d-sm-none col-7 d-none order-6 text-truncate">Accounts /<br>Invocation Hash</div>
+              <div class="col-xl-1 col-lg-1 order-lg-3 col-md-2 order-md-2 col-sm-3 order-sm-3 col-4 pr-sm-0 order-3 text-left text-sm-right pl-4">Staking<br>Amount</div>
+              <div class="col-xl-1 col-lg-1 order-lg-4 col-md-2 order-md-3 col-sm-3 order-sm-3 col-4 pr-sm-0 order-4 text-right">Earnings<br>(VOTING)</div>
+              <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-4 col-sm-3 order-sm-3 col-4 pr-sm-0 order-5 text-right pr-0">Earnings<br>(MINING)</div>
+              <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-4 d-md-block col-sm-3 order-sm-3 d-sm-none col-6 pr-sm-0 order-2 text-right pr-0">Time of Withdraw</div>
+              <div class="col-xl-2 col-lg-2 order-lg-6 d-lg-block col-md-3 order-md-5 d-md-none col-sm-6 order-sm-4 d-sm-none col-12 d-none order-7 pr-sm-0 pr-0 text-right">Revoke<br>Staking</div>                
+            </div>
+
+            <div class="row qlc-table-row qlc-table-row-twolines closed pr-4" *ngFor="let pledge of pledgesCompleted;let i = index">
+              <div class="col-xl-2 col-lg-2 order-lg-1 col-md-4 order-md-1 col-sm-3 order-sm-1 col-8 order-1 pl-4 pb-0 pr-0">
+                <span class="qlc-icon icon-Staking d-sm-none d-md-inline-block" title="Staking"></span>
+                <span class="d-inline-block">
+                  <span class="text-bold-grey" *ngIf="pledge.pType == 'vote'">Voting/<br>Mining Node</span>
+                  <span class="text-bold-grey" *ngIf="pledge.pType == 'network'">Confidant</span>
+                  <span class="text-bold-grey" *ngIf="pledge.pType == 'mintage'">Mintage</span>
+                  
+                </span>
+              </div>
+              <div class="col-xl-4 col-lg-4 order-lg-2 pl-lg-2 col-md-8 order-md-6 pl-md-4 col-sm-8 order-sm-5 pl-sm-4 col-12 pl-4 order-6 pb-0 text-truncate">
+                <span class="text-color-lightgrey" >From: </span> 
+                <a href="{{ neoService.getExplorer() }}/address/{{pledge.multiSigAddress}}" target="_blank" >{{ pledge.multiSigAddress }}</a><br>
+                <span class="text-color-lightgrey" >To: </span> 
+                <a routerLink="/myaccount/{{ pledge.beneficial }}" >{{ pledge.beneficial }}</a><br>
+                <!-- <a (click)="neoService.contractGetLockInfo(pledge.nep5TxId)">Check</a>-->
+                <a href="{{ neoService.getExplorer() }}/transaction/{{pledge.nep5TxId}}" target="_blank">
+                  <span class="text-tiny">{{ pledge.nep5TxId }}</span> 
+                </a>
+              </div>
+              <div class="col-xl-1 col-lg-1 order-lg-3 col-md-2 order-md-2 col-sm-3 order-sm-2 col-4 order-3 pb-0 pr-sm-0 pl-4 pr-0 text-sm-right text-left text-blue">
+                <span data-toggle="tooltip" data-placement="top" title="">{{ pledge.amount | qlc:8 | currency:'':'':'1.2-8' }}</span>
+                <br><span class="text-color-grey">QLC</span>
+              </div>
+              <div class="col-xl-1 col-lg-1 order-lg-4 col-md-2 order-md-3 col-sm-3 order-sm-3 col-4 order-4 pb-0 pr-sm-0 pr-0 text-right text-color-green">
+                <span data-toggle="tooltip" data-placement="top" title="">{{ pledge.earnings | qlc:8 | currency:'':'':'1.2-8' }}</span>
+                <br><span class="text-color-grey">QGAS</span>
+              </div>
+              <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-4 col-sm-3 order-sm-4 col-4 order-5 pb-0 pr-sm-0 pr-0 text-right text-color-green">
+                <span data-toggle="tooltip" data-placement="top" title="">/</span>
+                <br><span class="text-color-grey">QGAS</span>
+              </div>
+              <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-5 col-sm-4 order-sm-6 col-4 order-2 pb-0 pr-sm-0 pr-0 text-right">
+                <span>
+                  {{ pledge.lastModifyTime * 1000 | date: 'dd/MM/yy' }}<br>{{ pledge.lastModifyTime * 1000 | date: 'H:mm:ss' }}<br>
+                  <span class="text-color-lightgrey" >-</span>
+                </span>
+              </div>
+              <div class="col-xl-2 col-lg-2 order-lg-6 col-md-4 order-md-7 offset-md-0 col-sm-4 offset-sm-8 order-sm-7 col-12 order-7 pb-0 pr-sm-0 pr-0 text-right">
+                <span>
+                    <div style="display:inline-block;vertical-align: top;padding:0px;padding-right:8px;"><img src="/assets/img/qlc-icon-staking-success-green.svg" style="height:20px;margin-top:-2px;margin-right:0px;"></div>
+                    <div style="display:inline-block;vertical-align:top;padding:0px;font-family: 'Lato', Gotham, 'Helvetica Neue', Helvetica, Arial, 'sans-serif'; font-size: 12px; text-transform: uppercase; font-weight: 700;">WITHDRAW<br>COMPLETE</div>
+                </span>
+              </div>
+            
+             </div>
+    
+
+        </div>
+        
+        
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+</div>
+
+
+<!-- REVOKE STEP 1 -->
+
+<div class="stake-screen-1" *ngIf="step == 1">
+
+
+
+  <!-- LOADING -->
+  <div class="container mt-0 qlc-content-first">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2">
+        <div class="container">
+            <div class="row">
+              <!-- TITLE -->
+              <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                <div class="content-title">
+                  <h1>Revoking in progress</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="container accounts">
+    <div class="row">
+
+      <!-- INFO -->
+      <div class="col-12 pb-3">
+          <div class="container pl-0 pr-0">
+            <div class="row pl-0 pr-0">
+
+
+            <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+              <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
+
+                <h3>Please wait</h3>
+                <h5 class="pt-3">The revoking process can take up to a couple of minutes.</h5>
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3 mt-5 mb-5">
+                      
+                      <div id="noTrespassingOuterBarG">
+                        <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <p style="color:#c10f0f;" class="pb-3"><strong>Important:</strong> Don't leave or close this page!</p>
+
+                <p class="pt-0 pb-0" *ngFor="let step of revokeSteps"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="/assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      
+
+
+    </div>
+  </div>		
+
+
+
+</div>
+
+<!-- REVOKE STEP 2 -->
+<div class="revoke-screen-2" *ngIf="step == 2">
+
+  <!-- COMPLETE -->
+  <div class="container mt-0 qlc-content-first">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2">
+        <div class="container">
+            <div class="row">
+              <!-- TITLE -->
+              <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                <div class="content-title">
+                  <h1>Revoking complete</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container accounts">
+    <div class="row">
+
+      <!-- INFO -->
+      <div class="col-12 pb-3">
+          <div class="container pl-0 pr-0">
+            <div class="row pl-0 pr-0">
+
+
+            <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+              <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
+
+                <h3>Congratulations!</h3>
+                <h5 class="pt-3">The revoking of your staking was successful.</h5>
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3 mt-5 mb-4">
+
+                      <img src="/assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;">
+
+                    </div>
+                  </div>
+                </div>
+
+                <p class="pt-3 mb-5"><strong>QGAS will soon be rewarded to your wallet:</strong><br><a href="#">{{ unlockPledge.beneficial }}</a></p>
+
+                <div class="container">
+                    <div class="row">
+                      <div class="col-md-4 offset-md-4 mb-4">
+
+                        <button (click)="backToOverview()" type="submit" class="btn btn-primary" style="min-width:100%;">
+                          BACK TO MY STAKINGS
+                        </button>
+
+                      </div>
+                    </div>
+                  </div>
+
+                
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>		
+
+
+</div>
+
+
+<!-- CONTINUE INVOKE -->
+<div class="stake-screen-1"  *ngIf='step == 3'>
+  <!-- LOADING -->
+  <div class="container mt-0 qlc-content-first">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2">
+        <div class="container">
+            <div class="row">
+              <!-- TITLE -->
+              <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                <div class="content-title">
+                  <h1>Invoking in progress</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="container accounts">
+    <div class="row">
+
+      <!-- INFO -->
+      <div class="col-12 pb-3">
+          <div class="container pl-0 pr-0">
+            <div class="row pl-0 pr-0">
+
+
+            <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+              <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
+
+                <h3>Please wait</h3>
+                <h5 class="pt-3">The invoking process can take up to a couple of minutes.</h5>
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3 mt-5 mb-5">
+
+                      <div id="noTrespassingOuterBarG">
+                        <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <p style="color:#c10f0f;" class="pb-3"><strong>Important:</strong> Don't leave or close this page!</p>
+
+                <p class="pt-0 pb-0" *ngFor="let step of invokeSteps"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="/assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}<a routerLink="{{ step.link }}" *ngIf="step.link"> {{ step.linkText }}</a></p>
+
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      
+
+
+    </div>
+  </div>		
+
+
+
+</div>
+
+
+
+
+<!-- FINISH INVOKE -->
+<div class="stake-screen-1" *ngIf="step == 4">
+
+
+
+  <!-- COMPLETE -->
+  <div class="container mt-0 qlc-content-first">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2">
+        <div class="container">
+            <div class="row">
+              <!-- TITLE -->
+              <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                <div class="content-title">
+                  <h1>Invoking complete</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="container accounts">
+    <div class="row">
+
+      <!-- INFO -->
+      <div class="col-12 pb-3">
+          <div class="container pl-0 pr-0">
+            <div class="row pl-0 pr-0">
+
+
+            <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+              <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
+
+                <h3>Woohoo!</h3>
+                <h5 class="pt-3">The invoking of your staking was successful.</h5>
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3 mt-5 mb-5">
+
+                      <img src="/assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;">
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                      <div class="col-md-4 offset-md-4 mb-4">
+  
+                        <button type="submit" (click)="backToOverview()" class="btn btn-primary" style="min-width:100%;" >
+                          BACK TO MY STAKINGS
+                        </button>
+
+                      </div>
+                    </div>
+                  </div>
+
+                
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      
+
+
+    </div>
+  </div>		
+
+
+
+</div>

@@ -1,7 +1,23 @@
 @import "../../../scss/mixins";
+.neo {
+	color: #659A28;
+}
+.neo-background {
+	background-color: #659A28 !important;
+}
+.neo-background:hover {
+	background-color: #78af39 !important;
+}
+.neo-background-light {
+	background-color: #8BC34A !important;
+}
+.white {
+	color: #ffffff;
+}
 .accounts {
 	position: relative;
 	text-align: left;
+	
 	h1 {
 		display: inline-block;
 		margin-bottom: 0;

@@ -16,8 +16,8 @@
           <!-- MENU -->
           <a routerLink="/" routerLinkActive="active" class="brand"></a>
           <div class="menu-holder">
+            <div class="menu-item menu-account" data-link="menu-sub-account"><div class="lock-icon locked" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()"></div><div class="lock-icon" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()"></div></div>
             <div class="menu-item menu-lang" data-link="menu-sub-language"></div>
-            <div class="menu-item menu-account" data-link="menu-sub-account"></div>
             <div class="menu-item menu-currency usd" data-link="menu-sub-currency"></div>
             <div class="menu-item menu-search" data-link="menu-sub-search"></div>
             <div class="menu-search-field" data-link="menu-sub-search">Search for: Address, Transaction, Phone Number</div>
@@ -125,11 +125,12 @@
     <div class="row text-center">
         <div class="col-10 offset-1">
             <div class="form-group text-center">
-              <h1 class="pt-5">Unlock Account</h1>
+              <img src="../../../assets/img/qlc-icon-lock-red.svg" style="width:80px;height:auto;" class="pt-4">
+              <h1 class="pt-4">Unlock Account</h1>
               <div class="input-group pt-3 pb-3">
                 <input class="form-control pass-field text-center" type="password" [(ngModel)]="unlockPassword" (keyup.enter)="unlockWalletConfirm()" placeholder="Enter your password" appAutofocus>
               </div>
-              <button class="btn btn-primary mb-5 w-100 pl-0 pr-0" type="button" (click)="unlockWalletConfirm()">UNLOCK</button>
+              <button class="btn btn-primary mb-4 w-100 pl-0 pr-0" type="button" (click)="unlockWalletConfirm()">UNLOCK</button>
             </div>
       </div>
     </div>

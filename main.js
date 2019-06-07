@@ -9,7 +9,7 @@ const crossSpawn = require('cross-spawn-with-kill');
 const signalExit = require('signal-exit');
 const isDev = require('electron-is-dev');
 const fs = require('fs-extra');
-const PeerId = require('peer-id');
+//const PeerId = require('peer-id');
 
 global.resourcesPath = process.resourcesPath;
 
@@ -103,22 +103,18 @@ async function run() {
 	}
 	platform = process.platform;
 	// start gqlc
-	let configTemp = '';
 	if (isDev) {
 		console.log('Running in development');
 		if (platform == 'win32') {
-			configTemp = path.join(global.resourcesPath, '../../../../extra/config.json');
 			global.resourcesPath = path.resolve(global.resourcesPath, '../../../../extra/', process.platform, process.arch);
 		} else {
 			appPath = app.getAppPath();
 			global.resourcesPath = path.resolve(appPath, 'extra', process.platform, process.arch);
-			configTemp = path.join(appPath, 'extra/config.json');
 		}
 	} else {
 		console.log('Running in production');
-		configTemp = path.join(global.resourcesPath, 'config.json');
 	}
-	console.log(`path: ${global.resourcesPath}, config template ${configTemp}`);
+	console.log(`path: ${global.resourcesPath}`);
 	console.log(`path: ` + toExecutableName('gqlc'));
 
 	const cmd = path.join(global.resourcesPath, toExecutableName('gqlc'));
@@ -131,60 +127,76 @@ async function run() {
 	console.log(`prepare gqlc data dir ${configDir}`);
 
 	const config = path.join(configDir, 'qlc_wallet.json');
-	console.log(configDir);
-	console.log(config);
+	console.log(`${configDir}, ${config}`);
+
 	async function prepare_config() {
-		if (!fs.existsSync(config)) {
+		if (!fs.existsSync(config)) { // check if config exsist
 			//read config template to set dataDir and save it to wallet user data dir
-			let rawdata = fs.readFileSync(configTemp);
-			let cfg = JSON.parse(rawdata);
-			cfg.dataDir = configDir;
-			//generate p2p Id
-			await PeerId.create({ bits: 2048 }, (err, id) => {
-				if (err) {
-					throw err;
-				}
-				pid = id.toJSON();
-				cfg.p2p.identity.peerId = pid.id;
-				cfg.p2p.identity.privateKey = pid.privKey;
+			const tempchild = await crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
+				windowsHide: true,
+				stdio: ['ignore', 'pipe', 'pipe']
 			});
-			console.log(`read config temp from resource ${configTemp}`);
-			let data = JSON.stringify(cfg, null, 4);
-			fs.writeFileSync(config, data);
+
+			var check = function(){  // wait until config is found and change rpcEnabled to true, restart
+				console.log('checking if file');
+				if(fs.existsSync(config)){
+					console.log('file found updating');
+					tempchild.kill();
+					let rawdata = fs.readFileSync(config);
+					let cfg = JSON.parse(rawdata);
+					cfg.rpc.rpcEnabled=true;
+					let data = JSON.stringify(cfg, null, 4);
+					fs.writeFileSync(config, data);
+					setTimeout(startChild, 2000);
+				}
+				else {
+					setTimeout(check, 3000); // check again
+				}
+			}
+			
+			await check();
+
+		} else {
+			startChild();
 		}
 	}
+	let child = {};
 	await prepare_config();
 
-	console.log(`start qglc ${cmd}`);
-	const child = crossSpawn(cmd, ['--config', config], {
-		windowsHide: true,
-		stdio: ['ignore', 'pipe', 'pipe']
-	});
+	
+	function startChild() {
+		console.log(`start qglc ${cmd}`);
+		child = crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
+			windowsHide: true,
+			stdio: ['ignore', 'pipe', 'pipe']
+		});
 
-	if (!child) {
-		const err = new Error('gqlc not started');
-		err.code = 'ENOENT';
-		err.path = cmd;
-		throw err;
+		if (!child) {
+			const err = new Error('gqlc not started');
+			err.code = 'ENOENT';
+			err.path = cmd;
+			throw err;
+		}
+		child.stdout.on('data', data => console.log('[node]', String(data).trim()));
+		child.stderr.on('data', data => console.log('[node]', String(data).trim()));
+
+		child.once('exit', () => {
+			removeExitHandler();
+			global.isNodeStarted = false;
+			console.log(`Node exiting (PID ${child.pid})`);
+			forceKill(child);
+		});
+	
+		child.once('exit', () => app.removeListener('will-quit', killHandler));
+	
+		child.once('loaded', () => {});
 	}
-	child.stdout.on('data', data => console.log('[node]', String(data).trim()));
-	child.stderr.on('data', data => console.log('[node]', String(data).trim()));
-
+	
 	//console.log(child);
 
 	const killHandler = () => child.kill();
 	const removeExitHandler = signalExit(killHandler);
-	child.once('exit', () => {
-		removeExitHandler();
-		global.isNodeStarted = false;
-		console.log(`Node exiting (PID ${child.pid})`);
-		forceKill(child);
-	});
-
-	child.once('exit', () => app.removeListener('will-quit', killHandler));
-
-	child.once('loaded', () => {});
-
+	
 	app.on('ready', () => {
 		// Once the app is ready, launch the wallet window
 		createWindow();

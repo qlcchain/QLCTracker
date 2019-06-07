@@ -35,7 +35,7 @@ export class MyrepresentativesComponent implements OnInit {
 	msg7 = '';
 	msg8 = '';
 	msg9 = '';
-  msg10 = '';
+    msg10 = '';
 
   representativeResults$ = new BehaviorSubject([]);
 	showRepresentatives = false;
@@ -326,7 +326,7 @@ export class MyrepresentativesComponent implements OnInit {
 		const qlcTokenMeta = await this.api.accountInfoByToken(newRep);
 		if (qlcTokenMeta === undefined || qlcTokenMeta == null) {
 			this.changingRepresentatives = false;
-			return this.notifications.sendWarning(this.msg5 + ` ${newRep} ` + this.msg6 + 'to?');
+			return this.notifications.sendWarning(this.msg5 + ` ${newRep} ` + this.msg6);
 		}
 
 		const allAccounts = accounts.find(a => a.id === 'All Accounts');
@@ -349,11 +349,7 @@ export class MyrepresentativesComponent implements OnInit {
 
 		// Now loop and change them
 		for (const account of accountsNeedingChange) {
-			console.log('account');
-			console.log(account);
 			const walletAccount = await this.walletService.getWalletAccount(account.id);
-			console.log('walletAccount');
-			console.log(walletAccount);
 			if (!walletAccount) {
 				continue; // Unable to find account in the wallet? wat?
 			}

@@ -26,9 +26,9 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-7 text-right">Owner</div> 
             </div>
             <div class="row qlc-table-row closed" *ngFor="let token of tokens">
-                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-5"><img src="assets/img/token-{{ token.tokenName | lowercase }}.png" class="table-token"> {{ token.tokenName }}</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-5"><img src="assets/img/token-{{ token.image | lowercase }}.png" class="table-token"> {{ token.tokenName }}</div>
                 <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block">{{ token.tokenSymbol }}</div>
-                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-5 col-2 d-none d-sm-block text-right">{{ token.totalSupply | qlc | currency:'':'':'1.0-0' }}</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-5 col-2 d-none d-sm-block text-right">{{ token.totalSupply | qlc:token.decimals | currency:'':'':'1.0-0' }}</div>
                 <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block text-right">{{ token.decimals }}</div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-7 text-right text-truncate pr-4"><a [routerLink]="'/account/' + (token.owner)">{{ token.owner }}</a></div> 
               <div class="container transaction-details"></div>
@@ -50,126 +50,3 @@
   <div class="row">
   </div>
 </div>
-
-<!--
-<div class="container mt-2 mb-5">
-  <div class="row">
-    
-    <div class="col-12 pl-0 pr-0">
-      
-      <div class="col-lg-12 mb-3 mt-4">
-        <div class="content-title">
-          <h1>Tokens</h1>
-        </div>
-      </div>
-      <div class="col-lg-12 mb-4">
-        <div class="content-box-white">
-
-
-          <div class="container">
-            <div class="row qlc-table-header">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">TOKEN NAME</div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">SYMBOL</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">TOTAL SUPPLY</div>
-               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">Price</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right">24h change</div> 
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">CREATED ON</div>
-            </div>
-
-            <div class="row qlc-table-row">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 text-truncate">
-                <span class="qlc-icon icon-token-qn1" title="QN1">
-                </span><a href="/f/explore/token?hash=E66E8CAD20394B3D7FA984D07CC500829AD36B69005E98F45348D98C37BF8EDC&lang=en">QN1</a>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN1</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">700000000.00</div>
-               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
-            </div>
-            
-            <div class="row qlc-table-row">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 text-truncate">
-                <span class="qlc-icon icon-token-qn2" title="QN2">
-                </span><a href="/f/explore/token?hash=3A938337C8B9F6BA8A6C94F3C53C02815E574E2BC2DCEC3EA2B60E67154FFECA&lang=en">QN2</a>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN2</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">500000000.00</div>
-              <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
-            </div>
-            
-            <div class="row qlc-table-row">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 text-truncate">
-                <span class="qlc-icon icon-token-qn3" title="QN3">
-                </span><a href="/f/explore/token?hash=9A4171BAA9133AFB9F8B77848A36592465A680375C8591E1EC7ADBB980C189F1&lang=en">QN3</a>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN3</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">800000000.00</div>
-               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
-            </div>
-
-            <div class="row qlc-table-row">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 text-truncate">
-                <span class="qlc-icon icon-token-qn4" title="QN4">
-                </span><a href="/f/explore/token?hash=222DC0E09225D6F929C96F3F1A0BF584ED680B9C253A5E0AE2C5C951098DDA0D&lang=en">QN4</a>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN4</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">900000000.00</div>
-               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
-            </div>
-
-            <div class="row qlc-table-row">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 text-truncate">
-                <span class="qlc-icon icon-token-qn5" title="QN5">
-                </span><a href="/f/explore/token?hash=AD3313731172B299E50B338C2CB7589A79F8B518F35D61CAF60953A9B5653AF4&lang=en">QN5</a>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QN5</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">400000000.00</div>
-               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">6M&nbsp;ago</div>
-            </div>
-            
-            
-            
-            
-            
-            
-            
-            <div class="row qlc-table-row">
-              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 text-truncate">
-                <span class="qlc-icon icon-token-qn6" title="Root_Token">
-                </span><a href="/f/explore/token?hash=125998E086F7011384F89554676B69FCD86769642080CE7EED4A8AA83EF58F36&lang=en">Root_Token</a>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2">QLC</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 d-none d-sm-block text-right">600000000.00</div>
-               <div class="col-xl-2 col-lg-1 col-md-2 col-sm-2 col-2 d-none d-md-block text-right">$0.26</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 d-none d-lg-block text-right text-color-green">+0.81%</div> 
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-5 text-right">8M&nbsp;ago</div>
-            </div>
-            
-
-            <div class="row qlc-table-header">
-              <div class="col-6"><span class="d-none d-sm-none d-md-inline-block">Tokens</span>&nbsp;&nbsp;1&nbsp;&nbsp;TO&nbsp;&nbsp;6&nbsp;&nbsp;OF&nbsp;&nbsp;6</div>
-              <div class="col-6 text-right qlc-pagination"><a href="javascript:">&#171;</a>
-<a href="javascript:" class="active">1</a>
-<a href="javascript:"> &#187;</a>
-</div>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-    
-    </div>
-    
-  </div>
-</div>
--->

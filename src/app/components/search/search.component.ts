@@ -34,12 +34,14 @@ export class SearchComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+   
     this.routerSub = this.router.events.subscribe(event => {
 			if (event instanceof ChildActivationEnd) {
 				this.load(); // Reload the state when navigating to itself from the transactions page
 			}
     });
     this.load();
+
   }
 
   ngOnDestroy() {

@@ -30,7 +30,7 @@
                 </div>
                 -->
                 <div class="row qlc-table-header" *ngIf="phoneBlocks.send.length > 0">
-                  <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Account / Transaction ID</div>
+                  <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Address / Transaction ID</div>
                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
                   <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
                 </div>
@@ -48,7 +48,7 @@
                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                     transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'
                   }}">
-                  <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
+                  <span data-toggle="tooltip" data-placement="top" title="">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
                   <br><span class="text-color-grey">{{ transaction.tokenName }}</span>
                 </div>
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
@@ -64,7 +64,7 @@
                 </div>
               </div>-->
               <div class="row qlc-table-header" *ngIf="phoneBlocks.receive.length > 0">
-                <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Account / Transaction ID</div>
+                <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Address / Transaction ID</div>
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
               </div>
@@ -81,7 +81,7 @@
                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                     transaction.type == 'Send' ? 'text-color-red' : 'text-color-green'
                   }}">
-                  <span data-toggle="tooltip" data-placement="top" title="+9.00 $">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
+                  <span data-toggle="tooltip" data-placement="top" title="">{{transaction.type == 'Send' ? '-' : '+'}} {{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</span>
                   <br><span class="text-color-grey">{{ transaction.tokenName }}</span>
                 </div>
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
@@ -93,7 +93,7 @@
               </div>
 
               <div class="row qlc-table-header" *ngIf="messageBlocks.length > 0">
-                <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Account / Transaction ID</div>
+                <div class="col-xl-8 col-lg-7 col-md-7 col-sm-7 col-9 text-truncate">Address / Transaction ID</div>
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
               </div>

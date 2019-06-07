@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit {
 		}
 
 		const transactionsCount = await this.api.blocksCount();
+		console.log(transactionsCount);
 		if (!transactionsCount.error) {
 			this.transactionsCount = transactionsCount.result; // transactionsCount.unchecked == pending transactions ??
 		}
@@ -91,13 +92,7 @@ export class HomeComponent implements OnInit {
 	}
 
   async loadTransactions() {
-    const tokenMap = {};
-		const tokens = await this.api.tokens();
-		if (!tokens.error) {
-			tokens.result.forEach(token => {
-				tokenMap[token.tokenId] = token;
-			});
-		}
+    
     
     await this.getTransactions();
   }
@@ -109,22 +104,35 @@ export class HomeComponent implements OnInit {
 
 		this.transactions = [];
 		if (!transactions.error) {
+			const tokenMap = {};
+			const tokens = await this.api.tokens();
+			if (!tokens.error) {
+				tokens.result.forEach(token => {
+					tokenMap[token.tokenId] = token;
+				});
+			}
 			const historyResult = transactions.result;
 			for (const block of historyResult) {
 				// For Open and receive blocks, we need to look up block info to get originating account
-				if (block.type === 'Open' || block.type === 'Receive') {
+				if (block.type === 'Open' || block.type === 'Receive' || block.type === 'ContractReward') {
           const preBlock = await this.api.blocksInfo([block.link]);
 					if (!preBlock.error && typeof(preBlock.result[0]) != 'undefined' && preBlock.result.length > 0 ) {
 						block.link_as_account = preBlock.result[0].address;
 					}
+				} else if (block.type === 'ContractSend') {
+					block.link_as_account = block.address;
 				} else {
           const link_as_account = await this.api.accountForPublicKey(block.link);
           if (!link_as_account.error && typeof(link_as_account.result) != 'undefined') {
             block.link_as_account = link_as_account.result;
           }
 				}
-				if (this.transactions.length < 5 && block.type !== 'Change')
+				if (this.transactions.length < 5 && block.type !== 'Change') {
+					if (tokenMap.hasOwnProperty(block.token)) {
+						block.tokenInfo = tokenMap[block.token];
+					}
 					this.transactions.push(block);
+				}
 			}
     }
 	}

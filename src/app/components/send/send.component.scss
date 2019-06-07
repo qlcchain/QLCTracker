@@ -28,6 +28,13 @@
 	background-size: 16px 16px;
 }
 
+.otherSlide img {
+	opacity: 0.4;
+}
+.otherSlide .activeOther img {
+	opacity: 1;
+}
+
 
 .sendTokens {
 	padding-top: 40px;
@@ -190,7 +197,7 @@
 	}
 	.sum span {
 		background: #fff;
-		padding: 15px;
+		padding: 0px 15px;
 		position: relative;
 		top: -15px;
 	}
