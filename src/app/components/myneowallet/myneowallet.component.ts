@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, ChildActivationEnd } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
 import { WalletService } from 'src/app/services/wallet.service';
@@ -8,7 +8,7 @@ import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AddressBookService } from 'src/app/services/address-book.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { timer } from 'rxjs';
+import { timer, Subscription, combineLatest } from 'rxjs';
 import { NeoWalletService } from 'src/app/services/neo-wallet.service';
 import * as QRCode from 'qrcode';
 import BigNumber from 'bignumber.js';
@@ -22,7 +22,8 @@ export class MyneowalletComponent implements OnInit {
 
   wallet = this.walletService.wallet;
   walletAccount = {
-    balances: []
+		balances: [],
+		encryptedwif: ''
 	};
 	claimableGas = '0';
 
@@ -44,7 +45,10 @@ export class MyneowalletComponent implements OnInit {
   
   showEditName = false;
 	addressBookTempName = '';
-  addressBookModel = '';
+	addressBookModel = '';
+	
+	subscriptions: Subscription[] = [];
+	neoPrivateCode = '';
   
   isNaN = isNaN;
   
@@ -70,7 +74,8 @@ export class MyneowalletComponent implements OnInit {
 		private trans: TranslateService,
 		private notificationService: NotificationService,
 		private addressBook: AddressBookService,
-		private modalService: BsModalService) { }
+		private modalService: BsModalService,
+		private changeDetection: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.routerSub = this.router.events.subscribe(event => {
@@ -138,7 +143,6 @@ export class MyneowalletComponent implements OnInit {
 			}
 		}
 		
-		console.log(this.walletAccount.balances);
 		this.claimableGas = await this.neoService.getClaimAmount(this.walletId);
 
     const transactions = await this.neoService.getLastTransactions(this.walletId);
@@ -177,7 +181,21 @@ export class MyneowalletComponent implements OnInit {
   }
   
   openModal(template: TemplateRef<any>) {
+		const _combine = combineLatest(
+      this.modalService.onShow,
+      this.modalService.onShown,
+      this.modalService.onHide,
+      this.modalService.onHidden
+		).subscribe(() => this.changeDetection.markForCheck());
+		this.subscriptions.push(
+      this.modalService.onHide.subscribe((reason: string) => {
+        this.neoPrivateCode = '';
+      })
+		);
+		
 		this.modalRef = this.modalService.show(template);
+
+
   }
   
   async claim() {
@@ -195,6 +213,15 @@ export class MyneowalletComponent implements OnInit {
 
 		this.walletService.saveWalletExport();
 		this.router.navigate(['myaccounts/']);
+	}
+
+	async recoverPrivateKey(recover) {
+		if (this.walletService.walletIsLocked()) {
+			return this.notifications.sendWarning('ERROR wallet locked');
+		}
+		
+		this.neoPrivateCode = await this.neoService.decrypt(this.walletAccount.encryptedwif,this.wallet.password);
+		this.openModal(recover);
 	}
 
 }
