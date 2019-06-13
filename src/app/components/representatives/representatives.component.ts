@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
-import { forEach } from '@angular/router/src/utils/collection';
 import { ActivatedRoute, Router, ChildActivationEnd } from '@angular/router';
 import { NodeService } from 'src/app/services/node.service';
 import { timer } from 'rxjs';

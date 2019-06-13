@@ -17,7 +17,7 @@ import { NGXLogger } from 'ngx-logger';
   styleUrls: ['./myrepresentatives.component.scss']
 })
 export class MyrepresentativesComponent implements OnInit {
-  @ViewChild('repInput') repInput;
+  @ViewChild('repInput', { static: true }) repInput;
 
   accounts = this.walletService.wallet.accounts;
 	wallet = this.walletService.wallet;
