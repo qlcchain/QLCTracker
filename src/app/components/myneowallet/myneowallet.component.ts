@@ -49,6 +49,8 @@ export class MyneowalletComponent implements OnInit {
 	
 	subscriptions: Subscription[] = [];
 	neoPrivateCode = '';
+	neoPrivateCodeButton = 'Recover private key';
+	neoPrivateCodeRecoverStatus = 0;
   
   isNaN = isNaN;
   
@@ -189,7 +191,9 @@ export class MyneowalletComponent implements OnInit {
 		).subscribe(() => this.changeDetection.markForCheck());
 		this.subscriptions.push(
       this.modalService.onHide.subscribe((reason: string) => {
-        this.neoPrivateCode = '';
+				this.neoPrivateCode = '';
+				this.neoPrivateCodeRecoverStatus = 0;
+				this.neoPrivateCodeButton = 'Recover private key';
       })
 		);
 		
@@ -219,7 +223,12 @@ export class MyneowalletComponent implements OnInit {
 		if (this.walletService.walletIsLocked()) {
 			return this.notifications.sendWarning('ERROR wallet locked');
 		}
+		if (this.neoPrivateCodeRecoverStatus == 1) {
+			return this.notifications.sendInfo('Preparing, please wait a moment.');
+		}
 		
+		this.neoPrivateCodeRecoverStatus = 1;
+		this.neoPrivateCodeButton = 'Preparing, please wait.';
 		this.neoPrivateCode = await this.neoService.decrypt(this.walletAccount.encryptedwif,this.wallet.password);
 		this.openModal(recover);
 	}
