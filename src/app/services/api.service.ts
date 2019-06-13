@@ -18,6 +18,9 @@ export class ApiService {
 	rpcUrl = environment.rpcUrl[environment.qlcChainNetwork];
 	alive = true;
 	connectTimer = null;
+	reconnectTime = 1000;
+	reconnectInterval = 500;
+	reconnectTimeMax = 10000;
 	
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
 	c = new Client(this.HTTP_RPC, () => {});
@@ -30,9 +33,11 @@ export class ApiService {
 	}
 
 	async connect() {
-		const source = timer(1000);
+		const source = timer(this.reconnectTime);
 		this.connectTimer = source.subscribe(async val => {
-			
+			this.reconnectTime = this.reconnectTime + this.reconnectInterval;
+				if (this.reconnectTime > this.reconnectTimeMax)
+					this.reconnectTime = this.reconnectTimeMax;
 			const returns = await this.c.buildinLedger.blocksCount();
 
 			if (returns.result) {
@@ -98,7 +103,7 @@ export class ApiService {
 		}
 	}
 
-	async accountsPending(accounts: string[], count: number = 50): Promise<{ result: any; error?: string }> {
+	async accountsPending(accounts: string[], count: number = 500): Promise<{ result: any; error?: string }> {
 		const result = await this.c.buildinLedger.accountsPending(accounts,count);
 		if (!result.result && !result.error) 
 			this.reconnect('accountsPending');
@@ -297,28 +302,28 @@ export class ApiService {
 	}
 	
 
-	async getTotalRewards(txid: string): Promise<{ result: any; error?: string }> {
+	async getTotalRewards(txid: string): Promise<{ result: any; error?: any }> {
 		return await this.request('rewards_getTotalRewards', { params: [txid] });
 	}
 
-	async getReceiveRewardBlock(txid: string): Promise<{ result: any; error?: string }> {
+	async getReceiveRewardBlock(txid: string): Promise<{ result: any; error?: any }> {
 		return await this.request('rewards_getReceiveRewardBlock', { params: [txid] });
 	}
 
-	async getConfidantRewardsDetail(account: string): Promise<{ result: any; error?: string }> {
+	async getConfidantRewardsDetail(account: string): Promise<{ result: any; error?: any }> {
 		return await this.request('rewards_getConfidantRewordsDetail', { params: [account] });
 	}
 
-	async getConfidantRewards(account: string): Promise<{ result: any; error?: string }> {
+	async getConfidantRewards(account: string): Promise<{ result: any; error?: any }> {
 		return await this.request('rewards_getConfidantRewards', { params: [account] });
 	}
 	
-	async getTotalPledgeAmount(): Promise<{ result: any; error?: string }> {
+	async getTotalPledgeAmount(): Promise<{ result: any; error?: any }> {
 		return await this.request('pledge_getTotalPledgeAmount', { params: [] });
 	}
 
 	
-	async messageHash(message:string): Promise<{ result: any; error?: string }> {
+	async messageHash(message:string): Promise<{ result: any; error?: any }> {
 		const result = await this.c.buildinLedger.messageHash(message);
 		if (!result.result && !result.error) 
 			this.reconnect('messageHash');
@@ -326,7 +331,7 @@ export class ApiService {
 		return result;
 	}
 
-	async messageBlocks(messageHash:string): Promise<{ result: any; error?: string }> {
+	async messageBlocks(messageHash:string): Promise<{ result: any; error?: any }> {
 		const result = await this.c.buildinLedger.messageBlocks(messageHash);
 		if (!result.result && !result.error) 
 			this.reconnect('messageBlocks');

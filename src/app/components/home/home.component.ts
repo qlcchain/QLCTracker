@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	async reload() {
-		const source = timer(200);
+		const source = timer(500);
 		const abc =  source.subscribe(async val => {
 				this.load();
 		});

@@ -50,9 +50,9 @@ export class HeaderComponent implements OnInit {
     
     if (environment.desktop) {
       window.jQuery = window.$ = require('node_modules/jquery/dist/jquery.js');
-      particlesJS.load('particles-js', 'assets/data/particles.json', function() { console.log('callback - particles.js config loaded'); });
+      particlesJS.load('particles-js', 'assets/data/particles.json', function() {  });
     } else {
-      particlesJS.load('particles-js', '../../assets/data/particles.json', function() { console.log('callback - particles.js config loaded'); });
+      particlesJS.load('particles-js', '../../assets/data/particles.json', function() {  });
     }
     (function ($) {
       var myTarget;

@@ -519,15 +519,15 @@ export class StakingCreateComponent implements OnInit {
     const txid = pledge.nep5TxId;
 
     const transaction = await this.neoService.getTransaction(txid);
-    console.log('txid is ');
-    console.log(txid);
+    //console.log('txid is ');
+    //console.log(txid);
 
     const pType = pledge.pType;
     
     if (transaction.txid) {
       const waitTimer = timer(20000).subscribe( async (data) => {
-      console.log(transaction);
-      console.log('txid confirmed');
+      //console.log(transaction);
+      //console.log('txid confirmed');
       this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.', checkimg: 1});
 
       const pledgeResult = (pType == 'mintage') 
@@ -551,7 +551,7 @@ export class StakingCreateComponent implements OnInit {
       this.step = 4;
       });
     } else {
-      console.log('error repeating');
+      console.log('no txid yet ... repeating');
       // wait for neoscan to confirm transaction
       const waitTimer = timer(5000).subscribe( (data) => {
         this.confirmInvokeWaitForTXIDConfirmByPledge(pledge,walletAccount);
@@ -601,7 +601,7 @@ export class StakingCreateComponent implements OnInit {
       }
       });
     } else {
-      console.log('error repeating');
+      console.log('no txid yet ... repeating');
       // wait for neoscan to confirm transaction
       const waitTimer = timer(5000).subscribe( (data) => {
         this.confirmInvokeWaitForTXIDConfirm(txData,walletAccount);
@@ -694,7 +694,6 @@ export class StakingCreateComponent implements OnInit {
 		} else {
 			return null;
 		}
-	}
-
+  }
 
 }
