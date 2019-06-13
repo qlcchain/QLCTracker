@@ -120,9 +120,14 @@ export class QLCBlockService {
 			// proccess reward block
 			const rewardReceiveBlock = await this.api.getReceiveRewardBlock(sourceBlock);
 			//console.log(rewardReceiveBlock);
-			const processResponse = await this.api.process(rewardReceiveBlock.result);
-			//console.log(processResponse);
-			return
+			if (rewardReceiveBlock.result) {
+				const processResponse = await this.api.process(rewardReceiveBlock.result);
+				//console.log(processResponse);
+			}
+			if (rewardReceiveBlock.error) {
+				console.log(rewardReceiveBlock.error.message);
+			}
+			return;
 		}
 
 		// if (srcBlockInfo.result[0].address == 'qlc_3pj83yuemoegkn6ejskd8bustgunmfqpbhu3pnpa6jsdjf9isybzffwq7s4p' || srcBlockInfo.result[0].address == 'qlc_1kk5xst583y8hpn9c48ruizs5cxprdeptw6s5wm6ezz6i1h5srpz3mnjgxao') {
