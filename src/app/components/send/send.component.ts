@@ -431,8 +431,11 @@ export class SendComponent implements OnInit {
   }
   tokenBalance(token) {
     if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
-      const tokenData = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === token);
-      return tokenData.balance;
+			const tokenData = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === token);
+			if (tokenData != undefined && tokenData.balance != undefined)
+				return tokenData.balance;
+			else
+				return 0.00;
 		} else {
 			return 0.00;
 		}
