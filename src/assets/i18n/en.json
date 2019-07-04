@@ -58,7 +58,7 @@
 	},
 	"CREATE_NEW_WALLET": {
         "create_new_wallet_title": "Create new account",
-        "create_new_wallet_warning": "Read carefully before prodeeding!",
+        "create_new_wallet_warning": "Read carefully before proceeding!",
 		"create_new_wallet_text1": "When you create a new account, a new QLC Chain Account seed will be generated which can be used to create brand new wallets on the QLC Chain network. Your QLC Account seed is the master key to all of your wallets and any money inside of them!",
 		"create_new_wallet_text2": "Make sure you back up your seed, write it down, and keep it incredibly safe! ",
         "create_new_wallet_text3": "There is NO way to recover it after creation, and all funds inside WILL be lost without it!",
