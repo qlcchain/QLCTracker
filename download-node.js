@@ -2,8 +2,8 @@ const fs = require('fs-extra');
 const download = require('download');
 const chmod = require('chmod');
 
-const version = 'v1.2.2';
-const gitrev = '4efd8ee';
+const version = 'v1.2.4';
+const gitrev = '959bc98';
 
 let dir = 'extra/win32/x64';
 if (!fs.existsSync(dir)){
