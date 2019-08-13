@@ -1,4 +1,14 @@
-
-<app-header></app-header>
-<router-outlet></router-outlet>
+<div id="update-notifications" *ngIf="showUpdate">
+    <a href="#" class="update-close-but" *ngIf="updateBreak == 0" (click)="closeUpdate()"></a>
+    <div class="container pt-0 pb-0 pl-0 pr-0">
+        <div class="row pt-0 pb-0 pl-0 pr-0">
+          <div class="col-12 pl-md-4 pr-md-3 text-center">
+            {{updateText}}
+            <a href="{{updateLink}}" *ngIf="updateLink != ''" target="_blank" >Click here</a>
+          </div>
+        </div>
+    </div>
+</div>
+<app-header [class.update-open]="showUpdate"></app-header>
+<router-outlet [class.update-open]="showUpdate"></router-outlet>
 <app-notifications></app-notifications>
