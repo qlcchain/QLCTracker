@@ -381,7 +381,10 @@ export class NeoWalletService {
     .catch(config => {
       console.log("\n\n--- Response error ---");
       console.log(config);
-      return config;
+      const errorConfig = {
+        error: config
+      }
+      return errorConfig;
     });
     return returnToken;
   

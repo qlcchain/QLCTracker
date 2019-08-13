@@ -92,12 +92,15 @@ export class WalletService {
 	loadingPending = false;
 	pendingBlocks = [];
 	successfulBlocks = [];
-	blocksCount = 0;
+	blocksCount = {
+		'count':0,
+		'unchecked':0
+	};
 	tokenMap = {};
 	tokenRefreshTime = 0;
 
 	private pendingRefreshInterval$ = interval(10000);
-	private blocksCountInterval$ = interval(90000);
+	private blocksCountInterval$ = interval(60000);
 
 	constructor(
 		private util: UtilService,
@@ -154,6 +157,7 @@ export class WalletService {
 		this.blocksCountInterval$.subscribe(async () => {
 			this.refreshBlocks();
 		});
+		this.refreshBlocks();
 		this.loadPending();
 	}
 

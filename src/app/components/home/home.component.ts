@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ChildActivationEnd } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { NodeService } from 'src/app/services/node.service';
-import { timer } from 'rxjs';
+import { timer, interval } from 'rxjs';
 import BigNumber from 'bignumber.js';
+import { WalletService } from 'src/app/services/wallet.service';
 
 @Component({
   selector: 'app-home',
@@ -12,33 +13,42 @@ import BigNumber from 'bignumber.js';
 })
 export class HomeComponent implements OnInit {
 
-  transactions: any[] = [];
+  	transactions: any[] = [];
 	pendingBlocks = [];
 	pageSize = 25;
 	accountsCreated = 0;
-	transactionsCount = { count: 0, unchecked: 0 };
+	//transactionsCount = { count: 0, unchecked: 0 };
 	representativeOnline = 0;
 	representativesCount = 0;
 	votingPower = new BigNumber(0);
 	votingPowerPercent = '0';
 	tokensCount = 0;
 
-  routerSub = null;
+	routerSub = null;
+	
+	private latestTransactionsInterval$ = interval(60000);
 
-  constructor(
-		private route: Router,
-		private api: ApiService,
-		private node: NodeService
-  ) { }
+	constructor(
+			private route: Router,
+			private api: ApiService,
+			private node: NodeService,
+			public wallet: WalletService
+	) { }
 
-  async ngOnInit() {
-    this.routerSub = this.route.events.subscribe(event => {
+  	async ngOnInit() {
+   	 	this.routerSub = this.route.events.subscribe(event => {
 			if (event instanceof ChildActivationEnd) {
 				this.loadTransactions(); // Reload the state when navigating to itself from the transactions page
 			}
 		});
 		this.load();
 	}
+
+	ngOnDestroy() {
+		if (this.routerSub) {
+			this.routerSub.unsubscribe();
+		}
+  	}
 
 	load() {
 		if (this.node.status === true) {
@@ -62,11 +72,12 @@ export class HomeComponent implements OnInit {
 			this.accountsCreated = accountsCreated.result;
 		}
 
-		const transactionsCount = await this.api.blocksCount();
-		console.log(transactionsCount);
-		if (!transactionsCount.error) {
-			this.transactionsCount = transactionsCount.result; // transactionsCount.unchecked == pending transactions ??
-		}
+		//const transactionsCount = await this.api.blocksCount();
+		//console.log(transactionsCount);
+		//if (!transactionsCount.error) {
+		//	this.transactionsCount = transactionsCount.result; // transactionsCount.unchecked == pending transactions ??
+		//}
+		this.wallet.refreshBlocks();
 
 		const tokensCount = await this.api.tokens();
 		if (!tokensCount.error) {
@@ -80,29 +91,29 @@ export class HomeComponent implements OnInit {
 			const onlineReps = onlineRepresentatives.result;
 			this.representativeOnline = onlineReps.length; 
 			const tokens = await this.api.tokenInfoByName('QLC');
-      let displayReps = [];
 			let votingOnline = new BigNumber(0);
-      onlineReps.forEach(async rep => {
+      		onlineReps.forEach(async rep => {
 				const representative = Array.isArray(representatives.result) ? representatives.result.filter(repMeta => repMeta.address === rep)[0] : null;
-				votingOnline = new BigNumber(representative.balance).plus(votingOnline);
+				votingOnline = new BigNumber(representative.total).plus(votingOnline);
 				this.votingPower = votingOnline;
 				this.votingPowerPercent = new BigNumber(votingOnline).dividedBy(tokens.result.totalSupply).multipliedBy(100).toFixed(2); 
 			});
-    }
+    	}
 	}
 
-  async loadTransactions() {
-    
-    
-    await this.getTransactions();
-  }
+	async loadTransactions() {
+		this.getTransactions();
+		this.latestTransactionsInterval$.subscribe(async () => {
+			this.getTransactions();
+		});
+	}
 
-  async getTransactions() {
+	async getTransactions() {
 
 		const transactions = await this.api.blocks(10);
 		// const additionalBlocksInfo = [];
 
-		this.transactions = [];
+		
 		if (!transactions.error) {
 			const tokenMap = {};
 			const tokens = await this.api.tokens();
@@ -112,29 +123,31 @@ export class HomeComponent implements OnInit {
 				});
 			}
 			const historyResult = transactions.result;
+			let newTransactions = [];
 			for (const block of historyResult) {
 				// For Open and receive blocks, we need to look up block info to get originating account
 				if (block.type === 'Open' || block.type === 'Receive' || block.type === 'ContractReward') {
-          const preBlock = await this.api.blocksInfo([block.link]);
+          			const preBlock = await this.api.blocksInfo([block.link]);
 					if (!preBlock.error && typeof(preBlock.result[0]) != 'undefined' && preBlock.result.length > 0 ) {
 						block.link_as_account = preBlock.result[0].address;
 					}
 				} else if (block.type === 'ContractSend') {
 					block.link_as_account = block.address;
 				} else {
-          const link_as_account = await this.api.accountForPublicKey(block.link);
-          if (!link_as_account.error && typeof(link_as_account.result) != 'undefined') {
-            block.link_as_account = link_as_account.result;
-          }
+					const link_as_account = await this.api.accountForPublicKey(block.link);
+					if (!link_as_account.error && typeof(link_as_account.result) != 'undefined') {
+						block.link_as_account = link_as_account.result;
+					}
 				}
-				if (this.transactions.length < 5 && block.type !== 'Change') {
+				if (newTransactions.length < 5 && block.type !== 'Change') {
 					if (tokenMap.hasOwnProperty(block.token)) {
 						block.tokenInfo = tokenMap[block.token];
 					}
-					this.transactions.push(block);
+					newTransactions.push(block);
 				}
 			}
-    }
+			this.transactions = newTransactions;
+    	}
 	}
 
 }

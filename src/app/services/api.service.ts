@@ -38,23 +38,53 @@ export class ApiService {
 			this.reconnectTime = this.reconnectTime + this.reconnectInterval;
 				if (this.reconnectTime > this.reconnectTimeMax)
 					this.reconnectTime = this.reconnectTimeMax;
-			const returns = await this.c.buildinLedger.blocksCount();
 
-			if (returns.result) {
-				if ( returns.result.count < 5) {
-					this.node.setSynchronizing();
+			try {
+				const syncQuery = await this.syncing();
+				//console.log(syncQuery);
+				if (typeof syncQuery.result != undefined) {
+					this.node.setOnline();
+					
+					if ( syncQuery.result == true) {
+						this.node.setSynchronizing();
+						this.connect();
+					} else {
+						if (this.rpcUrl != environment.mainRpcUrl) {
+							const blocksMainQuery = await this.blocksCountMain();
+							const blocksQuery = await this.blocksCount();
+							const mainBlocksCount = blocksMainQuery.result.count;
+							const nodeBlocksCount = blocksQuery.result.count;
+							//console.log('mainBlocksCount ' + ' ' + mainBlocksCount + ' nodeBlocksCount ' + ' ' + nodeBlocksCount + ' unchecked ' + ' ' + blocksQuery.result.unchecked)
+							if (nodeBlocksCount < mainBlocksCount) {
+								this.node.setSynchronizing();
+								this.connect();
+							} else {
+								this.node.setSynchronized();
+							}
+							return;
+							
+						} else {
+							this.node.setSynchronized();
+						}
+					}
+				} else if (syncQuery.error) {
+					console.log(syncQuery.error);
 					this.connect();
 				} else {
-					this.node.setSynchronized();
+					console.log('error connecting');
+					this.connect();
 				}
-				this.node.setOnline();
-			} else if (returns.error) {
-				console.log(returns.error);
-				this.connect();
-			} else {
+			} catch (error) {
 				console.log('error connecting');
+				console.log(error);
+				this.node.setOffline('ERROR - Node offline, reconnecting ...');
 				this.connect();
 			}
+			
+
+			
+
+			
 		});
 	}
 
@@ -103,7 +133,13 @@ export class ApiService {
 		}
 	}
 
-	async accountsPending(accounts: string[], count: number = 500): Promise<{ result: any; error?: string }> {
+	async accountsPending(accounts: string[], count: number = 500): Promise<{ result?: any; error?: string }> {
+		if (this.node.synchronized === false) {
+			const errorMsg = {
+				error: 'Node is not synchronized.'
+			}
+			return errorMsg;
+		}
 		const result = await this.c.buildinLedger.accountsPending(accounts,count);
 		if (!result.result && !result.error) 
 			this.reconnect('accountsPending');
@@ -158,7 +194,19 @@ export class ApiService {
 		}
 	}
 
-	async process(block): Promise<{ result: string; error?: string }> {
+	async process(block): Promise<{ result?: string; error?: string }> {
+		if (this.node.synchronized === false) {
+			const errorMsg = {
+				error: 'Node is not synchronized.'
+			}
+			return errorMsg;
+		}
+		if (this.node.break === true) {
+			const errorMsg = {
+				error: 'Old node version, don\'t process.'
+			}
+			return errorMsg;
+		}
 		try {
 			return await this.c.request(methods.ledger.process, block);
 		} catch (err) {
@@ -281,15 +329,16 @@ export class ApiService {
 		return result;
 	}
 
-	// rewards 
+	
 
-	private async request(action, data): Promise<any> {
+	private async request(action, data, rpc = ''): Promise<any> {
 		data.jsonrpc = '2.0';
 		data.method = action;
 		data.id = uuid();
+		const url = (rpc != '')? rpc : this.rpcUrl;
 
 		return await this.http
-			.post(this.rpcUrl, data)
+			.post(url, data)
 			.toPromise()
 			.then(res => {
 				return res;
@@ -301,7 +350,7 @@ export class ApiService {
 			});
 	}
 	
-
+	// rewards 
 	async getTotalRewards(txid: string): Promise<{ result: any; error?: any }> {
 		return await this.request('rewards_getTotalRewards', { params: [txid] });
 	}
@@ -338,4 +387,29 @@ export class ApiService {
 
 		return result;
 	}
+
+	// net
+	async syncing(): Promise<{ result: any; error?: any }> {
+		return await this.request('net_syncing', { params: [] });
+	}
+
+	async connectPeersInfo(): Promise<{ result: any; error?: any }> {
+		return await this.request('net_connectPeersInfo', { params: [] });
+	}
+	// net END
+
+	// desktop
+	async blocksCountMain(): Promise<{ result: any; error?: string }> {
+		return await this.request('ledger_blocksCount', { params: [] }, environment.mainRpcUrl[environment.qlcChainNetwork]);
+	}
+	// desktop END
+
+	async updates(): Promise<{ result: any; error?: string }> {
+		const type = environment.desktop ? 'desktop' : 'web';
+		const version = environment.version;
+
+		return await this.request('updates', { params: [type,version] }, 'https://explorer.qlcchain.org/api/updates');
+	}
+
+
 }

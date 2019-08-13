@@ -32,7 +32,7 @@
             <div class="col-12">Settled messages</div>
           </div>
           <div class="row qlc-table-row-blue">
-            <div class="col-12">{{ transactionsCount.count | currency:'':'':'1.0-0' }}</div>
+            <div class="col-12">{{ wallet.blocksCount.count | currency:'':'':'1.0-0' }}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
             <div class="col-12"><a routerLink="/transactions"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
@@ -201,10 +201,10 @@
             <div class="col-12">Total transaction counter</div>
           </div>
           <div class="row qlc-table-row-white sub-page pb-0">
-            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ transactionsCount.count }}</span></div>
+            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ wallet.blocksCount.count }}</span></div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ transactionsCount.unchecked }} pending transactions</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ wallet.blocksCount.unchecked }} pending transactions</span></div>
           </div>
         </div>
       </div>

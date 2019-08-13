@@ -1,8 +1,13 @@
 export const environment = {
     production: true,
     desktop: true,
+    version: '1.0.1',
     qlcChainNetwork: 'test', // test or main
     neoNetwork: 'test', // test or main
+    mainRpcUrl: {
+        'test' : 'https://rpc-test.qlcchain.online',
+        'main' : 'https://rpc.qlcchain.online'
+    },
     rpcUrl: {
         'test' : 'http://127.0.0.1:19735',
         'main' : 'http://127.0.0.1:9735'
