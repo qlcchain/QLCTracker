@@ -82,7 +82,7 @@
 
 						</div>
 						<div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 text-right">
-								{{ rep.delegatedWeight | qlc: 'QLC' | currency:'':'':'1.0-8' }}
+								{{ rep.delegatedWeight | qlc:8 | currency:'':'':'1.0-8' }}
 						</div>
 					</div>
 
@@ -136,7 +136,7 @@
 											<option [value]="null">{{ 'REPRESENTATIVES.select_accounts_to_change' | translate }}</option>
 											<option [value]="'all'">{{ 'REPRESENTATIVES.all_accounts' | translate }}</option>
 											<ng-container *ngFor="let account of accounts">
-												<option [value]="account.id" *ngIf="account.accountMeta.coinBalance > 0"
+												<option [value]="account.id" *ngIf="account.accountMeta.coinBalance >= 0"
 													>{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id | squeeze }} ({{
 														account.accountMeta.coinBalance | qlc: settings.settings.displayDenomination
 													}}) 

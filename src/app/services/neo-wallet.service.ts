@@ -59,7 +59,6 @@ export class NeoWalletService {
   ) {
     const tokenList = require('../../assets/data/neoTokenList_'+environment.neoNetwork+'.json');
     this.tokenList = tokenList;
-    console.log(tokenList);
    }
 
   getNetwork() {
@@ -175,13 +174,13 @@ export class NeoWalletService {
       const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === address);
       const wif = await this.decrypt(selectedWallet.encryptedwif,this.walletService.wallet.password);
       const account = await new wallet.Account(wif);
-      console.log("\n\n--- Claiming Address ---");
-      console.log(account);
+      //console.log("\n\n--- Claiming Address ---");
+      //console.log(account);
       //const apiProvider = await new api.neoscan.instance(this.network);
       const apiProvider = new myProvider(); 
   
-      console.log("\n\n--- API Provider ---");
-      console.log(apiProvider);
+      //console.log("\n\n--- API Provider ---");
+      //console.log(apiProvider);
 
       const config = {
         api: apiProvider,
@@ -190,13 +189,13 @@ export class NeoWalletService {
 
       const claimed = await Neon.claimGas(config)
       .then(config => {
-        console.log("\n\n--- Response ---");
-        console.log(config.response);
+        //console.log("\n\n--- Response ---");
+        //console.log(config.response);
         this.notificationService.sendSuccess('GAS claimed. It should be visible soon.');
         return true;
       })
       .catch(config => {
-        console.log(config);
+        //console.log(config);
         return false;
       });
       
@@ -382,7 +381,10 @@ export class NeoWalletService {
     .catch(config => {
       console.log("\n\n--- Response error ---");
       console.log(config);
-      return config;
+      const errorConfig = {
+        error: config
+      }
+      return errorConfig;
     });
     return returnToken;
   
@@ -442,8 +444,7 @@ export class NeoWalletService {
   }  
 
   async contractLock(neoWalletAddress,qlcAmount,qlcWalletAddress,durationInDays) {
-    
-    console.log('contractLock')
+    //console.log('contractLock')
     /*console.log(neoWalletAddress)
     console.log(qlcAmount)
     console.log(qlcWalletAddress)
@@ -535,7 +536,7 @@ export class NeoWalletService {
   const script = Neon.create.script(props);
 
   let sb = new sc.ScriptBuilder(script);
-  console.log(sb.toScriptParams());
+  //console.log(sb.toScriptParams());
 
   //await rpc.Query.invokeScript(script)
   let returnData = await rpc.Query.invokeFunction(

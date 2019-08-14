@@ -17,7 +17,7 @@ import { NGXLogger } from 'ngx-logger';
   styleUrls: ['./myrepresentatives.component.scss']
 })
 export class MyrepresentativesComponent implements OnInit {
-  @ViewChild('repInput') repInput;
+  @ViewChild('repInput', { static: true }) repInput;
 
   accounts = this.walletService.wallet.accounts;
 	wallet = this.walletService.wallet;
@@ -155,7 +155,7 @@ export class MyrepresentativesComponent implements OnInit {
 							result.balance = qlcTokenMeta.balance;
 							this.logger.debug(`${account.id} resp: ${result.representative} balance: ${result.balance}`);
 						} else {
-							this.logger.debug(`${account.id} does not hold any Root_Token`);
+							this.logger.debug(`${account.id} does not hold any QLC`);
 						}
 						return result;
 					}
@@ -196,12 +196,12 @@ export class MyrepresentativesComponent implements OnInit {
 
 			const existingRep = representatives.find(rep => rep.id === accountInfo.representative);
 			if (existingRep) {
-				existingRep.weight = existingRep.weight.plus(new BigNumber(accountInfo.balance));
+				existingRep.weight = existingRep.weight.plus(new BigNumber(accountInfo.coinBalance));
 				existingRep.accounts.push(accountInfo);
 			} else {
 				const newRep = {
 					id: accountInfo.representative,
-					weight: new BigNumber(accountInfo.balance),
+					weight: new BigNumber(accountInfo.coinBalance),
 					accounts: [accountInfo]
 				};
 				representatives.push(newRep);
@@ -335,7 +335,7 @@ export class MyrepresentativesComponent implements OnInit {
 		// Remove any that don't need their represetatives to be changed
 		const accountsNeedingChange = accountsToChange.filter(account => {
 			const accountInfo = this.fullAccounts.find(a => a.id === account.id);
-			// token account exist and token account holder ROOT_TOKEN
+			// token account exist and token account holder QLC
 			if (accountInfo && accountInfo.representative) {
 				return accountInfo.representative.toLowerCase() !== newRep.toLowerCase();
 			}

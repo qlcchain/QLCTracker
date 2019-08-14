@@ -126,43 +126,16 @@ async function run() {
 	}
 	console.log(`prepare gqlc data dir ${configDir}`);
 
-	const config = path.join(configDir, 'qlc_wallet.json');
+	let config = path.join(configDir, 'qlc.json');
+	const config_old = path.join(configDir, 'qlc_wallet.json');
+	if (fs.existsSync(config_old)) {
+		config = config_old;
+	}
+
 	console.log(`${configDir}, ${config}`);
 
-	async function prepare_config() {
-		if (!fs.existsSync(config)) { // check if config exsist
-			//read config template to set dataDir and save it to wallet user data dir
-			const tempchild = await crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
-				windowsHide: true,
-				stdio: ['ignore', 'pipe', 'pipe']
-			});
-
-			var check = function(){  // wait until config is found and change rpcEnabled to true, restart
-				console.log('checking if file');
-				if(fs.existsSync(config)){
-					console.log('file found updating');
-					tempchild.kill();
-					let rawdata = fs.readFileSync(config);
-					let cfg = JSON.parse(rawdata);
-					cfg.rpc.rpcEnabled=true;
-					let data = JSON.stringify(cfg, null, 4);
-					fs.writeFileSync(config, data);
-					setTimeout(startChild, 2000);
-				}
-				else {
-					setTimeout(check, 3000); // check again
-				}
-			}
-			
-			await check();
-
-		} else {
-			startChild();
-		}
-	}
 	let child = {};
-	await prepare_config();
-
+	startChild();
 	
 	function startChild() {
 		console.log(`start qglc ${cmd}`);

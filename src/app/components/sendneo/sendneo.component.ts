@@ -340,6 +340,13 @@ export class SendneoComponent implements OnInit {
 				this.selectedToken.asset_hash,
 				this.amount
 			);
+
+			if (newHash.error) {
+				const errMessage = this.msg13 + ` ${newHash.error}`;
+				this.notificationService.sendError(errMessage);
+				this.confirmingTransaction = false;
+				return;
+			}
 			//console.log('hash >>>> ');
 			//console.log(newHash);
 			if (newHash) {

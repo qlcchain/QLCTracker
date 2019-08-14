@@ -5,10 +5,10 @@ import { NotificationService } from '../../services/notification.service';
 import { AddressBookService } from '../../services/address-book.service';
 import { AppSettingsService } from '../../services/app-settings.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
-import { QLCBlockService } from 'src/app/services/qlc-block.service';
-import { UtilService } from 'src/app/services/util.service';
 import { NeoWalletService } from 'src/app/services/neo-wallet.service';
 import BigNumber from 'bignumber.js';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ModalUnlockComponent } from '../modal-unlock/modal-unlock.component';
 
 @Component({
   selector: 'app-myaccounts',
@@ -26,6 +26,8 @@ export class MyaccountsComponent implements OnInit {
   successfulBlocks = [];
   processingPending = false;
 
+	modalRef: BsModalRef;
+	
 	msg1 = '';
 	msg2 = '';
 	msg3 = '';
@@ -51,8 +53,7 @@ export class MyaccountsComponent implements OnInit {
 		private addressBook: AddressBookService,
 		public settings: AppSettingsService,
 		private trans: TranslateService,
-		private qlcBlock: QLCBlockService,
-    private util: UtilService
+		private modalService: BsModalService
 	) {
 		this.loadLang();
 	}
@@ -121,6 +122,7 @@ export class MyaccountsComponent implements OnInit {
       this.accounts[i].pendingCount = pendingCount;
 			
 		}
+		//console.log(this.accounts);
 		for (let i = 0; i < this.neowallets.length; i++) {
 			this.neowallets[i].balances = [];
 			this.neowallets[i].addressBookName = this.addressBook.getAccountName(this.neowallets[i].id);
@@ -199,82 +201,9 @@ export class MyaccountsComponent implements OnInit {
   }
   
   async receive(account) {
-    await this.loadPending(account);
-    this.processPendingBlocks();
-  }
-
-  async loadPending(account) {
-    this.pendingBlocks = [];
-    const accountPending = await this.api.accountsPending([account], 25);
-		if (!accountPending.error && accountPending.result) {
-			const pendingResult = accountPending.result;
-
-			for (const account in pendingResult) {
-				if (!pendingResult.hasOwnProperty(account)) {
-					continue;
-        }
-        let walletAccount = this.wallet.accounts.find(a => a.id === account);
-				walletAccount.pendingCount = pendingResult[account].length;
-				pendingResult[account].forEach(pending => {
-					this.pendingBlocks.push({
-            account: pending.source,
-            receiveAccount: account,
-						amount: pending.amount,
-						tokenName: pending.tokenName,
-						timestamp: pending.timestamp,
-						hash: pending.hash
-					});
-				});
-			}
+		if (this.walletService.walletIsLocked()) {
+			this.modalRef = this.modalService.show(ModalUnlockComponent, {class: 'modal-lg'}); 
 		}
   }
 
-  async processPendingBlocks(tokenName = 'all') {
-    if (this.walletService.walletIsLocked()) {
-      this.notificationService.sendWarning(this.msgLocked);
-      return;
-		}
-		if (this.processingPending || this.wallet.locked || !this.pendingBlocks.length) {
-			return;
-		}
-    this.processingPending = true;
-
-    const nextBlock = this.pendingBlocks[0];
-		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
-			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
-		}
-		const walletAccount = await this.walletService.getWalletAccount(nextBlock.receiveAccount);
-		if (!walletAccount) {
-			return; // Dispose of the block, no matching account
-		}
-
-		let newHash = null;
-
-		if (tokenName !== 'all') {
-			if (nextBlock.tokenName == tokenName) {
-        newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.walletService.isLedgerWallet());
-        console.log(newHash);
-			}
-		} else {
-      newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.walletService.isLedgerWallet());
-		}
-		if (newHash) {
-			if (this.successfulBlocks.length >= 15) {
-				this.successfulBlocks.shift();
-			}
-			this.successfulBlocks.push(nextBlock.hash);
-
-			const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
-			this.notificationService.sendSuccess(
-				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenName}!`
-			);
-      await this.loadBalances();
-			// await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
-		} 
-
-		this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
-		this.processingPending = false;
-
-		setTimeout(() => this.processPendingBlocks(), 1500);
-	}
 }

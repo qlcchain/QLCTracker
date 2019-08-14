@@ -5,13 +5,18 @@
             <div class="container">
                     <div class="row">
                         <!-- TITLE -->
-                        <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+                        <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
                             <div class="content-title">
 								<h1 style="display:inline-block;">My Wallets</h1>
 								<span style="width:16px;height:16px;background:#2069c2;display:inline-block;margin-left:26px;margin-right:8px;"></span><span style="padding-bottom:4px;">QLC-Chain Wallets</span>
 								<span style="width:16px;height:16px;background:#8BC34A;display:inline-block;margin-left:16px;margin-right:8px;"></span> NEP-5 Wallets
                             </div>
-                        </div>
+						</div>
+						<div class="col-md-3 col-12 pl-md-2 pr-md-0 pl-3 pr-3 pb-3">
+							<button (click)="loadBalances()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100">
+							  REFRESH
+							</button>
+						</div>
                         <div class="col-md-3 col-12 pl-2 pr-2 pb-md-2 pb-3">
 							<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/mystakings" *ngIf="accounts.length">
 								MY STAKINGS

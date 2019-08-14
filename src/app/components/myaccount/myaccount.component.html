@@ -6,11 +6,16 @@
             <div class="container">
                     <div class="row">
                         <!-- TITLE -->
-                        <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+                        <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
                             <div class="content-title">
                                 <h1>Wallet Details</h1>
                             </div>
                         </div>
+                        <div class="col-md-3 col-12 pl-md-2 pr-md-0 pl-3 pr-3 pb-3">
+							<button (click)="loadAccount()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100">
+							  REFRESH
+							</button>
+						</div>
                         <div class="col-md-3 col-12 pl-2 pr-2">
                                 <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/myaccounts">
                                     Back to my Wallets
@@ -81,8 +86,8 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QLC']">{{ accountMeta.balances['QLC'].balance | qlc:8 | currency:'':'':'1.2-8' }}</div>
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QLC'])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount && walletAccount.balances != null && walletAccount.balances['QLC']">{{ walletAccount.balances['QLC'].balance | qlc:8 | currency:'':'':'1.2-8' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount && walletAccount.balances == null || (walletAccount && walletAccount.balances != null && !walletAccount.balances['QLC'])">0</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
                                             <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
@@ -120,8 +125,8 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances != null && accountMeta.balances['QGAS']">{{ accountMeta.balances['QGAS'].balance | qlc:8 | currency:'':'':'1.2-8' }}</div>
-                                            <div class="col-12 pb-0" *ngIf="accountMeta.balances == null || (accountMeta.balances != null && !accountMeta.balances['QGAS'])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount && walletAccount.balances != null && walletAccount.balances['QGAS']">{{ walletAccount.balances['QGAS'].balance | qlc:8 | currency:'':'':'1.2-8' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="walletAccount && walletAccount.balances == null || (walletAccount && walletAccount.balances != null && !walletAccount.balances['QGAS'])">0</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
                                             <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
@@ -141,19 +146,19 @@
 
 
                     <!-- BALANCE OTHERS -->
-                    <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2" *ngIf="otherTokens.length > 0">
+                    <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2" *ngIf="walletAccount && walletAccount.otherTokens.length > 0">
                         <div class="content-box-white h-auto mt-2 pb-3">
                             <div class="container">
                                 <div class="row qlc-table-header-white">
-                                    <div class="col-12">Other token Balances ({{ otherTokens.length }})</div>
+                                    <div class="col-12">Other token Balances ({{ walletAccount.otherTokens.length }})</div>
                                 </div>
                             </div>
                             <div class="container">
                                 <div class="row">
 
-                                        <carousel [interval]="3000" [(activeSlide)]="activeSlideIndex" class="w-100">
+                                        <carousel [interval]="3000" class="w-100">
                                             
-                                            <slide *ngFor="let token of otherTokens">
+                                            <slide *ngFor="let token of walletAccount.otherTokens">
                                                 <div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
                                                     <div class="col-3 pr-3 pt-1">
                                                         <img src="assets/img/token-none.png" class="w-100 icon-token">
@@ -183,7 +188,7 @@
 
 
                     <!-- BALANCE OTHERS EMPTY -->
-                    <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2" *ngIf="otherTokens.length == 0">
+                    <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2" *ngIf="walletAccount && walletAccount.otherTokens.length == 0">
                         <div class="content-box-white h-auto mt-2 pb-2">
                             <div class="container">
                                 <div class="row qlc-table-header-white">
@@ -197,7 +202,7 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0">NaN</div>
+                                            <div class="col-12 pb-0">0</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
                                             <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
@@ -209,7 +214,7 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button type="submit" class="btn btn-primary btn-blue btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(0 Pending)</span></button>
+                                    <button type="submit" class="btn btn-primary btn-blue btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(<span *ngIf="checkIfPending('OTHER')">{{ walletAccount.pendingPerTokenCount['OTHER'] }}</span><span *ngIf="!checkIfPending('OTHER')">0</span> Pending)</span></button>
                                 </div>
                             </div>
                         </div>
@@ -221,9 +226,9 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 text-center pt-4 pb-1">
-                                        <p *ngIf="pendingBlocks.length > 0 && walletService.isLocked()">To receive your <span class="text-bold">{{ pendingBlocks.length }} pending transactions</span> just <a (click)="showUnlock()" style="text-decoration:underline;">unlock your wallet</a></p>
-                                        <p *ngIf="pendingBlocks.length > 0 && !walletService.isLocked()">To receive your <span class="text-bold">{{ pendingBlocks.length }} pending transactions</span> receiving. Please wait a moment.</p>
-                                        <p *ngIf="pendingBlocks.length == 0">You have no pending transactions.</p>
+                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0 && walletService.isLocked()">To receive your <span class="text-bold">{{ walletAccount.pendingBlocks.length }} pending transactions</span> just <a (click)="showUnlock()" style="text-decoration:underline;">unlock your wallet</a></p>
+                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0 && !walletService.isLocked()">Receiving <span class="text-bold">{{ walletAccount.pendingBlocks.length }} pending transactions</span> . Please wait a moment.</p>
+                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length == 0">You have no pending transactions.</p>
                                     </div>
                                 </div>
                             </div>
@@ -269,7 +274,7 @@
 
 
 <!-- PENDING TRANSACTIONS -->
-<div class="container mt-3 mb-0" *ngIf="pendingBlocks.length > 0">
+<div class="container mt-3 mb-0" *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0">
   <div class="row">
     
     <div class="col-12 pl-0 pr-0">
@@ -294,7 +299,7 @@
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
             </div>
-            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let pending of pendingBlocks">
+            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let pending of walletAccount.pendingBlocks">
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                   <span class="qlc-icon icon-Receive" title="Receive"></span>
                   <span class="d-none d-sm-none d-md-inline-block">
@@ -349,7 +354,7 @@
       </div>
 
       <!-- LIST -->
-      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2" *ngIf="walletAccount && walletAccount.latestTransactions">
         <div class="content-box-white">
 
 
@@ -362,7 +367,7 @@
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
             </div>
 
-            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let history of accountHistory">
+            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let history of walletAccount.latestTransactions">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                 <span class="qlc-icon icon-{{ history.type }}" title="{{ history.type }}"></span>
                 <span class="d-none d-sm-none d-md-inline-block">

@@ -13,7 +13,6 @@ import { PriceService } from './price.service';
 // import { LedgerService } from './ledger.service';
 import { NGXLogger } from 'ngx-logger';
 import { interval } from 'rxjs';
-import { tokenName } from '@angular/compiler';
 
 export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
@@ -26,9 +25,10 @@ export interface WalletAccount {
 	balance: BigNumber;
 	balances: any;
 	otherTokens: any;
-	// pending: BigNumber;
+	pendingBlocks: any;
 	pendingCount: number;
 	pendingPerTokenCount: any;
+	latestTransactions: any;
 	// balanceRaw: BigNumber;
 	// pendingRaw: BigNumber;
 	// balanceFiat: number;
@@ -89,12 +89,18 @@ export class WalletService {
 	};
 
 	processingPending = false;
+	loadingPending = false;
 	pendingBlocks = [];
 	successfulBlocks = [];
-	blocksCount = 0;
+	blocksCount = {
+		'count':0,
+		'unchecked':0
+	};
+	tokenMap = {};
+	tokenRefreshTime = 0;
 
 	private pendingRefreshInterval$ = interval(10000);
-	private blocksCountInterval$ = interval(90000);
+	private blocksCountInterval$ = interval(60000);
 
 	constructor(
 		private util: UtilService,
@@ -145,62 +151,186 @@ export class WalletService {
 
 		this.pendingRefreshInterval$.subscribe(async () => {
 			// check every 10 sec for new pending transactions
-			let pendingCount = 0;
-			const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
-
-			let allAccounts = this.wallet.accounts;
-
-			if (!accountsPending.error) {
-				const pendingResult = accountsPending.result;
-				for (const account in pendingResult) {
-					if (!pendingResult.hasOwnProperty(account)) {
-						continue;
-					}
-					pendingCount += pendingResult[account].length;
-					let walletAccount = this.wallet.accounts.find(a => a.id === account);
-					walletAccount.pendingCount = pendingResult[account].length;
-					walletAccount.pendingPerTokenCount = [];
-					pendingResult[account].forEach(pending => {
-						if (pending.tokenName != 'QLC' && pending.tokenName != 'QGAS') {
-							pending.tokenName = 'OTHER';
-						}
-						if (!walletAccount.pendingPerTokenCount[pending.tokenName])
-							walletAccount.pendingPerTokenCount[pending.tokenName] = 0;
-
-						walletAccount.pendingPerTokenCount[pending.tokenName] += 1;
-						this.pendingBlocks.push({
-							account: pending.source,
-							receiveAccount: account,
-							amount: pending.amount,
-							tokenName: pending.tokenName,
-							tokenSymbol: pending.tokenName,
-							timestamp: pending.timestamp,
-							hash: pending.hash
-						});
-					});
-					if (!this.isLocked()) {
-						this.loadPendingBlocksForWallet();
-					}
-					allAccounts = allAccounts.filter(function( obj ) {
-						return obj.id !== account;
-					});
-				}
-			}
-
-			allAccounts.forEach((data) => {
-				let walletAccount = this.wallet.accounts.find(a => a.id === data.id);
-				walletAccount.pendingPerTokenCount = [];
-				walletAccount.pendingCount = 0;
-			});
-
-
-
-			this.wallet.pendingCount = pendingCount;
+			this.loadPending();
 		});
 
 		this.blocksCountInterval$.subscribe(async () => {
 			this.refreshBlocks();
 		});
+		this.refreshBlocks();
+		this.loadPending();
+	}
+
+	async loadTokens() {
+		if ((Date.now() - this.tokenRefreshTime) < 100000) {
+			return;
+		}
+		this.tokenRefreshTime = Date.now();
+		this.tokenMap = {};
+		const tokens = await this.api.tokens();
+		if (!tokens.error) {
+			tokens.result.forEach(token => {
+				this.tokenMap[token.tokenId] = token;
+			});
+		}
+		return;
+	}
+
+	async loadPending() {
+		if (this.processingPending === true) {
+			return;
+		}
+		if (this.loadingPending === true) {
+			return;
+		}
+		this.loadingPending = true;
+		this.pendingBlocks = [];
+		let pendingCount = 0;
+		const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
+
+		let allAccounts = this.wallet.accounts;
+
+		if (!accountsPending.error) {
+			await this.loadTokens();
+			const pendingResult = accountsPending.result;
+			for (const account in pendingResult) {
+				if (!pendingResult.hasOwnProperty(account)) {
+					continue;
+				}
+				pendingCount += pendingResult[account].length;
+				let walletAccount = this.wallet.accounts.find(a => a.id === account);
+				walletAccount.pendingCount = pendingResult[account].length;
+				walletAccount.pendingPerTokenCount = [];
+				walletAccount.pendingBlocks = [];
+				pendingResult[account].forEach(pending => {
+					if (this.tokenMap.hasOwnProperty(pending.type)) {
+						pending.tokenInfo = this.tokenMap[pending.type];
+					}
+					walletAccount.pendingBlocks.push(pending);
+					if (pending.tokenName != 'QLC' && pending.tokenName != 'QGAS') {
+						pending.tokenName = 'OTHER';
+					}
+					if (!walletAccount.pendingPerTokenCount[pending.tokenName])
+						walletAccount.pendingPerTokenCount[pending.tokenName] = 0;
+
+					walletAccount.pendingPerTokenCount[pending.tokenName] += 1;
+					this.pendingBlocks.push({
+						account: pending.source,
+						receiveAccount: account,
+						amount: pending.amount,
+						token: pending.type,
+						tokenName: pending.tokenName,
+						tokenSymbol: pending.tokenName,
+						timestamp: pending.timestamp,
+						hash: pending.hash
+					});
+				});
+				allAccounts = allAccounts.filter(function( obj ) {
+					return obj.id !== account;
+				});
+				//console.log(walletAccount.pendingBlocks);
+			}
+			if (!this.isLocked()) {
+				this.processPendingBlocks();
+			}
+		}
+
+		allAccounts.forEach((data) => {
+			let walletAccount = this.wallet.accounts.find(a => a.id === data.id);
+			walletAccount.pendingBlocks = [];
+			walletAccount.pendingPerTokenCount = [];
+			walletAccount.pendingCount = 0;
+		});
+
+		this.wallet.pendingCount = pendingCount;
+		this.loadingPending = false;
+	}
+
+	async removeBlockFromPendingAccount(block,newhash = '') {
+		let walletAccount = this.wallet.accounts.find(a => a.id === block.account);
+		if (walletAccount === undefined) {
+			walletAccount = this.wallet.accounts.find(a => a.id === block.receiveAccount);
+		}
+		
+		if (walletAccount === undefined) {
+			console.log('ERROR - Account not found');
+			return;
+		}
+
+		const pendingBlock = walletAccount.pendingBlocks.find( (pendingBlock) => {
+			return pendingBlock.hash === block.hash;
+		});
+
+		walletAccount.pendingBlocks = walletAccount.pendingBlocks.filter( (pendingBlock) => {
+			return pendingBlock.hash !== block.hash;
+		});
+
+		walletAccount.pendingCount = walletAccount.pendingBlocks.length;
+		let tokenName = block.tokenName;
+		if (block.tokenName != 'QLC' && block.tokenName != 'QGAS') {
+			tokenName = 'OTHER';
+		}
+		walletAccount.pendingPerTokenCount = [];
+		for (const pending of walletAccount.pendingBlocks) {
+			if (walletAccount.pendingPerTokenCount[pending.tokenName]) {
+				walletAccount.pendingPerTokenCount[pending.tokenName] += 1;
+			} else {
+				walletAccount.pendingPerTokenCount[pending.tokenName] = 1;
+			}
+		}
+		//walletAccount.pendingPerTokenCount[tokenName] -= 1;
+
+		// update balances
+		await this.getTokenBalance(walletAccount);
+		
+		if (newhash != '' && newhash != null) {
+			const blocksInfo = await this.api.blocksInfo([newhash]);
+			if (blocksInfo.result) {
+				let block = blocksInfo.result[0];
+				await this.loadTokens();
+				if (this.tokenMap.hasOwnProperty(block.token)) {
+					block.tokenInfo = this.tokenMap[block.token];
+				}
+				walletAccount.latestTransactions.unshift(block); // add block to latest transactions
+
+			}
+		}
+	}
+
+	async getTokenBalance(walletAccount,block = null) {
+		/*let tokenBalance = undefined;
+		if (walletAccount.accountMeta && walletAccount.accountMeta.tokens) {
+			tokenBalance = walletAccount.accountMeta.tokens.find( (token) => {
+				return token.type === block.token;
+			});
+		}
+		if (tokenBalance === undefined) {*/
+			const accountInfo = await this.api.accountInfo(walletAccount.id);
+			if (!accountInfo.error) {
+				const am = accountInfo.result;
+				for (const token of am.tokens) {
+					if (this.tokenMap.hasOwnProperty(token.type)) {
+						token.tokenInfo = this.tokenMap[token.type];
+					}
+				}
+				walletAccount.accountMeta = am;
+				let accountMeta = [];
+				let otherTokens = [];
+    			if (accountInfo.result && accountInfo.result.tokens && Array.isArray(accountInfo.result.tokens)) {
+      				accountInfo.result.tokens.forEach(token => {
+						accountMeta[token.tokenName] = token;
+						if (token.tokenInfo.tokenSymbol != 'QLC' && token.tokenInfo.tokenSymbol != 'QGAS') {
+							otherTokens.push(token);
+						}
+					});
+				}
+					
+				walletAccount.otherTokens = otherTokens;
+				walletAccount.balances = accountMeta;
+			}
+			//return await this.getTokenBalance(walletAccount,block);
+		//}
+		//return tokenBalance;
 	}
 
 	async refreshBlocks() {
@@ -539,10 +669,12 @@ export class WalletService {
 			keyPair: accountKeyPair,
 			balance: new BigNumber(0),
 			// pending: new BigNumber(0),
+			pendingBlocks: [],
 			pendingCount: 0,
 			pendingPerTokenCount: [],
 			balances: null,
 			otherTokens: [],
+			latestTransactions: [],
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,
@@ -700,8 +832,10 @@ export class WalletService {
 			balances: null,
 			otherTokens: [],
 			// pending: new BigNumber(0),
+			pendingBlocks: [],
 			pendingCount: 0,
 			pendingPerTokenCount: [],
+			latestTransactions: [],
 			// balanceRaw: new BigNumber(0),
 			// pendingRaw: new BigNumber(0),
 			// balanceFiat: 0,
@@ -819,7 +953,6 @@ export class WalletService {
 		if (!this.wallet.accounts.length) {
 			return;
 		}
-		console.log('loadPendingBlocksForWallet')
 		const accountsPending = await this.api.accountsPending(this.wallet.accounts.map(a => a.id));
 		if (accountsPending.error) {
 			return;
@@ -851,6 +984,7 @@ export class WalletService {
 		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
 			//console.log('Block has already been processed')
 			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+			this.removeBlockFromPendingAccount(nextBlock);
 			this.processingPending = false;
 			return setTimeout(() => this.processPendingBlocks(), 1500); // Block has already been processed
 		}
@@ -858,6 +992,7 @@ export class WalletService {
 		if (!walletAccount) {
 			//console.log('Dispose of the block, no matching account')
 			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+			this.removeBlockFromPendingAccount(nextBlock);
 			this.processingPending = false;
 			return; // Dispose of the block, no matching account
 		}
@@ -873,21 +1008,28 @@ export class WalletService {
 		}
 
 		if (newHash) {
-			if (this.successfulBlocks.length >= 15) {
+			if (this.successfulBlocks.length >= 500) {
 				this.successfulBlocks.shift();
 			}
 			this.successfulBlocks.push(nextBlock.hash);
 
-			const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
+			await this.loadTokens();
+
+			let tokenInfo;
+			if (this.tokenMap.hasOwnProperty(nextBlock.token)) {
+				tokenInfo = this.tokenMap[nextBlock.token];
+			}
+			//const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
 			this.notifications.sendSuccess(
-				`Successfully received ${receiveAmount.isZero() ? '' : receiveAmount.toFixed(6)} ${nextBlock.tokenSymbol}!`
+				`Successfully received ${nextBlock.amount == 0 ? '' : new BigNumber(nextBlock.amount).dividedBy(Math.pow(10,tokenInfo.decimals)).toFixed(tokenInfo.decimals)} ${tokenInfo.tokenSymbol}!`
 			);
 
 			// await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
-			await this.reloadBalances();
+			//await this.reloadBalances();
 		} 
 
 		this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+		this.removeBlockFromPendingAccount(nextBlock,newHash);
 		this.processingPending = false;
 
 		setTimeout(() => this.processPendingBlocks(), 1500);

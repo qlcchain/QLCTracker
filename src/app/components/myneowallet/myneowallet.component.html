@@ -168,7 +168,7 @@
         <!-- RIGHT -->
         <div class="col-lg-3 col-md-12 col-sm-12 order-lg-2 order-1 pl-0 pr-0 mb-xs-3 mb-3">
             
-            <div class="col-12 pl-2 pr-2 h-100">
+            <div class="col-12 pl-2 pr-2">
                 <div class="content-box-darkblue h-100 pb-4 pr-0 neo-background">
                     
                     <div class="container">
@@ -182,6 +182,21 @@
                                 <a (click)="editName()" class="menu-myaccount menu-icon-rename pr-0">Rename Account</a>
                                 <a href="{{ neoService.getExplorer() }}/address/{{ walletId }}" class="menu-myaccount menu-icon-details pr-0" target="_blank">Account Details</a>
                                 <a (click)="deleteWallet()" class="menu-myaccount menu-icon-details pr-0" target="_blank">Delete wallet</a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-12 pl-2 pr-2 mt-2">
+                <div class="content-box-darkblue pb-4 pr-0 neo-background">
+                    
+                    <div class="container">
+                        
+                        <div class="row pt-3 pr-0">
+                            <div class="col-12 pr-0">
+                                <a (click)="recoverPrivateKey(recover)" class="menu-myaccount menu-icon-details pr-0" target="_blank">{{ neoPrivateCodeButton }}</a>
                             </div>
                         </div>
                         
@@ -282,3 +297,18 @@
 </ng-template>
 
 
+<ng-template #recover>
+    <div class="modal-body">
+
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="row text-center">
+        <div class="col-12">
+            <h1 class="pt-5">Your NEO private code is</h1>
+            <p class="pb-5">{{ neoPrivateCode }}</p>
+        </div>
+        </div>
+
+    </div>
+</ng-template>

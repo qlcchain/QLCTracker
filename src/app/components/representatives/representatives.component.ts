@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
-import { forEach } from '@angular/router/src/utils/collection';
 import { ActivatedRoute, Router, ChildActivationEnd } from '@angular/router';
 import { NodeService } from 'src/app/services/node.service';
 import { timer } from 'rxjs';
@@ -109,19 +108,19 @@ export class RepresentativesComponent implements OnInit {
 
   async loadData() {
     const representatives = await this.api.representatives();
-		if (representatives.result) {
-			const onlineRepresentatives = await this.api.onlineRepresentatives();
-			const onlineReps = onlineRepresentatives.result;
-			const tokens = await this.api.tokenInfoByName('QLC');
-      let displayReps = [];
-      representatives.result.forEach(async rep => {
-				const repOnline = onlineReps.indexOf(rep.address) !== -1;
-				rep.online = repOnline;
-				rep.votingPower = (rep.balance / tokens.result.totalSupply*100).toFixed(2);
-				displayReps.push(rep);
-			});
-			this.representatives = displayReps;
-			this.representativesCount = displayReps.length;
+	if (representatives.result) {
+		const onlineRepresentatives = await this.api.onlineRepresentatives();
+		const onlineReps = onlineRepresentatives.result;
+		const tokens = await this.api.tokenInfoByName('QLC');
+      	let displayReps = [];
+      	representatives.result.forEach(async rep => {
+			const repOnline = onlineReps.indexOf(rep.address) !== -1;
+			rep.online = repOnline;
+			rep.votingPower = (rep.total / tokens.result.totalSupply*100).toFixed(2);
+			displayReps.push(rep);
+		});
+		this.representatives = displayReps;
+		this.representativesCount = displayReps.length;
     }
   }
 

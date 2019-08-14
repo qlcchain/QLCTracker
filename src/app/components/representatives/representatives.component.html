@@ -27,7 +27,7 @@
 
             <div class="row qlc-table-row closed" *ngFor="let rep of representatives">
               <div class="col-xl-7 col-lg-7 col-md-6 col-sm-7 col-6 text-truncate"><a routerLink="/account/{{ rep.address }}">{{ rep.address }}</a></div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 d-none d-md-block text-right"><span data-toggle="tooltip" data-placement="top" title="">{{ rep.balance | qlc | currency:'':'':'1.2-8' }}</span></div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 d-none d-md-block text-right"><span data-toggle="tooltip" data-placement="top" title="">{{ rep.total | qlc:8 | currency:'':'':'1.2-8' }}</span></div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 text-right">{{ rep.votingPower }} %</div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-2 text-right pr-4">
                 <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online" *ngIf="rep.online"></span>

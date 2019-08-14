@@ -10,20 +10,23 @@ export class NodeService {
   successMsg = 'Successfully connected to the node.';
 
   status:boolean = null; // null - loading, false - offline, true - online
-  synchronized:boolean = null; // null - loading, false - offline, true - online
+  synchronized:boolean = null; // null - loading, false - not synchronized, true - synchronized
+  break:boolean = null; // null - loading, false - node ok, true - old version, don't process
   
   constructor(private notifications: NotificationService) {
     this.notifications.sendInfo('Connecting to the node. Please wait.', { identifier: 'node-connect', length: 0 })
    }
 
 
-  setOffline(message) {
+  setOffline(message = this.errorMsg) {
     if (this.status === false || this.status === null) {
       return; // Already offline
     }
     
     this.status = false;
-    const errMessage = message || this.errorMsg;
+    this.synchronized = null;
+    const errMessage = message;
+    this.notifications.removeNotification('node-syncing');
     this.notifications.sendError(errMessage, { identifier: 'node-offline', length: 0 });
   }
 
@@ -49,6 +52,7 @@ export class NodeService {
     if (this.synchronized === false) {
       this.notifications.removeNotification('node-syncing');
       this.notifications.sendSuccess('Node synchronized.', { identifier: 'node-synced', length: 2000 });
+      this.synchronized = true;
     }
   }
 

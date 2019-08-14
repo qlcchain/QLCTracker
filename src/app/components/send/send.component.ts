@@ -98,7 +98,6 @@ export class SendComponent implements OnInit {
 		}
 	}
 	load() {
-    console.log('send');
 		if (this.node.status === true) {
 			if (this.accounts !== undefined && this.accounts.length > 0) {
 				this.searchAddressBook();
@@ -274,6 +273,11 @@ export class SendComponent implements OnInit {
 	}
 
 	async sendTransaction() {
+		if (this.amount == undefined || this.amount == 0) {
+			return this.notificationService.sendWarning('Please enter the amount to send.');
+		}
+		this.rawAmount = new BigNumber(0);
+		this.amountRaw = new BigNumber(0);
 		const isValid = await this.api.validateAccountNumber(this.toAccountID);
 		if (!isValid.result) {
 			return this.notificationService.sendWarning(this.msg2);
@@ -316,7 +320,6 @@ export class SendComponent implements OnInit {
 		// to be transfered amount
 		const rawAmount = new BigNumber(this.amount).multipliedBy(Math.pow(10,from.tokenInfo.decimals));
 		this.rawAmount = rawAmount.plus(this.amountRaw);
-
 		const qlcAmount = this.rawAmount.div(Math.pow(10,from.tokenInfo.decimals));
 
 		if (this.amount < 0 || rawAmount.isLessThan(0)) {
@@ -431,8 +434,11 @@ export class SendComponent implements OnInit {
   }
   tokenBalance(token) {
     if (this.accountTokens !== undefined && this.accountTokens.length > 0) {
-      const tokenData = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === token);
-      return tokenData.balance;
+			const tokenData = this.accountTokens.find(a => a.tokenInfo.tokenSymbol === token);
+			if (tokenData != undefined && tokenData.balance != undefined)
+				return tokenData.balance;
+			else
+				return 0.00;
 		} else {
 			return 0.00;
 		}
