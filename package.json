@@ -2,6 +2,7 @@
   "name": "smsbilling",
   "version": "1.0.1",
   "main": "main.js",
+  "author": "QLC Chain Team <admin@qlink.mobi>",
   "scripts": {
     "postinstall": "node patch.js",
     "ng": "ng",
