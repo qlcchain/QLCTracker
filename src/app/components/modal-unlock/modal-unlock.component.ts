@@ -44,7 +44,6 @@ export class ModalUnlockComponent implements OnInit {
 	}
 
   async unlockWalletConfirm() {
-    console.log('what twhafda')
 		const unlocked = await this.walletService.unlockWallet(this.unlockPassword);
 		this.unlockPassword = '';
 
