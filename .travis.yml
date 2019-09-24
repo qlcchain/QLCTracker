@@ -1,0 +1,15 @@
+    
+language: node_js
+node_js:
+  - node
+sudo: false
+cache:
+  directories:
+    - node_modules
+
+install:
+  - npm i 
+
+script:
+  - npm run sms:build-desktop
+  - npm run desktop:full
