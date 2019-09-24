@@ -2,6 +2,7 @@
   "name": "smsbilling",
   "version": "1.0.2",
   "main": "desktop/main.js",
+  "homepage": "https://github.com/qlcchain/sms-billing",
   "author": "QLC Chain Team <admin@qlink.mobi>",
   "description": "QLC Wallet and Explorer",
   "scripts": {
