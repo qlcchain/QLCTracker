@@ -14,6 +14,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { NavComponent } from './components/nav/nav.component';
 import { HeaderComponent } from './components/header/header.component';
 import { TransactionsComponent } from './components/transactions/transactions.component';
@@ -56,6 +57,7 @@ import { MystakingsComponent } from './components/mystakings/mystakings.componen
 import { StakingRevokeComponent } from './components/staking-revoke/staking-revoke.component';
 import { AmountValidatorDirective } from './directives/amount-validator.directive';
 import { ModalUnlockComponent } from './components/modal-unlock/modal-unlock.component';
+import { DesktopComponent } from './components/desktop/desktop.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -98,7 +100,8 @@ export function createTranslateLoader(http: HttpClient) {
     MystakingsComponent,
     StakingRevokeComponent,
     AmountValidatorDirective,
-    ModalUnlockComponent
+    ModalUnlockComponent,
+    DesktopComponent
   ],
   imports: [
     BrowserModule,
@@ -113,6 +116,7 @@ export function createTranslateLoader(http: HttpClient) {
 		ModalModule.forRoot(),
     AlertModule.forRoot(),
     CarouselModule.forRoot(),
+    ProgressbarModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,

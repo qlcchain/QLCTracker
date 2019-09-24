@@ -1,0 +1,240 @@
+.nodeControl {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 80px;
+    background-color: #454a51;
+    border: none;
+    padding: 0px;
+}
+
+.nodeControlIcon {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    background: #c10f0f url('../../../assets/img/logo-node-white.png') no-repeat center center;
+    background-size: 100% 100%;
+    display:block;
+    float:left;
+    /*position: fixed;
+    bottom: 10px;
+    left: 10px;
+    */
+}
+.nodeOnline {
+    background-color: #56af08;
+}
+.nodeInfoBoxHolder {
+    display: none;
+    width:calc(100% - 100px - 130px);
+    /*border: 1px solid blue;*/
+}
+.nodeInfoBox {
+    display: none;
+    height: 30px;
+    padding: 10px 40px 0px 40px;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: -72px;
+    vertical-align: middle;
+    line-height: 13px !important;
+}
+    .nodeInfoBox .nodeLabel {
+        color:#a8a6ae;
+    }
+    .nodeInfoBox .nodeData {
+        color:#ffffff;
+    }
+    .nodeInfoBoxButton {
+        display: block;
+        float:right;
+        height: 30px;
+        padding: 0px 0px 0px 10px;
+        font-weight: 700;
+        margin-top: 25px;
+        vertical-align: middle;
+        line-height: 13px !important;
+    }
+    .btn-node-start {
+        background: #26282c !important;
+        padding-left: 35px;
+        padding-right: 35px;
+        margin-top: -8px !important;
+    }
+    .nodeInfoBox.first, .nodeInfoBox.third {
+        margin-left:0px;
+        margin-right:0px;
+    }
+
+
+
+/* SM Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .nodeInfoBoxHolder {
+        display: inline-block;
+        width:calc(100% - 100px - 130px);
+    }
+    .nodeInfoBox {
+        display: block;
+        height: 22px;
+        width: 240px;
+        padding: 0px 0px 0px 20px;
+        font-weight: 700;
+        font-size: 13px;
+        vertical-align: middle;
+        line-height: 13px !important;
+        margin-top: 10px;
+        margin-bottom: -16px;
+    }
+    .nodeInfoBox.first, .nodeInfoBox.third {
+        margin-left:0px;
+        margin-right:0px;
+    }
+        .nodeInfoBox .nodeLabel {
+            color:#a8a6ae;
+        }
+        .nodeInfoBox .nodeData {
+            color:#ffffff;
+        }
+        .nodeInfoBoxButton {
+            display: inline-block;
+            float:right;
+            /*height: 30px;
+            padding: 0px 0px 0px 10px;*/
+            font-weight: 700;
+            margin-top: 23px;
+            vertical-align: middle;
+            line-height: 13px !important;
+        }
+        .btn-node-start {
+            background: #26282c !important;
+            padding-left: 35px;
+            padding-right: 35px;
+            margin-top: -8px !important;
+        }
+}
+
+/* MD Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .nodeInfoBox {
+        display: inline-block;
+        height: 22px;
+        width: 230px;
+        padding: 10px 0px 0px 0px;
+        font-weight: 700;
+        font-size: 13px;
+        vertical-align: middle;
+        line-height: 13px !important;
+        margin-top: 14px;
+    }
+        .nodeInfoBox.first, .nodeInfoBox.third {
+            margin-left:40px;
+            margin-right:-40px;
+        }
+        .nodeInfoBox .nodeLabel {
+            color:#a8a6ae;
+        }
+        .nodeInfoBox .nodeData {
+            color:#ffffff;
+        }
+        .nodeInfoBoxButton {
+            display: inline-block;
+            float:right;
+            /*height: 30px;
+            padding: 0px 0px 0px 10px;*/
+            font-weight: 700;
+            margin-top: 23px;
+            vertical-align: middle;
+            line-height: 13px !important;
+        }
+        .btn-node-start {
+            background: #26282c !important;
+            padding-left: 35px;
+            padding-right: 35px;
+            margin-top: -8px !important;
+        }
+}
+
+/* LG Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .nodeInfoBox {
+        display: inline-block;
+        height: 30px;
+        padding: 10px 0px 0px 35px;
+        font-weight: 700;
+        font-size: 13px;
+        margin-top: 25px;
+        vertical-align: middle;
+        line-height: 13px !important;
+        width:auto;
+    }
+        .nodeInfoBox.first, .nodeInfoBox.third {
+            margin-left:0px;
+            margin-right:0px;
+        }
+        .nodeInfoBox .nodeLabel {
+            color:#a8a6ae;
+        }
+        .nodeInfoBox .nodeData {
+            color:#ffffff;
+        }
+        .nodeInfoBoxButton {
+            display: inline-block;
+            float:right;
+            /*height: 30px;
+            padding: 0px 0px 0px 10px;*/
+            font-weight: 700;
+            margin-top: 23px;
+            vertical-align: middle;
+            line-height: 13px !important;
+        }
+        .btn-node-start {
+            background: #26282c !important;
+            padding-left: 35px;
+            padding-right: 35px;
+            margin-top: -8px !important;
+        }
+}
+
+
+/* XL Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .nodeInfoBox {
+        display: inline-block;
+        height: 30px;
+        padding: 10px 0px 0px 35px;
+        font-weight: 700;
+        font-size: 13px;
+        margin-top: 25px;
+        vertical-align: middle;
+        line-height: 13px !important;
+        width:auto;
+    }
+        .nodeInfoBox.first, .nodeInfoBox.third {
+            margin-left:0px;
+            margin-right:0px;
+        }
+        .nodeInfoBox .nodeLabel {
+            color:#a8a6ae;
+        }
+        .nodeInfoBox .nodeData {
+            color:#ffffff;
+        }
+        .nodeInfoBoxButton {
+            display: inline-block;
+            float:right;
+            /*height: 30px;
+            padding: 0px 0px 0px 10px;*/
+            font-weight: 700;
+            margin-top: 23px;
+            vertical-align: middle;
+            line-height: 13px !important;
+        }
+        .btn-node-start {
+            background: #26282c !important;
+            padding-left: 35px;
+            padding-right: 35px;
+            margin-top: -8px !important;
+        }
+}

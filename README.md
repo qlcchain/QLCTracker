@@ -32,13 +32,7 @@ Build a production version of the SMS Billing for desktop:
 npm run sms:build-desktop
 ```
 
-Then run
-
-```bash
-node download-node.js
-```
-
-to download the latest QLC node and 
+and 
 
 ```bash
 npm run desktop:dev

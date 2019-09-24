@@ -10,6 +10,8 @@ import { AddressBookService } from './services/address-book.service';
 import { Router } from '@angular/router';
 import { ApiService } from './services/api.service';
 
+import { environment } from '../environments/environment';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -21,19 +23,24 @@ export class AppComponent {
 	updateText = '';
 	updateLink = '';
 	updateBreak = 0;
+
+	desktop = false;
   
 	constructor(
 		private walletService: WalletService,
-			private addressBook: AddressBookService,
-			public settings: AppSettingsService,
-			private notifications: NotificationService,
-			public node: NodeService,
-			private router: Router,
-			private workPool: WorkPoolService,
-			public price: PriceService,
-			private lang: LangService,
-			private api: ApiService
+		private addressBook: AddressBookService,
+		public settings: AppSettingsService,
+		private notifications: NotificationService,
+		public node: NodeService,
+		private router: Router,
+		private workPool: WorkPoolService,
+		public price: PriceService,
+		private lang: LangService,
+		private api: ApiService
 	) {
+		if (environment.desktop) {
+			this.desktop = true;
+		}
 	}
 
 	async ngOnInit() {
