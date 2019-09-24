@@ -154,7 +154,7 @@
             <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let pending of pendingBlocks">
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                   <span class="qlc-icon icon-receive" title="Receive"></span>
-                  <span class="d-none d-sm-none d-md-inline-block">
+                  <span class="d-none d-sm-none d-md-inline-block txState">
                     <span class="text-color-lightgrey">State</span><br>
                     <span class="text-bold-grey">Receive</span>
                   </span>
@@ -222,7 +222,7 @@
             <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let history of accountHistory">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                 <span class="qlc-icon icon-{{ history.type }}" title="{{ history.type }}"></span>
-                <span class="d-none d-sm-none d-md-inline-block">
+                <span class="d-none d-sm-none d-md-inline-block txState">
                   <span class="text-color-lightgrey">State</span><br>
                   <span class="text-bold-grey">{{ history.type }}</span>
                 </span>

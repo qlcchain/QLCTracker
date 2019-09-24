@@ -12,7 +12,7 @@ import { AppSettingsService } from './app-settings.service';
 import { PriceService } from './price.service';
 // import { LedgerService } from './ledger.service';
 import { NGXLogger } from 'ngx-logger';
-import { interval } from 'rxjs';
+import { interval, timer } from 'rxjs';
 
 export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
@@ -99,8 +99,9 @@ export class WalletService {
 	tokenMap = {};
 	tokenRefreshTime = 0;
 
-	private pendingRefreshInterval$ = interval(10000);
+	private pendingRefreshInterval$ = interval(60000);
 	private blocksCountInterval$ = interval(60000);
+	private confirmTxTimer = timer(500);
 
 	constructor(
 		private util: UtilService,
@@ -150,14 +151,18 @@ export class WalletService {
 		});
 
 		this.pendingRefreshInterval$.subscribe(async () => {
-			// check every 10 sec for new pending transactions
+			// check every x sec for new pending transactions
 			this.loadPending();
 		});
 
 		this.blocksCountInterval$.subscribe(async () => {
 			this.refreshBlocks();
 		});
-		this.refreshBlocks();
+		this.load();
+	}
+
+	async load() {
+		await this.refreshBlocks();
 		this.loadPending();
 	}
 
@@ -230,7 +235,7 @@ export class WalletService {
 				});
 				//console.log(walletAccount.pendingBlocks);
 			}
-			if (!this.isLocked()) {
+			if (!this.isLocked() && this.appSettings.settings.receive == 'auto') {
 				this.processPendingBlocks();
 			}
 		}
@@ -247,10 +252,7 @@ export class WalletService {
 	}
 
 	async removeBlockFromPendingAccount(block,newhash = '') {
-		let walletAccount = this.wallet.accounts.find(a => a.id === block.account);
-		if (walletAccount === undefined) {
-			walletAccount = this.wallet.accounts.find(a => a.id === block.receiveAccount);
-		}
+		let walletAccount = this.wallet.accounts.find(a => a.id === block.receiveAccount);
 		
 		if (walletAccount === undefined) {
 			console.log('ERROR - Account not found');
@@ -266,10 +268,10 @@ export class WalletService {
 		});
 
 		walletAccount.pendingCount = walletAccount.pendingBlocks.length;
-		let tokenName = block.tokenName;
+		/*let tokenName = block.tokenName;
 		if (block.tokenName != 'QLC' && block.tokenName != 'QGAS') {
 			tokenName = 'OTHER';
-		}
+		}*/
 		walletAccount.pendingPerTokenCount = [];
 		for (const pending of walletAccount.pendingBlocks) {
 			if (walletAccount.pendingPerTokenCount[pending.tokenName]) {
@@ -968,14 +970,13 @@ export class WalletService {
 			});
 		}
 
-		// Now, only if we have results, do a unique on the account names, and run account info on all of them?
-		if (this.pendingBlocks.length) {
+		if (this.pendingBlocks.length && this.appSettings.settings.receive == 'auto') {
 			this.processPendingBlocks();
 		}
 	}
 
-	async processPendingBlocks(tokenName = 'all') {
-		if (this.processingPending || this.wallet.locked || !this.pendingBlocks.length) {
+	async processPendingBlocks() {
+		if (this.processingPending || this.wallet.locked || !this.pendingBlocks.length || this.appSettings.settings.receive != 'auto') {
 			return;
 		}
 		this.processingPending = true;
@@ -994,45 +995,86 @@ export class WalletService {
 			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
 			this.removeBlockFromPendingAccount(nextBlock);
 			this.processingPending = false;
+			return setTimeout(() => this.processPendingBlocks(), 1500); // Dispose of the block, no matching account
+		}
+
+		const newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
+		
+		if (newHash) {
+			this.confirmTx(newHash,nextBlock,true);
+		} 
+	}
+
+	async processPendingBlock(pending) {
+		if (this.processingPending || this.wallet.locked) {
+			return;
+		}
+		this.processingPending = true;
+		const nextBlock = {
+			account: pending.source,
+			receiveAccount: pending.account,
+			amount: pending.amount,
+			token: pending.type,
+			tokenName: pending.tokenName,
+			tokenSymbol: pending.tokenName,
+			timestamp: pending.timestamp,
+			hash: pending.hash
+		};
+		if (this.successfulBlocks.find(b => b.hash === nextBlock.hash)) {
+			//console.log('Block has already been processed')
+			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+			this.removeBlockFromPendingAccount(nextBlock);
+			this.processingPending = false;
+			return; // Block has already been processed
+		}
+		const walletAccount = await this.getWalletAccount(nextBlock.receiveAccount);
+		if (!walletAccount) {
+			//console.log('Dispose of the block, no matching account')
+			this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
+			this.removeBlockFromPendingAccount(nextBlock);
+			this.processingPending = false;
 			return; // Dispose of the block, no matching account
 		}
 
-		let newHash = null;
-
-		if (tokenName !== 'all') {
-			if (nextBlock.tokenName == tokenName) {
-				newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
-			}
-		} else {
-			newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
-		}
+		const newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
 
 		if (newHash) {
-			if (this.successfulBlocks.length >= 500) {
-				this.successfulBlocks.shift();
-			}
-			this.successfulBlocks.push(nextBlock.hash);
-
-			await this.loadTokens();
-
-			let tokenInfo;
-			if (this.tokenMap.hasOwnProperty(nextBlock.token)) {
-				tokenInfo = this.tokenMap[nextBlock.token];
-			}
-			//const receiveAmount = this.util.qlc.rawToQlc(nextBlock.amount);
-			this.notifications.sendSuccess(
-				`Successfully received ${nextBlock.amount == 0 ? '' : new BigNumber(nextBlock.amount).dividedBy(Math.pow(10,tokenInfo.decimals)).toFixed(tokenInfo.decimals)} ${tokenInfo.tokenSymbol}!`
-			);
-
-			// await this.promiseSleep(500); // Give the node a chance to make sure its ready to reload all?
-			//await this.reloadBalances();
+			this.confirmTx(newHash,nextBlock);
 		} 
 
-		this.pendingBlocks.shift(); // Remove it after processing, to prevent attempting to receive duplicated messages
-		this.removeBlockFromPendingAccount(nextBlock,newHash);
-		this.processingPending = false;
+		return false;
+	}
 
-		setTimeout(() => this.processPendingBlocks(), 1500);
+	async confirmTx(hash,nextBlock,auto = false) {
+		const blockConfirmedQuery = await this.api.blockConfirmedStatus(hash);
+		//console.log(blockConfirmedQuery);
+		if (typeof blockConfirmedQuery.result != 'undefined') {
+			if (blockConfirmedQuery.result == true) {
+				if (this.successfulBlocks.length >= 500) {
+					this.successfulBlocks.shift();
+				}
+				this.successfulBlocks.push(nextBlock.hash);
+				await this.loadTokens();
+				let tokenInfo;
+				if (this.tokenMap.hasOwnProperty(nextBlock.token)) {
+					tokenInfo = this.tokenMap[nextBlock.token];
+				}
+				this.notifications.sendSuccess(
+					`Successfully received ${nextBlock.amount == 0 ? '' : new BigNumber(nextBlock.amount).dividedBy(Math.pow(10,tokenInfo.decimals)).toFixed(tokenInfo.decimals)} ${tokenInfo.tokenSymbol}!`
+				);
+				// Remove it after processing, to prevent attempting to receive duplicated messages
+				this.pendingBlocks = this.pendingBlocks.filter(function( obj ) { 
+					return obj.hash !== nextBlock.hash;
+				});
+				this.removeBlockFromPendingAccount(nextBlock,hash);
+				this.processingPending = false;
+				setTimeout(() => this.processPendingBlocks(), 1500);
+				return true;
+			}
+		}
+		this.confirmTxTimer.subscribe( val => {
+			this.confirmTx(hash,nextBlock,auto);
+		});
 	}
 
 	saveWalletExport() {

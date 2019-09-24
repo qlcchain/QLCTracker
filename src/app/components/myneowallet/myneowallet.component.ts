@@ -229,8 +229,15 @@ export class MyneowalletComponent implements OnInit {
 		
 		this.neoPrivateCodeRecoverStatus = 1;
 		this.neoPrivateCodeButton = 'Preparing, please wait.';
-		this.neoPrivateCode = await this.neoService.decrypt(this.walletAccount.encryptedwif,this.wallet.password);
-		this.openModal(recover);
+
+		const wif = await this.neoService.decrypt(this.walletAccount.encryptedwif,this.wallet.password);
+		if (wif != false) {
+			this.neoPrivateCode = wif;
+			this.openModal(recover);
+		} else {
+			this.neoPrivateCodeButton = 'ERROR - Wrong password';
+		}
+		
 	}
 
 }

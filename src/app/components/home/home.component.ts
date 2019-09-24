@@ -20,6 +20,9 @@ export class HomeComponent implements OnInit {
 	//transactionsCount = { count: 0, unchecked: 0 };
 	representativeOnline = 0;
 	representativesCount = 0;
+	nodesOnline = 0;
+	nodesTotal = 0;
+	
 	votingPower = new BigNumber(0);
 	votingPowerPercent = '0';
 	tokensCount = 0;
@@ -98,7 +101,13 @@ export class HomeComponent implements OnInit {
 				this.votingPower = votingOnline;
 				this.votingPowerPercent = new BigNumber(votingOnline).dividedBy(tokens.result.totalSupply).multipliedBy(100).toFixed(2); 
 			});
-    	}
+		}
+		
+		const nodesInfoQuery = await this.api.nodeInfo();
+		if (nodesInfoQuery.result) {
+			this.nodesOnline = nodesInfoQuery.result.online;
+			this.nodesTotal = nodesInfoQuery.result.total;
+		}
 	}
 
 	async loadTransactions() {

@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 
 import * as QRCode from 'qrcode';
 import * as bip from 'bip39';
+import { NeoWalletService } from 'src/app/services/neo-wallet.service';
 
 @Component({
   selector: 'app-settings',
@@ -24,8 +25,8 @@ import * as bip from 'bip39';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-  wallet = this.walletService.wallet;
-  accounts = this.walletService.wallet.accounts;
+	wallet = this.walletService.wallet;
+	accounts = this.walletService.wallet.accounts;
 
 	msg1 = '';
 	msg2 = '';
@@ -55,30 +56,33 @@ export class SettingsComponent implements OnInit {
 	msg26 = '';
 	msg27 = '';
 	msg28 = '';
-  msg29 = '';
-  
-  msg30 = '';
-  msg31 = '';
-  msg32 = '';
-  msg33 = '';
-  msg34 = '';
-  msg35 = '';
-  msg36 = '';
-  msg37 = '';
-  msg38 = '';
-  msg39 = '';
-  msg40 = '';
-  msg41 = '';
+	msg29 = '';
+	
+	msg30 = '';
+	msg31 = '';
+	msg32 = '';
+	msg33 = '';
+	msg34 = '';
+	msg35 = '';
+	msg36 = '';
+	msg37 = '';
+	msg38 = '';
+	msg39 = '';
+	msg40 = '';
+	msg41 = '';
 
-  newPassword = '';
-  confirmPassword = '';
+	newPassword = '';
+	confirmPassword = '';
 
-  showQRExport = false;
-  QRExportUrl = '';
-  QRExportImg = '';
-  addressBookShowQRExport = false;
-  addressBookQRExportUrl = '';
-  addressBookQRExportImg = '';
+	updatePasswordButton = '';
+	updatePasswordButtonDisabled = false;
+
+	showQRExport = false;
+	QRExportUrl = '';
+	QRExportImg = '';
+	addressBookShowQRExport = false;
+	addressBookQRExportUrl = '';
+	addressBookQRExportImg = '';
 
 
 	denominations = [
@@ -123,13 +127,20 @@ export class SettingsComponent implements OnInit {
 	];
 	selectedPoWOption = this.powOptions[0].value;
 
+	receiveOptions = [
+		{ name: 'Manual', value: 'manual' },
+		{ name: 'Auto', value: 'auto' }
+	];
+	selectedReceiveOption = this.receiveOptions[0].value;
+
 	blockOptions = [{ name: this.msg21, value: false }, { name: this.msg22, value: true }];
 	selectedBlockOption = this.blockOptions[0].value;
 	langService: LangService;
-  modalRef: BsModalRef;
+  	modalRef: BsModalRef;
   
-  constructor(
-    private walletService: WalletService,
+  	constructor(
+		private walletService: WalletService,
+		private neoService: NeoWalletService,
 		private notifications: NotificationService,
 		private appSettings: AppSettingsService,
 		private addressBook: AddressBookService,
@@ -140,9 +151,9 @@ export class SettingsComponent implements OnInit {
 		private price: PriceService,
 		private lang: LangService,
 		private trans: TranslateService,
-    private modalService: BsModalService,
-    private router: Router
-  ) {
+    	private modalService: BsModalService,
+    	private router: Router
+  	) {
 		this.langService = lang;
 		this.loadLang();
 	}
@@ -155,6 +166,7 @@ export class SettingsComponent implements OnInit {
   }
 
   loadLang() {
+		this.trans.get('MANAGE_WALLET.change_wallet_password_button').subscribe((res: string) => {	this.updatePasswordButton = res;	});
 		this.trans.get('CONFIGURE_APP_WARNINGS.msg1').subscribe((res: string) => {	this.msg1 = res;	});
 		this.trans.get('CONFIGURE_APP_WARNINGS.msg2').subscribe((res: string) => {	this.msg2 = res;	});
 		this.trans.get('CONFIGURE_APP_WARNINGS.msg3').subscribe((res: string) => {	this.msg3 = res;	});
@@ -183,19 +195,20 @@ export class SettingsComponent implements OnInit {
 		this.trans.get('CONFIGURE_APP_WARNINGS.msg26').subscribe((res: string) => {	this.msg26 = res;	});
 		this.trans.get('CONFIGURE_APP_WARNINGS.msg27').subscribe((res: string) => {	this.msg27 = res;	});
 		this.trans.get('CONFIGURE_APP_WARNINGS.msg28').subscribe((res: string) => {	this.msg28 = res;	});
-    this.trans.get('CONFIGURE_APP_WARNINGS.msg29').subscribe((res: string) => {	this.msg29 = res;	});
-    
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg1').subscribe((res: string) => { this.msg30 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg2').subscribe((res: string) => { this.msg31 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg3').subscribe((res: string) => { this.msg32 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg4').subscribe((res: string) => { this.msg33 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg5').subscribe((res: string) => { this.msg34 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg6').subscribe((res: string) => { this.msg35 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg7').subscribe((res: string) => { this.msg36 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg8').subscribe((res: string) => { this.msg37 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg9').subscribe((res: string) => { this.msg38 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg10').subscribe((res: string) => { this.msg39 = res; });
-    this.trans.get('MANAGE_WALLET_WARNINGS.msg11').subscribe((res: string) => { this.msg40 = res; });
+		this.trans.get('CONFIGURE_APP_WARNINGS.msg29').subscribe((res: string) => {	this.msg29 = res;	});
+		
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg1').subscribe((res: string) => { this.msg30 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg2').subscribe((res: string) => { this.msg31 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg3').subscribe((res: string) => { this.msg32 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg4').subscribe((res: string) => { this.msg33 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg5').subscribe((res: string) => { this.msg34 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg6').subscribe((res: string) => { this.msg35 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg7').subscribe((res: string) => { this.msg36 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg8').subscribe((res: string) => { this.msg37 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg9').subscribe((res: string) => { this.msg38 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg10').subscribe((res: string) => { this.msg39 = res; });
+		this.trans.get('MANAGE_WALLET_WARNINGS.msg11').subscribe((res: string) => { this.msg40 = res; });
+		
 		this.denominations = [
 			{ name: this.msg1, value: 'mqlc' },
 			{ name: this.msg2, value: 'kqlc' },
@@ -235,7 +248,7 @@ export class SettingsComponent implements OnInit {
 	}
   
   loadFromSettings() {
-		const settings = this.appSettings.settings;
+		const settings = this.appSettings.loadAppSettings();
 
 		const matchingLang = this.languages.find(d => d.value === settings.lang);
 		this.selectedLang = matchingLang.value || this.languages[0].value;
@@ -249,7 +262,7 @@ export class SettingsComponent implements OnInit {
 		const matchingStorage = this.storageOptions.find(d => d.value == settings.walletStore);
 		this.selectedStorage = matchingStorage.value || this.storageOptions[0].value;
 
-    const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value == settings.lockInactivityMinutes);
+    	const matchingInactivityMinutes = this.inactivityOptions.find(d => d.value == settings.lockInactivityMinutes);
 
 		this.selectedInactivityMinutes = matchingInactivityMinutes
 			? matchingInactivityMinutes.value
@@ -260,6 +273,9 @@ export class SettingsComponent implements OnInit {
 
 		const matchingPowOption = this.powOptions.find(d => d.value == settings.powSource);
 		this.selectedPoWOption = matchingPowOption ? matchingPowOption.value : this.powOptions[0].value;
+
+		const matchingReceiveOption = this.receiveOptions.find(d => d.value == settings.receive);
+		this.selectedReceiveOption = matchingReceiveOption ? matchingReceiveOption.value : this.receiveOptions[0].value;
 	}
 
 	async updateAppSettings() {
@@ -269,20 +285,22 @@ export class SettingsComponent implements OnInit {
 		const reloadFiat = this.appSettings.settings.displayCurrency !== newCurrency;
 		const newLang = this.selectedLang;
 		const reloadLang = this.appSettings.settings.lang !== newLang;
+		const receive = this.selectedReceiveOption;
 
 		const newSettings = {
 			walletStore: newStorage,
 			lockOnClose: this.selectedLockOption,
 			lockInactivityMinutes: this.selectedInactivityMinutes,
 			displayDenomination: this.selectedDenomination,
-			lang: newLang
+			lang: newLang,
+			receive
 		};
-		console.log(newSettings);
+		
 		this.appSettings.setAppSettings(newSettings);
 		this.notifications.sendSuccess(this.msg23);
 
 		if (reloadLang) {
-			this.langService.changeLang(newLang); // If swapping the storage engine, resave the wallet
+			this.langService.changeLang(newLang); // If swapping the language, resave the wallet
 		}
 
 		if (resaveWallet) {
@@ -374,14 +392,29 @@ export class SettingsComponent implements OnInit {
     }
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning(this.msg32);
-    }
+	}
+	this.notifications.sendInfo('Changing password. Please wait.');
+	this.updatePasswordButton = 'Changing. Please wait.';
+	this.updatePasswordButtonDisabled = true;
+	for (let neowallet of this.walletService.wallet.neowallets) {
+		try {
+			const wif = await this.neoService.decrypt(neowallet.encryptedwif,this.walletService.wallet.password);
+			neowallet.encryptedwif = await this.neoService.encrypt(wif,this.newPassword);
+			console.log('NEO address ' + neowallet.id + ' password change successful.');
+		} catch (error) {
+			this.notifications.sendInfo('NEO address ' + neowallet.id + ' password change failed.');
+			//console.log(error);
+		}
+	}
 
     this.walletService.wallet.password = this.newPassword;
     this.walletService.saveWalletExport();
 
     this.newPassword = '';
     this.confirmPassword = '';
-    this.notifications.sendSuccess(this.msg33);
+	this.notifications.sendSuccess(this.msg33);
+	this.trans.get('MANAGE_WALLET.change_wallet_password_button').subscribe((res: string) => {	this.updatePasswordButton = res;	});
+	this.updatePasswordButtonDisabled = false;
   }
 
   async exportWallet() {

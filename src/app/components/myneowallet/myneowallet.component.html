@@ -43,7 +43,7 @@
                                     <div class="col-12 white">Address</div>
                                 </div>
                                 <div class="row qlc-table-row-blue row-text-mid mt-3 neo-background-light">
-                                    <div class="col-12 text-break pr-3"><span *ngIf="addressBookModel != ''">{{ addressBookModel }} - </span>{{ walletId }} <a ngxClipboard [cbContent]="walletId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+                                    <div class="col-12 text-break pr-3"><span *ngIf="addressBookModel != ''" class="force-wrap">{{ addressBookModel }} - </span>{{ walletId }} <a ngxClipboard [cbContent]="walletId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
                                     <div class="col-12 px-0" *ngIf="showEditName">
                                         <div class="editNameButtons">
                                             <div class="row pl-3 pr-3">
@@ -241,7 +241,7 @@
             <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let history of walletHistory">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                 <span class="qlc-icon icon-{{ history.type }}" title="{{ history.type }}"></span>
-                <span class="d-none d-sm-none d-md-inline-block">
+                <span class="d-none d-sm-none d-md-inline-block txState">
                   <span class="text-color-lightgrey">State</span><br>
                   <span class="text-bold-grey">{{ history.type }}</span>
                 </span>

@@ -122,7 +122,11 @@ export class QLCBlockService {
 			//console.log(rewardReceiveBlock);
 			if (rewardReceiveBlock.result) {
 				const processResponse = await this.api.process(rewardReceiveBlock.result);
-				//console.log(processResponse);
+				if (processResponse && processResponse.result) {
+					return processResponse.result;
+				} else {
+					return null;
+				}
 			}
 			if (rewardReceiveBlock.error) {
 				console.log(rewardReceiveBlock.error.message);

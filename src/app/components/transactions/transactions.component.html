@@ -29,7 +29,7 @@
             <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of transactions">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                 <span class="qlc-icon icon-{{ transaction.type }}" title="{{ transaction.type }}"></span>
-                <span class="d-none d-sm-none d-md-inline-block">
+                <span class="d-none d-sm-none d-md-inline-block txState">
                   <span class="text-color-lightgrey">State</span><br>
                   <span class="text-bold-grey">{{ transaction.type }}</span>
                 </span>
