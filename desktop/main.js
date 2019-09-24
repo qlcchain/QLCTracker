@@ -12,7 +12,7 @@ const fs = require('fs-extra');
 const chmod = require('chmod-plus');
 const findProcess = require('find-process');
 const pidusage = require('pidusage');
-//const PeerId = require('peer-id');
+const fkill = require('fkill');
 
 const DownloadManager = require("electron-download-manager");
 
@@ -235,47 +235,6 @@ function downloadUpdate(version,gitrev,platform) {
     });
 }
 
-
-	const forceKill = (child, timeout = 5000) => {
-		if (!child.killed) {
-			child.kill();
-		}
-
-		if (child.stdin) {
-			child.stdin.destroy();
-		}
-
-		if (child.stdout) {
-			child.stdout.destroy();
-		}
-
-		if (child.stderr) {
-			child.stderr.destroy();
-		}
-
-		const { pid } = child;
-		child.unref();
-
-		const interval = 500;
-		function poll() {
-			try {
-				process.kill(pid, 0);
-				setTimeout(() => {
-					try {
-						process.kill(pid, 'SIGKILL');
-						console.log('Forcefully killed process PID:', pid);
-					} catch (e) {
-						setTimeout(poll, interval);
-					}
-				}, timeout);
-			} catch (e) {
-				// ignore
-			}
-		}
-
-		return setTimeout(poll, interval);
-	};
-
 	function createWindow() {
 		// Create the browser window.
 		mainWindow = new BrowserWindow({
@@ -360,7 +319,46 @@ function downloadUpdate(version,gitrev,platform) {
 		child.once('loaded', () => {});
 	}
 	
-	//console.log(child);
+	
+	const forceKill = (child, timeout = 5000) => {
+		if (!child.killed) {
+			child.kill();
+		}
+
+		if (child.stdin) {
+			child.stdin.destroy();
+		}
+
+		if (child.stdout) {
+			child.stdout.destroy();
+		}
+
+		if (child.stderr) {
+			child.stderr.destroy();
+		}
+
+		const { pid } = child;
+		child.unref();
+
+		const interval = 500;
+		function poll() {
+			try {
+				process.kill(pid, 0);
+				setTimeout(() => {
+					try {
+						process.kill(pid, 'SIGKILL');
+						console.log('Forcefully killed process PID:', pid);
+					} catch (e) {
+						setTimeout(poll, interval);
+					}
+				}, timeout);
+			} catch (e) {
+				// ignore
+			}
+		}
+
+		return setTimeout(poll, interval);
+	};
 
 	const killHandler = () => { 
 		if (typeof child.kill == 'function') {
@@ -369,6 +367,14 @@ function downloadUpdate(version,gitrev,platform) {
 				'status' : 0
 			});
 		}
+		findProcess('name','gqlc')
+			.then(async function (list) {
+				if (typeof list[0] != 'undefined') {
+					await fkill(list[0].pid, { force: true });
+				} 
+			}, function (err) {
+				log.log(err.stack || err);
+			});
 	};
 	const removeExitHandler = signalExit(killHandler);
 	
@@ -402,18 +408,8 @@ function downloadUpdate(version,gitrev,platform) {
 
 	// Quit when all windows are closed.
 	app.on('window-all-closed', function() {
-		// On OS X it is common for applications and their menu bar
-		// to stay active until the user quits explicitly with Cmd + Q
-
-		if (process.platform !== 'darwin') {
-			// close gqlc
-			console.log(typeof child.kill);
-			if (typeof child.kill == 'function') {
-				child.kill();
-				killHandler();
-			}
-			app.quit();
-		}
+		killHandler();
+		app.quit();		
 	});
 
 	app.on('activate', function() {
