@@ -17,11 +17,11 @@ cache:
 script:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      security create-keychain build.keychain;
+      security create-keychain -p $KEYCHAIN_PASSWORD build.keychain;
       security default-keychain -s build.keychain;
-      security unlock-keychain build.keychain;
+      security unlock-keychain -p $KEYCHAIN_PASSWORD build.keychain;
       echo $CERTIFICATE_OSX_P12 | base64 --decode - > keystore.p12;
-      security import keystore.p12 -k build.keychain -T /usr/bin/codesign;
+      security import keystore.p12 -k build.keychain -P $KEYCHAIN_PASSWORD -T /usr/bin/codesign;
       npm install;
       npm run sms:build-desktop;
       npm run desktop:full;
