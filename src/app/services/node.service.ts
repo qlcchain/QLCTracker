@@ -12,6 +12,7 @@ export class NodeService {
   status:boolean = null; // null - loading, false - offline, true - online
   synchronized:boolean = null; // null - loading, false - not synchronized, true - synchronized
   break:boolean = null; // null - loading, false - node ok, true - old version, don't process
+  running:boolean = false; // local node status, false - not running, true - running
   
   constructor(private notifications: NotificationService) {
     this.notifications.sendInfo('Connecting to the node. Please wait.', { identifier: 'node-connect', length: 0 })

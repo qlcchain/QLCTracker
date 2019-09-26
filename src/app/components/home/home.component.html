@@ -106,7 +106,7 @@
             <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of transactions">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                 <span class="qlc-icon icon-{{ transaction.type }}" title="{{ transaction.type }}"></span>
-                <span class="d-none d-sm-none d-md-inline-block">
+                <span class="d-none d-sm-none d-md-inline-block txState">
                   <span class="text-color-lightgrey">State</span><br>
                   <span class="text-bold-grey">{{ transaction.type }}</span>
                 </span>
@@ -166,13 +166,13 @@
       <div class="content-box-white">
         <div class="container">
           <div class="row qlc-table-header-white sub-page">
-            <div class="col-12">Representative online</div>
+            <div class="col-12">Nodes online</div>
           </div>
           <div class="row qlc-table-row-white sub-page pb-0">
-            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ representativeOnline }}</span></div>
+            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ nodesOnline }}</span></div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ representativesCount }} total representatives</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ nodesTotal }} total nodes</span></div>
           </div>
         </div>
       </div>

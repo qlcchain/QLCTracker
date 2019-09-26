@@ -156,7 +156,19 @@ export class PowService {
 		if (!work) {
 			const errMessage = `Unable to generate work for ${queueItem.hash} using ${powSource}`;
 			this.notifications.sendError(errMessage);
-			queueItem.promise.reject(null);
+			const infoMessage = `Trying POW Server to generate work for ${queueItem.hash}`;
+			this.notifications.sendInfo(infoMessage);
+			const pow = await this.getPOWServer(queueItem.hash);
+			if (pow.result) {
+				queueItem.work = pow.result;
+				queueItem.promise.resolve(pow.result);
+				const successMessage = `Work for ${queueItem.hash} generated using POW Server`;
+				this.notifications.sendSuccess(successMessage);
+			} else {
+				const errMessage = `Unable to generate work for ${queueItem.hash} using POW server`;
+				this.notifications.sendError(errMessage);
+				queueItem.promise.reject(null);
+			}
 		} else {
 			queueItem.work = work;
 			queueItem.promise.resolve(work);
@@ -170,6 +182,14 @@ export class PowService {
 	/**
 	 * Actual PoW functions
 	 */
+
+	/**
+	 * Generate PoW using POW server
+	 */
+
+	async getPOWServer(hash) {
+		return await this.api.getPow(hash);
+	}
 
 	/**
 	 * Generate PoW using CPU without workers (Not used)

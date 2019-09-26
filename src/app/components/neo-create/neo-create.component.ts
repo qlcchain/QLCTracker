@@ -101,10 +101,17 @@ export class NeoCreateComponent implements OnInit {
     const account = await this.neoWallet.createWallet('new',this.walletNameModel.trim());
     this.newWalletEncryptedKey = account.encryptedwif;
 
-    this.newWalletPrivateKey = await this.neoWallet.decrypt(account.encryptedwif,this.wallet.password);
-    this.newWallet = account;
-    this.notifications.sendSuccess('Wallet created. Please save your key in a safe space.');
-    this.alreadyImporting = false;
+    const wif = await this.neoWallet.decrypt(account.encryptedwif,this.wallet.password);
+    if (wif != false) {
+      this.newWalletPrivateKey = wif;
+      this.newWallet = account;
+      this.notifications.sendSuccess('Wallet created. Please save your key in a safe space.');
+      this.alreadyImporting = false;
+    } else {
+      this.newWalletPrivateKey = 'ERROR - Please don\'t use this wallet. There was an encryption error.';
+      this.newWalletEncryptedKey = 'ERROR - Please don\'t use this wallet. There was an encryption error.';
+    }
+    
   }
 
   confirmNewWallet() {

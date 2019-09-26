@@ -21,6 +21,9 @@ export class ApiService {
 	reconnectTime = 1000;
 	reconnectInterval = 500;
 	reconnectTimeMax = 10000;
+
+	public nodeBlocksCount = 0;
+	public nodeMainBlocksCount = 0;
 	
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
 	c = new Client(this.HTTP_RPC, () => {});
@@ -35,52 +38,55 @@ export class ApiService {
 	async connect() {
 		const source = timer(this.reconnectTime);
 		this.connectTimer = source.subscribe(async val => {
-			this.reconnectTime = this.reconnectTime + this.reconnectInterval;
-				if (this.reconnectTime > this.reconnectTimeMax)
-					this.reconnectTime = this.reconnectTimeMax;
+			if (!environment.desktop || (environment.desktop && this.node.running)) {
+				this.reconnectTime = this.reconnectTime + this.reconnectInterval;
+					if (this.reconnectTime > this.reconnectTimeMax)
+						this.reconnectTime = this.reconnectTimeMax;
 
-			try {
-				const syncQuery = await this.syncing();
-				//console.log(syncQuery);
-				if (typeof syncQuery.result != undefined) {
-					this.node.setOnline();
-					
-					if ( syncQuery.result == true) {
-						this.node.setSynchronizing();
-						this.connect();
-					} else {
-						if (this.rpcUrl != environment.mainRpcUrl) {
-							const blocksMainQuery = await this.blocksCountMain();
-							const blocksQuery = await this.blocksCount();
-							const mainBlocksCount = blocksMainQuery.result.count;
-							const nodeBlocksCount = blocksQuery.result.count;
-							//console.log('mainBlocksCount ' + ' ' + mainBlocksCount + ' nodeBlocksCount ' + ' ' + nodeBlocksCount + ' unchecked ' + ' ' + blocksQuery.result.unchecked)
-							if (nodeBlocksCount < mainBlocksCount) {
-								this.node.setSynchronizing();
-								this.connect();
+				try {
+					const syncQuery = await this.syncing();
+					//console.log(syncQuery);
+					if (typeof syncQuery.result != undefined) {
+						this.node.setOnline();
+						
+						if ( syncQuery.result == true) {
+							this.node.setSynchronizing();
+							this.connect();
+						} else {
+							if (this.rpcUrl != environment.mainRpcUrl) {
+								const blocksMainQuery = await this.blocksCountMain();
+								const blocksQuery = await this.blocksCount();
+								this.nodeMainBlocksCount = blocksMainQuery.result.count;
+								this.nodeBlocksCount = blocksQuery.result.count;
+								//console.log('mainBlocksCount ' + ' ' + mainBlocksCount + ' nodeBlocksCount ' + ' ' + nodeBlocksCount + ' unchecked ' + ' ' + blocksQuery.result.unchecked)
+								if (this.nodeBlocksCount < this.nodeMainBlocksCount) {
+									this.node.setSynchronizing();
+									this.connect();
+								} else {
+									this.node.setSynchronized();
+								}
+								return;
+								
 							} else {
 								this.node.setSynchronized();
 							}
-							return;
-							
-						} else {
-							this.node.setSynchronized();
 						}
+					} else if (syncQuery.error) {
+						console.log(syncQuery.error);
+						this.connect();
+					} else {
+						console.log('error connecting');
+						this.connect();
 					}
-				} else if (syncQuery.error) {
-					console.log(syncQuery.error);
-					this.connect();
-				} else {
+				} catch (error) {
 					console.log('error connecting');
+					console.log(error);
+					this.node.setOffline('ERROR - Node offline, reconnecting ...');
 					this.connect();
 				}
-			} catch (error) {
-				console.log('error connecting');
-				console.log(error);
-				this.node.setOffline('ERROR - Node offline, reconnecting ...');
+			} else {
 				this.connect();
 			}
-			
 
 			
 
@@ -134,6 +140,12 @@ export class ApiService {
 	}
 
 	async accountsPending(accounts: string[], count: number = 500): Promise<{ result?: any; error?: string }> {
+		if (environment.desktop && !this.node.running) {
+			const errorMsg = {
+				error: 'Node is not running.'
+			}
+			return errorMsg;
+		}
 		if (this.node.synchronized === false) {
 			const errorMsg = {
 				error: 'Node is not synchronized.'
@@ -203,7 +215,7 @@ export class ApiService {
 		}
 		if (this.node.break === true) {
 			const errorMsg = {
-				error: 'Old node version, don\'t process.'
+				error: 'Don\'t process.'
 			}
 			return errorMsg;
 		}
@@ -231,7 +243,13 @@ export class ApiService {
 		}
 	}
 
-	async accountInfo(account): Promise<{ result: any; error?: string }> {
+	async accountInfo(account): Promise<{ result?: any; error?: any }> {
+		if (environment.desktop && !this.node.running) {
+			const errorMsg = {
+				error: 'Node is not running.'
+			}
+			return errorMsg;
+		}
 		try {
 			return await this.c.request(methods.ledger.accountInfo, account);
 		} catch (err) {
@@ -247,7 +265,13 @@ export class ApiService {
 		}
 	}
 
-	async tokens(): Promise<{ result: any; error?: string }> {
+	async tokens(): Promise<{ result?: any; error?: string }> {
+		if (environment.desktop && !this.node.running) {
+			const errorMsg = {
+				error: 'Node is not running.'
+			}
+			return errorMsg;
+		}
 		try {
 			return await this.c.request(methods.ledger.tokens);
 		} catch (err) {
@@ -255,7 +279,13 @@ export class ApiService {
 		}
 	}
 
-	async blocks(count:Number = 0, offset:Number = 0): Promise<{ result: any; error?: string }> {
+	async blocks(count:Number = 0, offset:Number = 0): Promise<{ result?: any; error?: string }> {
+		if (environment.desktop && !this.node.running) {
+			const errorMsg = {
+				error: 'Node is not running.'
+			}
+			return errorMsg;
+		}
 		const result = await this.c.buildinLedger.blocks(count,offset);
 		if (!result.result && !result.error) 
 			this.reconnect('blocks');
@@ -263,7 +293,13 @@ export class ApiService {
 		return result;
 	}
 	
-	async blocksCount(): Promise<{ result: any; error?: string }> {
+	async blocksCount(): Promise<{ result?: any; error?: string }> {
+		if (environment.desktop && !this.node.running) {
+			const errorMsg = {
+				error: 'Node is not running.'
+			}
+			return errorMsg;
+		}
 		try {
 			return await this.c.request( methods.ledger.blocksCount );
 		} catch (err) {
@@ -355,7 +391,13 @@ export class ApiService {
 		return await this.request('rewards_getTotalRewards', { params: [txid] });
 	}
 
-	async getReceiveRewardBlock(txid: string): Promise<{ result: any; error?: any }> {
+	async getReceiveRewardBlock(txid: string): Promise<{ result?: any; error?: any }> {
+		if (this.node.break === true) {
+			const errorMsg = {
+				error: 'Don\'t process.'
+			}
+			return errorMsg;
+		}
 		return await this.request('rewards_getReceiveRewardBlock', { params: [txid] });
 	}
 
@@ -388,6 +430,20 @@ export class ApiService {
 		return result;
 	}
 
+	async blockConfirmedStatus(hash:string): Promise<{ result: any; error?: any }> {
+		const result = await this.request('ledger_blockConfirmedStatus', { params: [hash] });
+		if (typeof result.result == 'undefined' && typeof result.error == 'undefined') 
+			this.reconnect('blockConfirmedStatus');
+
+		return result;
+	}	
+
+	// pow
+	async getPow(hash:string): Promise<{ result: any; error?: string }> {
+		return await this.request('work', { params: [hash] }, 'https://explorer.qlcchain.org/api/node');
+	}
+	// pow END
+
 	// net
 	async syncing(): Promise<{ result: any; error?: any }> {
 		return await this.request('net_syncing', { params: [] });
@@ -402,7 +458,7 @@ export class ApiService {
 	async blocksCountMain(): Promise<{ result: any; error?: string }> {
 		return await this.request('ledger_blocksCount', { params: [] }, environment.mainRpcUrl[environment.qlcChainNetwork]);
 	}
-	// desktop END
+	
 
 	async updates(): Promise<{ result: any; error?: string }> {
 		const type = environment.desktop ? 'desktop' : 'web';
@@ -410,6 +466,16 @@ export class ApiService {
 
 		return await this.request('updates', { params: [type,version] }, 'https://explorer.qlcchain.org/api/updates');
 	}
+
+	async nodeInfo(): Promise<{ result: any; error?: string }> {
+		return await this.request('info', { params: [] }, 'https://explorer.qlcchain.org/api/node');
+	}
+
+	async nodeVersion(desktopVersion, nodeVersion, platform, arch): Promise<{ result: any; error?: string }> {
+		return await this.request('version', { params: [desktopVersion, nodeVersion, platform, arch] }, 'https://explorer.qlcchain.org/api/node');
+	}
+
+	// desktop END
 
 
 }

@@ -1,8 +1,10 @@
 {
   "name": "smsbilling",
-  "version": "1.0.1",
-  "main": "main.js",
+  "version": "1.0.2",
+  "main": "desktop/main.js",
+  "homepage": "https://github.com/qlcchain/sms-billing",
   "author": "QLC Chain Team <admin@qlink.mobi>",
+  "description": "QLC Wallet and Explorer",
   "scripts": {
     "postinstall": "node patch.js",
     "ng": "ng",
@@ -17,26 +19,25 @@
     "sms:build": "ng build --configuration=production",
     "sms:build-desktop": "ng build --configuration=desktop --base-href ./",
     "sms:build-desktop-testnet": "ng build --configuration=desktop-testnet --base-href ./",
-    "desktop:dev": "electron main.js",
-    "desktop:dev-testnet": "electron main_testnet.js",
+    "desktop:dev": "electron desktop/main.js",
     "desktop:local": "electron-builder",
     "desktop:devLocal": "electron-builder -c.compression=store",
     "desktop:full": "electron-builder -wml --x64"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^8.1.0",
-    "@angular/common": "^8.2.0",
-    "@angular/compiler": "^8.2.0",
-    "@angular/core": "^8.2.0",
-    "@angular/forms": "^8.2.0",
-    "@angular/platform-browser": "^8.2.0",
-    "@angular/platform-browser-dynamic": "^8.2.0",
-    "@angular/router": "^8.2.0",
+    "@angular/animations": "^8.2.7",
+    "@angular/common": "^8.2.7",
+    "@angular/compiler": "^8.2.7",
+    "@angular/core": "^8.2.7",
+    "@angular/forms": "^8.2.7",
+    "@angular/platform-browser": "^8.2.7",
+    "@angular/platform-browser-dynamic": "^8.2.7",
+    "@angular/router": "^8.2.7",
     "@cityofzion/neon-js": "^4.7.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
-    "@types/jest": "^24.0.17",
+    "@types/jest": "^24.0.18",
     "@types/jquery": "^3.3.31",
     "@types/mocha": "^5.2.7",
     "bignumber.js": "^8.1.1",
@@ -47,65 +48,70 @@
     "core-js": "^2.6.9",
     "cross-spawn-with-kill": "^1.0.0",
     "crypto-js": "^3.1.9-1",
-    "electron-log": "^3.0.7",
+    "electron-download-manager": "^2.1.2",
+    "electron-log": "^3.0.8",
     "electron-updater": "^4.1.2",
     "electron-util": "^0.11.0",
+    "find-process": "^1.4.2",
+    "fkill": "^6.2.0",
     "fs-extra": "^8.1.0",
     "jquery": "^3.4.1",
     "js-base64": "^2.5.1",
     "jsonrpc-lite": "^2.0.7",
     "ngx-bootstrap": "^4.3.0",
-    "ngx-clipboard": "^12.2.0",
-    "ngx-device-detector": "^1.3.9",
+    "ngx-clipboard": "^12.2.1",
+    "ngx-device-detector": "^1.3.11",
     "ngx-logger": "^3.4.6",
     "particles.js": "^2.0.0",
+    "pidusage": "^2.0.17",
+    "ps-node": "^0.1.6",
     "qlc.js": "0.0.7",
-    "qrcode": "^1.4.1",
-    "rxjs": "~6.5.2",
+    "qrcode": "^1.4.2",
+    "rxjs": "^6.5.3",
     "signal-exit": "^3.0.2",
     "to-executable-name": "^2.0.0",
     "tslib": "^1.10.0",
-    "uuid": "^3.3.2",
+    "uuid": "^3.3.3",
     "xhr2": "^0.1.4",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.800.6",
-    "@angular/cli": "^8.2.0",
-    "@angular/compiler-cli": "^8.2.0",
-    "@angular/language-service": "^8.2.0",
-    "@types/jasmine": "^3.3.13",
+    "@angular/cli": "^8.3.5",
+    "@angular/compiler-cli": "^8.2.7",
+    "@angular/language-service": "^8.2.7",
+    "@types/jasmine": "^3.4.0",
     "@types/jasminewd2": "~2.0.6",
-    "@types/node": "^12.0.10",
-    "codelyzer": "^5.1.0",
+    "@types/node": "^12.7.5",
+    "codelyzer": "^5.1.1",
     "download": "^7.1.0",
-    "electron": "^5.0.9",
+    "electron": "^5.0.10",
     "electron-builder": "^20.44.4",
     "electron-is-dev": "^1.1.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
-    "karma": "^4.2.0",
+    "karma": "^4.3.0",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "^2.1.0",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
     "popper.js": "^1.15.0",
     "protractor": "~5.4.2",
-    "tar": "^4.4.10",
-    "ts-node": "^8.3.0",
+    "tar": "^4.4.11",
+    "ts-node": "^8.4.1",
     "tslint": "~5.16.0",
     "typescript": "3.4.5"
   },
   "build": {
     "appId": "org.qlcchain.smsbilling",
-    "buildVersion": "1.0.1",
+    "buildVersion": "1.0.2",
     "productName": "SMSBilling",
     "asar": true,
     "files": [
       "dist/**/*",
       "node_modules/**/*",
       "package.json",
-      "main.js"
+      "desktop/main.js"
     ],
     "directories": {
       "output": "dist-desktop",
@@ -135,22 +141,8 @@
         "dmg"
       ],
       "type": "distribution",
-      "extraResources": [
-        {
-          "from": "./extra/darwin/x64/",
-          "to": "./",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./extra/config.json",
-          "to": "./"
-        }
-      ],
-      "binaries": [
-        "./dist-desktop/mac/smsBilling.app/Contents/Resources/gqlc"
-      ],
+      "extraResources": [],
+      "binaries": [],
       "category": "public.app-category.finance"
     },
     "win": {
@@ -158,22 +150,7 @@
         "nsis",
         "portable"
       ],
-      "extraResources": [
-        {
-          "from": "./extra/win32/${arch}",
-          "to": "./",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./extra/config.json",
-          "to": "./",
-          "filter": [
-            "**/*"
-          ]
-        }
-      ]
+      "extraResources": []
     },
     "nsis": {
       "oneClick": false,
@@ -187,22 +164,7 @@
       "desktop": {
         "Categories": "P2P;Finance;Security"
       },
-      "extraResources": [
-        {
-          "from": "./extra/linux/x64/",
-          "to": "./",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./extra/config.json",
-          "to": "./",
-          "filter": [
-            "**/*"
-          ]
-        }
-      ]
+      "extraResources": []
     },
     "publish": [
       {

@@ -43,7 +43,7 @@
                                     <div class="col-12">Address</div>
                                 </div>
                                 <div class="row qlc-table-row-blue row-text-mid mt-3">
-                                    <div class="col-12 text-break pr-3"><span *ngIf="addressBookModel != ''">{{ addressBookModel }} - </span>{{ accountId }} <a ngxClipboard [cbContent]="accountId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+                                    <div class="col-12 text-break pr-3"><span *ngIf="addressBookModel != ''" class="force-wrap">{{ addressBookModel }} - </span>{{ accountId }} <a ngxClipboard [cbContent]="accountId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
                                     <div class="col-12 px-0" *ngIf="showEditName">
                                         <div class="editNameButtons">
                                             <div class="row pl-3 pr-3">
@@ -99,7 +99,7 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('QLC')" type="submit" class="btn btn-primary btn-purple btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">
+                                    <button type="submit" class="btn btn-primary btn-purple btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">
                                         (<span *ngIf="checkIfPending('QLC')">
                                             {{ walletAccount.pendingPerTokenCount['QLC'] }}
                                         </span>
@@ -138,7 +138,7 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('QGAS')" type="submit" class="btn btn-primary btn-darkgrey btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(<span *ngIf="checkIfPending('QGAS')">{{ walletAccount.pendingPerTokenCount['QGAS'] }}</span><span *ngIf="!checkIfPending('QGAS')">0</span> Pending)</span></button>
+                                    <button type="submit" class="btn btn-primary btn-darkgrey btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(<span *ngIf="checkIfPending('QGAS')">{{ walletAccount.pendingPerTokenCount['QGAS'] }}</span><span *ngIf="!checkIfPending('QGAS')">0</span> Pending)</span></button>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +180,7 @@
                         <div class="container mt-3">
                             <div class="row">
                                 <div class="col-12 pl-0 pr-0">
-                                    <button (click)="receive('all')" type="submit" class="btn btn-primary btn-blue2 btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(<span *ngIf="checkIfPending('OTHER')">{{ walletAccount.pendingPerTokenCount['OTHER'] }}</span><span *ngIf="!checkIfPending('OTHER')">0</span> Pending)</span></button>
+                                    <button type="submit" class="btn btn-primary btn-blue2 btn-icon-receiveXX w-100 pl-2 pr-2"><span class="superlight">(<span *ngIf="checkIfPending('OTHER')">{{ walletAccount.pendingPerTokenCount['OTHER'] }}</span><span *ngIf="!checkIfPending('OTHER')">0</span> Pending)</span></button>
                                 </div>
                             </div>
                         </div>
@@ -226,8 +226,10 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 text-center pt-4 pb-1">
-                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0 && walletService.isLocked()">To receive your <span class="text-bold">{{ walletAccount.pendingBlocks.length }} pending transactions</span> just <a (click)="showUnlock()" style="text-decoration:underline;">unlock your wallet</a></p>
-                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0 && !walletService.isLocked()">Receiving <span class="text-bold">{{ walletAccount.pendingBlocks.length }} pending transactions</span> . Please wait a moment.</p>
+                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0 && this.settings.settings.receive == 'auto' && walletService.isLocked()">To receive your <span class="text-bold">{{ walletAccount.pendingBlocks.length }} pending transactions</span> just <a (click)="showUnlock()" style="text-decoration:underline;">unlock your wallet</a></p>
+                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0 && this.settings.settings.receive != 'auto' && walletService.isLocked()">To receive your <span class="text-bold">{{ walletAccount.pendingBlocks.length }} pending transactions</span>&nbsp;<u class="text-bold">first</u>&nbsp;<a (click)="showUnlock()" style="text-decoration:underline;">unlock your wallet</a></p>
+                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0 && this.settings.settings.receive == 'auto' && !walletService.isLocked()">Receiving <span class="text-bold">{{ walletAccount.pendingBlocks.length }} pending transactions</span> . Please wait a moment.</p>
+                                        <p *ngIf="walletAccount && walletAccount.pendingBlocks.length > 0 && this.settings.settings.receive != 'auto' && !walletService.isLocked()">Click on RECEIVE to receive your <span class="text-bold">{{ walletAccount.pendingBlocks.length }} pending transaction<span *ngIf="walletAccount.pendingBlocks.length > 1">s</span></span>.</p>
                                         <p *ngIf="walletAccount && walletAccount.pendingBlocks.length == 0">You have no pending transactions.</p>
                                     </div>
                                 </div>
@@ -293,26 +295,40 @@
 
           <div class="container">
 
-            <div class="row qlc-table-header">
+            <div class="row qlc-table-header" *ngIf="this.settings.settings.receive == 'auto'">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
               <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
               <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
             </div>
+            <div class="row qlc-table-header" *ngIf="this.settings.settings.receive != 'auto'">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
+                <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-5 text-truncate">Address / Transaction ID</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-2 pr-4 text-right">Time</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 d-none d-sm-block col-2 pr-4 text-right">Receive</div>
+            </div>
             <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let pending of walletAccount.pendingBlocks">
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                   <span class="qlc-icon icon-Receive" title="Receive"></span>
-                  <span class="d-none d-sm-none d-md-inline-block">
+                  <span class="d-none d-sm-none d-md-inline-block txState">
                     <span class="text-color-lightgrey">State</span><br>
                     <span class="text-bold-grey">Receive</span>
                   </span>
                 </div>
-                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                  <span class="text-color-lightgrey">from:</span> 
-                  <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a>
-                  <a [routerLink]="'/transaction/' + pending.hash"><br>
-                    <span class="text-tiny">{{ pending.hash }}</span>
-                  </a>
+                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate" *ngIf="this.settings.settings.receive == 'auto'">
+                    <span class="text-color-lightgrey">from:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a>
+                    <a [routerLink]="'/transaction/' + pending.hash"><br>
+                        <span class="text-tiny">{{ pending.hash }}</span>
+                    </a>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-7 text-truncate" *ngIf="this.settings.settings.receive != 'auto'">
+                    <span class="text-color-lightgrey">from:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a>
+                    <a [routerLink]="'/transaction/' + pending.hash"><br>
+                        <span class="text-tiny">{{ pending.hash }}</span>
+                    </a>
                 </div>
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                   pending.type == 'Send' ? 'text-color-red' : 'text-color-green'
@@ -320,8 +336,13 @@
                   <span data-toggle="tooltip" data-placement="top" title="">{{pending.type == 'Send' ? '-' : '+'}} {{ pending.amount | qlc: pending.tokenInfo.decimals | currency:'':'':'1.0-'+pending.tokenInfo.decimals }}</span>
                   <br><span class="text-color-grey">{{ pending.tokenInfo.tokenSymbol }}</span>
                 </div>
-                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-12 pr-4 text-right">
                   {{ pending.timestamp * 1000 | date: 'short' }}
+                </div>
+                <div class="col-xl-2 col-lg-2 col-12 pr-4 text-right" *ngIf="this.settings.settings.receive != 'auto'">
+                    <button type="submit" class="btn btn-primary" (click)="receive(pending)" style="min-width:100%;"  [disabled]="walletService.processingPending">
+                        RECEIVE
+                    </button>
                 </div>
                 <div class="container transaction-details">
   
@@ -370,7 +391,7 @@
             <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let history of walletAccount.latestTransactions">
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                 <span class="qlc-icon icon-{{ history.type }}" title="{{ history.type }}"></span>
-                <span class="d-none d-sm-none d-md-inline-block">
+                <span class="d-none d-sm-none d-md-inline-block txState">
                   <span class="text-color-lightgrey">State</span><br>
                   <span class="text-bold-grey">{{ history.type }}</span>
                 </span>

@@ -12,6 +12,7 @@ interface AppSettings {
 	lockInactivityMinutes: number;
 	powSource: PoWSource;
 	lang: string;
+	receive: string;
 }
 
 @Injectable({
@@ -27,7 +28,8 @@ export class AppSettingsService {
 		lockOnClose: 1,
 		lockInactivityMinutes: 30,
 		powSource: 'best',
-		lang: 'en'
+		lang: 'en',
+		receive: 'manual'
 	};
 
 	constructor() {}
@@ -76,7 +78,8 @@ export class AppSettingsService {
 			lockOnClose: 1,
 			lockInactivityMinutes: 30,
 			powSource: 'best',
-			lang: 'en'
+			lang: 'en',
+			receive: 'manual'
 		};
 	}
 }

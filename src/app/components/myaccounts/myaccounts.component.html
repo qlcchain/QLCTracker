@@ -45,7 +45,7 @@
 			<div class="container">
 				
 				<div class="row qlc-table-header-blue">
-					<div class="col-12">Address <span *ngIf="account.addressBookName">({{ account.addressBookName }})</span></div>
+					<div class="col-12">Address <span *ngIf="account.addressBookName" class="force-wrap">({{ account.addressBookName }})</span></div>
 				</div>
 				<div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer">
 					<div class="col-12 text-break pr-3" 
@@ -177,7 +177,7 @@
 		<div class="container mt-2">
 			<div class="row">
 				<div class="col-12 pl-0 pr-0">
-					<button (click)="receive(account.id)" type="submit" class="btn btn-primary w-100 pl-2 pr-2"><span class="superlight">({{ account.pendingCount }} Pending)</span></button>
+					<button [routerLink]="'/myaccount/' + account.id" type="submit" class="btn btn-primary w-100 pl-2 pr-2"><span class="superlight">({{ account.pendingCount }} Pending)</span></button>
 				</div>
 			</div>
 		</div>
@@ -202,7 +202,7 @@
 			<div class="container">
 				
 				<div class="row qlc-table-header-blue neo-background-light">
-					<div class="col-12 white">Address <span *ngIf="neowallet.addressBookName">({{ neowallet.addressBookName }})</span></div>
+					<div class="col-12 white">Address <span *ngIf="neowallet.addressBookName" class="force-wrap">({{ neowallet.addressBookName }})</span></div>
 				</div>
 				<div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer neo-background-light">
 					<div class="col-12 text-break pr-3" 

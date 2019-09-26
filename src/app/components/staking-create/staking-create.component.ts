@@ -227,6 +227,10 @@ export class StakingCreateComponent implements OnInit {
       
     }
     const txData = await this.neoService.contractGetLockInfo(this.recoverForm.value.recover_txid);
+    if (txData === false) {
+      this.recoverSteps.push({ msg: 'Wrong NEO wallet password.'});
+      return;
+    }
     if (txData.neoAddress != '') {
       this.recoverSteps.push({ msg: 'TXID lock found.'});
       const walletAccount = await this.walletService.getWalletAccount(txData.beneficial);
@@ -474,6 +478,10 @@ export class StakingCreateComponent implements OnInit {
       this.invokeSteps.push({ msg: 'Locking '+ this.stakingForm.value.amounToStake +' QLC on NEO network.'});
       txData = await this.contractLock();
     }
+    if (txData === false) {
+      this.invokeSteps.push({ msg: 'ERROR - Wrong NEO Wallet password.'});
+      return;
+    } 
     if (txData.lockTxId == undefined) {
       this.invokeSteps.push({ msg: 'ERROR - No TXID received. Please try again later.'});
       return;
@@ -501,7 +509,7 @@ export class StakingCreateComponent implements OnInit {
 
   async continueInvokeProccess() {
 		if (this.walletService.walletIsLocked()) {
-			return this.notifications.sendWarning('ERROR wallet locked');
+			return this.notifications.sendError('ERROR - wallet locked');
     }
     this.invokeSteps = [];
     const pledge = this.continueInvokePledge;
@@ -516,6 +524,20 @@ export class StakingCreateComponent implements OnInit {
   }
 
   async confirmInvokeWaitForTXIDConfirmByPledge(pledge,walletAccount) {
+    if (this.walletService.walletIsLocked()) {
+      this.step = 1;
+			return this.notifications.sendError('ERROR - wallet locked');
+    }
+    if (walletAccount == undefined || walletAccount.keyPair == undefined) {
+      this.recoverSteps = [];
+      this.recoverSteps.push({ msg: 'ERROR - Beneficial account "' + pledge.beneficial + '" not found.'});
+      this.continueInvokePledge = {};
+      this.continueInvoke = 0;
+      this.checkingTxid = 0;
+      this.step = 1;
+			return this.notifications.sendError('ERROR - Beneficial account not found');
+    }
+
     const txid = pledge.nep5TxId;
 
     const transaction = await this.neoService.getTransaction(txid);
@@ -560,6 +582,10 @@ export class StakingCreateComponent implements OnInit {
   }
 
   async confirmInvokeWaitForTXIDConfirm(txData,walletAccount) {
+    if (this.walletService.walletIsLocked()) {
+      this.step = 1;
+			return this.notifications.sendWarning('ERROR wallet locked');
+    }
     const txid = txData.lockTxId;
     const transaction = await this.neoService.getTransaction(txid);
     
@@ -615,6 +641,9 @@ export class StakingCreateComponent implements OnInit {
 
   async contractLock() {
     const txData = await this.neoService.contractLock(this.stakingForm.value.fromNEOWallet,this.stakingForm.value.amounToStake,this.stakingForm.value.toQLCWallet,this.stakingForm.value.durationInDays);
+    if (txData === false) {
+      return false;
+    }
     if (txData.lockTxId == undefined) {
       return this.contractLock();
     }

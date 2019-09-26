@@ -102,8 +102,13 @@ export class NeoWalletService {
   }
 
   async decrypt(encryptedKey,password) {
-    const wif = await wallet.decrypt(encryptedKey, password);
-    return wif;
+    try {
+      const wif = await wallet.decrypt(encryptedKey, password);
+      return wif;
+    } catch (error) {
+      console.log('Wrong NEO Wallet password.');
+      return false;
+    }
   }
 
   async encrypt(privateKey,password) {
@@ -173,6 +178,9 @@ export class NeoWalletService {
       this.notificationService.sendInfo('Claiming GAS.');
       const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === address);
       const wif = await this.decrypt(selectedWallet.encryptedwif,this.walletService.wallet.password);
+      if (wif === false) {
+        return false;
+      }
       const account = await new wallet.Account(wif);
       //console.log("\n\n--- Claiming Address ---");
       //console.log(account);
@@ -291,6 +299,9 @@ export class NeoWalletService {
     const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === from);
     const wif = await this.decrypt(selectedWallet.encryptedwif,this.walletService.wallet.password);
     
+    if (wif === false) {
+      return false;
+    }
     const account = await new wallet.Account(wif);
     //console.log("\n\n--- From Address ---");
     //console.log(account);
@@ -454,6 +465,9 @@ export class NeoWalletService {
 
     const amountWithDecimals = new BigNumber(qlcAmount).multipliedBy(100000000);
     
+    if (wif === false) {
+      return false;
+    }
     const account = await new wallet.Account(wif);
     //console.log("\n\n--- From Address ---");
     //console.log(account);
@@ -613,6 +627,9 @@ export class NeoWalletService {
     if (selectedWallet) {
       const wif = await this.decrypt(selectedWallet.encryptedwif,this.walletService.wallet.password);
       
+      if (wif === false) {
+        return false;
+      }
       const account = await new wallet.Account(wif);
       returnData.publicKey = account.publicKey;
     }
@@ -627,6 +644,9 @@ async contractUnlockPrepare(pledge) {
 
   for (const neowallet of this.walletService.wallet.neowallets) {
     const wif = await this.decrypt(neowallet.encryptedwif,this.walletService.wallet.password);
+    if (wif === false) {
+      return false;
+    }
     const account = await new wallet.Account(wif);
 
     // multisig

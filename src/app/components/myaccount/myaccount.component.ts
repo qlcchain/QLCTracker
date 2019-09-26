@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { NodeService } from 'src/app/services/node.service';
 import { Router, ChildActivationEnd, ActivatedRoute } from '@angular/router';
-import { timer, interval } from 'rxjs';
+import { timer } from 'rxjs';
 import { RepresentativeService } from 'src/app/services/representative.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { WalletService, WalletAccount } from 'src/app/services/wallet.service';
@@ -22,30 +22,30 @@ import { ModalUnlockComponent } from '../modal-unlock/modal-unlock.component';
 })
 export class MyaccountComponent implements OnInit {
 
-  wallet = this.walletService.wallet;
+ 	 wallet = this.walletService.wallet;
 
-  accountHistory: any[] = [];
+  	accountHistory: any[] = [];
 	pendingBlocks = [];
 	successfulBlocks = [];
-  pageSize = 10;
-  accountBlocksCount = 0;
+  	pageSize = 10;
+  	accountBlocksCount = 0;
 	maxPageSize = 200;
 
-  routerSub = null;
+  	routerSub = null;
 
-  repLabel: any = '';
+  	repLabel: any = '';
 	addressBookEntry: any = null;
 	//accountMeta: any = {};
 	//otherTokens: any = [];
 	accountId = '';
 
-  walletAccount:WalletAccount ;
+  	walletAccount:WalletAccount ;
   
 	modalRef: BsModalRef;
   
-  qrCodeImage = null;
+  	qrCodeImage = null;
   
-  showEditName = false;
+  	showEditName = false;
 	addressBookTempName = '';
 	addressBookModel = '';
 	showEditRepresentative = false;
@@ -53,52 +53,52 @@ export class MyaccountComponent implements OnInit {
 	//representativeResults$ = new BehaviorSubject([]);
 	showRepresentatives = false;
 	representativeListMatch = '';
-  isNaN = isNaN;
+  	isNaN = isNaN;
 
-  processingPending = false;
-  processingPendingBlocks = [];
+  	processingPending = false;
+  	processingPendingBlocks = [];
   
-  msg1 = '';
+  	msg1 = '';
 	msg2 = '';
 	msg3 = '';
 	msg4 = '';
 	msg5 = '';
 	msgEdit1 = '';
-  msgEdit2 = '';
+  	msgEdit2 = '';
   
-  constructor(
+  	constructor(
 		private router: ActivatedRoute,
 		private route: Router,
 		private api: ApiService,
 		private repService: RepresentativeService,
 		private notifications: NotificationService,
 		public walletService: WalletService,
-    private util: UtilService,
-    private node: NodeService,
+    	private util: UtilService,
+    	private node: NodeService,
 		public settings: AppSettingsService,
 		private trans: TranslateService,
 		private notificationService: NotificationService,
 		private addressBook: AddressBookService,
 		private modalService: BsModalService
-  ) {  }
+  	) {  }
 
-  async ngOnInit() {
-    this.routerSub = this.route.events.subscribe(event => {
-			if (event instanceof ChildActivationEnd) {
-				this.load(); // Reload the state when navigating to itself from the transactions page
-			}
-		});
-    this.load();
-        this.loadLang();
-  }
+  	async ngOnInit() {
+		this.routerSub = this.route.events.subscribe(event => {
+				if (event instanceof ChildActivationEnd) {
+					this.load(); // Reload the state when navigating to itself from the transactions page
+				}
+			});
+		this.load();
+			this.loadLang();
+	}
   
-  ngOnDestroy() {
+	ngOnDestroy() {
 		if (this.routerSub) {
 			this.routerSub.unsubscribe();
 		}
-  }
+	}
   
-  loadLang() {
+  	loadLang() {
 		this.trans.get('RECEIVE_WARNINGS.msg1').subscribe((res: string) => { this.msg1 = res;	});
 		this.trans.get('RECEIVE_WARNINGS.msg2').subscribe((res: string) => { this.msg2 = res;	});
 		this.trans.get('RECEIVE_WARNINGS.msg3').subscribe((res: string) => { this.msg3 = res;	});
@@ -125,16 +125,16 @@ export class MyaccountComponent implements OnInit {
 		const abc =  source.subscribe(async val => {
 				this.load();
 		});
-  }
+  	}
   
-  async loadAccount() {
-    //this.pendingBlocks = [];
-    this.accountId = this.router.snapshot.params.account;
-    if (this.accountId == undefined || this.accountId == '')
-      this.accountId = this.wallet.accounts[0].accountMeta.account;
+  	async loadAccount() {
+		//this.pendingBlocks = [];
+		this.accountId = this.router.snapshot.params.account;
+		if (this.accountId == undefined || this.accountId == '')
+		this.accountId = this.wallet.accounts[0].accountMeta.account;
 
-    this.walletAccount = this.wallet.accounts.find(a => a.id === this.accountId);
-    this.addressBookEntry = this.addressBook.getAccountName(this.accountId);
+		this.walletAccount = this.wallet.accounts.find(a => a.id === this.accountId);
+		this.addressBookEntry = this.addressBook.getAccountName(this.accountId);
 		this.addressBookModel = this.addressBookEntry || '';
 		const tokenMap = {};
 		const tokens = await this.api.tokens();
@@ -154,18 +154,18 @@ export class MyaccountComponent implements OnInit {
 				}
 			}
 			this.walletAccount.accountMeta = am;
-    }
+    	}
     
 		let accountMeta = [];
 		this.walletAccount.otherTokens = [];
-    if (accountInfo.result && accountInfo.result.tokens && Array.isArray(accountInfo.result.tokens)) {
-      accountInfo.result.tokens.forEach(token => {
+    	if (accountInfo.result && accountInfo.result.tokens && Array.isArray(accountInfo.result.tokens)) {
+      		accountInfo.result.tokens.forEach(token => {
 				accountMeta[token.tokenName] = token;
 				if (token.tokenInfo.tokenSymbol != 'QLC' && token.tokenInfo.tokenSymbol != 'QGAS') {
 					this.walletAccount.otherTokens.push(token);
 				}
-      });
-    }
+      		});
+    	}
 		this.walletAccount.balances = accountMeta;
 
 		/*if (this.walletAccount.accountMeta && this.walletAccount.accountMeta.tokens) {
@@ -189,16 +189,14 @@ export class MyaccountComponent implements OnInit {
 
 		await this.getAccountHistory(this.accountId);
 
-    const qrCode = await QRCode.toDataURL(`${this.accountId}`);
-    this.qrCodeImage = qrCode;
+		const qrCode = await QRCode.toDataURL(`${this.accountId}`);
+		this.qrCodeImage = qrCode;
 
-    
-    const accountBlocksCount = await this.api.accountBlocksCount(this.accountId);
-    if (typeof(accountBlocksCount.result) == 'number')
-      this.accountBlocksCount = accountBlocksCount.result;
-      
-    
-  }
+		
+		const accountBlocksCount = await this.api.accountBlocksCount(this.accountId);
+		if (typeof(accountBlocksCount.result) == 'number')
+		this.accountBlocksCount = accountBlocksCount.result;
+  	}
 
   checkIfPending(token) {
     if (typeof(this.walletAccount) != 'undefined' && typeof(this.walletAccount.pendingPerTokenCount) != 'undefined' && typeof(this.walletAccount.pendingPerTokenCount[token]) != 'undefined')
@@ -285,10 +283,14 @@ export class MyaccountComponent implements OnInit {
 
   }
 
-  async receive(token) {
+  async receive(pending) {
 		if (this.walletService.walletIsLocked()) {
-			this.modalRef = this.modalService.show(ModalUnlockComponent, {class: 'modal-lg'}); 
+			return this.modalRef = this.modalService.show(ModalUnlockComponent, {class: 'modal-lg'}); 
 		}
+		this.notifications.sendSuccess(
+			`Receiving ${pending.amount == 0 ? '' : new BigNumber(pending.amount).dividedBy(Math.pow(10,pending.tokenInfo.decimals)).toFixed(pending.tokenInfo.decimals)} ${pending.tokenInfo.tokenSymbol}!`
+		);
+		await this.walletService.processPendingBlock(pending);
   }
 
 

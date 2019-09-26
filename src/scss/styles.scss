@@ -1229,6 +1229,11 @@ pre {
     min-height: 50px;
     border: 0px !important;
 }
+.btn-primary.btn-small {
+    min-width: unset;
+    padding: unset;
+    width: 100%;
+}
 .btn-primary:hover, .btn-primary:active {
     color:#fff;
     text-decoration: none !important;
@@ -1933,6 +1938,12 @@ router-outlet.update-open {
     border: none !important;
 }
 
+progressbar bar { 
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 4px;
+} 
+
 /* SM Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
     .hide-mobile {
@@ -2187,4 +2198,14 @@ router-outlet.update-open {
     
 }
 
-
+.force-wrap {
+    word-wrap: break-word;
+}
+.txState {
+    width: 65%;
+    word-break: break-word;
+}
+body { 
+    padding-bottom: 100px !important;
+    padding-right: 0px !important;
+}

@@ -1,0 +1,152 @@
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Node Control Center</h4>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showCheckingStatus">
+        Checking node status...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNodeFound">
+        Node version {{ desktopConfig.nodeData.version }} found. Checking for updates...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNoNodeFound">
+        No node found. Checking for latest version...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showDownload">
+        <span *ngIf="showDownloadUpdate">New node version {{ newVersion.version }} found. <em>Click download to proceed</em></span>
+        <span *ngIf="showDownloadNew">Found latest version {{ newVersion.version }} <em>Click download to proceed</em></span>
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="nodeUpdate()">Download</button>
+    </div>
+    <div class="modal-body text-center pb-4" *ngIf="showDownloading">
+        Downloading, please wait.<br>
+        <progressbar [value]="downloadProgress" type="success" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ downloadProgress | number : '1.2-2' }}%</progressbar>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showDownloadFinished">
+        Download finished.
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNoUpdate">
+        No update found.
+    </div>
+  
+    <div class="modal-body text-center pb-0" *ngIf="showStartNode">
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="nodeStart()">Start node</button>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showStartingNode">
+        Starting node...
+    </div>
+    <div class="modal-body text-center pb-4" *ngIf="showSynchronizingNode && (api.nodeMainBlocksCount != api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">
+        Synchronizing please wait...<br>
+        <progressbar *ngIf="api.nodeMainBlocksCount != 0" [max]="api.nodeMainBlocksCount" type="info" [value]="api.nodeBlocksCount" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ api.nodeBlocksCount }}/{{ api.nodeMainBlocksCount }}</progressbar>
+    </div>
+    <div class="modal-body text-center" *ngIf="showSynchronizingNode && api.nodeMainBlocksCount == api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">
+        <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;" class="mt-2 mb-4"><br>
+        The node is synchronized and ready to use.<br>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Close" (click)="closeModal()">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #templateNodeStopped>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Node Control Center</h4>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNodeStopped">
+        Node stopped. Please run the node to use the wallet.
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showStartNode">
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="nodeStart()">Start node</button>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showStartingNode">
+        Starting node...
+    </div>
+    <div class="modal-body text-center pb-4" *ngIf="showSynchronizingNode && (api.nodeMainBlocksCount != api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">
+        Synchronizing please wait...<br>
+        <progressbar *ngIf="api.nodeMainBlocksCount != 0" [max]="api.nodeMainBlocksCount" type="info" [value]="api.nodeBlocksCount" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ api.nodeBlocksCount }}/{{ api.nodeMainBlocksCount }}</progressbar>
+    </div>
+    <div class="modal-body text-center" *ngIf="showSynchronizingNode && api.nodeMainBlocksCount == api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">
+        <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;" class="mt-2 mb-4"><br>
+        The node is synchronized and ready to use.<br>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Close" (click)="closeNodeStoppedModal()">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #templateUpdateCheck>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Node Control Center</h4>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showCheckingStatus">
+        Checking for udpates...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNodeFound">
+        Node version {{ desktopConfig.nodeData.version }} found. Checking for node updates...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showDownload">
+        <span *ngIf="showDownloadUpdate">New node version {{ newVersion.version }} found. <em>Click download to proceed</em></span>
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="nodeUpdate()">Download</button>
+    </div>
+    <div class="modal-body text-center pb-4" *ngIf="showDownloading">
+        Downloading, please wait.<br>
+        <progressbar [value]="downloadProgress" type="success" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ downloadProgress | number : '1.2-2' }}%</progressbar>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showDownloadFinished">
+        Download finished.
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNoUpdate">
+        No update found.
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showStartNode">
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="nodeStart()">Start node</button>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showStartingNode">
+        Starting node...
+    </div>
+    <div class="modal-body text-center pb-4" *ngIf="!showDownload && !showDownloading && !showStartNode && showSynchronizingNode && (api.nodeMainBlocksCount != api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">
+        Synchronizing please wait...<br>
+        <progressbar *ngIf="api.nodeMainBlocksCount != 0" [max]="api.nodeMainBlocksCount" type="info" [value]="api.nodeBlocksCount" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ api.nodeBlocksCount }}/{{ api.nodeMainBlocksCount }}</progressbar>
+    </div>
+    <div class="modal-body text-center" *ngIf="!showDownload && !showDownloading && !showStartNode && showSynchronizingNode && api.nodeMainBlocksCount == api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">
+        <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;" class="mt-2 mb-4"><br>
+        The node is synchronized and ready to use.<br>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Close" (click)="closeUpdateCheckModal()">Close</button>
+    </div>
+</ng-template>
+
+<div class="nodeControl" *ngIf="showNodeControl">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 pl-md-2 pr-md-2">
+
+                <div class="nodeControlIcon" [ngClass]="{'nodeOnline': node.running}" (click)="showNodeControl = !showNodeControl"></div>
+
+                <div class="nodeInfoBoxHolder">
+                    <div class="nodeInfoBox first">
+                        <span class="nodeLabel">Node status: </span>
+                        <span class="nodeData" *ngIf="node.running == false">Offline</span>
+                        <span class="nodeData" *ngIf="node.running == true && showSynchronizingNode && (api.nodeMainBlocksCount != api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">Synchronizing</span>
+                        <span class="nodeData" *ngIf="node.running == true && showSynchronizingNode && api.nodeMainBlocksCount == api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">Online</span>
+                    </div>
+                    <div class="nodeInfoBox" *ngIf="node.running == true">
+                        <span class="nodeLabel">Memory Usage: </span>
+                        <span class="nodeData">{{ nodeMemoryUsage / 1024 | number : '1.2-2' }} K</span>       
+                    </div>
+                    <div class="nodeInfoBox third" *ngIf="node.running == true && platform != 'win32'">
+                        <span class="nodeLabel">CPU Usage: </span>
+                        <span class="nodeData">{{ nodeCPUUsage | number : '1.2-2' }} %</span>
+                    </div>
+                    <div class="nodeInfoBox third" *ngIf="node.running == true && platform == 'win32'">
+                        <span class="nodeLabel">Node version: </span>
+                        <span class="nodeData">{{ desktopConfig.nodeData.version }}</span>
+                    </div>
+                    <div class="nodeInfoBox" *ngIf="node.running == true">
+                        <span class="nodeLabel">Uptime: </span>
+                        <span class="nodeData">{{ nodeUptime }}</span>
+                    </div>
+                </div>
+                <div class="nodeInfoBoxButton" *ngIf="node.running == true">
+                    <button (click)="nodeStop()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
+                        Stop node
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
