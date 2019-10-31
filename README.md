@@ -1,4 +1,6 @@
-# SMS Billing
+# QLCTracker 
+
+QLCTracker is an integrated platform with explorer, wallet, staking, mining reward functions for QLC Chain.
 
 
 ## Development Prerequisites
@@ -11,22 +13,22 @@
 ### Clone repository and install dependencies
 
 ```bash
-git clone https://github.com/qlcchain/sms-billing
-cd sms-billing
+git clone https://github.com/qlcchain/QLCTracker
+cd QLCTracker
 npm install
 ```
 
-## Build SMS Billing (For Production)
+## Build QLCTracker (For Production)
 
-Build a production version of the SMS Billing for web:
+Build a production version of the QLCTracker for web:
 
 ```bash
 npm run sms:build
 ```
 
-## Build SMS Billing (For Desktop)
+## Build QLCTracker (For Desktop)
 
-Build a production version of the SMS Billing for desktop:
+Build a production version of the QLCTracker for desktop:
 
 ```bash
 npm run sms:build-desktop
