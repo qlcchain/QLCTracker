@@ -7,10 +7,11 @@ import { LangService } from './services/lang.service';
 import { WalletService } from './services/wallet.service';
 import { PriceService } from './services/price.service';
 import { AddressBookService } from './services/address-book.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { ApiService } from './services/api.service';
 
 import { environment } from '../environments/environment';
+import { QLCWebSocketService } from './services/qlc-websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ export class AppComponent {
 	updateBreak = 0;
 
 	desktop = false;
-  
+
 	constructor(
 		private walletService: WalletService,
 		private addressBook: AddressBookService,
@@ -36,11 +37,13 @@ export class AppComponent {
 		private workPool: WorkPoolService,
 		public price: PriceService,
 		private lang: LangService,
-		private api: ApiService
+		private api: ApiService,
+		private webSocket: QLCWebSocketService
 	) {
 		if (environment.desktop) {
 			this.desktop = true;
 		}
+		//this.desktop = true;
 	}
 
 	async ngOnInit() {
@@ -61,9 +64,21 @@ export class AppComponent {
 				this.walletService.lockWallet();
 			}
 		});
+		this.router.events.subscribe(event => {
+			if (event instanceof NavigationEnd) {
+				//(<any>window).ga('set', 'page', event.urlAfterRedirects);
+				//(<any>window).ga('send', 'pageview');
+				//googleAnalytics(event.urlAfterRedirects);
+			}
+			if (!(event instanceof NavigationEnd)) {
+				return;
+			}
+			window.scrollTo(0, 0);
+		});
+		this.webSocket.connect();
+    	this.addressBook.loadAddressBook();
 		await this.walletService.loadStoredWallet();
 		this.settings.loadAppSettings();
-		this.addressBook.loadAddressBook();
 		this.workPool.loadWorkCache();
 
 		this.updates();
@@ -87,5 +102,5 @@ export class AppComponent {
 	closeUpdate() {
 		this.showUpdate = false;
 	}
-  
+
 }

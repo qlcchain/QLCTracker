@@ -30,7 +30,22 @@
                 <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block">{{ token.tokenSymbol }}</div>
                 <div class="col-xl-2 col-lg-2 col-md-3 col-sm-5 col-2 d-none d-sm-block text-right">{{ token.totalSupply | qlc:token.decimals | currency:'':'':'1.0-0' }}</div>
                 <div class="col-xl-1 col-lg-1 col-md-2 col-sm-1 col-2 d-none d-lg-block text-right">{{ token.decimals }}</div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-7 text-right text-truncate pr-4"><a [routerLink]="'/account/' + (token.owner)">{{ token.owner }}</a></div> 
+                <div class="d-none d-xl-block col-xl-6 text-right pr-4">
+                  <a [routerLink]="'/account/' + token.owner">{{ token.owner }}</a>
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-6 text-right pr-4">
+                  <a [routerLink]="'/account/' + token.owner">{{ token.owner | squeeze : '25,25' }}</a>
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-6 text-right pr-4">
+                  <a [routerLink]="'/account/' + token.owner">{{ token.owner | squeeze : '15,15' }}</a>
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-4 text-right pr-4">
+                  <a [routerLink]="'/account/' + token.owner">{{ token.owner | squeeze : '8,8' }}</a>
+                </div>
+                <div class="d-block d-sm-none col-7 text-right pr-4">
+                  <a [routerLink]="'/account/' + token.owner">{{ token.owner | squeeze : '8,8' }}</a>
+                </div>
+
               <div class="container transaction-details"></div>
             </div>
           </div>

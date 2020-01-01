@@ -16,9 +16,10 @@
           <!-- MENU -->
           <a routerLink="/" routerLinkActive="active" class="brand"></a>
           <div class="menu-holder">
-            <div class="menu-item menu-account" data-link="menu-sub-account"><div class="lock-icon locked" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()"></div><div class="lock-icon" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()"></div></div>
-            <div class="menu-item menu-lang" data-link="menu-sub-language"></div>
-            <div class="menu-item menu-currency usd" data-link="menu-sub-currency"></div>
+            <!-- data-link="menu-sub-account" -->
+            <div class="menu-item menu-account" routerLink="/dashboard"><div class="lock-icon locked" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()"></div><div class="lock-icon" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()"></div></div>
+            <div class="menu-item menu-lang menu-hide-mobile" data-link="menu-sub-language"></div>
+            <div class="menu-item menu-currency usd menu-hide-mobile" data-link="menu-sub-currency"></div>
             <div class="menu-item menu-search" data-link="menu-sub-search"></div>
             <div class="menu-search-field" data-link="menu-sub-search">Search for: Address, Transaction, Phone Number</div>
             <div class="menu-item menu-main" data-link="menu-sub-main"><span>{{ 'NAV.menu' | translate }}</span></div>
@@ -30,6 +31,8 @@
             <div class="menu-item menu-close"></div>
             <div class="menu-sub-items">
               <!-- <a routerLink="/topwallets" routerLinkActive="active">Top Wallets</a>-->
+              <a routerLink="/pov-explorer" routerLinkActive="active">PoV Explorer</a>
+              <a routerLink="/news" routerLinkActive="active">News</a>
               <a routerLink="/tokens" routerLinkActive="active">Tokens</a>
               <a routerLink="/representatives" routerLinkActive="active">{{ 'NAV.representatives' | translate }}</a>
               <a routerLink="/accounts" routerLinkActive="active">{{ 'NAV.accounts' | translate }}</a>
@@ -72,11 +75,17 @@
             <div class="menu-sub-items menu-sub-items-account">
               <a (click)="openModal(unlockWallet)" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && walletService.isLocked()">Unlock Account</a>
               <a (click)="lockWallet()" *ngIf="walletService.isConfigured() && !walletService.isLedgerWallet() && !walletService.isLocked()">Lock Account</a>
-              <a routerLink="/myaccounts" routerLinkActive="active" *ngIf="walletService.isConfigured()">My Wallets</a>
-              <a routerLink="/send" routerLinkActive="active" *ngIf="walletService.isConfigured()">Send</a>
-              <a routerLink="/settings" routerLinkActive="active" *ngIf="walletService.isConfigured()">Settings</a>
-              <a routerLink="/myrepresentatives" routerLinkActive="active" *ngIf="walletService.isConfigured()">My representatives</a>
+              <!--
+                <a routerLink="/wallets" routerLinkActive="active" *ngIf="walletService.isConfigured()">My Wallets</a>
+                <a routerLink="/send" routerLinkActive="active" *ngIf="walletService.isConfigured()">Send</a>
+              -->
               <a routerLink="/createwallet" routerLinkActive="active">Create/Import Account</a>
+              <a routerLink="/settings" routerLinkActive="active" *ngIf="walletService.isConfigured()">Settings</a>
+              <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+              <!--
+                <a routerLink="/myrepresentatives" routerLinkActive="active" *ngIf="walletService.isConfigured()">My representatives</a>
+              -->
+              
             </div>
             <div class="sub-left sub-left-account">Account</div>
           </div>

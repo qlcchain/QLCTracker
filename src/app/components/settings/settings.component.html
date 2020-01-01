@@ -1,4 +1,6 @@
-<div class="container mt-0 qlc-content-first pl-0 mb-5 pb-5">
+<app-user-submenu></app-user-submenu>
+
+<div class="container mt-0 qlc-content-first pl-0 mb-5 pb-5 qlc-content-home qlc-after-submenu">
     <div class="row">
 
 
@@ -104,18 +106,21 @@
 
               <div class="container">
                   <div class="row pl-4 pt-4 pb-4 pr-4">
-                        
                     <div class="col-lg-2 px-lg-0 text-truncate dataName  form-label-custom-2 pl-0 pt-2">{{ 'APP_SETTINGS.advanced_settings_text' | translate }}</div>
-                    <div class="col-xl-3 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 pr-lg-2 text-left text-truncate">
+                  </div>
+                  <div class="row pl-3 pt-2 pb-4 pr-3">
+                    <!--<div class="col-xl-3 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
+                      <button (click)="openModal(newWalletTemp)"  class="btn btn-primary w-100 pl-0 pr-0">Create / Import New QLC Wallet</button>
+                    </div>-->
+                    <div class="col-xl-4 col-lg-4 col-md-12 px-0 pt-2 pt-lg-0 pr-lg-2 text-left text-truncate">
                       <button (click)="openModal(clearWorkCatche)" class="btn btn-primary btn-danger w-100 pl-0 pr-0">{{ 'APP_SETTINGS.advanced_settings_button1' | translate }}</button>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
+                    <div class="col-xl-4 col-lg-4 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
                       <button (click)="openModal(clearWalletData)" type="submit" class="btn btn-primary btn-danger w-100 pl-0 pr-0">{{ 'APP_SETTINGS.advanced_settings_button2' | translate }}</button>
                     </div>
-                    <div class="col-xl-3 col-lg-3 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
+                    <div class="col-xl-4 col-lg-4 col-md-12 px-0 pt-2 pt-lg-0 px-lg-2 text-left text-truncate">
                       <button (click)="openModal(clearAllData)"  class="btn btn-primary btn-danger w-100 pl-0 pr-0">{{ 'APP_SETTINGS.advanced_settings_button3' | translate }}</button>
                     </div>
-
                 </div>
               </div>
 
@@ -149,6 +154,15 @@
           <div class="modal-footer pb-4 pl-4 pr-4">
             <button class="btn btn-primary w-100 pl-0 pr-0" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
             <button class="btn btn-primary btn-danger w-100 pl-0 pr-0" type="button" (click)="clearAll()">{{ 'OK' | translate }}</button>
+          </div>
+        </ng-template>
+
+        <ng-template #newWalletTemp>
+          <div class="modal-body text-center pt-4" [innerHTML]="'Creating or importing a new wallet will delete the current wallet'">
+          </div>
+          <div class="modal-footer pb-4 pl-4 pr-4">
+            <button class="btn btn-primary w-100 pl-0 pr-0" type="button" (click)="modalRef.hide()">{{ 'CANCEL' | translate }}</button>
+            <button class="btn btn-primary btn-danger w-100 pl-0 pr-0" type="button" (click)="newWallet()">{{ 'OK' | translate }}</button>
           </div>
         </ng-template>
       
@@ -185,7 +199,39 @@
         <!-- WALLET STUFF -->
         <div class="col-12 col-md-6" *ngIf="(accounts).length">
 
+          <!-- TITLE - REP MANAGMENT -->
+          <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+            <div class="content-title pt-4" >
+              <h1>Representatives</h1>
+            </div>
+          </div>
 
+          <div class="col-12 pr-2 pl-2 pt-2">
+            <div class="content-box-white">
+
+              <div class="container">
+                  <div class="row pl-4 pt-4 pb-4 pr-4">
+                        
+                      <div class="col-12 px-0" >
+                          <div class="col-12">
+                            <div class="row defaultTable content pt-0">
+                              <div class="col-12">
+                                <div class="row align-items-center rowButtons">
+                                  <div class="col-lg-6 col-md-6 col-sm-6 col-12 px-0 text-left text-truncate pt-0">
+                                    <button type="submit" class="btn btn-primary" routerLink="/representation/manage">Manage reps</button>
+                                  </div>
+                                </div>
+                              </div>
+                
+                            </div>
+                          </div>
+                        </div>
+
+                </div>
+              </div>
+
+              </div>
+            </div>
 
             
           <!-- TITLE - WALLET PASSWORD -->
@@ -327,6 +373,57 @@
         <div class="col-12 col-md-6 mb-5" *ngIf="(accounts).length">
 
 
+          <!-- TITLE BACKUP WALLET -->
+          <div class="col-lg-12 mt-2 pl-md-2 pr-md-2">
+            <div class="content-title pt-4" >
+              <h1>New QLC Account</h1>
+            </div>
+          </div>
+
+          <div class="col-12 pr-2 pl-2 pt-2">
+            <div class="content-box-white">
+
+              <div class="container">
+                  <div class="row pl-4 pt-4 pb-4 pr-4">
+                        
+                        
+                      <div class="col-12 px-0" >
+                        <div class="col-12">
+                          <div class="row defaultTable content">
+                            <div class="col-12">
+
+                              <div class="row align-items-center rowContent autoHP" *ngIf="!wallet.locked">
+                                <div class="col-12 px-0 py-2 pb-3">
+                                  <strong>Please backup your current accounts mnemonic phrase or seed.</strong><br>
+                                  After you create/import a new account, your current one will be deleted from your browsers storage.
+                                </div>
+                              </div>
+                              
+                              <div class="row align-items-center rowContent autoHP" *ngIf="!wallet.locked">
+                                <div class="col-12 px-0 pb-2">
+                                  <button (click)="openModal(newWalletTemp)"  class="btn btn-primary btn-danger pl-5 pr-5">Create / Import New QLC Wallet</button>
+                                </div>
+              
+                              </div>
+
+                              <div class="row align-items-center rowContent autoHP" *ngIf="wallet.locked">
+                                <div class="col-12 px-0 py-2">
+                                  To create or import a new QLC Account,<br>you must first <strong>unlock</strong> your current account.
+                                </div>
+                              </div>
+
+                            </div>
+              
+                          </div>
+                        </div>
+                      </div>
+                      
+
+                </div>
+              </div>
+
+              </div>
+            </div>
 
 
 

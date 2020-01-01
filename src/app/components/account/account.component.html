@@ -51,12 +51,12 @@
                         <slide *ngFor="let token of accountMeta.tokens">
                           <div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
                             <div class="col-3 pr-3 pt-1">
-                              <img src="assets/img/token-{{ token.tokenInfo.image | lowercase }}.png" class="w-100 icon-token" style="padding-right:2px;">
+                              <img src="assets/img/token-{{ token.tokenInfo.image | lowercase }}.png" class="w-100 icon-token" style="padding-right:2px;" *ngIf="token.tokenInfo">
                             </div>
                             <div class="col-9 pr-0 pl-0 mb-2 pb-0">
                               <div class="row qlc-table-row-white row-text-mid mt-0 pb-1">
-                                <div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">{{ token.tokenInfo.tokenSymbol }}</span></div>
-                                <div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">{{ token.balance | qlc: token.tokenInfo.decimals | currency:'':'':'1.2-8' }}</div>
+                                <div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;" *ngIf="token.tokenInfo">{{ token.tokenInfo.tokenSymbol }}</span></div>
+                                <div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;" *ngIf="token.tokenInfo">{{ token.balance | qlc: token.tokenInfo.decimals | currency:'':'':'1.2-8' }}</div>
                               </div>
                             </div>
                           </div>
@@ -159,12 +159,35 @@
                     <span class="text-bold-grey">Receive</span>
                   </span>
                 </div>
-                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                  <span class="text-color-lightgrey">from:</span> 
-                  <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a>
-                  <a [routerLink]="'/transaction/' + pending.hash"><br>
-                    <span class="text-tiny">{{ pending.hash }}</span>
-                  </a>
+                <div class="d-none d-xl-block col-xl-6 pb-0">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash }}</span></a>
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-5 pb-0">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '25,25' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '25,25' }}</span></a>
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-5 pb-0">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '18,18' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '18,18' }}</span></a>
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-5 pb-0">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '10,10' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '10,10' }}</span></a>
+                </div>
+                <div class="d-block d-sm-none col-7 pb-0">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '10,10' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '10,10' }}</span></a>
                 </div>
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                   pending.type == 'Send' || pending.type == 'ContractSend' ? 'text-color-red' : 'text-color-green'
@@ -227,12 +250,60 @@
                   <span class="text-bold-grey">{{ history.type }}</span>
                 </span>
               </div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{history.type == 'Send' || history.type == 'ContractSend' ? 'to' : 'from'}}: </span> 
-                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a>
-                <a [routerLink]="'/transaction/' + history.hash"><br>
-                  <span class="text-tiny">{{ history.hash }}</span>
-                </a>
+              <div class="d-none d-xl-block col-xl-6 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
+              </div>
+              <div class="d-none d-lg-block d-xl-none col-lg-5 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
+              </div>
+              <div class="d-none d-md-block d-lg-none col-md-5 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address | squeeze : '18,18' }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash | squeeze : '18,18' }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
+              </div>
+              <div class="d-none d-sm-block d-md-none col-sm-5 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address | squeeze : '15,15' }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash | squeeze : '15,15' }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
+              </div>
+              <div class="d-block d-sm-none col-7 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address | squeeze : '13,13' }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash | squeeze : '13,13' }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                 history.type == 'Send' || history.type == 'ContractSend' ? 'text-color-red' : 'text-color-green'

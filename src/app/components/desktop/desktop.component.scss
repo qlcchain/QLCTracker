@@ -8,7 +8,17 @@
     border: none;
     padding: 0px;
 }
-
+.minerControl {
+    position: fixed;
+    bottom: 80px;
+    left: 0;
+    width: 100%;
+    height: 81px;
+    background-color: #454a51;
+    border: none;
+    padding: 0;
+    border-bottom: 1px solid #000000;
+}
 .nodeControlIcon {
     width: 80px;
     height: 80px;
@@ -29,6 +39,41 @@
     display: none;
     width:calc(100% - 100px - 130px);
     /*border: 1px solid blue;*/
+}
+
+.minerInfoBox,.minerInfoBoxFirst {
+    display: inline-block;
+    height: 48px;
+    padding: 10px 0 0 35px;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 10px;
+    vertical-align: middle;
+    line-height: 13px!important;
+    width: 100%;
+    margin-left: 5px;
+    word-break: break-all;
+    overflow: hidden;
+}
+.minerInfoBox .nodeLabel,.minerInfoBoxFirst .nodeLabel {
+    color:#a8a6ae;
+}
+.minerInfoBox .nodeData,.minerInfoBoxFirst .nodeData {
+    color:#ffffff;
+}
+.minerInfoBoxFirst {
+    margin-top: 5px;
+    height: 20px;
+
+}
+.minerInfoBoxButton {
+    display: inline-block;
+    font-weight: 700;
+    vertical-align: middle;
+    line-height: 13px !important;
+    position: absolute;
+    right: 8px;
+    top: 23px;
 }
 .nodeInfoBox {
     display: none;
@@ -128,73 +173,71 @@
         line-height: 13px !important;
         margin-top: 14px;
     }
-        .nodeInfoBox.first, .nodeInfoBox.third {
-            margin-left:40px;
-            margin-right:-40px;
-        }
-        .nodeInfoBox .nodeLabel {
-            color:#a8a6ae;
-        }
-        .nodeInfoBox .nodeData {
-            color:#ffffff;
-        }
-        .nodeInfoBoxButton {
-            display: inline-block;
-            float:right;
-            /*height: 30px;
-            padding: 0px 0px 0px 10px;*/
-            font-weight: 700;
-            margin-top: 23px;
-            vertical-align: middle;
-            line-height: 13px !important;
-        }
-        .btn-node-start {
-            background: #26282c !important;
-            padding-left: 35px;
-            padding-right: 35px;
-            margin-top: -8px !important;
-        }
+    .nodeInfoBox.first, .nodeInfoBox.third {
+        margin-left:40px;
+        //margin-right:-40px;
+    }
+    .nodeInfoBox .nodeLabel {
+        color:#a8a6ae;
+    }
+    .nodeInfoBox .nodeData {
+        color:#ffffff;
+    }
+    .nodeInfoBoxButton {
+        display: inline-block;
+        /*height: 30px;
+        padding: 0px 0px 0px 10px;*/
+        font-weight: 700;
+        margin-top: 23px;
+        vertical-align: middle;
+        line-height: 13px !important;
+    }
+    .btn-node-start {
+        background: #26282c !important;
+        padding-left: 35px;
+        padding-right: 35px;
+        margin-top: -8px !important;
+    }
 }
 
 /* LG Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     .nodeInfoBox {
         display: inline-block;
-        height: 30px;
-        padding: 10px 0px 0px 35px;
+        height: 22px;
+        width: 230px;
+        padding: 10px 0px 0px 0px;
         font-weight: 700;
         font-size: 13px;
-        margin-top: 25px;
         vertical-align: middle;
         line-height: 13px !important;
-        width:auto;
+        margin-top: 14px;
     }
-        .nodeInfoBox.first, .nodeInfoBox.third {
-            margin-left:0px;
-            margin-right:0px;
-        }
-        .nodeInfoBox .nodeLabel {
-            color:#a8a6ae;
-        }
-        .nodeInfoBox .nodeData {
-            color:#ffffff;
-        }
-        .nodeInfoBoxButton {
-            display: inline-block;
-            float:right;
-            /*height: 30px;
-            padding: 0px 0px 0px 10px;*/
-            font-weight: 700;
-            margin-top: 23px;
-            vertical-align: middle;
-            line-height: 13px !important;
-        }
-        .btn-node-start {
-            background: #26282c !important;
-            padding-left: 35px;
-            padding-right: 35px;
-            margin-top: -8px !important;
-        }
+    .nodeInfoBox.first, .nodeInfoBox.third {
+        margin-left:40px;
+        margin-right:-40px;
+    }
+    .nodeInfoBox .nodeLabel {
+        color:#a8a6ae;
+    }
+    .nodeInfoBox .nodeData {
+        color:#ffffff;
+    }
+    .nodeInfoBoxButton {
+        display: inline-block;
+        /*height: 30px;
+        padding: 0px 0px 0px 10px;*/
+        font-weight: 700;
+        margin-top: 23px;
+        vertical-align: middle;
+        line-height: 13px !important;
+    }
+    .btn-node-start {
+        background: #26282c !important;
+        padding-left: 35px;
+        padding-right: 35px;
+        margin-top: -8px !important;
+    }
 }
 
 
@@ -202,39 +245,38 @@
 @media (min-width: 1200px) {
     .nodeInfoBox {
         display: inline-block;
-        height: 30px;
-        padding: 10px 0px 0px 35px;
+        height: 22px;
+        width: 230px;
+        padding: 10px 0px 0px 0px;
         font-weight: 700;
         font-size: 13px;
-        margin-top: 25px;
         vertical-align: middle;
         line-height: 13px !important;
-        width:auto;
+        margin-top: 14px;
     }
-        .nodeInfoBox.first, .nodeInfoBox.third {
-            margin-left:0px;
-            margin-right:0px;
-        }
-        .nodeInfoBox .nodeLabel {
-            color:#a8a6ae;
-        }
-        .nodeInfoBox .nodeData {
-            color:#ffffff;
-        }
-        .nodeInfoBoxButton {
-            display: inline-block;
-            float:right;
-            /*height: 30px;
-            padding: 0px 0px 0px 10px;*/
-            font-weight: 700;
-            margin-top: 23px;
-            vertical-align: middle;
-            line-height: 13px !important;
-        }
-        .btn-node-start {
-            background: #26282c !important;
-            padding-left: 35px;
-            padding-right: 35px;
-            margin-top: -8px !important;
-        }
+    .nodeInfoBox.first, .nodeInfoBox.third {
+        margin-left:40px;
+        margin-right:-40px;
+    }
+    .nodeInfoBox .nodeLabel {
+        color:#a8a6ae;
+    }
+    .nodeInfoBox .nodeData {
+        color:#ffffff;
+    }
+    .nodeInfoBoxButton {
+        display: inline-block;
+        /*height: 30px;
+        padding: 0px 0px 0px 10px;*/
+        font-weight: 700;
+        margin-top: 23px;
+        vertical-align: middle;
+        line-height: 13px !important;
+    }
+    .btn-node-start {
+        background: #26282c !important;
+        padding-left: 35px;
+        padding-right: 35px;
+        margin-top: -8px !important;
+    }
 }

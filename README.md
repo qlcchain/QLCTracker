@@ -23,7 +23,7 @@ npm install
 Build a production version of the QLCTracker for web:
 
 ```bash
-npm run sms:build
+npm run qlc:build
 ```
 
 ## Build QLCTracker (For Desktop)
@@ -31,7 +31,7 @@ npm run sms:build
 Build a production version of the QLCTracker for desktop:
 
 ```bash
-npm run sms:build-desktop
+npm run qlc:build-desktop
 ```
 
 and 
@@ -58,7 +58,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Bugs/Feedback
 
-If you run into any issues, please use the [GitHub Issue Tracker](https://github.com/qlcchain/sms-billing/issues)
+If you run into any issues, please use the [GitHub Issue Tracker](https://github.com/qlcchain/qlc-billing/issues)
 We are continually improving and adding new features based on the feedback you provide, so please let your opinions be known!
 
 ## Acknowledgements

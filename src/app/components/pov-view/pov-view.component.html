@@ -1,0 +1,211 @@
+<div class="container mt-0 qlc-content-first">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+      <div class="container">
+        <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
+                <div class="content-title">
+                    <h1 class="neo">POV Details</h1>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container pl-2 pr-2 pb-0 mb-0" *ngIf="block != null">
+  <!-- TX HASH -->
+  <div class="col-lg-12 col-md-12 col-sm-12 mt-0 mb-0 pl-0 pr-0 pb-0">
+    <div class="content-box-blue">
+      <div class="container">
+        <div class="row qlc-table-header-blue">
+          <div class="col-12">Pov hash</div>
+        </div>
+        <div class="row qlc-table-row-blue row-text-mid mt-2 mb-2 pb-4">
+          <div class="col-12 text-break">{{ block.header.basHdr.hash }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-0 pt-0" *ngIf="block != null">
+        
+  <div class="row equal">
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row qlc-table-header-white sub-page">
+            <div class="col-12">Height</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pb-1">
+            <div class="col-12 text-wrap pb-4">{{ block.header.basHdr.height }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row qlc-table-header-white sub-page">
+              <div class="col-12">Number of transactions</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pb-1">
+              <div class="col-12 text-wrap pb-4">{{ block.header.cbtx.txNum }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+            <div class="row qlc-table-header-white sub-page">
+                <div class="col-12">Bits</div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pb-1">
+                <div class="col-12 text-wrap pb-4">{{ block.header.basHdr.bits }}</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+            <div class="row qlc-table-header-white sub-page">
+                <div class="col-12">Time</div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pb-1">
+                <div class="col-12 text-wrap pb-4">{{ block.header.basHdr.timestamp * 1000 | date: 'short' }}</div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row qlc-table-header-white sub-page">
+            <div class="col-12">Previous</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pb-1">
+            <div class="col-12 text-wrap pb-4"><a routerLink="/pov/hash/{{ block.header.basHdr.previous }}">{{ block.header.basHdr.previous }}</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row qlc-table-header-white sub-page">
+              <div class="col-12">Merkle Root</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pb-1">
+              <div class="col-12 text-wrap pb-4">{{ block.header.basHdr.merkleRoot }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+            <div class="row qlc-table-header-white sub-page">
+                <div class="col-12">Nonce</div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pb-1">
+                <div class="col-12 text-wrap pb-4">{{ block.header.basHdr.nonce }}</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+            <div class="row qlc-table-header-white sub-page">
+                <div class="col-12">Algorithm</div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pb-1">
+                <div class="col-12 text-wrap pb-4">{{ block.algoName }}</div>
+            </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  </div>
+
+  <!-- MINER -->    
+  <div class="container mt-0" *ngIf="block != null">
+    <div class="row equal">
+
+        <div class="col-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+            <div class="content-box-white">
+                <div class="container">
+                    <div class="row qlc-table-header-white sub-page">
+                        <div class="col-12">Miner</div>
+                    </div>
+                    <div class="row qlc-table-row-white sub-page">
+                        <div class="col-12">
+                            <a routerLink="/account/{{ block.header.cbtx.txOuts[0].address }}">{{ block.header.cbtx.txOuts[0].address }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- TRANSACTIONS -->    
+  <div class="container mt-0" *ngIf="block != null">
+      <div class="row equal">
+
+          <div class="col-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-white">
+                  <div class="container">
+                      <div class="row qlc-table-header-white sub-page">
+                          <div class="col-12">Transactions</div>
+                      </div>
+                      <div class="row qlc-table-row-white sub-page">
+                          <div class="col-12" *ngFor="let transaction of block.body.txs">
+                              <a routerLink="/transaction/{{ transaction.hash }}">{{ transaction.hash }}</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <!-- RAW BLOCK -->    
+  <div class="container mt-0" *ngIf="block != null">
+      <div class="row equal">
+
+          <div class="col-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+              <div class="content-box-white">
+                  <div class="container">
+                      <div class="row qlc-table-header-white sub-page">
+                          <div class="col-12">Raw Block Data</div>
+                      </div>
+                      <div class="row qlc-table-row-white sub-page">
+                          <div class="col-12">
+                              <code><pre>{{ blockJSON }}</pre></code>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+<div class="container mt-4 mb-4">
+  <div class="row">
+  </div>
+</div>

@@ -22,10 +22,9 @@ import { ModalUnlockComponent } from '../modal-unlock/modal-unlock.component';
 })
 export class MyaccountComponent implements OnInit {
 
- 	 wallet = this.walletService.wallet;
+ 	wallet = this.walletService.wallet;
 
   	accountHistory: any[] = [];
-	pendingBlocks = [];
 	successfulBlocks = [];
   	pageSize = 10;
   	accountBlocksCount = 0;
@@ -56,7 +55,6 @@ export class MyaccountComponent implements OnInit {
   	isNaN = isNaN;
 
   	processingPending = false;
-  	processingPendingBlocks = [];
   
   	msg1 = '';
 	msg2 = '';
@@ -128,12 +126,12 @@ export class MyaccountComponent implements OnInit {
   	}
   
   	async loadAccount() {
-		//this.pendingBlocks = [];
 		this.accountId = this.router.snapshot.params.account;
 		if (this.accountId == undefined || this.accountId == '')
 		this.accountId = this.wallet.accounts[0].accountMeta.account;
 
 		this.walletAccount = this.wallet.accounts.find(a => a.id === this.accountId);
+		this.walletService.loadPending();
 		this.addressBookEntry = this.addressBook.getAccountName(this.accountId);
 		this.addressBookModel = this.addressBookEntry || '';
 		const tokenMap = {};
@@ -179,13 +177,13 @@ export class MyaccountComponent implements OnInit {
 			}
 		}*/
 
-		if (this.walletAccount.accountMeta.error) {
+		/*if (this.walletAccount.accountMeta.error) {
 			const pendingRaw = this.pendingBlocks.reduce(
 				(prev: BigNumber, current: any) => prev.plus(new BigNumber(current.amount)),
 				new BigNumber(0)
 			);
 			this.walletAccount.accountMeta.pending = pendingRaw;
-		}
+		}*/
 
 		await this.getAccountHistory(this.accountId);
 
@@ -195,7 +193,7 @@ export class MyaccountComponent implements OnInit {
 		
 		const accountBlocksCount = await this.api.accountBlocksCount(this.accountId);
 		if (typeof(accountBlocksCount.result) == 'number')
-		this.accountBlocksCount = accountBlocksCount.result;
+			this.accountBlocksCount = accountBlocksCount.result;
   	}
 
   checkIfPending(token) {
@@ -242,7 +240,7 @@ export class MyaccountComponent implements OnInit {
 				}
 				this.walletAccount.latestTransactions.push(block);
 			}
-			this.walletAccount.latestTransactions = this.walletAccount.latestTransactions.filter(h => h.type !== 'Change');
+			//this.walletAccount.latestTransactions = this.walletAccount.latestTransactions.filter(h => h.type !== 'Change');
 		}
   }
 

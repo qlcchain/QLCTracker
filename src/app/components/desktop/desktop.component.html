@@ -37,10 +37,571 @@
         Synchronizing please wait...<br>
         <progressbar *ngIf="api.nodeMainBlocksCount != 0" [max]="api.nodeMainBlocksCount" type="info" [value]="api.nodeBlocksCount" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ api.nodeBlocksCount }}/{{ api.nodeMainBlocksCount }}</progressbar>
     </div>
-    <div class="modal-body text-center" *ngIf="showSynchronizingNode && api.nodeMainBlocksCount == api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">
+    <div class="modal-body text-center" *ngIf="showSynchronizingNode && api.nodeMainBlocksCount <= api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">
+    <!--<div class="modal-body text-center"> -->
         <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;" class="mt-2 mb-4"><br>
         The node is synchronized and ready to use.<br>
         <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Close" (click)="closeModal()">Close</button>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Setup mining" (click)="openMiningSetupModal()">Setup mining</button>
+    </div>
+</ng-template>
+
+<!-- MINER STEP 01 -->
+
+<ng-template #templateMiningSetup>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Miner Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0">
+        
+        <p><span class="title-modal-blue mt-5 mb-4">Do you want to run a miner?</span><br>
+        PoV supports mutliple algorithms</p>
+
+        <hr class="hr-modal">
+        <div class="container" *ngIf="minerAccounts.length == 0">
+            <div class="row">
+                <div class="col-12 pb-3 pt-3">
+                    <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">You are not a miner yet</span><br>
+                        Stake 100k QLC and start mining.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container" *ngIf="minerAccounts.length > 0">
+            <div class="row">
+                <div class="col-12 pb-3 pt-3">
+                    <p class="text-left">Please choose your account:</p>
+                </div>
+                <div class="col-12 mb-3">
+                    <select class="custom-select" [(ngModel)]="selectedMinerAccount" id="form-horizontal-select">
+                        <option *ngFor="let minerAccount of minerAccounts" [value]="minerAccount.id">{{ minerAccount.id | squeeze : '12,12' }}</option>
+                    </select>
+                </div>
+      
+            </div>
+            <div class="row">
+                <div class="col-12 pb-3 pt-3">
+                    <p class="text-left">Please choose your favorite PoW miner.</p>
+                </div>
+                <div class="col-1 mb-3"><input type="radio" value="1" name="pow-algo" id="pow-algo-1" [(ngModel)]="selectedMiner"></div>
+                <div class="col-11 mb-3 pl-0">
+                    <label for="pow-algo-1" class="text-left w-100">
+                        <span class="title-modal-blue">Use gqlc-miner </span><span class="text-modal-red">(SIMPLE & NOT RECOMMENDED)</span>
+                        <p>gqlc-miner is just for develop testing with very poor performance.</p>
+                    </label>
+                </div>
+        
+                <div class="col-1"><input type="radio" value="2" name="pow-algo" id="pow-algo-2" [(ngModel)]="selectedMiner"></div>
+                <div class="col-11 pl-0">
+                    <label for="pow-algo-2" class="text-left w-100">
+                        <span class="title-modal-blue">Use gqlc-pool </span><span class="text-modal-green">(FOR ADVANCED USERS)</span>
+                        <p>gqlc-pool is a very simple mining pool between node and miner, which support stratum mining protocol.</p>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr-modal" style="margin-bottom:0;">
+
+        <div class="container" *ngIf="minerAccounts.length == 0">
+            <div class="row">
+                <div class="col-6 pb-3 pt-3 pl-2">
+                    <button type="button" class="btn btn-primary btn-grey mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Close" (click)="closeMiningSetupModal()">OK</button>
+                </div>
+            </div>
+        </div> 
+
+        <div class="container" *ngIf="minerAccounts.length > 0">
+            <div class="row">
+                <div class="col-6 pb-3 pt-3 pr-2">
+                    <button type="button" class="btn btn-primary mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Continue" (click)="continueMinerSetup()">YES, CONTINUE</button>
+                </div>
+                <div class="col-6 pb-3 pt-3 pl-2">
+                    <button type="button" class="btn btn-primary btn-grey mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Close" (click)="closeMiningSetupModal()">I DON'T WANT TO MINE</button>
+                </div>
+            </div>
+        </div>        
+    </div>
+</ng-template>
+
+
+<ng-template #templatePoolSetup>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Gqlc Pool Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0">
+        
+        <p><span class="title-modal-blue mt-5 mb-4">Choose algorithm</span></p>
+
+        <hr class="hr-modal" style="margin-bottom:0 !important;">
+        
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;background: #f7f7f7;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-3 pt-3">
+                        <p class="text-left">Please choose your PoW algorithm.</p>
+                    </div>
+                    <div class="col-1"><input type="radio" value="SHA256D" name="pow-algo" id="pow-algo-1" [(ngModel)]="selectedAlgo"></div>
+                    <div class="col-11 pl-0">
+                        <label for="pow-algo-1" class="text-left w-100">
+                            <span class="title-modal-blue">SHA256D</span>
+                        </label>
+                    </div>
+            
+                    <div class="col-1"><input type="radio" value="X11" name="pow-algo" id="pow-algo-2" [(ngModel)]="selectedAlgo"></div>
+                    <div class="col-11 pl-0">
+                        <label for="pow-algo-2" class="text-left w-100">
+                            <span class="title-modal-blue">X11</span>
+                        </label>
+                    </div>
+
+                    <div class="col-1 mb-3"><input type="radio" value="SCRYPT" name="pow-algo" id="pow-algo-3" [(ngModel)]="selectedAlgo"></div>
+                    <div class="col-11 mb-3 pl-0">
+                        <label for="pow-algo-3" class="text-left w-100">
+                            <span class="title-modal-blue">SCRYPT</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-6 offset-md-3 pb-3 pt-3 pr-2">
+                        <button type="button" class="btn btn-primary mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Continue" (click)="poolUpdate()">Continue</button>
+                    </div>
+                </div>
+            </div>        
+
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateGqlcMiningSetup>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Gqlc Miner Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0">
+        
+        <p><span class="title-modal-blue mt-5 mb-4">Choose algorithm</span></p>
+
+        <hr class="hr-modal" style="margin-bottom:0 !important;">
+        
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;background: #f7f7f7;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-3 pt-3">
+                        <p class="text-left">Please choose your favorite PoW algorithm.</p>
+                    </div>
+                    <div class="col-1"><input type="radio" value="SHA256D" name="pow-algo" id="pow-algo-1" [(ngModel)]="selectedAlgo"></div>
+                    <div class="col-11 pl-0">
+                        <label for="pow-algo-1" class="text-left w-100">
+                            <span class="title-modal-blue">SHA256D</span>
+                        </label>
+                    </div>
+            
+                    <div class="col-1"><input type="radio" value="X11" name="pow-algo" id="pow-algo-2" [(ngModel)]="selectedAlgo"></div>
+                    <div class="col-11 pl-0">
+                        <label for="pow-algo-2" class="text-left w-100">
+                            <span class="title-modal-blue">X11</span>
+                        </label>
+                    </div>
+
+                    <div class="col-1 mb-3"><input type="radio" value="SCRYPT" name="pow-algo" id="pow-algo-3" [(ngModel)]="selectedAlgo"></div>
+                    <div class="col-11 mb-3 pl-0">
+                        <label for="pow-algo-3" class="text-left w-100">
+                            <span class="title-modal-blue">SCRYPT</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-6 offset-md-3 pb-3 pt-3 pr-2">
+                        <button type="button" class="btn btn-primary mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Continue" (click)="minerUpdate()">Continue</button>
+                    </div>
+                </div>
+            </div>        
+
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateMiner>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Gqlc Miner Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showCheckingMinerStatus">
+        Checking miner status...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showMinerFound">
+        Miner version {{ desktopConfig.minerData.version }} found. Checking for updates...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNoMinerFound">
+        No miner found. Checking for latest version...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showDownloadMiner">
+        <span *ngIf="showDownloadMinerUpdate">New miner version {{ newMinerVersion.version }} found. <em>Click download to proceed</em></span>
+        <span *ngIf="showDownloadMinerNew">Found latest version {{ newMinerVersion.version }} <em>Click download to proceed</em></span>
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="runMinerUpdate()">Download</button>
+    </div>
+    <div class="modal-body text-center pb-4" *ngIf="showDownloadingMiner">
+        Downloading, please wait.<br>
+        <progressbar [value]="downloadMinerProgress" type="success" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ downloadMinerProgress | number : '1.2-2' }}%</progressbar>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showDownloadMinerFinished">
+        Download finished.
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNoMinerUpdate">
+        No update found.
+    </div>
+  
+    <div class="modal-body text-center pb-0" *ngIf="showStartMiner">
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="minerStart()">Start miner</button>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showStartingMiner">
+        Starting miner...
+    </div>
+    <div class="modal-body text-center" *ngIf="showStartedMiner">
+        <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;" class="mt-2 mb-4"><br>
+        The miner is running.<br>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Close" (click)="closeMinerModal()">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #templatePool>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Gqlc Pool Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showCheckingPoolStatus && !showStartedPool">
+        Checking pool status...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showPoolFound">
+        Pool version {{ desktopConfig.poolData.version }} found. Checking for updates...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNoPoolFound">
+        No pool found. Checking for latest version...
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showDownloadPool">
+        <span *ngIf="showDownloadPoolUpdate">New Pool version {{ newPoolVersion.version }} found. <em>Click download to proceed</em></span>
+        <span *ngIf="showDownloadPoolNew">Found latest version {{ newPoolVersion.version }} <em>Click download to proceed</em></span>
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="runPoolUpdate()">Download</button>
+    </div>
+    <div class="modal-body text-center pb-4" *ngIf="showDownloadingPool">
+        Downloading, please wait.<br>
+        <progressbar [value]="downloadPoolProgress" type="success" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ downloadPoolProgress | number : '1.2-2' }}%</progressbar>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showDownloadPoolFinished">
+        Download finished.
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showNoPoolUpdate && !showStartedPool">
+        No update found.
+    </div>
+  
+    <div class="modal-body text-center pb-0" *ngIf="showStartPool">
+        <button type="button" class="btn btn-primary mt-4 mb-4" (click)="poolStart()">Start pool</button>
+    </div>
+    <div class="modal-body text-center pb-0" *ngIf="showStartingPool">
+        Starting pool...
+    </div>
+    <div class="modal-body text-center" *ngIf="showStartedPool">
+        <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;" class="mt-2 mb-4"><br>
+        The pool is running.<br>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Close" (click)="closePoolModal()">Close</button><br>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Close" (click)="openPoolMinersModal()">Show possible miners</button>
+    </div>
+</ng-template>
+
+<!-- MINER STEP 02 -->
+<!--
+<ng-template #templateMiningSetup>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Miner Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0">
+        
+        <p><span class="title-modal-blue mt-5 mb-4">How to run different Stratum mining protocols</span></p>
+
+        <hr class="hr-modal" style="margin-bottom:0 !important;">
+        
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;background: #f7f7f7;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left"><span class="text-modal-comment"># SHA256D</span><br>./gqlc-stratum -nodeurl http://127.0.0.1:29735 <strong>-algo SHA256D</strong> -miner qlc_xxxYOUR_QLC_ADDRESSxxx</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left"><span class="text-modal-comment"># or X11</span><br>./gqlc-stratum -nodeurl http://127.0.0.1:29735 <strong>-algo X11</strong> -miner qlc_xxxYOUR_QLC_ADDRESSxxx</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left"><span class="text-modal-comment"># or SCRYPT</span><br>./gqlc-stratum -nodeurl http://127.0.0.1:29735 <strong>-algo SCRYPT</strong> -miner qlc_xxxYOUR_QLC_ADDRESSxxx</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-6 offset-md-3 pb-3 pt-3 pr-2">
+                        <button type="button" class="btn btn-primary mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Continue" (click)="closeMiningSetupModal()">I UNDERSTAND, CONTINUE</button>
+                    </div>
+                </div>
+            </div>        
+
+        </div>
+    </div>
+</ng-template>
+-->
+
+
+<!-- MINER STEP 03 -->
+<ng-template #templatePoolMiners>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Miner Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0">
+        
+        <p><span class="title-modal-blue mt-5 mb-4">What kind of miner will you use?</span>
+
+        <hr class="hr-modal">
+        
+        <div class="container pb-3">
+            <div class="row">
+                <div class="col-12 pb-3 pt-3">
+                    <p class="text-left">Please choose your Miner</p>
+                </div>
+
+                <div class="col-1 mb-3"><input type="radio" value="1" name="pow-miner" id="pow-miner-1" [(ngModel)]="selectedPoolMiner"></div>
+                <div class="col-11 mb-3 pl-0">
+                    <label for="pow-miner-1" class="text-left w-100">
+                        <span class="title-modal-blue mb-3">Use CPU Miner </span><span class="text-modal-red">(NOT RECOMMENDED)</span>
+                        <p class="pt-2">Crypto CPUminer (Linux + Windows)<br><a href="https://github.com/tpruvot/cpuminer-multi" target="_blank">https://github.com/tpruvot/cpuminer-multi</a></p>
+                    </label>
+                </div>
+        
+                <div class="col-1"><input type="radio" value="2" name="pow-miner" id="pow-miner-2" [(ngModel)]="selectedPoolMiner"></div>
+                <div class="col-11 pl-0">
+                    <label for="pow-miner-2" class="text-left w-100">
+                        <span class="title-modal-blue mb-3">Use GPU Miner </span>
+                        <p class="pt-2 pb-0 mb-0">OPENCL:<br><a href="https://github.com/tpruvot/cpuminer-multi" target="_blank">https://github.com/tpruvot/cpuminer-multi</a></p>
+                        <p class="mt-2 pt-0">CUDA:<br><a href="https://github.com/luke-jr/bfgminer" target="_blank">https://github.com/luke-jr/bfgminer</a></p>
+                    </label>
+                </div>
+
+                <div class="col-1"><input type="radio" value="3" name="pow-miner" id="pow-miner-3" [(ngModel)]="selectedPoolMiner"></div>
+                <div class="col-11 pl-0">
+                    <label for="pow-miner-3" class="text-left w-100">
+                        <span class="title-modal-blue">Use ASIC Miner</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr-modal" style="margin-bottom:0;">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 offset-md-3 pb-3 pt-3 pr-2">
+                    <button type="button" class="btn btn-primary mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Continue" (click)="continuePoolMinerSetup()">CONTINUE TO INSTRUCTIONS</button>
+                </div>
+            </div>
+        </div>        
+    </div>
+</ng-template>
+
+<!-- MINER STEP 03/A -->
+<ng-template #templatePoolMinersCPU>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Miner Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0">
+        
+        <p><span class="title-modal-blue mt-5 mb-4">CPU Miner Instructions</span></p>
+
+        <hr class="hr-modal" style="margin-bottom:0 !important;">
+        
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left">Crypto CPUminer (Linux + Windows)<br><a href="https://github.com/tpruvot/cpuminer-multi" target="_blank">https://github.com/tpruvot/cpuminer-multi</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+        </div>
+
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;background: #f7f7f7;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left"><span class="text-modal-comment"># SHA256D</span><br>./cpuminer -a sha256d -o stratum+tcp://127.0.0.1:3333 -O test.1:test</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 offset-md-3 pb-3 pt-3 pr-2">
+                    <button type="button" class="btn btn-primary mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Done" (click)="closePoolMinersModalCPU()">Done</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ng-template>
+
+<!-- MINER STEP 03/B -->
+<ng-template #templatePoolMinersGPU>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Miner Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0">
+        
+        <p><span class="title-modal-blue mt-5 mb-4">GPU miner Instructions</span></p>
+
+        <hr class="hr-modal" style="margin-bottom:0 !important;">
+        
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left"><span class="font-blue">OPEN CL</span> (Supports sha256d/scrypt, without x11.)<br><a href="https://github.com/luke-jr/bfgminer" target="_blank">https://github.com/luke-jr/bfgminer</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+        </div>
+
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;background: #f7f7f7;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left"><span class="text-modal-comment"># SHA256D</span><br>./bfgminer -o stratum+tcp://127.0.0.1:3333 -O test.1:test -S opencl:auto</p>
+                        <p class="text-left"><span class="text-modal-comment"># SCRYPT</span><br>./bfgminer --scrypt -o stratum+tcp://127.0.0.1:3333 -O test.1:test -S opencl:auto</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+        </div>
+        
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left"><span class="font-blue">CUDA</span> (Supports sha256d/x11/scrypt)<br><a href="https://github.com/KlausT/ccminer" target="_blank">https://github.com/KlausT/ccminer</a></p>
+                    </div>
+                </div>
+            </div>
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+        </div>
+
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;background: #f7f7f7;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left"><span class="text-modal-comment"># Please follow ccminer's guide</span></p>
+                    </div>
+                </div>
+            </div>
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+        </div>        
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 offset-md-3 pb-3 pt-3 pr-2">
+                    <button type="button" class="btn btn-primary mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Done" (click)="closePoolMinersModalGPU()">Done</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ng-template>
+
+<!-- MINER STEP 03/C -->
+<ng-template #templatePoolMinersASIC>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Miner Setup</h4>
+    </div>
+    <div class="modal-body text-center pb-0">
+        
+        <p><span class="title-modal-blue mt-5 mb-4">ASIC Miner Instructions</span></p>
+
+        <hr class="hr-modal" style="margin-bottom:0 !important;">
+        
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left">Please check your miner's guides, and config the miner to use gqlc stratum pool, such as:</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+        </div>
+
+        <div style="margin-left:-14px; margin-right:-14px;padding-left:14px;padding-right:14px;background: #f7f7f7;">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 pb-2 pt-4">
+                        <p class="text-left">stratum+tcp://192.168.1.100:3333</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="hr-modal" style="margin-bottom:0 !important; margin-top:0 !important;">
+
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 offset-md-3 pb-3 pt-3 pr-2">
+                    <button type="button" class="btn btn-primary mt-4 mb-4 w-100 pl-0 pr-0" style="min-width: auto;" aria-label="Done" (click)="closePoolMinersModalASIC()">Done</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </ng-template>
 
@@ -114,7 +675,7 @@
         <div class="row">
             <div class="col-12 pl-md-2 pr-md-2">
 
-                <div class="nodeControlIcon" [ngClass]="{'nodeOnline': node.running}" (click)="showNodeControl = !showNodeControl"></div>
+                <div class="nodeControlIcon" [ngClass]="{'nodeOnline': node.running}"></div>
 
                 <div class="nodeInfoBoxHolder">
                     <div class="nodeInfoBox first">
@@ -123,6 +684,57 @@
                         <span class="nodeData" *ngIf="node.running == true && showSynchronizingNode && (api.nodeMainBlocksCount != api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">Synchronizing</span>
                         <span class="nodeData" *ngIf="node.running == true && showSynchronizingNode && api.nodeMainBlocksCount == api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">Online</span>
                     </div>
+                    <!--<div class="nodeInfoBox" *ngIf="node.running == true">
+                        <span class="nodeLabel">Memory Usage: </span>
+                        <span class="nodeData">{{ nodeMemoryUsage / 1024 | number : '1.2-2' }} K</span>       
+                    </div>-->
+                    <div class="nodeInfoBox third" *ngIf="node.running == true && platform != 'win32'">
+                        <span class="nodeLabel">CPU Usage: </span>
+                        <span class="nodeData">{{ nodeCPUUsage | number : '1.2-2' }} %</span>
+                    </div>
+                    <div class="nodeInfoBox third" *ngIf="node.running == true && platform == 'win32'">
+                        <span class="nodeLabel">Node version: </span>
+                        <span class="nodeData">{{ desktopConfig.nodeData.version }}</span>
+                    </div>
+                    <!--<div class="nodeInfoBox" *ngIf="node.running == true">
+                        <span class="nodeLabel">Uptime: </span>
+                        <span class="nodeData">{{ nodeUptime }}</span>
+                    </div>-->
+                </div>
+                <div class="nodeInfoBoxButton" *ngIf="node.running == true" style="right: 160px; position: absolute;">
+                    <button (click)="openMiningSetupModal()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
+                        Setup
+                    </button>
+                </div>
+                <div class="nodeInfoBoxButton" *ngIf="node.running == true">
+                    <button (click)="nodeStop()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
+                        Stop node
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="minerControl" *ngIf="showMinerControl">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 pl-md-2 pr-md-2">
+
+                <div class="nodeControlIcon" [ngClass]="{'nodeOnline': showStartedMiner}"></div>
+
+                <div class="nodeInfoBoxHolder">
+                    <div class="minerInfoBoxFirst">
+                        <span class="nodeLabel">Miner status: </span>
+                        <span class="nodeData" *ngIf="showStartedMiner == false">Not running</span>
+                        <span class="nodeData" *ngIf="showStartedMiner">Running</span>
+                    </div>
+                    <div class="minerInfoBox" *ngIf="showStartedMiner">
+                        <span class="nodeLabel">Last message: </span>
+                        <span class="nodeData">{{ minerLastMsg }}</span>       
+                    </div>
+                    <!--
                     <div class="nodeInfoBox" *ngIf="node.running == true">
                         <span class="nodeLabel">Memory Usage: </span>
                         <span class="nodeData">{{ nodeMemoryUsage / 1024 | number : '1.2-2' }} K</span>       
@@ -132,17 +744,75 @@
                         <span class="nodeData">{{ nodeCPUUsage | number : '1.2-2' }} %</span>
                     </div>
                     <div class="nodeInfoBox third" *ngIf="node.running == true && platform == 'win32'">
-                        <span class="nodeLabel">Node version: </span>
+                        <span class="nodeLabel">Miner version: </span>
                         <span class="nodeData">{{ desktopConfig.nodeData.version }}</span>
                     </div>
                     <div class="nodeInfoBox" *ngIf="node.running == true">
                         <span class="nodeLabel">Uptime: </span>
                         <span class="nodeData">{{ nodeUptime }}</span>
                     </div>
+                    -->
                 </div>
-                <div class="nodeInfoBoxButton" *ngIf="node.running == true">
-                    <button (click)="nodeStop()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
-                        Stop node
+                <div class="minerInfoBoxButton" *ngIf="showStartedMiner">
+                    <button (click)="minerStop()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
+                        Stop miner
+                    </button>
+                </div>
+                <div class="minerInfoBoxButton" *ngIf="!showStartedMiner">
+                    <button (click)="minerStart()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
+                        Start miner
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="minerControl" *ngIf="showPoolControl">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 pl-md-2 pr-md-2">
+
+                <div class="nodeControlIcon" [ngClass]="{'nodeOnline': showStartedPool}"></div>
+
+                <div class="nodeInfoBoxHolder">
+                    <div class="minerInfoBoxFirst">
+                        <span class="nodeLabel">Pool status: </span>
+                        <span class="nodeData" *ngIf="showStartedPool == false">Not running</span>
+                        <span class="nodeData" *ngIf="showStartedPool">Running</span>
+                    </div>
+                    <div class="minerInfoBox" *ngIf="showStartedPool">
+                        <span class="nodeLabel">Last message: </span>
+                        <span class="nodeData">{{ poolLastMsg }}</span>       
+                    </div>
+                    <!--
+                    <div class="nodeInfoBox" *ngIf="node.running == true">
+                        <span class="nodeLabel">Memory Usage: </span>
+                        <span class="nodeData">{{ nodeMemoryUsage / 1024 | number : '1.2-2' }} K</span>       
+                    </div>
+                    <div class="nodeInfoBox third" *ngIf="node.running == true && platform != 'win32'">
+                        <span class="nodeLabel">CPU Usage: </span>
+                        <span class="nodeData">{{ nodeCPUUsage | number : '1.2-2' }} %</span>
+                    </div>
+                    <div class="nodeInfoBox third" *ngIf="node.running == true && platform == 'win32'">
+                        <span class="nodeLabel">Miner version: </span>
+                        <span class="nodeData">{{ desktopConfig.nodeData.version }}</span>
+                    </div>
+                    <div class="nodeInfoBox" *ngIf="node.running == true">
+                        <span class="nodeLabel">Uptime: </span>
+                        <span class="nodeData">{{ nodeUptime }}</span>
+                    </div>
+                    -->
+                </div>
+                <div class="minerInfoBoxButton" *ngIf="showStartedPool">
+                    <button (click)="poolStop()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
+                        Stop pool
+                    </button>
+                </div>
+                <div class="minerInfoBoxButton" *ngIf="!showStartedPool">
+                    <button (click)="openPoolSetupModal()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
+                        Start pool
                     </button>
                 </div>
 

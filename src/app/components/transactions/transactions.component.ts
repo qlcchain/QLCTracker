@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, ChildActivationEnd } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { NodeService } from 'src/app/services/node.service';
 import { timer } from 'rxjs';
+import { WalletService } from 'src/app/services/wallet.service';
 
 @Component({
 	selector: 'app-transactions',
@@ -14,6 +15,7 @@ export class TransactionsComponent implements OnInit {
 	transactions: any[] = [];
 	transactionsCount = 0;
 	pendingBlocks = [];
+	latestPovHeight = 0;
 
 	accountMeta: any = {};
 	account = '';
@@ -31,7 +33,8 @@ export class TransactionsComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private api: ApiService,
-		private node: NodeService
+		private node: NodeService,
+		private wallet: WalletService
 	) { }
 
 	async ngOnInit() {
@@ -71,14 +74,6 @@ export class TransactionsComponent implements OnInit {
 	}
 
 	async loadTransactions() {
-		const tokenMap = {};
-		const tokens = await this.api.tokens();
-		if (!tokens.error) {
-			tokens.result.forEach(token => {
-				tokenMap[token.tokenId] = token;
-			});
-		}
-
 		await this.getTransactions();
 	}
 
@@ -128,6 +123,12 @@ export class TransactionsComponent implements OnInit {
 	}
 
 	async getTransactions() {
+		/*this.latestPovHeight = 0;
+		const latesPovHeader = await this.api.getLatestHeader();
+		if (!latesPovHeader.error) {
+			this.latestPovHeight = latesPovHeader.result.height;
+		}*/
+		
 		this.account = this.route.snapshot.params.account;
 		let transactionsCount = null;
 		if (this.account != null && this.account != '') {
@@ -147,42 +148,18 @@ export class TransactionsComponent implements OnInit {
 
 		let transactions = null;
 		if (this.account != null && this.account != '') {
-			transactions = await await this.api.accountHistory(this.account, this.pageSize, this.offSet);
+			transactions = await this.api.accountHistory(this.account, this.pageSize, this.offSet);
 		} else {
-			transactions = await await this.api.blocks(this.pageSize, this.offSet);
+			transactions = await this.api.blocks(this.pageSize, this.offSet);
 		}
 		//transactions = await this.api.blocks(this.pageSize,this.offSet);
 		// const additionalBlocksInfo = [];
 
 		this.transactions = [];
 		if (!transactions.error) {
-			const tokenMap = {};
-			const tokens = await this.api.tokens();
-			if (!tokens.error) {
-				tokens.result.forEach(token => {
-					tokenMap[token.tokenId] = token;
-				});
-			}
-			const historyResult = transactions.result;
-			for (const block of historyResult) {
-				const blockInfo = await this.api.blocksInfo([block.link]);
-				// For Open and receive blocks, we need to look up block info to get originating account
-				if (block.type === 'Open' || block.type === 'Receive' || block.type === 'ContractReward') {
-					const preBlock = await this.api.blocksInfo([block.link]);
-					if (!preBlock.error && typeof (preBlock.result[0]) != 'undefined' && preBlock.result.length > 0) {
-						block.link_as_account = preBlock.result[0].address;
-					}
-				} else {
-					const link_as_account = await this.api.accountForPublicKey(block.link);
-					if (!link_as_account.error && typeof (link_as_account.result) != 'undefined') {
-						block.link_as_account = link_as_account.result;
-					}
-				}
-				if (tokenMap.hasOwnProperty(block.token)) {
-					block.tokenInfo = tokenMap[block.token];
-				}
-				this.transactions.push(block);
-			}
+			this.transactions = await this.wallet.prepareQLCBlockView(transactions.result);
+			//const historyResult = transactions.result;
+			
 			//this.transactions = this.transactions.filter(h => h.type !== 'change');
 		}
 	}

@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Base64 } from 'js-base64';
 
-declare var particlesJS: any;
 declare var jQuery: any;
 declare var require: any;
 
@@ -47,13 +46,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    
-    if (environment.desktop) {
-      window.jQuery = window.$ = require('node_modules/jquery/dist/jquery.js');
-      particlesJS.load('particles-js', 'assets/data/particles.json', function() {  });
-    } else {
-      particlesJS.load('particles-js', '../../assets/data/particles.json', function() {  });
-    }
     (function ($) {
       var myTarget;
       $('.menu-close').on('click', function (e) {
@@ -75,6 +67,11 @@ export class HeaderComponent implements OnInit {
         myTarget = $(this).attr('data-link');
         $('.'+myTarget).addClass('active');
         $('.search-text').focus();
+      });
+
+      $('.menu-sub-items').on('click', function (e) {
+        e.preventDefault();
+        $('.menu-sub-holder').removeClass('active');
       });
     
     

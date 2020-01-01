@@ -13,6 +13,7 @@ import { PriceService } from './price.service';
 // import { LedgerService } from './ledger.service';
 import { NGXLogger } from 'ngx-logger';
 import { interval, timer } from 'rxjs';
+import { ChainxAccountService } from './chainx-account.service';
 
 export type WalletType = 'seed' | 'ledger' | 'privateKey';
 
@@ -43,6 +44,14 @@ export interface NeoWallet {
 	addressBookName: string | null;
 	encryptedwif: string;
 }
+export interface ChainxAccount {
+  id: string;
+  index: number;
+  addressBookName: string | null;
+  balances: object | null;
+  wif: string;
+  mnemonic: boolean;
+}
 export interface FullWallet {
 	type: WalletType;
 	seedBytes: any;
@@ -57,6 +66,7 @@ export interface FullWallet {
 	// pendingFiat: number;
 	accounts: WalletAccount[];
 	neowallets: NeoWallet[];
+	chainxAccounts: ChainxAccount[];
 	accountsIndex: number;
 	locked: boolean;
 	password: string;
@@ -83,6 +93,7 @@ export class WalletService {
 		// pendingFiat: 0,
 		accounts: [],
 		neowallets: [],
+		chainxAccounts: [],
 		accountsIndex: 0,
 		locked: false,
 		password: ''
@@ -175,6 +186,11 @@ export class WalletService {
 		const tokens = await this.api.tokens();
 		if (!tokens.error) {
 			tokens.result.forEach(token => {
+				if (token.tokenSymbol != 'QLC' && token.tokenSymbol != 'QGAS') {
+					token.image = 'none';
+				} else {
+					token.image = token.tokenSymbol;
+				}
 				this.tokenMap[token.tokenId] = token;
 			});
 		}
@@ -235,6 +251,7 @@ export class WalletService {
 				});
 				//console.log(walletAccount.pendingBlocks);
 			}
+			this.loadingPending = false;
 			if (!this.isLocked() && this.appSettings.settings.receive == 'auto') {
 				this.processPendingBlocks();
 			}
@@ -253,7 +270,7 @@ export class WalletService {
 
 	async removeBlockFromPendingAccount(block,newhash = '') {
 		let walletAccount = this.wallet.accounts.find(a => a.id === block.receiveAccount);
-		
+
 		if (walletAccount === undefined) {
 			console.log('ERROR - Account not found');
 			return;
@@ -284,7 +301,7 @@ export class WalletService {
 
 		// update balances
 		await this.getTokenBalance(walletAccount);
-		
+
 		if (newhash != '' && newhash != null) {
 			const blocksInfo = await this.api.blocksInfo([newhash]);
 			if (blocksInfo.result) {
@@ -326,7 +343,7 @@ export class WalletService {
 						}
 					});
 				}
-					
+
 				walletAccount.otherTokens = otherTokens;
 				walletAccount.balances = accountMeta;
 			}
@@ -372,6 +389,10 @@ export class WalletService {
 		return this.wallet.accounts.find(a => a.id === accountID);
 	}
 
+	async getNeoWallet(walletID) {
+		return this.wallet.neowallets.find(a => a.id === walletID);
+	}
+
 	async loadStoredWallet() {
 		this.resetWallet();
 
@@ -391,7 +412,7 @@ export class WalletService {
 			this.wallet.locked = walletJson.locked;
 			this.wallet.password = walletJson.password || null;
 		}
-		
+
 		this.wallet.accountsIndex = walletJson.accountsIndex || 0;
 
 		if (walletJson.accounts && walletJson.accounts.length) {
@@ -410,13 +431,17 @@ export class WalletService {
 		if (walletJson.neowallets && walletJson.neowallets.length) {
 			walletJson.neowallets.forEach(async account => await this.loadNeoWalletAccount(account));
 		}
+		if (walletJson.chainxAccounts && walletJson.chainxAccounts.length) {
+			walletJson.chainxAccounts.forEach(async account => await this.loadChainxAccount(account));
+		}
 
 		await this.reloadBalances(true);
+
 
 		return this.wallet;
 	}
 
-	
+
 
 	async loadNeoWalletAccount(account) {
 		const addressBookName = this.addressBook.getAccountName(account.id);
@@ -429,6 +454,22 @@ export class WalletService {
 			encryptedwif: account.encryptedwif
 		};
 		this.wallet.neowallets.push(newAccount);
+		this.saveWalletExport();
+		return newAccount;
+	}
+
+	async loadChainxAccount(account) {
+		const addressBookName = this.addressBook.getAccountName(account.id);
+
+		const newAccount: ChainxAccount = {
+			id: account.id,
+			index: account.index,
+			addressBookName,
+			balances: null,
+			wif: account.wif,
+      mnemonic: account.mnemonic
+		};
+		this.wallet.chainxAccounts.push(newAccount);
 		this.saveWalletExport();
 		return newAccount;
 	}
@@ -999,10 +1040,10 @@ export class WalletService {
 		}
 
 		const newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
-		
+
 		if (newHash) {
 			this.confirmTx(newHash,nextBlock,true);
-		} 
+		}
 	}
 
 	async processPendingBlock(pending) {
@@ -1037,17 +1078,17 @@ export class WalletService {
 		}
 
 		const newHash = await this.qlcBlock.generateReceive(walletAccount, nextBlock.hash, this.isLedgerWallet());
-
+console.log(newHash);
 		if (newHash) {
 			this.confirmTx(newHash,nextBlock);
-		} 
+		}
 
 		return false;
 	}
 
 	async confirmTx(hash,nextBlock,auto = false) {
 		const blockConfirmedQuery = await this.api.blockConfirmedStatus(hash);
-		//console.log(blockConfirmedQuery);
+		console.log(blockConfirmedQuery);
 		if (typeof blockConfirmedQuery.result != 'undefined') {
 			if (blockConfirmedQuery.result == true) {
 				if (this.successfulBlocks.length >= 500) {
@@ -1063,7 +1104,7 @@ export class WalletService {
 					`Successfully received ${nextBlock.amount == 0 ? '' : new BigNumber(nextBlock.amount).dividedBy(Math.pow(10,tokenInfo.decimals)).toFixed(tokenInfo.decimals)} ${tokenInfo.tokenSymbol}!`
 				);
 				// Remove it after processing, to prevent attempting to receive duplicated messages
-				this.pendingBlocks = this.pendingBlocks.filter(function( obj ) { 
+				this.pendingBlocks = this.pendingBlocks.filter(function( obj ) {
 					return obj.hash !== nextBlock.hash;
 				});
 				this.removeBlockFromPendingAccount(nextBlock,hash);
@@ -1100,6 +1141,7 @@ export class WalletService {
 			type: this.wallet.type,
 			accounts: this.wallet.accounts.map(a => ({ id: a.id, index: a.index })),
 			neowallets: this.wallet.neowallets.map(a => ({ id: a.id, index: a.index, encryptedwif: a.encryptedwif })),
+			chainxAccounts: this.wallet.chainxAccounts.map(a => ({ id: a.id, index: a.index, wif: a.wif, mnemonic: a.mnemonic })),
 			accountsIndex: this.wallet.accountsIndex
 		};
 
@@ -1110,5 +1152,36 @@ export class WalletService {
 		}
 
 		return data;
+	}
+
+	
+
+	async prepareQLCBlockView(blocks) {
+		let preparedBlocks = [];
+		
+		await this.loadTokens();
+
+		for (const block of blocks) {
+			//const blockInfo = await this.api.blocksInfo([block.link]);
+			// For Open and receive blocks, we need to look up block info to get originating account
+			if (block.type === 'Online' || block.type === 'Change') {
+				block.link_as_account = block.address;
+			} else if (block.type === 'Open' || block.type === 'Receive' || block.type === 'ContractReward') {
+				const preBlock = await this.api.blocksInfo([block.link]);
+				if (!preBlock.error && typeof (preBlock.result[0]) != 'undefined' && preBlock.result.length > 0) {
+					block.link_as_account = preBlock.result[0].address;
+				}
+			} else {
+				const link_as_account = await this.api.accountForPublicKey(block.link);
+				if (!link_as_account.error && typeof (link_as_account.result) != 'undefined') {
+					block.link_as_account = link_as_account.result;
+				}
+			}
+			if (this.tokenMap.hasOwnProperty(block.token)) {
+				block.tokenInfo = this.tokenMap[block.token];
+			}
+			preparedBlocks.push(block);
+		}
+		return preparedBlocks;
 	}
 }

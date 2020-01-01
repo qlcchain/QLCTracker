@@ -1,0 +1,19 @@
+.qlc-table-row {
+    min-height: 34px;
+    padding-bottom: 12px;
+}
+.qlc-table-row div {
+    padding-bottom: 10px;
+}
+a .link-blue, a h3.link-blue, div a .link-blue, div a h3.link-blue {
+    color: #00479d !important;
+    text-decoration: none !important;
+}
+h3:hover, a:hover h3, a h3:hover {
+    color: #595757 !important;
+    text-decoration: none !important;
+}
+.link-blue:hover, a:hover .link-blue, div a:hover .link-blue, div a h3.link-blue:hover {
+    text-decoration: none !important;
+    color: #595757 !important;
+}

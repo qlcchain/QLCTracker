@@ -24,10 +24,22 @@
               <!--<div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right">Last transaction</div>-->
             </div>
             <div class="row qlc-table-row closed" *ngFor="let account of accounts">
-              <div class="col-xl-8 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate">
-                <a [routerLink]="'/account/' + (account.account)">{{ account.account }}</a>
+              <div class="d-none d-xl-block col-xl-8">
+                <a [routerLink]="'/account/' + account.account">{{ account.account }}</a>
               </div>
-              <div class="col-xl-4 col-lg-5 col-md-6 col-sm-7 col-6 text-right">
+              <div class="d-none d-lg-block d-xl-none col-lg-7 pl-4">
+                <a [routerLink]="'/account/' + account.account">{{ account.account }}</a>
+              </div>
+              <div class="d-none d-md-block d-lg-none col-md-6 pl-4">
+                <a [routerLink]="'/account/' + account.account">{{ account.account | squeeze : '26,26' }}</a>
+              </div>
+              <div class="d-none d-sm-block d-md-none col-sm-5 pl-4">
+                <a [routerLink]="'/account/' + account.account">{{ account.account | squeeze : '18,18' }}</a>
+              </div>
+              <div class="d-block d-sm-none col-6 pl-4">
+                <a [routerLink]="'/account/' + account.account">{{ account.account | squeeze : '11,11' }}</a>
+              </div>
+              <div class="col-xl-4 col-lg-5 col-md-6 col-sm-7 col-6 text-right pr-3">
                 <span data-toggle="tooltip" data-placement="top" title="" *ngFor="let token of account.tokens" style="display:block;padding:0px;margin:0px;min-height:auto;margin-bottom:4px;">{{ token.balance | qlc:token.tokenInfo.decimals | currency:'':'':'1.2-8' }} {{ token.tokenInfo.tokenSymbol }}<img src="assets/img/token-{{ token.tokenInfo.image | lowercase }}.png" class="icon-token" style="width:18px;margin-top:-2px;"></span>
               </div>
               <!--<div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6 pr-4 text-right" *ngFor="let token of account.tokens">{{ token.modified * 1000 | date: 'short' }}</div>-->

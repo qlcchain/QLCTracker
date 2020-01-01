@@ -202,30 +202,7 @@ export class StakingCreateComponent implements OnInit {
     this.recoverErrorMsg = '';
     this.recoverSteps = [];
 
-    const pledgeInfoByTransactionID = await this.nep5api.pledgeInfoByTransactionID(this.recoverForm.value.recover_txid);
-    
-    this.recoverSteps.push({ msg: 'Checking if a Pledge already exsists.'});
-    if (pledgeInfoByTransactionID.result) {
-      const pledgeInfo = pledgeInfoByTransactionID.result;
-      if (pledgeInfo.state != 'PledgeStart' && pledgeInfo.state != 'PledgeProcess') {
-        this.recoverSteps.push({ msg: 'ERROR - Pledge already proccessed.'});
-        this.checkingTxid = 0;
-        return;
-      }
-      if (pledgeInfo.state == 'PledgeStart' || pledgeInfo.state == 'PledgeProcess') {
-        this.recoverSteps.push({ msg: 'Pledge found! Press "CONTINUE INVOKE" to proceed.'});
-        this.continueInvokePledge = pledgeInfo;
-        this.continueInvoke = 1;
-        this.checkingTxid = 0;
-        return;
-      }
-    } 
-    if (pledgeInfoByTransactionID.error) {
-      if (pledgeInfoByTransactionID.error.message == 'Key not found') {
-        this.recoverSteps.push({ msg: 'No pledge found. Checking if TXID is a lock.'});
-      }
-      
-    }
+    // check if TXID is a lock
     const txData = await this.neoService.contractGetLockInfo(this.recoverForm.value.recover_txid);
     if (txData === false) {
       this.recoverSteps.push({ msg: 'Wrong NEO wallet password.'});
@@ -235,10 +212,28 @@ export class StakingCreateComponent implements OnInit {
       this.recoverSteps.push({ msg: 'TXID lock found.'});
       const walletAccount = await this.walletService.getWalletAccount(txData.beneficial);
       if (!walletAccount) {
-        this.recoverSteps.push({ msg: 'Invalid beneficial.'});
+        this.recoverSteps.push({ msg: 'ERROR - QLC address not found. Please add the connected QLC address and try again.'});
         this.checkingTxid = 0;
         return;
       }
+      const neoWallet= await this.walletService.getNeoWallet(txData.neoAddress);
+      if (!neoWallet) {
+        this.recoverSteps.push({ msg: 'ERROR - NEO address not found. Please add the connected NEO address and try again.'});
+        this.checkingTxid = 0;
+        return;
+      }
+
+      this.recoverSteps.push({ msg: 'Checking pledge status.'});
+      const pledgeInfoByTransactionID = await this.nep5api.pledgeInfoByTransactionID(this.recoverForm.value.recover_txid);
+      if (pledgeInfoByTransactionID.result) {
+        const pledgeInfo = pledgeInfoByTransactionID.result;
+        if (pledgeInfo.state != 'PledgeStart' && pledgeInfo.state != 'PledgeProcess') {
+          this.recoverSteps.push({ msg: 'ERROR - Pledge already proccessed.'});
+          this.checkingTxid = 0;
+          return;
+        }
+      }
+
       this.checkingTxid = 0;
       this.recovering_txid = 1;
       this.stakingForm.get('fromNEOWallet').setValue(txData.neoAddress);
@@ -256,6 +251,9 @@ export class StakingCreateComponent implements OnInit {
       }
       this.checkingTxid = 0;
     }
+
+    return;
+   
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {
@@ -277,6 +275,7 @@ export class StakingCreateComponent implements OnInit {
           this.stakingForm.get('toQLCWallet').status == 'VALID' 
       ) {
         this.step = 2;
+        window.scrollTo(0, 0);
       } 
     } else if (this.stakingForm.value.stakingType == 1) {
       if (this.stakingForm.get('amounToStake').status == 'VALID' &&
@@ -285,16 +284,19 @@ export class StakingCreateComponent implements OnInit {
           this.stakingForm.get('toQLCWallet').status == 'VALID' 
       ) {
         this.step = 2;
+        window.scrollTo(0, 0);
       }
     }
     if (this.stakingForm.status === 'VALID' && this.invalidTokenSymbol == 0 && this.invalidTokenName == 0 ) {
       this.step = 2;
+      window.scrollTo(0, 0);
     }
   }
 
   invokeNewStaking() {
     this.loadBalances();
     this.step = 1;
+    window.scrollTo(0, 0);
   }
   
 
@@ -353,6 +355,7 @@ export class StakingCreateComponent implements OnInit {
   
   back() {
     this.step = 1;
+    window.scrollTo(0, 0);
     this.macaddresses = [];
 
   }
@@ -470,6 +473,7 @@ export class StakingCreateComponent implements OnInit {
 			return this.notifications.sendWarning('ERROR wallet locked');
     }
     this.step = 3;
+    window.scrollTo(0, 0);
     this.invokeSteps = [];
     let txData;
     if (this.recover == 1 && this.recovering_txid == 1) {
@@ -516,6 +520,7 @@ export class StakingCreateComponent implements OnInit {
     console.log(pledge);
     const walletAccount = await this.walletService.getWalletAccount(pledge.beneficial);
     this.step = 3;
+    window.scrollTo(0, 0);
     this.invokeSteps.push({ msg: 'Continuing invoke.'});
     this.invokeSteps.push({ msg: 'Checking TXID on NEO network.', checkimg: 1});
 
@@ -526,6 +531,7 @@ export class StakingCreateComponent implements OnInit {
   async confirmInvokeWaitForTXIDConfirmByPledge(pledge,walletAccount) {
     if (this.walletService.walletIsLocked()) {
       this.step = 1;
+      window.scrollTo(0, 0);
 			return this.notifications.sendError('ERROR - wallet locked');
     }
     if (walletAccount == undefined || walletAccount.keyPair == undefined) {
@@ -535,6 +541,7 @@ export class StakingCreateComponent implements OnInit {
       this.continueInvoke = 0;
       this.checkingTxid = 0;
       this.step = 1;
+      window.scrollTo(0, 0);
 			return this.notifications.sendError('ERROR - Beneficial account not found');
     }
 
@@ -556,6 +563,13 @@ export class StakingCreateComponent implements OnInit {
                             ? await this.nep5api.mintagePledge(txid)
                             : await this.nep5api.benefitPledge(txid)
                             ;
+
+      if (pledgeResult.error) {
+        if (pledgeResult.error.message == "get lockinfo error: value is not lockinfo struct : map[type:ByteArray value:]") {
+          this.invokeSteps.push({ msg: 'ERROR. TXID is not a lock.', checkimg: 1});
+        }
+        return;
+      }
       if (!pledgeResult.result) {
         this.invokeSteps.push({ msg: 'Pledge ERROR.', link: '/staking-create', linkText: 'Please use RECOVER to recover a failed TX.'});
         /*console.log('pledgeResult error repeating');
@@ -571,6 +585,7 @@ export class StakingCreateComponent implements OnInit {
       
       this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result, checkimg: 1 });
       this.step = 4;
+      window.scrollTo(0, 0);
       });
     } else {
       console.log('no txid yet ... repeating');
@@ -584,6 +599,7 @@ export class StakingCreateComponent implements OnInit {
   async confirmInvokeWaitForTXIDConfirm(txData,walletAccount) {
     if (this.walletService.walletIsLocked()) {
       this.step = 1;
+      window.scrollTo(0, 0);
 			return this.notifications.sendWarning('ERROR wallet locked');
     }
     const txid = txData.lockTxId;
@@ -606,6 +622,13 @@ export class StakingCreateComponent implements OnInit {
                             ? await this.nep5api.mintagePledge(txid)
                             : await this.nep5api.benefitPledge(txid)
                             ;
+
+      if (pledgeResult.error) {
+        if (pledgeResult.error.message == "get lockinfo error: value is not lockinfo struct : map[type:ByteArray value:]") {
+          this.invokeSteps.push({ msg: 'ERROR. TXID is not a lock.', checkimg: 1});
+        }
+        return;
+      }
       if (!pledgeResult.result) {
         console.log('pledgeResult error repeating');
         const waitTimer = timer(5000).subscribe( (data) => {
@@ -620,6 +643,7 @@ export class StakingCreateComponent implements OnInit {
       
       this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result, checkimg: 1 });
       this.step = 4;
+      window.scrollTo(0, 0);
       if (pType == 'network') {
         const setMac = await this.confidantApi.confirmMacAddresses(this.stakingForm.value.email_address, this.stakingForm.value.security_code, this.macaddresses, this.stakingForm.value.toQLCWallet, this.stakingForm.value.fromNEOWallet, txid);
         this.macaddresses = [];
@@ -695,6 +719,12 @@ export class StakingCreateComponent implements OnInit {
 
 
   async processBlock(block, keyPair, txid) {
+    const povFittest = await this.api.getFittestHeader();
+    if (povFittest.error || !povFittest.result) {
+      console.log('ERROR - no fittest header');
+      return;
+    }
+    block.poVHeight = povFittest.result.height;
 		const blockHash = await this.api.blockHash(block);
 		const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
 		const signature = this.util.hex.fromUint8(signed);

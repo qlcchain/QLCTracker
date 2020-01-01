@@ -1,0 +1,35 @@
+.icon-Send, .icon-send {
+    height: 20px;
+}
+.icon-Receive, .icon-receive {
+    height: 20px;
+}
+
+.row-anim-in {
+    -webkit-animation: row-anim-in-keyframes 0.35s ease-in-out; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: row-anim-in-keyframes 0.35s ease-in-out; /* Firefox < 16 */
+        -ms-animation: row-anim-in-keyframes 0.35s ease-in-out; /* Internet Explorer */
+         -o-animation: row-anim-in-keyframes 0.35s ease-in-out; /* Opera < 12.1 */
+            animation: row-anim-in-keyframes 0.35s ease-in-out;
+    transform-origin: bottom left;
+}
+
+@keyframes row-anim-in-keyframes {
+    0% { opacity: 0.3; background:transparent; transform: scale(0.8) translate(10px); }
+    100%   { opacity: 1; background:#ffffff; transform: scale(1.00) translate(0px); }
+}
+/* Firefox < 16 */
+@-moz-keyframes row-anim-in-keyframes {
+    0% { opacity: 0.3; background:transparent; transform: scale(0.8) translate(10px); }
+    100%   { opacity: 1; background:#ffffff; transform: scale(1.00) translate(0px); }
+}
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes row-anim-in-keyframes {
+    0% { opacity: 0.3; background:transparent; transform: scale(0.8) translate(10px); }
+    100%   { opacity: 1; background:#ffffff; transform: scale(1.00) translate(0px); }
+}
+/* Internet Explorer */
+@-ms-keyframes row-anim-in-keyframes {
+    0% { opacity: 0.3; background:transparent; transform: scale(0.8) translate(10px); }
+    100%   { opacity: 1; background:#ffffff; transform: scale(1.00) translate(0px); }
+}

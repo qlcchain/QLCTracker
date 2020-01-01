@@ -21,21 +21,49 @@
           </div>
         </div>
       </div>
-          </div>
+    </div>
           
           <!-- FROM TO -->
-          <div class="col-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+          <div class="col-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2" *ngIf="transaction">
               <div class="content-box-white">
                   <div class="container transaction-details open">
                       <div class="row">
                           <div class="col-lg-6 text-center pt-4 pb-4">
                               <div class="text-label pb-0">Sent from</div>
-                              <div class="text-truncate pl-5 pr-5 pt-2 pb-2"><a routerLink="/account/{{ transaction.address }}">{{ transaction.address }}</a></div>
+                                <div class="d-none d-xl-block pl-5 pr-5 pt-2 pb-2">
+                                  <a routerLink="/account/{{ transaction.address }}">{{ transaction.address | squeeze : '25,25' }}</a>
+                                </div>
+                                <div class="d-none d-lg-block d-xl-none pl-5 pr-5 pt-2 pb-2">
+                                    <a routerLink="/account/{{ transaction.address }}">{{ transaction.address | squeeze : '18,18' }}</a>
+                                </div>
+                                <div class="d-none d-md-block d-lg-none pl-5 pr-5 pt-2 pb-2">
+                                    <a routerLink="/account/{{ transaction.address }}">{{ transaction.address | squeeze : '20,20' }}</a>
+                                </div>
+                                <div class="d-none d-sm-block d-md-none pl-5 pr-5 pt-2 pb-2">
+                                    <a routerLink="/account/{{ transaction.address }}">{{ transaction.address | squeeze : '15,15' }}</a>
+                                </div>
+                                <div class="d-block d-sm-none pl-5 pr-5 pt-2 pb-2">
+                                    <a routerLink="/account/{{ transaction.address }}">{{ transaction.address | squeeze : '12,12' }}</a>
+                                </div>
                               <!--<div class="text-color-red pt-0 text-bold">-17.481 QN1</div>-->
                           </div>
                           <div class="col-lg-6 text-center pt-4 pb-4">
                               <div class="text-label pb-0">Sent to</div>
-                              <div class="text-truncate pl-5 pr-5 pt-2 pb-2"><a routerLink="/account/{{ transaction.link_as_account }}">{{ transaction.link_as_account }}</a></div>
+                              <div class="d-none d-xl-block pl-5 pr-5 pt-2 pb-2">
+                                <a routerLink="/account/{{ transaction.link_as_account }}">{{ transaction.link_as_account | squeeze : '25,25' }}</a>
+                              </div>
+                              <div class="d-none d-lg-block d-xl-none pl-5 pr-5 pt-2 pb-2">
+                                  <a routerLink="/account/{{ transaction.link_as_account }}">{{ transaction.link_as_account | squeeze : '18,18' }}</a>
+                              </div>
+                              <div class="d-none d-md-block d-lg-none pl-5 pr-5 pt-2 pb-2">
+                                  <a routerLink="/account/{{ transaction.link_as_account }}">{{ transaction.link_as_account | squeeze : '20,20' }}</a>
+                              </div>
+                              <div class="d-none d-sm-block d-md-none pl-5 pr-5 pt-2 pb-2">
+                                  <a routerLink="/account/{{ transaction.link_as_account }}">{{ transaction.link_as_account | squeeze : '15,15' }}</a>
+                              </div>
+                              <div class="d-block d-sm-none pl-5 pr-5 pt-2 pb-2">
+                                  <a routerLink="/account/{{ transaction.link_as_account }}">{{ transaction.link_as_account | squeeze : '12,12' }}</a>
+                              </div>
                               <!--<div class="text-color-green pt-0 text-bold">+17.481 QN1</div>-->
                           </div>
                       </div>
@@ -48,7 +76,7 @@
 
 
   <!-- MAIN INFO / SEND -->
-  <div class="container" *ngIf="transaction.type == 'Send'">
+  <div class="container" *ngIf="transaction && transaction.type == 'Send'">
       <div class="row">
           
           <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -108,7 +136,7 @@
 
 
   <!-- MAIN INFO / RECEIVE -->
-  <div class="container" *ngIf="transaction.type == 'Receive'">
+  <div class="container" *ngIf="transaction && transaction.type == 'Receive'">
       <div class="row">
           
           <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -131,7 +159,7 @@
                           <div class="col-12">Amount</div>
                       </div>
                       <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
-                          <div class="col-12">{{ transaction.amount | qlc }}</div>
+                          <div class="col-12">{{ transaction.amount | qlc: transaction.tokenInfo.decimals }}</div>
                       </div>
                   </div>
               </div>
@@ -168,7 +196,7 @@
 
 
   <!-- MAIN INFO / CHANGE -->
-  <div class="container" *ngIf="transaction.type == 'Change'">
+  <div class="container" *ngIf="transaction && transaction.type == 'Change'">
       <div class="row">
           
           <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -191,7 +219,7 @@
                           <div class="col-12">Amount</div>
                       </div>
                       <div class="row qlc-table-row-blue row-text-mid mt-3 mb-3">
-                          <div class="col-12">{{ transaction.amount | qlc }}</div>
+                          <div class="col-12">{{ transaction.amount | qlc: transaction.tokenInfo.decimals }}</div>
                       </div>
                   </div>
               </div>
@@ -228,7 +256,7 @@
 
 
 <!-- MAIN INFO / OPEN -->
-<div class="container" *ngIf="transaction.type == 'Open'">
+<div class="container" *ngIf="transaction && transaction.type == 'Open'">
     <div class="row">
         
         <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -251,7 +279,7 @@
                         <div class="col-12">Amount</div>
                     </div>
                     <div class="row qlc-table-row-purple row-text-mid mt-3 mb-3">
-                        <div class="col-12">{{ transaction.amount | qlc | currency:'':'':'1.2-8' }}</div>
+                        <div class="col-12">{{ transaction.amount | qlc: transaction.tokenInfo.decimals }}</div>
                     </div>
                 </div>
             </div>
@@ -289,7 +317,7 @@
 
 <!-- RAW DATA BLOCKS -->
 
-<div class="container mt-0">
+<div class="container mt-0" *ngIf="transaction">
   <div class="row equal">
     
     <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -348,7 +376,7 @@
   </div>
   
   <!-- RAW BLOCK -->    
-  <div class="container mt-0">
+  <div class="container mt-0" *ngIf="transaction">
       <div class="row equal">
 
           <div class="col-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
@@ -367,7 +395,25 @@
           </div>
       </div>
   </div>
+<!-- RAW BLOCK -->    
+<div class="container mt-0" *ngIf="!transaction">
+    <div class="row equal">
 
+        <div class="col-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+            <div class="content-box-white">
+                <div class="container">
+                    <div class="row qlc-table-header-white sub-page">
+                        <div class="col-12">Transaction not found</div>
+                    </div>
+                    <div class="row qlc-table-row-white sub-page">
+                        <div class="col-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container mt-4 mb-4">
   <div class="row">

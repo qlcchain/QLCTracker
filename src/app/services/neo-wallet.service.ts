@@ -51,6 +51,8 @@ export class NeoWalletService {
 
   claimingTimer = null;
 
+  selectedNode = '';
+
   constructor(
     private walletService: WalletService,
     private http: HttpClient,
@@ -143,7 +145,7 @@ export class NeoWalletService {
 
   async getBalance(address) {
     //const apiProvider = await new api.neoscan.instance(this.network);
-    const apiProvider = new myProvider(); 
+    const apiProvider = new myProvider(this.selectedNode); 
     const balanceResults = await apiProvider.getBalance(address)
     .catch(e => {
       // indicates that neo scan is down and that api.sendAsset and api.doInvoke
@@ -156,13 +158,13 @@ export class NeoWalletService {
 
   async getClaimAmount(address) {
     //const apiProvider = await new api.neoscan.instance(this.network);
-    const apiProvider = new myProvider(); 
+    const apiProvider = new myProvider(this.selectedNode); 
     const claims = await apiProvider.getMaxClaimAmount(address);
     return new BigNumber(claims).toFixed();
   }
 
   async getClaims(address) {
-    const apiProvider = new myProvider(); 
+    const apiProvider = new myProvider(this.selectedNode); 
     //const apiProvider = await new api.neoscan.instance(this.network);
     const claims = await apiProvider.getClaims(address);
     return claims;
@@ -185,7 +187,7 @@ export class NeoWalletService {
       //console.log("\n\n--- Claiming Address ---");
       //console.log(account);
       //const apiProvider = await new api.neoscan.instance(this.network);
-      const apiProvider = new myProvider(); 
+      const apiProvider = new myProvider(this.selectedNode); 
   
       //console.log("\n\n--- API Provider ---");
       //console.log(apiProvider);
@@ -307,7 +309,7 @@ export class NeoWalletService {
     //console.log(account);
     
     //let apiProvider = await new api.neoscan.instance(this.network);
-    const apiProvider = new myProvider(); 
+    const apiProvider = new myProvider(this.selectedNode); 
    
     const token = Object.values(this.tokenList).find( a => a.networks[1].hash == asset_hash);
     //console.log(token);
@@ -403,7 +405,7 @@ export class NeoWalletService {
 
   async contractGetName(address) {
     //const apiProvider = await new api.neoscan.instance(this.network);
-    const apiProvider = new myProvider(); 
+    const apiProvider = new myProvider(this.selectedNode); 
     //apiProvider.set({httpsOnly: true});
     //console.log("\n\n--- API Provider ---");
     //console.log(apiProvider);
@@ -430,7 +432,7 @@ export class NeoWalletService {
 
   async contractGetQlcContract(address) {
     //const apiProvider = await new api.neoscan.instance(this.network);
-    const apiProvider = new myProvider(); 
+    const apiProvider = new myProvider(this.selectedNode); 
     //console.log("\n\n--- API Provider ---");
     //console.log(apiProvider);
 
@@ -485,7 +487,7 @@ export class NeoWalletService {
     //console.log(multisigAcct);
     //neonJS.settings.httpsOnly = true;
     //const apiProvider = await new api.neoscan.instance(this.network);
-    const apiProvider = new myProvider(); 
+    const apiProvider = new myProvider(this.selectedNode); 
     
     //console.log("\n\n--- API Provider ---");
     //console.log(apiProvider);
@@ -538,7 +540,7 @@ export class NeoWalletService {
  
  async contractGetLockInfo(txid) {
   //const apiProvider = await new api.neoscan.instance(this.network);
-  const apiProvider = new myProvider(); 
+  const apiProvider = new myProvider(this.selectedNode); 
   const props = {
     scriptHash: this.smartContractScript, 
     operation: 'getLockInfo', 
@@ -719,17 +721,35 @@ async contractUnlock(pledge,account) {
 export class myProvider implements Provider {
   name: string;
   http: HttpClient;
+  selectedNode: string = '';
+
+  constructor(selectedNode:string = '') {
+    this.selectedNode = selectedNode;
+  }
+
   async getRPCEndpoint(noCache?: boolean): Promise<string> {
     //const seed:string = await apiProvider.getRPCEndpoint();
     //return seed ;
+    if (this.selectedNode == '') {
+      const url = environment.neoScanApi[environment.neoNetwork];
+      const response = await axios.get(url + "/v1/get_all_nodes");
+      let nodes = response.data as RpcNode[];
+      nodes = filterHttpsOnly(nodes);
+      
+      const goodNodes = findGoodNodesFromHeight(nodes);
+      const bestRPC = await getBestUrl(goodNodes);
+      return bestRPC;
+    } else {
+      return this.selectedNode;
+    }
+  }
+  async getGoodNodes(noCache?: boolean): Promise<any> {
     const url = environment.neoScanApi[environment.neoNetwork];
     const response = await axios.get(url + "/v1/get_all_nodes");
     let nodes = response.data as RpcNode[];
     nodes = filterHttpsOnly(nodes);
-    
     const goodNodes = findGoodNodesFromHeight(nodes);
-    const bestRPC = await getBestUrl(goodNodes);
-    return bestRPC;
+    return goodNodes;
   }
   async getBalance(address: string): Promise<import("@cityofzion/neon-core/lib/wallet").Balance> {
     const url = environment.neoScanApi[environment.neoNetwork];
@@ -787,9 +807,6 @@ export class myProvider implements Provider {
     throw new Error("Method not implemented.");
   }
 
-  constructor() {
-
-  }
 
 }
 

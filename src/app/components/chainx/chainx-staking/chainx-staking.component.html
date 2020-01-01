@@ -1,0 +1,649 @@
+<app-user-submenu></app-user-submenu>
+<!-- CHAIN X STAKING - STEP 01 - DASHBOARD-->
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="step === 1">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0">
+      <div class="container">
+        <div class="row">
+          <!-- TITLE -->
+          <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
+            <div class="content-title">
+              <h1 style="display:inline-block;">My PCX Stakings</h1>
+            </div>
+          </div>
+          <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" routerLink="/wallets">
+              BACK TO MY WALLETS
+            </button>
+          </div>
+          <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 ml-xl-2 ml-lg-4 ml-md-5 ml-0 w-100" routerLink="/staking/chainx/invoke">
+              INVOKE NEW STAKING
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row pb-4">
+    <div class="col-lg-4 col-md-4 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+      <div class="content-box-blue bg-blue-tokens-chainx">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">YOUR CURRENT STAKING VOLUME</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 pb-2" style="font-size:0.7em;"><span *ngIf="nominationTotal; else nanTemplate">{{ (nominationTotal.staking / chainxAccountService.divisor) | currency:'':'':'1.2-8' }} PCX</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+      <div class="content-box-blue bg-blue-tokens-chainx">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">YOUR CURRENT UNFREEZE RESERVED</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 pb-2" style="font-size:0.7em;"><span *ngIf="nominationTotal; else nanTemplate">{{ (nominationTotal.unfreezeLocked / chainxAccountService.divisor) | currency:'':'':'1.2-8'}} PCX</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+      <div class="content-box-blue bg-blue-voting-chainx">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">TOTAL UNCLAIMED REWARDS</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 pb-2" style="font-size:0.7em;"><span *ngIf="nominationTotal; else nanTemplate">{{ (nominationTotal.unclaimed / chainxAccountService.divisor) | currency:'':'':'1.2-8'}} PCX</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="nominationRecords.length > 0; else showLoaderTemplate">
+    <div class="row" *ngFor="let nominationRecord of nominationRecords">
+      <div class="col-12 pl-0 pr-0 pt-2">
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <h5><span style="display:inline-block;" *ngIf="nominationRecord.name !== null">{{ nominationRecord.name }} - </span><a href="/chainx/account/{{ nominationRecord.address }}" target="_blank">{{ nominationRecord.address }}</a></h5>
+          <div class="content-box-white">
+            <div class="container">
+              <div class="row qlc-table-header pr-4">
+                <div class="col-xl-2 col-lg-2 order-lg-1 col-md-4 order-md-1 col-sm-3 order-sm-3 col-6 order-1 pl-4">Candidate</div>
+                <div class="col-xl-3 col-lg-3 order-lg-2 d-lg-block col-md-2 d-md-none col-sm-12 order-sm-5 d-sm-none col-7 d-none order-6 text-truncate">Address</div>
+                <div class="col-xl-1 col-lg-1 order-lg-3 col-md-2 order-md-3 col-sm-3 order-sm-3 col-4 pr-sm-0 order-5 text-right pr-0">Current<br>Jackpot</div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 col-md-2 order-md-4 d-md-block col-sm-3 order-sm-3 d-sm-none col-6 pr-sm-0 order-2 text-right pr-0">Your<br>Stakings</div>
+                <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-5 col-sm-3 order-sm-3 col-4 pr-sm-0 order-3 text-left text-sm-right pl-4">Unfreeze<br>Reserved</div>
+                <div class="col-xl-1 col-lg-1 order-lg-6 col-md-2 order-md-6 col-sm-3 order-sm-3 col-4 pr-sm-0 order-4 text-right">Unclaimed<br>Rewards</div>
+                <div class="col-xl-3 col-lg-3 order-lg-7 d-lg-block col-md-7 order-md-5 d-md-none col-sm-6 order-sm-4 d-sm-none col-12 d-none order-7 pr-sm-0 pr-0 text-right"></div>
+              </div>
+              <ng-container *ngIf="nominationRecord.nominations.length > 0; else noStakings"><!---->
+                <div class="row qlc-table-row qlc-table-row-twolines closed pr-4" *ngFor="let nomination of nominationRecord.nominations">
+                  <div class="col-xl-2 col-lg-2 order-lg-1 col-md-4 order-md-1 col-sm-3 order-sm-1 col-8 order-1 pl-4 pb-0 pr-0">
+                    <span class="qlc-icon icon-candidate-online d-sm-none d-md-inline-block" title="Candidate"></span> <span class="d-inline-block">
+                        {{ nomination.candidate.name }}
+                      </span>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 order-lg-2 pl-lg-2 col-md-8 order-md-2 pl-md-4 col-sm-8 order-sm-5 pl-sm-4 col-12 pl-4 order-6 pb-0 text-truncate" tooltip="{{ nomination.candidateAddress }}">
+                    <a href="https://scan.chainx.org/accounts/{{ nomination[0] }}" target="_blank">{{ nomination.candidateAddress }}</a>
+                  </div>
+                  <div class="col-xl-1 col-lg-1 order-lg-3 col-md-2 order-md-3 col-sm-3 order-sm-4 col-4 order-5 pb-0 pr-sm-0 pr-0 text-right">
+                    <span tooltip="{{ (nomination.jackpot / chainxAccountService.divisor) | currency:'':'':'1.2-8' }}">{{ (nomination.jackpot / chainxAccountService.divisor) | currency:'':'':'1.2-2' }}</span>
+                  </div>
+                  <div class="col-xl-1 col-lg-1 order-lg-4 col-md-2 order-md-4 col-sm-4 order-sm-6 col-4 order-2 pb-0 pr-sm-0 pr-0 text-right">
+                    <span tooltip="{{ (nomination[1].nomination / chainxAccountService.divisor) | currency:'':'':'1.2-8' }}">{{ (nomination[1].nomination / chainxAccountService.divisor) | currency:'':'':'1.2-2' }}</span>
+                  </div>
+                  <div class="col-xl-1 col-lg-1 order-lg-5 col-md-2 order-md-5 col-sm-3 order-sm-2 col-4 order-3 pb-0 pr-sm-0 pl-4 pr-0 text-sm-right text-left">
+                    <span tooltip="{{ (nomination.unfreezeReserved / chainxAccountService.divisor) | currency:'':'':'1.2-8' }}">{{ (nomination.unfreezeReserved / chainxAccountService.divisor) | currency:'':'':'1.2-2' }}</span>
+                  </div>
+                  <div class="col-xl-1 col-lg-1 order-lg-6 col-md-2 order-md-6 col-sm-3 order-sm-3 col-4 order-4 pb-0 pr-sm-0 pr-0 text-right">
+                    <span tooltip="{{ (nomination.unclaimed / chainxAccountService.divisor) | currency:'':'':'1.2-8' }}">{{ (nomination.unclaimed / chainxAccountService.divisor) | currency:'':'':'1.2-2' }}</span>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 order-lg-7 col-md-4 order-md-7 offset-md-0 col-sm-4 offset-sm-8 order-sm-7 col-12 order-7 pb-0 pr-sm-0 pr-0 text-right">
+                    <button type="submit" (click)="invokeChange(nominationRecord.address, nomination.candidate, nomination[1].nomination)" class="btn btn-primary float-right ml-1 mr-0 pl-3 pr-3 pt-1 pb-1" style="height:auto; min-height:auto; min-width:auto !important; margin-top:-6px;">
+                      CHANGE
+                    </button>
+                    <button type="submit" (click)="claim(nominationRecord.address, nomination.candidateAddress)" [disabled]="alreadyClaiming" class="btn btn-primary float-right ml-1 mr-1 pl-3 pr-3 pt-1 pb-1" style="height:auto; min-height:auto; min-width:auto !important; margin-top:-6px;">
+                      CLAIM
+                    </button>
+                    <button type="submit" (click)="unfreezeDetails(nominationRecord.address, nomination[0])" [disabled]="nomination[1].revocations.length === 0" class="btn btn-primary float-right ml-0 mr-1 pl-3 pr-3 pt-1 pb-1" style="height:auto; min-height:auto; min-width:auto !important; margin-top:-6px;">
+                      UNFREEZE
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<ng-template #nanTemplate>
+  <div class="col-12 pb-0">
+    <img src="assets/img/preloaders/preloader-white-38px.svg" style="margin-left:-16px; margin-top:0px;width:24px;height:auto;">
+  </div>
+</ng-template>
+<ng-template #noStakings>
+  <div class="col-12 pb-0 text-center pt-4 pb-4">
+    You have currently no active stakings. <a routerLink="/staking/chainx/invoke" class="color-chainx">Invoke new staking</a>
+  </div>
+</ng-template>
+<!-- CHAIN X STAKING - STEP 02 - CANDIDATES -->
+<div class="container mt-4 mb-2 qlc-content-home qlc-after-submenu" *ngIf="step === 2">
+  <div class="row">
+    <!-- TITLE -->
+    <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+      <div class="content-title">
+        <h1 style="display:inline-block;">Select your ChainX Candidate</h1>
+<!--        <span style="width:16px;height:16px;background:#8fcfef;display:inline-block;margin-left:26px;margin-right:8px;"></span>-->
+<!--        <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">Senator</span> -->
+        <span style="width:16px;height:16px;background:#f9de92;display:inline-block;margin-left:16px;margin-right:8px;"></span>
+        <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">Trustee</span>
+      </div>
+    </div>
+    <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+      <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-0 mr-lg-0 mr-md-5 ml-0 w-100" routerLink="/staking/chainx">
+        BACK TO MY STAKINGS
+      </button>
+    </div>
+    <ng-container *ngIf="!loading; else showLoaderTemplate">
+      <!-- CANDIDATES LIST -->
+      <!-- CANDIDATE ITEM START -->
+      <ng-container *ngFor="let candidate of candidates; let i = index">
+        <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-0 mb-2">
+          <div class="content-box-white cursor-pointer popover-box">
+            <div style="position:absolute; width:30px;height:8px;display:inline-block; bottom:10px; right:10px;">
+<!--              <span tooltip="Senator" style="width:8px;height:8px;background:#8fcfef;display:block;float:right;margin-left:6px;"></span> -->
+              <span tooltip="Trustee" *ngIf="candidate.isTrustee.length > 0" style="width:8px;height:8px;background:#f9de92;display:block;float:right;margin-left:6px;"></span>
+            </div>
+            <div class="container">
+              <div class="row">
+                <div class="col-4 mt-3">
+                  <!--                  <span *ngIf="checkImage(); then logo; else default;">-->
+                  <img src="https://chainx-validators-logo.oss-cn-hangzhou.aliyuncs.com/{{ candidate.name.toLowerCase() }}.png" onerror="this.src='assets/img/chainx-node-default.png'" [style.display]="(defaultLogo) ? 'none' : 'block' " class="w-100 icon-token">
+                  <!--                  </span>-->
+                </div>
+                <div class="col-8 pr-0 pl-0">
+                  <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                    <div class="col-12 pb-2">{{ candidate.name }}</div>
+                  </div>
+                  <div class="row qlc-table-row-white sub-page pt-0 pb-3">
+                    <div class="col-12 text-wrap pt-0"><span class="text-blue">Bonded:</span> {{ (candidate.selfVote / chainxAccountService.divisor) | currency:'':'':'1.0-0' }}</div>
+                    <div class="col-12 text-wrap pt-0"><span class="text-blue">Total:</span> {{ (candidate.totalNomination / chainxAccountService.divisor) | currency:'':'':'1.0-0' }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="popover-candidate">
+              <div class="container pl-0 pr-0 pt-2 pb-0">
+                <div class="row pl-0 pr-0 pb-0">
+                  <div class="col-5 candidate-left pr-0"><span class="l">Bonded Rank</span></div>
+                  <div class="col-7 candidate-right text-truncate">{{ (i+1) }}</div>
+                  <div class="col-5 candidate-left pr-0"><span class="l">Type</span></div>
+                  <div class="col-7 candidate-right text-truncate" *ngIf="candidate.isValidator; else syncModeTemplate">Validator</div>
+                  <div class="col-5 candidate-left pr-0"><span class="l">Node Duty</span></div>
+                  <div class="col-7 candidate-right text-truncate"><span *ngIf="candidate.isTrustee.length > 0">Trustee, </span><span>Member</span></div>
+                  <div class="col-5 candidate-left pr-0"><span class="l">Website</span></div>
+                  <div class="col-7 candidate-right text-truncate"><a href="http://{{ candidate.url }}" target="_blank">{{ candidate.url }}</a></div>
+                  <div class="col-5 candidate-left pr-0"><span class="l">Account</span></div>
+                  <div class="col-7 candidate-right text-truncate" style="padding-right:20px;"><a href="https://scan.chainx.org/accounts/{{ candidate.account }}" target="_blank">{{ chainxAccountService.getPublicAddress(candidate.account) }}</a></div>
+                  <div class="col-5 candidate-left pr-0"><span class="l">Jackpot Address</span></div>
+                  <div class="col-7 candidate-right text-truncate" style="padding-right:20px;"><a href="https://scan.chainx.org/accounts/{{ candidate.jackpotAccount }}" target="_blank">{{ chainxAccountService.getPublicAddress(candidate.jackpotAccount) }}</a></div>
+                  <div class="col-5 candidate-left pr-0"><span class="l">Jackpot Balance</span></div>
+                  <div class="col-7 candidate-right text-truncate" style="padding-right:20px;">{{ (candidate.jackpot / chainxAccountService.divisor) | currency:'':'':'1.0-8' }}</div>
+                  <div class="col-5 candidate-left pr-0"><span class="l">Validator Brief</span></div>
+                  <div class="col-7 candidate-right" style="padding-right:20px;">{{ candidate.about || '/' }}</div>
+                  <div class="col-10 offset-1">
+                    <button type="submit" class="btn btn-primary chainx-background mt-3 mb-2 w-100" *ngIf="(candidate.selfVote * 10) > candidate.totalNomination; else disableVoteTemplate" style="max-width: 100% !important;min-width: 100% !important;" (click)="vote(candidate)">Vote</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #logo>
+              <div class="col-7 candidate-right text-truncate">
+                <img src="https://chainx-validators-logo.oss-cn-hangzhou.aliyuncs.com/{{ candidate.name.toLowerCase() }}.png" class="w-100 icon-token">
+              </div>
+            </ng-template>
+            <ng-template #default>
+              <img src="assets/img/chainx-node-default.png" class="w-100 icon-token">
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+      <!-- CANDIDATE ITEM END -->
+    </ng-container>
+  </div>
+</div>
+<ng-template #syncModeTemplate>
+  <div class="col-7 candidate-right text-truncate">Sync mode</div>
+</ng-template>
+<ng-template #disableVoteTemplate>
+  <button type="submit" class="btn btn-primary chainx-background mt-3 mb-2 w-100" style="max-width: 100% !important;min-width: 100% !important;" disabled>Node is full</button>
+</ng-template>
+<ng-template #showLoaderTemplate>
+  <!--<img src="assets/img/Loader.svg" style="margin-left: 40%; margin-top: 20%"/>-->
+  <img src="assets/img/preloaders/preloader-chainx-64px.svg" style="margin-left: calc(50% - 32px); margin-top: 10%;">
+</ng-template>
+<ng-template #showLoadingTemplate>
+<!--  <div class="col-12 pb-0">-->
+    <!--<div class="lds-dual-ring"></div>-->
+    <img src="assets/img/preloaders/preloader-black-38px.svg" style="margin-top:-2px;width:24px;height:auto;opacity:0.65;">
+<!--  </div>-->
+</ng-template>
+<!-- CHAIN X STAKING - STEP 02 - INVOKE -->
+<div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf="step === 3">
+  <!-- TITLE -->
+  <div class="container mt-0 qlc-content-first">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-6 col-12 mt-2 pl-md-2 pr-md-2">
+              <div class="content-title">
+                <h1>Initiate New Staking - {{ candidate.name }}</h1>
+              </div>
+            </div>
+            <div class="col-md-3 offset-md-3 col-12 pl-md-2 pr-md-2">
+              <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" (click)="backToNominates()">
+                Back to Candidates
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container accounts">
+    <div class="row">
+      <!-- FORM -->
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore">
+        <div class="container pl-0 pr-0">
+          <div class="row pl-0 pr-0">
+            <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+              <div class="content-box-white h-auto mt-0 pb-2 pl-2 pr-2 pt-0">
+                <div class="container ml-1 pr-3 pl-3 pt-0 mt-0">
+                  <div class="row defaultTable sendTokens mt-1">
+                    <div class="col-12">
+                      <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          AMOUNT TO STAKE
+                        </div>
+                        <div class="col-md-5 text-left">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text ">
+                                PCX
+                              </div>
+                            </div>
+                            <input
+                              type="text"
+                              class="form-control inlineForm"
+                              [(ngModel)]="amount"
+                              placeholder="Stake amount"
+                              onfocus="this.placeholder = ''"
+                              (change)="checkAmount()"
+                              style="height: 42.5px !important;"
+                            />
+                            <div class="input-group-append">
+                              <a (click)="setMaxAmount()">
+                                <div class="input-group-text maxLink">Max</div>
+                              </a>
+                            </div>
+                          </div>
+                          <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;" *ngIf="chainxAccount.balances !== null; else noBalanceTemplate">The maximum amount you can stake is {{ (((candidate.selfVote * 10)-candidate.totalNomination) / chainxAccountService.divisor) | currency:'':'':'1.2-8'}} PCX</p>
+                          <p style="max-width:100%;font-size:12px;padding-left:16px;padding-top:8px;color:red" *ngIf="stakingWarning">A node can only receive up to 10 times the votes it bonded, please contact the node to increase the bonded votes. <a href="https://scan.chainx.org/referendum/finished" target="_blank">More info (Proposal 01)</a></p>
+                        </div>
+                        <div class="col-md-4 dataName pb-3 pb-md-0 form-label-custom-2">
+                          BALANCE:
+                          <ng-container *ngIf="chainxAccount.balances; else showLoadingTemplate">
+                            {{ (chainxAccount.balances.Free / chainxAccountService.divisor) | currency:'':'':'1.2-8'}} PCX
+                          </ng-container>
+                        </div>
+                      </div>
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          STAKE FROM
+                        </div>
+                        <div class="col-md-9 text-left">
+                          <div class="form-group">
+                            <select class="custom-select" [(ngModel)]="accountFrom" (change)="selectAccount()">
+                              <option *ngFor="let account of chainxAccounts" [value]="account.id">{{ account.addressBookName ? account.addressBookName+' - ' : '' }} {{ account.id }}</option>
+                            </select>
+                            <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select your PCX wallet you want to stake PCX from</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          MEMO
+                        </div>
+                        <div class="col-md-9 text-left">
+                          <div class="form-group">
+                            <input class="form-control w-100 h-25 inlineForm3" [(ngModel)]="memo"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
+                        <div class="col-md-3"></div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+                          <button (click)="invoke()" [disabled]="alreadyInvoking || stakingWarning" type="submit" class="btn btn-primary" style="min-width:100%;">
+                            VOTE & INVOKE STAKING
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- EXPLAINER -->
+      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-blue h-100 pb-3">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">ABOUT STAKING PCX</div>
+            </div>
+            <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
+              <hr style="height:1px;width:100%;border:none;background:#eeddad;display:block;"/>
+              <p>
+                <span style="color:#eeddad;margin-top:4px;display:inline-block;">Minimum Amount:</span><br>No limit<br>
+                <span style="color:#eeddad;margin-top:4px;display:inline-block;padding-top:10px;">Maximum Amount:</span><br>The maximum amount is 10 times the votes a node has bonded (check the available amount)<br>
+
+                <span style="color:#eeddad;margin-top:4px;display:inline-block;padding-top:10px;">Minimum Staking Period:</span><br>No limit. You can revoke your staking anytime. Once you do, your PCX stays frozen for another 3 days before you can unfreeze them.<br>
+
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #noBalanceTemplate>
+  <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">You have no balance</p>
+</ng-template>
+<!-- STAKINGS LIST -->
+<!-- CHAIN X STAKING - CHANGE -->
+<div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf="step === 4">
+  <!-- TITLE -->
+  <div class="container mt-0 qlc-content-first">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-6 col-12 mt-2 pl-md-2 pr-md-2">
+              <div class="content-title">
+                <h1>Change Staking</h1>
+              </div>
+            </div>
+            <div class="col-md-3 offset-md-3 col-12 pl-md-2 pr-md-2">
+              <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" (click)="step = 1">
+                Back to My Stakings
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container accounts">
+    <div class="row">
+      <!-- FORM -->
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore">
+        <div class="container pl-0 pr-0">
+          <div class="row pl-0 pr-0">
+            <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+              <div class="content-box-white h-auto mt-0 pb-2 pl-2 pr-2 pt-0">
+                <div class="container ml-1 pr-3 pl-3 pt-0 mt-0">
+                  <div class="row pt-5" style="border-bottom: 1px solid #edeef4;">
+                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-14px;">
+                      WHAT'S YOUR CHANGE
+                    </div>
+                    <div class="col-md-9 text-left">
+                      <div class="form-group">
+                        <input type="radio" name="stakingChange" [(ngModel)]="changeStaking" value="increase" id="c1"><label for="c1" style="padding-left:10px;padding-right:30px;"> Increase</label> <input type="radio" name="stakingChange" [(ngModel)]="changeStaking" value="decrease" id="c2"><label for="c2" style="padding-left:10px;padding-right:30px;"> Decrease</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row defaultTable sendTokens mt-1" *ngIf="changeStaking == 'increase'">
+                    <div class="col-12">
+                      <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          AMOUNT TO INCREASE
+                        </div>
+                        <div class="col-md-5 text-left">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text ">
+                                PCX
+                              </div>
+                            </div>
+                            <input
+                              type="text"
+                              class="form-control inlineForm"
+                              [(ngModel)]="amount"
+                              placeholder="Increase amount"
+                              onfocus="this.placeholder = ''"
+                              (change)="checkAmount()"
+                              style="height: 42.5px !important;"
+                            />
+                            <div class="input-group-append">
+                              <a (click)="setMaxAmount()">
+                                <div class="input-group-text maxLink">Max</div>
+                              </a>
+                            </div>
+                          </div>
+                          <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The maximum amount you can increase is {{ (((candidate.selfVote * 10)-candidate.totalNomination) / chainxAccountService.divisor) | currency:'':'':'1.2-8'}} PCX</p>
+                          <p style="max-width:100%;font-size:12px;padding-left:16px;padding-top:8px;color:red" *ngIf="stakingWarning">A node can only receive up to 10 times the votes it bonded, please contact the node to increase the bonded votes. <a href="https://scan.chainx.org/referendum/finished" target="_blank">More info (Proposal 01)</a></p>
+                        </div>
+                        <div class="col-md-4 dataName pb-3 pb-md-0 form-label-custom-2">
+                          BALANCE:
+                          <ng-container *ngIf="chainxAccount.balances; else showLoadingTemplate">
+                            {{ (chainxAccount.balances.Free / chainxAccountService.divisor) | currency:'':'':'1.2-8'}} PCX
+                          </ng-container>
+                        </div>
+                      </div>
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          MEMO
+                        </div>
+                        <div class="col-md-9 text-left">
+                          <div class="form-group">
+                            <input class="form-control w-100 h-25 inlineForm3" [(ngModel)]="memo"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
+                        <div class="col-md-3"></div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+                          <button (click)="invoke()" [disabled]="alreadyInvoking" type="submit" class="btn btn-primary" style="min-width:100%;">
+                            INCREASE STAKING
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row defaultTable sendTokens mt-1" *ngIf="changeStaking == 'decrease'">
+                    <div class="col-12">
+                      <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          AMOUNT TO DECREASE
+                        </div>
+                        <div class="col-md-6 text-left">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text ">
+                                PCX
+                              </div>
+                            </div>
+                            <input
+                              type="text"
+                              class="form-control inlineForm"
+                              [(ngModel)]="amount"
+                              placeholder="Decrease amount"
+                              onfocus="this.placeholder = ''"
+                              (change)="checkAmount('revoke')"
+                              style="height: 42.5px !important;"
+                            />
+                            <div class="input-group-append">
+                              <a (click)="setMaxAmount('revoke')">
+                                <div class="input-group-text maxLink">Max</div>
+                              </a>
+                            </div>
+                          </div>
+                          <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The maximum amount you can decrease is {{ (candidateStaked / chainxAccountService.divisor) | currency:'':'':'1.2-8' }} PCX</p>
+                        </div>
+                      </div>
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                          MEMO
+                        </div>
+                        <div class="col-md-9 text-left">
+                          <div class="form-group">
+                            <input class="form-control w-100 h-25 inlineForm3" [(ngModel)]="memo"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
+                        <div class="col-md-3"></div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+                          <button (click)="revoke()" [disabled]="alreadyInvoking" type="submit" class="btn btn-primary" style="min-width:100%;">
+                            DECREASE STAKING
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- EXPLAINER -->
+      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-blue h-100 pb-3">
+          <div class="container" *ngIf="changeStaking === 'increase'">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">INCREASE</div>
+            </div>
+            <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
+              <hr style="height:1px;width:100%;border:none;background:#eeddad;display:block;"/>
+              <p>
+                  <span style="color:#eeddad;margin-top:4px;display:inline-block;">Simply add PCX to your staking</span><br>
+                  You can add additional PCX to you staking and earn more rewards.<br>
+                  <span style="color:#eeddad;margin-top:4px;display:inline-block;padding-top:10px;">Maximum Amount:</span><br>The maximum amount is 10 times the votes a node has bonded (check the available amount)<br>
+              </p>
+            </div>
+          </div>
+          <div class="container" *ngIf="changeStaking === 'decrease'">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">DECREASE</div>
+            </div>
+            <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
+              <hr style="height:1px;width:100%;border:none;background:#eeddad;display:block;"/>
+              <p>
+                  <span style="color:#eeddad;margin-top:4px;display:inline-block;">Simply decrease your PCX staking</span><br>
+                  You can revoke your PCX from staking partly or the full amount.<br><br>
+                  Once you do, that PCX stays frozen for another 3 days before you can unfreeze them.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--STAKINGS LIST-->
+<!-- CHAIN X STAKING - UNFREEZE -->
+<div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf="step === 5">
+  <!-- TITLE -->
+  <div class="container mt-0 qlc-content-first">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-6 col-12 mt-2 pl-md-2 pr-md-2">
+              <div class="content-title">
+                <h1>Unfreeze Stakings</h1>
+              </div>
+            </div>
+            <div class="col-md-3 offset-md-3 col-12 pl-md-2 pr-md-2">
+              <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" (click)="step = 1">
+                Back to My Stakings
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container accounts">
+    <div class="row">
+      <!-- FORM -->
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore">
+        <div class="container pl-0 pr-0">
+          <div class="row pl-0 pr-0 pt-2">
+            <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+              <div class="content-box-white">
+                <div class="container">
+                  <div class="row qlc-table-header pr-4">
+                    <div class="col-xl-4 col-lg-4 order-lg-1 col-md-4 order-md-1 col-sm-4 order-sm-1 col-4 pr-sm-0 order-1 text-left pr-0">In order</div>
+                    <div class="col-xl-2 col-lg-2 order-lg-2 col-md-2 order-md-2 d-md-block col-sm-2 order-sm-3 d-sm-none col-2 pr-sm-0 order-2 text-left pr-0">Block Number</div>
+                    <div class="col-xl-3 col-lg-3 order-lg-3 col-md-3 order-md-3 col-sm-3 order-sm-3 col-3 pr-sm-0 order-3 text-left text-sm-right pl-4">Predicted dead time</div>
+                    <div class="col-xl-3 col-lg-3 order-lg-4 d-lg-block col-md-3 order-md-4 d-md-none col-sm-3 order-sm-4 d-sm-none col-3 d-none order-4 pr-sm-0 pr-0 text-right"></div>
+                  </div>
+                  <ng-container *ngIf="nominationRecordsUnfreeze">
+                    <div class="row qlc-table-row qlc-table-row-twolines closed pr-4" *ngFor="let revocation of nominationRecordsUnfreeze.revocations; let i = index">
+                      <div class="col-xl-4 col-lg-4 order-lg-1 col-md-4 order-md-1 col-sm-4 order-sm-1 col-4 order-1 pb-0 pr-sm-0 pr-0 text-left">
+                        <span tooltip="{{ (revocation.value / chainxAccountService.divisor) | currency:'':'':'1.2-8' }}">{{ (revocation.value / chainxAccountService.divisor) | currency:'':'':'1.2-8' }}</span>
+                      </div>
+                      <div class="col-xl-2 col-lg-2 order-lg-2 col-md-2 order-md-2 col-sm-2 order-sm-2 col-2 order-2 pb-0 pr-sm-0 pr-0 text-left">
+                        <span tooltip="{{ revocation.blockNumber }}">{{ revocation.blockNumber }}</span>
+                      </div>
+                      <div class="col-xl-3 col-lg-3 order-lg-3 col-md-3 order-md-3 col-sm-3 order-sm-3 col-3 order-3 pb-0 pr-sm-0 pl-4 pr-0 text-sm-right text-left">
+                        <span tooltip="">24/10/2019 06:32</span>
+                      </div>
+                      <div class="col-xl-3 col-lg-3 order-lg-4 col-md-3 order-md-4 offset-md-0 col-sm-3 offset-sm-0 order-sm-4 col-3 order-4 pb-0 pr-sm-0 pr-0 text-right">
+                        <button type="submit" (click)="unfreeze(nominationRecordsUnfreeze.sender, nominationRecordsUnfreeze.target, i)" class="btn btn-primary float-right ml-0 mr-1 pl-3 pr-3 pt-1 pb-1" style="height:auto; min-height:auto; min-width:auto !important; margin-top:-6px;" [disabled]="unfreezing">
+                          UNFREEZE
+                        </button>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- EXPLAINER -->
+      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-blue h-100 pb-0">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">UNFREEZE</div>
+            </div>
+            <div class="row qlc-table-row-blue mt-1 qlc-stake-explainer pr-3">
+              <hr style="height:1px;width:100%;border:none;background:#eeddad;display:block;"/>
+              <p>
+                After revoking an amount of staked PCX, they stay locked for 3 days before you can unfreeze and transfer them back to your free balance.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--UNFREEZE LIST-->

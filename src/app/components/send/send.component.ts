@@ -234,13 +234,26 @@ export class SendComponent implements OnInit {
 	}
 
 	searchAddressBook() {
+		const unSelectedAccount = this.accounts.filter(a => a.id !== this.fromAccountID);
+		
+		let addresses = [];
+		for (const account of unSelectedAccount) {
+			addresses.push({
+				name: account.addressBookName ? account.addressBookName + ' - ' : '',
+				account: account.id
+			})
+		}
+		this.addressBookResults$.next(addresses);
+		/*
 		this.showAddressBook = true;
 		const search = this.toAccountID || '';
 		const addressBook = this.addressBookService.addressBook;
 
 		const matches = addressBook.filter(a => a.name.toLowerCase().indexOf(search.toLowerCase()) !== -1).slice(0, 5);
 
-		this.addressBookResults$.next(matches);
+
+
+		this.addressBookResults$.next(matches);*/
 	}
 
 	selectBookEntry(account) {
@@ -481,6 +494,7 @@ export class SendComponent implements OnInit {
 				: '';
 
 		this.resetRaw();
+		this.searchAddressBook();
 	}
 
 	selectFromBook() {

@@ -1,0 +1,343 @@
+.popover-box .popover-candidate {
+	position: absolute;
+	display:none;
+	font-size: 12px;
+	background: #fff;
+	padding: 20px 0px 10px 0px;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.08);
+	max-width: 100%;
+	z-index: 101;
+}
+.popover-box:hover .popover-candidate {
+	display:block;
+}
+.candidate-left, .candidate-right {
+    border-bottom: 1px solid #eaeaea;
+    padding-top:3px;
+    padding-bottom:5px;
+}
+.candidate-left {
+	color: #a8a6ae;
+}
+.candidate-left span.l {
+	padding-left: 12px !important;
+	display:block;
+}
+.candidate-right span.r {
+	padding-right: 12px !important;
+	display:block;
+}
+.btn-primary.chainx-background {
+    background-color: #b5943a !important;
+}
+.btn-primary.chainx-background:hover {
+    background-color: #bd9c3f !important;
+}
+.popover-box .popover-candidate a {
+	color:#b5943a !important;
+}
+.popover-box .popover-candidate a:hover {
+	color: #595757 !important;
+}
+.qlc-table-row a {
+	color: #595757 !important;
+}
+.qlc-table-row a:hover {
+	color: #b5943a !important;
+}
+
+@import '../../../../scss/mixins';
+.btn {
+    padding: initial;
+}
+
+/* STAKING FORM ETC */
+
+.custom-select {
+	display: inline-block;
+	width: 100%;
+	height: calc(2.25rem + 2px);
+	padding: 0.375rem 2.4rem 0.375rem 0.75rem;
+	line-height: 1.5;
+	color: #495057;
+	vertical-align: middle;
+	//background: #fff url('../assets/img/qlc-icon-dropdown.svg') no-repeat right 0.75rem center;
+	background-size: 16px 16px;
+	border: 1px solid #495057;
+	border-radius: 0;
+	appearance: none;
+}
+.custom-select:focus {
+	border-color: #495057;
+	outline: 0;
+	box-shadow: 0 0 0 2px rgba(108, 69, 190, 0.2);
+}
+
+.custom-select.contacts {
+	//background: #fff url('../assets/img/qlc-icon-addressbook-grey.svg') no-repeat right 0.75rem center;
+	background-size: 16px 16px;
+}
+
+
+.sendTokens {
+	padding-top: 30px;
+	padding-bottom: 20px;
+	.second {
+		margin-top: 15px;
+	}
+	.balance {
+		font-weight: bold;
+		padding-left: 30px;
+	}
+	.fiat {
+		font-weight: bold;
+		color: $textLight;
+	}
+	.toaccount {
+        position: absolute;
+        top: 15px;
+        width: 90%;
+        height: 31px;
+        left: 1px;
+        border-right: none;
+        border: transparent;
+	}
+	.success {
+		border: 1px solid $greenLight;
+	}
+	.toaccount.success {
+		border-right: none;
+	}
+	.dangerLeft {
+		border-bottom: 1px solid $redLight;
+		border-top: 1px solid $redLight;
+		border-left: 1px solid $redLight;
+	}
+	.dangerRight {
+		border-bottom: 1px solid $redLight;
+		border-top: 1px solid $redLight;
+		border-right: 1px solid $redLight;
+	}
+
+	button.btn-outline-secondary {
+		margin-top: auto;
+		background-color: transparent;
+		border: 1px solid $textLight;
+		border-left: none;
+		color: $default;
+		border-radius: 0;
+		text-shadow: none;
+	}
+	button.btn-outline-secondary:hover {
+		text-decoration: underline;
+	}
+	button.btn-outline-secondary:focus,
+	.btn-outline-secondary:not(:disabled):not(.disabled):active,
+	.btn-outline-secondary:not(:disabled):not(.disabled).active,
+	.show > .btn-outline-secondary.dropdown-toggle,
+	.btn-outline-secondary:not(:disabled):not(.disabled):active:focus,
+	.btn-outline-secondary:not(:disabled):not(.disabled).active:focus,
+	.show > .btn-outline-secondary.dropdown-toggle:focus {
+		box-shadow: none;
+		outline: 0;
+		background-color: transparent;
+		color: $default;
+		border-color: $textLight;
+	}
+	button.btn-outline-secondary:active {
+		text-decoration: underline;
+	}
+	.inlineForm,
+	.inlineForm2 {
+		border: 0;
+		border-top: 1px solid $textLight;
+		border-bottom: 1px solid $textLight;
+		//background: #fff url('../../../../assets/img/separator_input.png') no-repeat left 0 center;
+		background-size: 1px 34px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	.inlineForm2 {
+		border-radius: 0;
+		border-right: 1px solid $textLight;
+	}
+	.input-group-text {
+		font-weight: bold;
+		border-radius: 0;
+		border: 1px solid $textLight;
+		/*border-right: none;*/
+		background: transparent;
+		width: 65px;
+		font-size: 13px;
+	}
+	.input-group-prepend {
+		border-right: 1px solid #c9c7d0 !important;
+	}
+	.input-group-text.maxLink {
+		border: 1px solid $textLight;
+		border-left: none;
+		color: #b5943a !important;
+		width: auto;
+		padding-top: 10px;
+		padding-bottom: 11px;
+	}
+	.maxLink:hover {
+		text-decoration: underline;
+	}
+	.rowAmount {
+		font-size: 13px;
+		height: 58px;
+		padding-left: 20px;
+		padding-right: 20px;
+		color: $text;
+		padding-top: 10px;
+		height: auto;
+	}
+}
+
+.confirm-title {
+	font-weight: bolder;
+	display: block;
+	font-size: 24px;
+}
+
+.confirm-currency {
+	font-weight: bolder;
+	display: block;
+	font-size: 20px;
+}
+
+.confirm-subtitle {
+	display: block;
+	font-size: 10px;
+}
+.form-control.form-my-border {
+	border: 1px solid #a8a6ae !important;
+}
+.ng-invalid.ng-touched {
+	border: 1px solid #ff0000 !important;
+}
+@media (max-width: 12450px) {
+	.br-spacer {
+		display: block;
+	}
+}
+@media (max-width: 959px) {
+	.br-spacer {
+		display: none;
+	}
+}
+.confirmTransaction {
+	font-weight: bold;
+	text-align: center;
+	font-size: 13px;
+	color: $text;
+	.text-label {
+		text-transform: uppercase;
+		color: $textLight;
+		font-size: 12px;
+	}
+	.sum {
+		color: $default;
+		font-size: $fontSizeTitle;
+		background: #edeef4;
+		height: 1px;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+	.sum span {
+		background: #fff;
+		padding: 15px;
+		position: relative;
+		top: -15px;
+	}
+	.name {
+		font-size: $fontSizeTitle;
+	}
+	.address {
+		word-break: break-all;
+		word-wrap: break-word;
+		color: $text;
+	}
+	.address:hover {
+		color: $superLight;
+	}
+	.transfer {
+		background: #ffffff url('../../../../assets/img/qlc-icon-arrow-transaction-right-grey.svg') no-repeat center center;
+		background-size: 24px 24px;
+		border-top: 0;
+		@media (max-width: 992px) {
+			background: #ffffff url('../../../../assets/img/qlc-icon-arrow-transaction-down-grey.svg') no-repeat center center;
+			background-size: 24px 24px;
+		}
+	}
+	.fiatrate {
+		color: $textLight;
+	}
+}
+
+.ng-invalid.ng-invalid-ignore, .ng-invalid.ng-touched.ng-invalid-ignore, .ng-invalid-ignore, .ng-touched.ng-invalid-ignore, .ng-dirty.ng-invalid-ignore {
+    border: none !important;
+}
+
+.content-box-blue {
+    background: #bd9c3f;
+}
+.content-box-blue.bg-blue-voting-chainx {
+    background: #bd9c3f url("../../../../assets/img/bg_box_votes_chainx.png") no-repeat right top;
+    background-size: auto;
+}
+.content-box-blue.bg-blue-tokens-chainx {
+    background: #bd9c3f url("../../../../assets/img/bg_box_tokens_chainx.png") no-repeat right top;
+    background-size: auto;
+}
+.qlc-table-header-blue {
+    color: #eeddad;
+}
+.color-chainx {
+	color: #b5943a !important;
+}
+.color-chainx:hover, h5 a:hover {
+	color: #caa847 !important;
+}
+.btn-primary {
+    background-color: #caa847 !important;
+}
+.btn-primary:hover {
+    background-color: #bd9c3f !important;
+}
+.text-blue {
+	color: #b5943a !important;
+}
+
+.sendTokens .input-group-text.maxLink {
+	padding-top: 12px;
+	padding-bottom: 9.5px;
+}
+.inlineForm2 {
+	border-radius: 0;
+	border-right: 1px solid $textLight;
+}
+.inlineForm3 {
+	border-radius: 0;
+	border: 1px solid $textLight;
+}
+
+.tooltip.show {
+    opacity: 1;
+    /*top: -4px !important;*/
+}
+.tooltip-inner {
+    font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
+    max-width: 500px !important;
+    padding: 4px 10px 3px 10px;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+	background-color: #595757;
+	background-color: red !important;
+    border-radius: 0;
+}
+.bs-tooltip-top .arrow::before, .bs-tooltip-auto[x-placement^="top"] .arrow::before {
+    border-top-color: #595757;
+}

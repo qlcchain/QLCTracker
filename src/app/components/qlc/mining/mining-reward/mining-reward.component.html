@@ -1,0 +1,600 @@
+<app-user-submenu></app-user-submenu>
+
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+      <div class="container">
+        <div class="row">
+          <!-- TITLE -->
+          <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
+            <div class="content-title">
+              <h1 class="neo">My Miners</h1>
+            </div>
+          </div>
+          <div class="col-md-3 col-12 pl-2 pr-2">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-md-3 " (click)="checkMiners()">
+              Refresh
+            </button>
+          </div>
+          <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 "  routerLink="/mining">
+              Mining Status
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container accounts pt-3">
+  <div class="row">
+    
+    <!-- LIST -->
+    <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+      <div class="content-box-white">
+        
+        
+        <div class="container">
+          
+          <div class="row qlc-table-header">
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-7 text-truncate">Miner Address</div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Status</div>
+            <div class="col-xl-1 col-lg-1 pr-sm-0 pr-4 d-none d-lg-block">Main Block</div>
+            <div class="col-xl-1 col-lg-1 pr-sm-0 pr-4 d-none d-lg-block text-center">Reward</div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pr-sm-0 pr-4 text-right">Blocks height</div>
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block col-5 pr-4 text-right">Time</div>
+          </div>
+
+          
+          <div class="row qlc-table-row qlc-table-row-twolines closed" *ngIf="minerAccounts.length == 0 && minerAccountsNotStarted.length == 0">
+            <div class="col-12 pb-0 text-center">
+                <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">You are not a miner yet</span><br>
+                  Stake 100k QLC and start mining.</p>
+            </div>
+          </div>
+
+          <div class="row qlc-table-row qlc-table-row-twolines closed"  *ngFor="let miner of minerAccountsNotStarted">
+            <div class="col-12">
+                <a [routerLink]="'/wallets/qlc/' + miner.id">{{ miner.id | squeeze : '25,25' }}</a>
+            </div>
+            <div class="col-12 pb-0 text-center">
+
+                <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">You have enough staking to start mining</span><br>
+                  Learn more about how to set up your miner here:<br>
+                  <a href="https://docs.qlcchain.online/tutorial/getstarted/#pov-mining" target="_blank">https://docs.qlcchain.online/tutorial/getstarted/#pov-mining</a></p>
+
+            </div>
+          </div>
+          
+          <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let miner of minerAccounts">
+            <div class="d-none d-xl-block col-xl-3 pb-0">
+              <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '18,18' }}</a>
+            </div>
+            <div class="d-none d-lg-block d-xl-none col-lg-3 pb-0">
+              <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '16,16' }}</a>
+            </div>
+            <div class="d-none d-md-block d-lg-none col-md-4 pb-0">
+              <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '10,10' }}</a><br>
+              <span><span class="text-color-lightgrey text-tiny">Main Block:</span> {{ miner.minerInfo.mainBlockNum }}</span><br>
+              <span class="text-color-lightgrey text-tiny">Reward: </span>{{ miner.minerInfo.mainRewardAmount | qlc: '8' | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} QGAS
+            </div>
+            <div class="d-none d-sm-block d-md-none col-sm-4 pb-0">
+              <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '8,8' }}</a><br>
+              <span><span class="text-color-lightgrey text-tiny">Main Block:</span> {{ miner.minerInfo.mainBlockNum }}</span><br>
+              <span class="text-color-lightgrey text-tiny">Reward: </span>{{ miner.minerInfo.mainRewardAmount | qlc: '8' | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} QGAS
+            </div>
+            <div class="d-block d-sm-none col-5 pb-0">
+              <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '8,8' }}</a><br>
+              <span><span class="text-color-lightgrey text-tiny">Main Block:</span> {{ miner.minerInfo.mainBlockNum }}</span><br>
+              <span class="text-color-lightgrey text-tiny">Reward: </span>{{ miner.minerInfo.mainRewardAmount | qlc: '8' | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} QGAS
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+              <span class="qlc-icon icon-Online24h-{{ miner.minerInfo.isDayOnline }}" style="height:24px;" title="24 Hours Online: {{ miner.minerInfo.isDayOnline }}"></span>
+              <span class="d-none d-sm-none d-md-inline-block txState">
+                <span class="text-bold-grey">24h Online</span>
+              </span>
+              <br>
+              <span class="qlc-icon icon-Online1h-{{ miner.minerInfo.isHourOnline }}" style="height:24px;" title="Last Hour Online: {{ miner.minerInfo.isHourOnline }}"></span>
+              <span class="d-none d-sm-none d-md-inline-block txState">
+                <span class="text-bold-grey">1h Online</span>
+              </span>
+            </div>
+            <div class="col-xl-1 col-lg-1 d-none d-lg-block pr-sm-0 pr-4">
+                {{ miner.minerInfo.mainBlockNum }}
+            </div>
+            <div class="col-xl-1 col-lg-1 d-none d-lg-block pr-sm-0 pr-4 text-center">
+              {{ miner.minerInfo.mainRewardAmount | qlc: '8' | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} <br>QGAS
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-5 pb-0 pr-sm-0 pr-4 text-right" >
+              <span class="text-color-lightgrey text-tiny">First Block Height:</span> {{ miner.minerInfo.firstBlockHeight }}
+              <br>
+              <span class="text-color-lightgrey text-tiny">Last Block Height:</span> {{ miner.minerInfo.lastBlockHeight }}               
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-12 pr-4 text-right">
+              <span class="text-color-lightgrey text-tiny">First Block Time:</span> {{ miner.minerInfo.firstBlockTime | date: 'short' }}
+              <br>
+              <span class="text-color-lightgrey text-tiny">Last Block Time:</span> {{ miner.minerInfo.lastBlockTime | date: 'short' }}
+            </div>
+          
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NO MINER -->
+<div *ngIf="minerAccounts.length == 0 && minerAccountsNotStarted.length == 0">
+  <div class="container mt-0">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="neo"><span >Your Mining Rewards</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container accounts pt-3">
+    <div class="row">
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+          <div class="container">
+            <div class="row qlc-table-header">
+              <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-6 text-truncate">Miner Address</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Reward</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Info</div>
+              <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 d-none d-sm-block col-5 pr-4 text-right">Block heights</div>
+            </div>
+            <div class="row qlc-table-row qlc-table-row-twolines closed">
+              <div class="col-12 pb-0 text-center">
+                <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">You are not a miner yet</span><br>
+                  Stake 100k QLC and start mining.</p>
+              </div>
+            </div>            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-0">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="neo"><span >Mining Reward History</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-4">
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-voting">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Reward Amount</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">0,00 QGAS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-blocks">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Reward Blocks</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-blocks">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Last End Height</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-transactions">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Last Reward Time</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>     
+    </div>
+  </div>
+</div>
+
+<!-- LOOP ALL REWARDS-->
+
+<!-- NOT STARTED MINERS -->
+
+<div *ngFor="let miner of minerAccountsNotStarted" >
+  <div class="container mt-0">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="neo"><span >Your Mining Rewards</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container accounts pt-3">
+    <div class="row">
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+          <div class="container">
+            <div class="row qlc-table-header">
+              <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-6 text-truncate">Miner Address</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Reward</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Info</div>
+              <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 d-none d-sm-block col-5 pr-4 text-right">Block heights</div>
+            </div>
+            <div class="row qlc-table-row qlc-table-row-twolines closed">
+                <div class="col-12">
+                    <a [routerLink]="'/wallets/qlc/' + miner.id">{{ miner.id | squeeze : '25,25' }}</a>
+                </div>
+                <div class="col-12 pb-0 text-center">
+                    <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">You have enough staking to start mining</span><br>
+                      Learn more about how to set up your miner here:<br>
+                      <a href="https://docs.qlcchain.online/tutorial/getstarted/#pov-mining" target="_blank">https://docs.qlcchain.online/tutorial/getstarted/#pov-mining</a></p>
+                </div>
+            </div>            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-0">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="neo"><span >Mining Reward History</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-4">
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-voting">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Reward Amount</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">0,00 QGAS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-blocks">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Reward Blocks</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-blocks">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Last End Height</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-transactions">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Last Reward Time</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>     
+    </div>
+  </div>
+</div>
+
+
+<!-- NEW MINING REWARDS -->
+<div *ngFor="let miner of minerAccounts">
+
+    <div class="container mt-0">
+      <div class="row">
+        <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+          <div class="container">
+            <div class="row">
+              <!-- TITLE -->
+              <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+                <div class="content-title">
+                  <h1 class="neo"><span *ngIf="miner.minerRewards.status == 0">Checking for Mining Rewards...</span></h1>
+                  <h1 class="neo"><span *ngIf="miner.minerRewards.status == -1">Your Mining Rewards</span></h1>
+                  <h1 class="neo"><span *ngIf="miner.minerRewards.status == 1">Your Mining Rewards</span></h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container accounts pt-3">
+      <div class="row">
+        
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+            
+            
+            <div class="container">
+              
+              <div class="row qlc-table-header">
+                <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-6 text-truncate">Miner Address</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Reward</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Info</div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 d-none d-sm-block col-5 pr-4 text-right">Block heights</div>
+              </div>
+              
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngIf="miner.minerRewards.status == 1">
+
+                <div class="d-none d-xl-block col-xl-5 pb-0">
+                  <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '25,25' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ miner.minerRewards.data.lastEndHeight }} 
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-4 pb-0">
+                  <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '18,18' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ miner.minerRewards.data.lastEndHeight }} 
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-4 pb-0">
+                  <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '10,10' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ miner.minerRewards.data.lastEndHeight }} 
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-4 pb-0">
+                  <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '8,8' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ miner.minerRewards.data.lastEndHeight }} 
+                </div>
+                <div class="d-block d-sm-none col-6 pb-0">
+                  <a [routerLink]="'/wallets/qlc/' + miner.minerInfo.address">{{ miner.minerInfo.address | squeeze : '8,8' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ miner.minerRewards.data.lastEndHeight }} 
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+                  <span class="text-color-lightgrey text-tiny"> </span> <span class="text-color-green">+{{ miner.minerRewards.data.availRewardAmount | qlc : 8 }}</span> QGAS<br>
+                  <span class="text-color-lightgrey text-tiny">Reward Blocks:</span> {{ miner.minerRewards.data.availRewardBlocks }}<br>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right" >
+                  <span class="text-color-lightgrey text-tiny">Block Start Height:</span> {{ miner.minerRewards.data.availStartHeight }}<br>
+                  <span class="text-color-lightgrey text-tiny">Block End Height:</span> {{ miner.minerRewards.data.availEndHeight }}
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-5 pr-4 text-right">
+                  <span class="text-color-lightgrey text-tiny">Latest Block Height:</span> {{ miner.minerRewards.data.latestBlockHeight }} <br>
+                  <span class="text-color-lightgrey text-tiny">Latest Node Reward Height:</span> {{ miner.minerRewards.data.nodeRewardHeight }} 
+                </div>
+              
+              </div>
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngIf="miner.minerRewards.status == -1">
+                <div class="col-12 pb-0 text-center">
+                  <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">You have currently no Rewards</span><br>
+                    The Rewards of the recent 1440 POV blocks are reserved.</p>
+                </div>
+              </div>
+
+              <!-- REWARD CLAIMING -->
+              <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4" *ngIf="miner.minerRewards.showGetReward == 1">
+                <div class="w-100">
+                  <div class="row pt-1 pb-2" style="border-bottom: none !important;">
+                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 pl-4">
+                      Beneficial Address
+                    </div>
+                    <div class="col-md-9 text-left" [formGroup]="miningForm">
+                      <div class="form-group" >
+                        <select class="custom-select" formControlName="beneficial" >
+                          <option *ngFor="let account of accounts" [value]="account.id"
+                          >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }}</option>
+                        </select>
+                        <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;"></p>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">&nbsp;</div>
+                    <div class="col-lg-9 col-md-9 col-sm-12 col-12 pr-0 pl-md-2 pr-md-2">
+                      <button (click)="getReward(miner.account.id)" type="submit" class="btn btn-primary ml-2 mb-4" >
+                        GET REWARD
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="miner.minerRewards.showProcessingReward == 1">
+                
+                <p class="text-center pt-5"><span class="title-modal-blue mt-0 mb-4">Please wait</span><br>
+                  Processing your reward...</p>
+                
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3 mt-2 mb-5 pb-3">
+                      
+                      <div id="noTrespassingOuterBarG">
+                        <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="miner.minerRewards.showError == 1">
+                <div class="col-12">
+                  ERROR - {{ miner.minerRewards.errorTxt }}
+                </div>
+              </div>
+              <div class="row" *ngIf="miner.minerRewards.showBlockProcessed == 1">
+                <div class="col-12 mb-5 text-center">
+                    <p class="text-center pt-5"><span class="title-modal-blue mt-0 mb-4">Reward block processed</span><br>
+                      <span class="text-tiny text-color-lightgrey pt-3">Reward block hash</span><br>
+                      <a routerLink="/transaction/{{ miner.minerRewards.rewardProcessHash }}">{{ miner.minerRewards.rewardProcessHash }}</a></p>
+
+                    <!--Please go to your <a >account</a> to claim the reward.-->
+                    <button (click)="checkMiners()" type="submit" class="btn btn-primary mt-3 mr-2 ml-2" >
+                      CHECK FOR MORE REWARDS
+                    </button>
+                    <button routerLink="/wallets/qlc/{{ miner.account.id }}" type="submit" class="btn btn-primary mt-3 mr-2 ml-2" >
+                      CLAIM YOUR REWARDS
+                    </button>
+                </div>
+              </div>
+
+              
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- REWARDS HISTORY -->
+
+    <div class="container mt-0">
+      <div class="row">
+        <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+          <div class="container">
+            <div class="row">
+              <!-- TITLE -->
+              <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+                <div class="content-title">
+                  <h1 class="neo"><span *ngIf="miner.minerHistory.status == 0">Checking for Mining Reward History...</span></h1>
+                  <h1 class="neo"><span *ngIf="miner.minerHistory.status == -1">Mining Reward History</span></h1>
+                  <h1 class="neo"><span *ngIf="miner.minerHistory.status == 1">Mining Reward History</span></h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row pb-4">
+
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+          <div class="content-box-blue bg-blue-voting">
+            <div class="container">
+              <div class="row qlc-table-header-blue">
+                <div class="col-12">Reward Amount</div>
+              </div>
+              <div class="row qlc-table-row-blue">
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="miner.minerHistory.status == 1">{{ miner.minerHistory.data.rewardAmount | qlc : 8 | number: '1.2-2' }} QGAS</div>
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="miner.minerHistory.status == -1">0,00 QGAS</div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+          <div class="content-box-blue bg-blue-blocks">
+            <div class="container">
+              <div class="row qlc-table-header-blue">
+                <div class="col-12">Reward Blocks</div>
+              </div>
+              <div class="row qlc-table-row-blue">
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="miner.minerHistory.status == 1">{{ miner.minerHistory.data.rewardBlocks }}</div>
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="miner.minerHistory.status == -1">/</div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+          <div class="content-box-blue bg-blue-blocks">
+            <div class="container">
+              <div class="row qlc-table-header-blue">
+                <div class="col-12">Last End Height</div>
+              </div>
+              <div class="row qlc-table-row-blue">
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="miner.minerHistory.status == 1">{{ miner.minerHistory.data.lastEndHeight }}</div>
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="miner.minerHistory.status == -1">/</div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+          <div class="content-box-blue bg-blue-transactions">
+            <div class="container">
+              <div class="row qlc-table-header-blue">
+                <div class="col-12">Last Reward Time</div>
+              </div>
+              <div class="row qlc-table-row-blue">
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="miner.minerHistory.status == 1">{{ miner.minerHistory.data.lastRewardTime * 1000 | date: 'short' }}</div>
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="miner.minerHistory.status == -1">/</div>
+              </div>
+            </div>
+          </div>
+        </div>        
+    
+      </div>
+    </div>
+
+
+
+
+
+
+
+</div>

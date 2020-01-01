@@ -1,0 +1,382 @@
+<app-user-submenu *ngIf="wallet.isConfigured()"></app-user-submenu>
+
+<div class="container mt-0 qlc-content-first qlc-content-home" [ngClass]="{'qlc-after-submenu':wallet.isConfigured()}">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+      <div class="container">
+        <div class="row">
+          <!-- TITLE -->
+          <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+            <div class="content-title">
+              <h1>Representatives</h1>
+            </div>
+          </div>
+          <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2" *ngIf="wallet.isConfigured()">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 "  routerLink="/representation">
+              My Representatives
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-blocks">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Latest POV Height</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ repStats.latestBlockHeight | currency:'':'':'1.0-0' }} </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-miners">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Reps with rewards</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ repStats.repCount | currency:'':'':'1.0-0' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-signatures">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Total Period</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 text-truncate">{{ repStats.totalPeriod }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-transactions">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Total Qgas Reward Amount</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ repStats.totalRewardAmount | qlc: 8 | currency:'':'':'1.2-2' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loaded === true">
+<!-- REPRESENTATIVES -->
+<div *ngIf="onlineRepsWithRewards.length > 0 || offlineRepsWithRewards.length > 0">
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1><span>Rewarded Representatives</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container accounts pt-3">
+      <div class="row">
+        
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+            
+            
+            <div class="container">
+              
+              <div class="row qlc-table-header">
+                <div class="col-xl-5 col-lg-4 col-md-6 col-sm-4 col-4 text-truncate">Address</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 pl-4 text-right">Weight</div>
+                <div class="col-xl-1 col-lg-2 pr-lg-0 col-md-3 pr-md-4 col-sm-4 col-4 pr-sm-4 pr-4 text-right">Voting power</div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 d-lg-block order-md-5 col-md-1 d-md-none d-none col-sm-1 col-1 pl-4 text-right">Main Block</div>
+                <div class="col-xl-2 col-lg-2 order-lg-5 d-lg-block pl-lg-0 order-md-6 col-md-2 d-md-none d-none col-sm-2 col-2 pl-4 text-right">Reward</div>
+                <div class="col-xl-1 col-lg-1 order-lg-6 d-lg-block order-md-4 col-md-1 d-md-none d-none col-sm-1 col-1 text-right">Online</div>
+              </div>
+                  
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let rep of onlineRepsWithRewards">
+                <div class="d-none d-xl-block col-xl-5 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '25,25' }}</a>
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '18,18' }}</a>
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-6 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '18,18' }}</a>
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '12,12' }}</a>
+                </div>
+                <div class="d-block d-sm-none col-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '8,8' }}</a>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 pl-4 text-right order-lg-2">
+                  <span data-toggle="tooltip" data-placement="top" title="">{{ rep.total | qlc:8 | currency:'':'':'1.2-2' }}</span>
+                </div>
+                <div class="col-xl-1 col-lg-2 pr-lg-0 col-md-3 col-sm-4 col-4 pr-4 text-right order-lg-3" >
+                  {{ rep.votingPower }} %      
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 pr-lg-3 order-6 col-md-3 pr-4 col-sm-4 col-4 pl-4 text-right">
+                  <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Main block: &nbsp;</span>{{ rep.reward.mainBlockNum }}
+                </div>
+                <div class="col-xl-2 col-lg-2 pr-lg-2 order-lg-5 order-5 col-md-5 col-sm-5 col-5 pl-4 text-right">
+                  <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Reward: &nbsp;</span>{{ rep.reward.mainRewardAmount | qlc:8 | currency:'':'':'1.2-2' }} QGAS
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-6 pr-lg-3 text-lg-right pr-lg-0 order-4 col-md-4 text-md-left col-sm-3 col-3 text-left pr-4 pl-4">
+                  <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Online</span>
+                </div>
+              </div>
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let rep of offlineRepsWithRewards">
+                <div class="d-none d-xl-block col-xl-5 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '25,25' }}</a>
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '18,18' }}</a>
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-6 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '18,18' }}</a>
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '12,12' }}</a>
+                </div>
+                <div class="d-block d-sm-none col-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '8,8' }}</a>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 pl-4 text-right order-lg-2">
+                  <span data-toggle="tooltip" data-placement="top" title="">{{ rep.total | qlc:8 | currency:'':'':'1.2-2' }}</span>
+                </div>
+                <div class="col-xl-1 col-lg-2 pr-lg-0 col-md-3 col-sm-4 col-4 pr-4 text-right order-lg-3" >
+                  {{ rep.votingPower }} %      
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 pr-lg-3 order-6 col-md-3 pr-4 col-sm-4 col-4 pl-4 text-right">
+                  <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Main block: &nbsp;</span>{{ rep.reward.mainBlockNum }}
+                </div>
+                <div class="col-xl-2 col-lg-2 pr-lg-2 order-lg-5 order-5 col-md-5 col-sm-5 col-5 pl-4 text-right">
+                  <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Reward: &nbsp;</span>{{ rep.reward.mainRewardAmount | qlc:8 | currency:'':'':'1.2-2' }} QGAS
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-6 pr-lg-3 text-lg-right pr-lg-0 order-4 col-md-4 text-md-left col-sm-3 col-3 text-left pr-4 pl-4">
+                  <span class="qlc-icon icon-status-offline" data-toggle="tooltip" data-placement="top" title="" data-original-title="Offline"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Offline</span>
+                </div>
+              </div>
+            </div>
+    
+          </div>
+        </div>
+    
+      </div>
+    </div>
+</div>
+
+<!-- REPRESENTATIVES -->
+<div *ngIf="eligibleForRewards.length > 0">
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1><span>Representatives Eligible For Reward</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-3 mb-3">
+    <div class="row">
+      
+      <div class="col-12 pl-0 pr-0">
+
+
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+
+
+            <div class="container">
+
+              <div class="row qlc-table-header">
+                <div class="col-xl-5 col-lg-4 col-md-6 col-sm-4 col-4 text-truncate">Address</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 pl-4 text-right">Weight</div>
+                <div class="col-xl-1 col-lg-2 pr-lg-0 col-md-3 pr-md-4 col-sm-4 col-4 pr-sm-4 pr-4 text-right">Voting power</div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 d-lg-block order-md-5 col-md-1 d-md-none d-none col-sm-1 col-1 pl-4 text-right">Main Block</div>
+                <div class="col-xl-2 col-lg-2 order-lg-5 d-lg-block pl-lg-0 order-md-6 col-md-2 d-md-none d-none col-sm-2 col-2 pl-4 text-right">Reward</div>
+                <div class="col-xl-1 col-lg-1 order-lg-6 d-lg-block order-md-4 col-md-1 d-md-none d-none col-sm-1 col-1 text-right">Online</div>
+              </div>
+
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let rep of eligibleForRewards">
+                <div class="d-none d-xl-block col-xl-5 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '25,25' }}</a>
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '18,18' }}</a>
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-6 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '18,18' }}</a>
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '12,12' }}</a>
+                </div>
+                <div class="d-block d-sm-none col-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '8,8' }}</a>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 pl-4 text-right order-lg-2">
+                  <span data-toggle="tooltip" data-placement="top" title="">{{ rep.total | qlc:8 | currency:'':'':'1.2-2' }}</span>
+                </div>
+                <div class="col-xl-1 col-lg-2 pr-lg-0 col-md-3 col-sm-4 col-4 pr-4 text-right order-lg-3" >
+                  {{ rep.votingPower }} %      
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 pr-lg-3 order-6 col-md-3 pr-4 col-sm-4 col-4 pl-4 text-right">
+                  <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Main block: &nbsp;</span>N/A
+                </div>
+                <div class="col-xl-2 col-lg-2 pr-lg-2 order-lg-5 order-5 col-md-5 col-sm-5 col-5 pl-4 text-right">
+                  <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Reward: &nbsp;</span>N/A
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-6 pr-lg-3 text-lg-right pr-lg-0 order-4 col-md-4 text-md-left col-sm-3 col-3 text-left pr-4 pl-4">
+                  <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online" *ngIf="rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="rep.online">Offline</span>
+                  <span class="qlc-icon icon-status-offline" data-toggle="tooltip" data-placement="top" title="" data-original-title="Offline" *ngIf="!rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="!rep.online">Offline</span>
+                </div>
+                <div class="container transaction-details"></div>
+              </div>
+              
+                            
+
+            </div>
+
+
+          </div>
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="pages.length > 1">
+          <a class="btn btn-primary btn-blue btn-box" *ngIf="activePage != 1" (click)="goTo(activePage-1)">&lt;</a>
+          <a class="btn btn-primary btn-white btn-box" *ngFor="let page of pages" [ngClass]="{'active' : page == activePage}" (click)="goTo(page)">{{ page }}</a>
+          <a class="btn btn-primary btn-blue btn-box" *ngIf="activePage != allPages" (click)="goTo(activePage+1)">&gt;</a>
+        </div>
+                
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!-- REPRESENTATIVES -->
+<div *ngIf="representatives.length > 0">
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1><span>Other Representatives</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-3 mb-3">
+    <div class="row">
+      
+      <div class="col-12 pl-0 pr-0">
+
+
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+
+
+            <div class="container">
+
+              <div class="row qlc-table-header">
+                <div class="col-xl-5 col-lg-4 col-md-6 col-sm-4 col-4 text-truncate">Address</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 pl-4 text-right">Weight</div>
+                <div class="col-xl-1 col-lg-2 pr-lg-0 col-md-3 pr-md-4 col-sm-4 col-4 pr-sm-4 pr-4 text-right">Voting power</div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 d-lg-block order-md-5 col-md-1 d-md-none d-none col-sm-1 col-1 pl-4 text-right">Main Block</div>
+                <div class="col-xl-2 col-lg-2 order-lg-5 d-lg-block pl-lg-0 order-md-6 col-md-2 d-md-none d-none col-sm-2 col-2 pl-4 text-right">Reward</div>
+                <div class="col-xl-1 col-lg-1 order-lg-6 d-lg-block order-md-4 col-md-1 d-md-none d-none col-sm-1 col-1 text-right">Online</div>
+              </div>
+
+              <div class="row qlc-table-row closed" *ngFor="let rep of representatives">
+                <div class="d-none d-xl-block col-xl-5 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '25,25' }}</a>
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '18,18' }}</a>
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-6 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '18,18' }}</a>
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '12,12' }}</a>
+                </div>
+                <div class="d-block d-sm-none col-4 pl-4 order-lg-1">
+                  <a [routerLink]="'/account/' + rep.address">{{ rep.address | squeeze : '8,8' }}</a>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 pl-4 text-right order-lg-2">
+                  <span data-toggle="tooltip" data-placement="top" title="">{{ rep.total | qlc:8 | currency:'':'':'1.2-2' }}</span>
+                </div>
+                <div class="col-xl-1 col-lg-2 pr-lg-0 col-md-3 col-sm-4 col-4 pr-4 text-right order-lg-3" >
+                  {{ rep.votingPower }} %      
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-4 pr-lg-3 order-6 col-md-3 pr-4 col-sm-4 col-4 pl-4 text-right">
+                  <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Main block: &nbsp;</span>N/A
+                </div>
+                <div class="col-xl-2 col-lg-2 pr-lg-2 order-lg-5 order-5 col-md-5 col-sm-5 col-5 pl-4 text-right">
+                  <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Reward: &nbsp;</span>N/A
+                </div>
+                <div class="col-xl-1 col-lg-1 order-lg-6 pr-lg-3 text-lg-right pr-lg-0 order-4 col-md-4 text-md-left col-sm-3 col-3 text-left pr-4 pl-4">
+                  <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online" *ngIf="rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="rep.online">Offline</span>
+                  <span class="qlc-icon icon-status-offline" data-toggle="tooltip" data-placement="top" title="" data-original-title="Offline" *ngIf="!rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="!rep.online">Offline</span>
+                </div>
+                <div class="container transaction-details"></div>
+              </div>
+              
+                            
+
+            </div>
+
+
+          </div>
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="pages.length > 1">
+          <a class="btn btn-primary btn-blue btn-box" *ngIf="activePage != 1" (click)="goTo(activePage-1)">&lt;</a>
+          <a class="btn btn-primary btn-white btn-box" *ngFor="let page of pages" [ngClass]="{'active' : page == activePage}" (click)="goTo(page)">{{ page }}</a>
+          <a class="btn btn-primary btn-blue btn-box" *ngIf="activePage != allPages" (click)="goTo(activePage+1)">&gt;</a>
+        </div>
+                
+      </div>
+      
+    </div>
+  </div>
+</div>
+</div>
+<div class="container mt-4 mb-4">
+  <div class="row">
+  </div>
+</div>

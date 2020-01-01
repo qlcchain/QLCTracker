@@ -1,0 +1,75 @@
+<!-- NEWS TOP 4 -->
+<div class="container mt-4 mb-4 qlc-content-home">
+  <div class="row">
+
+    <!-- TITLE -->
+    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+      <div class="content-title">
+        <h1>News</h1>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2" *ngFor="let news of newsList">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 pt-4 pb-4 pl-4 pr-4">
+              <p class="date-mini">{{ news.date | date: 'MM/dd/yyyy' }}</p>
+              <a href="{{ news.link }}" target="_blank" class="link-blue"><h3 class="pb-4 link-blue">{{ news.title }}</h3></a>
+              <p>{{ news.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- NEWS ARCHIVE (NEXT 20) -->
+<div class="container mt-0 mb-3">
+    <div class="row">
+      
+      <div class="col-12 pl-0 pr-0">
+
+        <!-- TITLE -->
+        <div class="col-lg-12 mb-0 pb-2 mt-2 pl-md-2 pr-md-2">
+          <div class="content-title">
+            <h1>Archive</h1>
+          </div>
+        </div>
+  
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+  
+  
+            <div class="container">
+  
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let news of archiveList">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-3 pl-4 pb-0">
+                  {{ news.date | date: 'MM/dd/yyyy' }}
+                </div>
+                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-9 col-9 pb-0 text-truncate">
+                  <a href="{{ news.link }}" target="_blank" class="text-blue">{{ news.title }}</a>
+                </div>
+              </div>
+  
+  
+            </div>
+  
+  
+          </div>
+        </div>
+  
+        <!-- BUTTON -->
+        <!--
+        <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center">
+          <a routerLink="/news" class="btn btn-primary btn-blue">ALL NEWS</a>
+        </div>
+        -->
+      
+      </div>
+      
+    </div>
+  </div>
