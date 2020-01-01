@@ -9,6 +9,7 @@ import { HomeComponent } from './components/home/home.component';
 
 import { ClipboardModule } from 'ngx-clipboard';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -19,7 +20,7 @@ import { NavComponent } from './components/nav/nav.component';
 import { HeaderComponent } from './components/header/header.component';
 import { TransactionsComponent } from './components/transactions/transactions.component';
 import { AccountsComponent } from './components/accounts/accounts.component';
-import { RepresentativesComponent } from './components/representatives/representatives.component';
+import { RepresentativesComponent } from './components/qlc/representation/representatives/representatives.component';
 import { TokensComponent } from './components/tokens/tokens.component';
 import { AccountComponent } from './components/account/account.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
@@ -44,20 +45,39 @@ import { SendComponent } from './components/send/send.component';
 import { FiatPipe } from './pipes/fiat.pipe';
 import { SearchComponent } from './components/search/search.component';
 import { SettingsComponent } from './components/settings/settings.component';
-import { MyrepresentativesComponent } from './components/myrepresentatives/myrepresentatives.component';
+import { MyrepresentativesComponent } from './components/qlc/representation/myrepresentatives/myrepresentatives.component';
 import { SqueezePipe } from './pipes/squeeze.pipe';
-import { ManageRepresentativesComponent } from './components/manage-representatives/manage-representatives.component';
+import { ManageRepresentativesComponent } from './components/qlc/representation/manage-representatives/manage-representatives.component';
 import { ImportAddressBookComponent } from './components/import-address-book/import-address-book.component';
-import { NeoImportComponent } from './components/neo-import/neo-import.component';
-import { NeoCreateComponent } from './components/neo-create/neo-create.component';
-import { MyneowalletComponent } from './components/myneowallet/myneowallet.component';
-import { SendneoComponent } from './components/sendneo/sendneo.component';
+import { NeoImportComponent } from './components/neo/neo-import/neo-import.component';
+import { NeoCreateComponent } from './components/neo/neo-create/neo-create.component';
+import { MyneowalletComponent } from './components/neo/myneowallet/myneowallet.component';
+import { SendneoComponent } from './components/neo/sendneo/sendneo.component';
 import { StakingCreateComponent } from './components/staking-create/staking-create.component';
 import { MystakingsComponent } from './components/mystakings/mystakings.component';
 import { StakingRevokeComponent } from './components/staking-revoke/staking-revoke.component';
 import { AmountValidatorDirective } from './directives/amount-validator.directive';
 import { ModalUnlockComponent } from './components/modal-unlock/modal-unlock.component';
 import { DesktopComponent } from './components/desktop/desktop.component';
+import { NeoSettingsComponent } from './components/neo/neo-settings/neo-settings.component';
+import { ChainxCreateComponent } from './components/chainx/chainx-create/chainx-create.component';
+import { ChainxStakingComponent } from './components/chainx/chainx-staking/chainx-staking.component';
+import { ChainxAccountComponent } from './components/chainx/chainx-account/chainx-account.component';
+import { ChainxSendComponent } from './components/chainx/chainx-send/chainx-send.component';
+import { MiningComponent } from './components/qlc/mining/mining/mining.component';
+import { PovViewComponent } from './components/pov-view/pov-view.component';
+import { PovExplorerComponent } from './components/pov-explorer/pov-explorer.component';
+import { NewsComponent } from './components/news/news.component';
+import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
+
+import { ChartjsModule } from '@ctrl/ngx-chartjs';
+import { NoCommaPipe } from './pipes/no-comma.pipe';
+import { CanActivateRouteGuard } from './app-routing.guard';
+import { RepresentationRewardComponent } from './components/qlc/representation/representation-reward/representation-reward.component';
+import { MiningRewardComponent } from './components/qlc/mining/mining-reward/mining-reward.component';
+import { UserSubmenuComponent } from './components/user-dashboard/user-submenu/user-submenu.component';
+import { StakingDashboardComponent } from './components/staking-dashboard/staking-dashboard.component';
+import { SqueezeNumberPipe } from './pipes/squeeze-number.pipe';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -101,7 +121,23 @@ export function createTranslateLoader(http: HttpClient) {
     StakingRevokeComponent,
     AmountValidatorDirective,
     ModalUnlockComponent,
-    DesktopComponent
+    DesktopComponent,
+    NeoSettingsComponent,
+    ChainxCreateComponent,
+    ChainxStakingComponent,
+    ChainxAccountComponent,
+    ChainxSendComponent,
+    MiningComponent,
+    PovViewComponent,
+    PovExplorerComponent,
+    NewsComponent,
+    UserDashboardComponent,
+    NoCommaPipe,
+    RepresentationRewardComponent,
+    MiningRewardComponent,
+    UserSubmenuComponent,
+    StakingDashboardComponent,
+    SqueezeNumberPipe
   ],
   imports: [
     BrowserModule,
@@ -110,10 +146,12 @@ export function createTranslateLoader(http: HttpClient) {
     FormsModule,
     ReactiveFormsModule,
     ClipboardModule,
+    ChartjsModule,
 		TooltipModule.forRoot(),
 		BsDropdownModule.forRoot(),
 		CollapseModule.forRoot(),
 		ModalModule.forRoot(),
+    PopoverModule.forRoot(),
     AlertModule.forRoot(),
     CarouselModule.forRoot(),
     ProgressbarModule.forRoot(),
@@ -136,7 +174,8 @@ export function createTranslateLoader(http: HttpClient) {
     provide: HTTP_INTERCEPTORS,
     useClass: HttpErrorInterceptor,
     multi: true
-  }
+    },
+    CanActivateRouteGuard
 ],
   bootstrap: [AppComponent],
   entryComponents: [

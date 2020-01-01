@@ -1,289 +1,327 @@
-<!-- QLC WALLETS -->
-<div class="container mt-0 qlc-content-first">
-    <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
-        <div class="col-12 pl-0 pr-0">
-            <div class="container">
-                    <div class="row">
-                        <!-- TITLE -->
-                        <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
-                            <div class="content-title">
-								<h1 style="display:inline-block;">My Wallets</h1>
-								<span style="width:16px;height:16px;background:#2069c2;display:inline-block;margin-left:26px;margin-right:8px;"></span><span style="padding-bottom:4px;">QLC-Chain Wallets</span>
-								<span style="width:16px;height:16px;background:#8BC34A;display:inline-block;margin-left:16px;margin-right:8px;"></span> NEP-5 Wallets
-                            </div>
-						</div>
-						<div class="col-md-3 col-12 pl-md-2 pr-md-0 pl-3 pr-3 pb-3">
-							<button (click)="loadBalances()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100">
-							  REFRESH
-							</button>
-						</div>
-                        <div class="col-md-3 col-12 pl-2 pr-2 pb-md-2 pb-3">
-							<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/mystakings" *ngIf="accounts.length">
-								MY STAKINGS
-							</button>
-						</div>
-                    </div>
-                </div>
+<app-user-submenu></app-user-submenu>
+
+<!-- WALLETS -->
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+  <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
+    <div class="col-12 pl-0 pr-0">
+      <div class="container">
+        <div class="row">
+          <!-- TITLE -->
+          <div class="col-lg-6 col-md-7 col-12 mt-2 pl-2 pr-2">
+            <div class="content-title">
+              <h1 style="display:inline-block;">My Wallets</h1>
+              <span style="width:16px;height:16px;background:#2069c2;margin-left:26px;margin-right:8px;" class="d-none d-sm-inline-block"></span>
+              <span style="width:16px;height:16px;background:#2069c2;margin-left:16px;margin-right:8px;" class="d-inline-block d-sm-none"></span>
+              <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">QLC<span class="d-none d-sm-inline d-md-none d-lg-inline"> Chain</span></span> 
+              <span style="width:16px;height:16px;background:#8BC34A;display:inline-block;margin-left:16px;margin-right:8px;"></span>
+              <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">NEO<span class="d-none d-sm-inline d-md-none d-lg-inline">/NEP-5</span></span> 
+              <span style="width:16px;height:16px;background:#caa847;display:inline-block;margin-left:16px;margin-right:8px;"></span>
+              <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">ChainX</span>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-2 col-12 pl-md-3 pr-md-0 pl-3 pr-3 pb-3">
+            <!--<button (click)="loadBalances()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100">
+              
+            </button>-->
+          </div>
+          <div class="col-md-3 col-12 pl-2 pr-2 pb-md-2 pb-3">
+            <button (click)="loadBalances()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0">
+              REFRESH
+            </button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-
-
 <div class="container accounts pb-5 mb-5">
-	
-	<div *ngIf="!accounts.length" class="row defaultTable content">
-		<div class="col-12 text-center">
-			{{ 'NO_WALLET_CONFIGURED' | translate
-		}}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
-	</div>
+  <div *ngIf="!accounts.length" class="row defaultTable content">
+    <div class="col-12 text-center">
+      {{ 'NO_WALLET_CONFIGURED' | translate    }}<a routerLink="/createwallet">{{ 'NO_WALLET_CONFIGURED_CLICK' | translate }}</a>
+    </div>
+  </div>
+  <div class="row pl-md-0 pr-md-0 pl-sm-2 pl-0 pr-0">
+    <!-- ADDRESS -->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let account of accounts">
+      <div class="content-box-blue h-auto pb-3">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Address <span *ngIf="account.addressBookName" class="force-wrap">({{ account.addressBookName }})</span></div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer">
+            <div class="col-12 text-break pr-3"
+              [routerLink]="'/wallets/qlc/' + account.id"
+              tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}"
+            >{{ account.id }}</div>
+          </div>
+        </div>
+      </div>
+      <!-- BALANCES -->
+      <div class="content-box-white h-auto mt-2 pb-2">
+        <div class="container">
+          <div class="row qlc-table-header-white">
+            <div class="col-12">Balances</div>
+          </div>
+        </div>
+        <!-- QLC -->
+        <div class="container">
+          <div class="row">
+            <div class="col-3 mt-3">
+              <img src="assets/img/token-qlc.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QLC']">{{ account.balances['QLC'].balance | qlc:8 | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} QLC</div>
+                <div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QLC'])">NaN QLC</div>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- QGAS -->
+        <div class="container pb-0 mb-0">
+          <div class="row pb-0 mb-0">
+            <div class="col-3 mt-3">
+              <img src="assets/img/token-qgas.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QGAS']">{{ account.balances['QGAS'].balance | qlc:8 | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} QGAS</div>
+                <div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QGAS'])">NaN QGAS</div>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- OTHERS -->
+        <div class="container" *ngIf="account.otherTokens.length > 0">
+          <div class="row mt-0 pt-0">
+            <div class="col-12 mt-0 pl-0 pr-0 ml-0 mr-0">
+              <div class="container pt-0 mt-0">
+                <div class="row qlc-table-header-white pt-0 mt-0">
+                  <div class="col-12 pt-0 mt-0">Other token Balances ({{ account.otherTokens.length }})</div>
+                </div>
+              </div>
+              <div class="container">
+                <div class="row">
+                  <carousel [interval]="3000" class="w-100">
+                    <slide *ngFor="let token of account.otherTokens">
+                      <div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
+                        <div class="col-3 pr-3 pt-1">
+                          <img src="assets/img/token-none.png" class="w-100 icon-token" style="padding-right:2px;">
+                        </div>
+                        <div class="col-9 pr-0 pl-0 mb-2 pb-0">
+                          <div class="row qlc-table-row-white row-text-mid mt-0 pb-1">
+                            <div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">{{ token.tokenInfo.tokenSymbol }} ({{ token.tokenInfo.tokenName }})</span></div>
+                            <div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">{{ token.balance | qlc: token.tokenInfo.decimals | squeezeNumber: '8,2' | currency:'':'':'1.0-'+token.tokenInfo.decimals}}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </slide>
+                  </carousel>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- OTHERS EMPTY -->
+        <div class="container" *ngIf="account.otherTokens.length == 0">
+          <div class="row mt-0 pt-0">
+            <div class="col-12 mt-0 pl-0 pr-0 ml-0 mr-0">
+              <div class="container pt-0 mt-0">
+                <div class="row qlc-table-header-white pt-0 mt-0">
+                  <div class="col-12 pt-0 mt-0">Other token Balances (0)</div>
+                </div>
+              </div>
+              <div class="container" style="padding-bottom:1px !important;">
+                <div class="row pt-1">
+                  <div class="col-3 mt-3">
+                    <img src="assets/img/token-none.png" class="w-100 icon-token">
+                  </div>
+                  <div class="col-9 pr-0 pl-0">
+                    <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                      <div class="col-12 pb-0">NaN</div>
+                    </div>
+                    <div class="row qlc-table-row-white sub-page pt-0 pb-2 mb-2">
+                      <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container mt-2">
+        <div class="row">
+          <div class="col-12 pl-0 pr-0">
+            <button [routerLink]="'/wallets/qlc/' + account.id" type="submit" class="btn btn-primary w-100 pl-2 pr-2"><span class="superlight">({{ account.pendingCount }} Pending)</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- // END ADDRESS -->
+    <!-- NEW WALLET BUTTON -->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0  pl-md-0 pr-md-0 pl-sm-2 pl-3 pr-3">
+      <button type="submit" class="btn btn-primary button-newaccount" (click)="createAccount()" *ngIf="accounts.length">
+        {{ 'ACCOUNTS.title_button_wallet' | translate }}
+      </button>
+      <button type="submit" class="btn btn-primary button-newstaking mt-2 w-100 pl-0 pr-0" routerLink="/staking/qlc" *ngIf="accounts.length">
+        MY QLC STAKINGS
+      </button>
+    </div>
+    <!-- // END NEW WALLET BUTTON -->
+    <!-- NEO START -->
+    <!-- ADDRESS -->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let neowallet of neowallets">
+      <div class="content-box-blue h-auto pb-3 neo-background-light" style="min-height: 172px;">
+        <div class="container">
+          <div class="row qlc-table-header-blue neo-background-light">
+            <div class="col-12 white">Address <span *ngIf="neowallet.addressBookName" class="force-wrap">({{ neowallet.addressBookName }})</span></div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer neo-background-light">
+            <div class="col-12 text-break pr-3"
+              [routerLink]="'/wallets/neo/' + neowallet.id"
+              tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}"
+            >{{ neowallet.id }}</div>
+          </div>
+        </div>
+      </div>
+      <!-- BALANCES -->
+      <div class="content-box-white h-auto mt-2 pb-2">
+        <div class="container">
+          <div class="row qlc-table-header-white">
+            <div class="col-12">Balances</div>
+          </div>
+        </div>
+        <!-- NEO -->
+        <div class="container">
+          <div class="row">
+            <div class="col-3 mt-3">
+              <img src="assets/img/token-neo.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} NEO</div>
+                <div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash])">NaN NEO</div>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- NEO GAS -->
+        <div class="container">
+          <div class="row">
+            <div class="col-3 mt-3">
+              <img src="assets/img/token-gas.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} GAS</div>
+                <div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash])">NaN GAS</div>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- NEO QLC -->
+        <div class="container">
+          <div class="row">
+            <div class="col-3 mt-3">
+              <img src="assets/img/token-qlc.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} QLC</div>
+                <div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash])">NaN QLC</div>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- // END ADDRESS -->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0 pl-3 pr-3">
+      <button type="submit" class="btn btn-primary button-newaccount neo-background" [routerLink]="'/wallets/neo/create'">
+        Add New NEO Wallet
+      </button>
+    </div>
+    <!-- NEO END -->
+    <!-- ChainX START -->
+    <!-- ADDRESS -->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let chainxAccount of chainxAccounts">
+      <div class="content-box-blue h-auto pb-3 chainx-background-light" style="min-height: 172px;">
+        <div class="container">
+          <div class="row qlc-table-header-blue chainx-background-light">
+            <div class="col-12 white">Address <span *ngIf="chainxAccount.addressBookName" class="force-wrap">({{ chainxAccount.addressBookName }})</span></div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer chainx-background-light">
+            <div class="col-12 text-break pr-3"
+              [routerLink]="'/wallets/chainx/account/' + chainxAccount.id"
+              tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}"
+            >{{ chainxAccount.id }}</div>
+          </div>
+        </div>
+      </div>
+      <!-- BALANCES -->
+      <div class="content-box-white h-auto mt-2 pb-2" style="min-height: 172px;">
+        <div class="container">
+          <div class="row qlc-table-header-white">
+            <div class="col-12">Balances</div>
+          </div>
+        </div>
+        <!-- PCX -->
+        <div class="container">
+          <div class="row">
+            <div class="col-3 mt-3">
+              <img src="assets/img/token-pcx.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <ng-container *ngIf="!loading; else showLoadingTemplate">
+                  <div class="col-12 pb-0" *ngIf="chainxAccount.balances != null; else nanTemplate">{{ (chainxAccount.balances.Free / chainxAccountService.divisor) | currency:'':'':'1.2-8' }} PCX</div>
+                </ng-container>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- // END ADDRESS -->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0 pl-3 pr-3">
+      <button type="submit" class="btn btn-primary button-newaccount chainx-background" [routerLink]="'/wallets/chainx/account/create'">
+        Add New ChainX Account
+      </button>
+      <button type="submit" class="btn btn-primary button-newstaking chainx-background mt-2 w-100 pl-0 pr-0" routerLink="/staking/chainx" *ngIf="chainxAccounts.length > 0" style="min-height: 172px;">
+        MY CHAINX STAKINGS
+      </button>
+    </div>
+    <!-- ChainX END -->
+  </div>
 </div>
-<div class="row pl-md-0 pr-md-0 pl-sm-2 pl-0 pr-0">
-	
-	<!-- ADDRESS -->
-	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let account of accounts" >
-		<div class="content-box-blue h-auto pb-3">
-			<div class="container">
-				
-				<div class="row qlc-table-header-blue">
-					<div class="col-12">Address <span *ngIf="account.addressBookName" class="force-wrap">({{ account.addressBookName }})</span></div>
-				</div>
-				<div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer">
-					<div class="col-12 text-break pr-3" 
-					[routerLink]="'/myaccount/' + account.id"
-					tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}"
-					>{{ account.id }}</div>
-				</div>
-				
-			</div>
-		</div>
-		<!-- BALANCES -->
-		<div class="content-box-white h-auto mt-2 pb-2">
-			<div class="container">
-				<div class="row qlc-table-header-white">
-					<div class="col-12">Balances</div>
-				</div>
-			</div>
-			<!-- QLC -->
-			<div class="container">
-				<div class="row">
-					<div class="col-3 mt-3">
-						<img src="assets/img/token-qlc.png" class="w-100 icon-token">
-					</div>
-					<div class="col-9 pr-0 pl-0">
-						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QLC']">{{ account.balances['QLC'].balance | qlc:8 | currency:'':'':'1.2-8' }} QLC</div>
-							<div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QLC'])">NaN QLC</div>
-						</div>
-						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- QGAS -->
-			<div class="container pb-0 mb-0">
-				<div class="row pb-0 mb-0">
-					<div class="col-3 mt-3">
-						<img src="assets/img/token-qgas.png" class="w-100 icon-token">
-					</div>
-					<div class="col-9 pr-0 pl-0">
-						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="account.balances != null && account.balances['QGAS']">{{ account.balances['QGAS'].balance | qlc:8 | currency:'':'':'1.2-8' }} QGAS</div>
-							<div class="col-12 pb-0" *ngIf="account.balances == null || (account.balances != null && !account.balances['QGAS'])">NaN QGAS</div>
-						</div>
-						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- OTHERS -->
-			<div class="container" *ngIf="account.otherTokens.length > 0">
-				<div class="row mt-0 pt-0">
-					<div class="col-12 mt-0 pl-0 pr-0 ml-0 mr-0">
-						
-
-							<div class="container pt-0 mt-0">
-								<div class="row qlc-table-header-white pt-0 mt-0">
-									<div class="col-12 pt-0 mt-0">Other token Balances ({{ account.otherTokens.length }})</div>
-								</div>
-							</div>
-							<div class="container">
-								<div class="row">
-
-										<carousel [interval]="3000" class="w-100">
-											
-											<slide *ngFor="let token of account.otherTokens">
-												<div class="row pt-3 pl-3 pr-3 mb-2 pb-1">
-													<div class="col-3 pr-3 pt-1">
-														<img src="assets/img/token-none.png" class="w-100 icon-token" style="padding-right:2px;">
-													</div>
-													<div class="col-9 pr-0 pl-0 mb-2 pb-0">
-														<div class="row qlc-table-row-white row-text-mid mt-0 pb-1">
-															<div class="col-12 pb-0 mb-0"><span style="color: #a8a6ae;font-size: 12px;text-transform: uppercase;font-weight: 700; line-height:14px;">{{ token.tokenInfo.tokenSymbol }} ({{ token.tokenInfo.tokenName }})</span></div>
-															<div class="col-12 pb-0 pt-0 mt-0" style="color: #595757;font-size: 14px;text-transform: uppercase;font-weight: 700; line-height:16px;">{{ token.balance | qlc: token.tokenInfo.decimals | currency:'':'':'1.0-'+token.tokenInfo.decimals}}</div>
-														</div>
-													</div>
-												</div>
-											</slide>
-											
-										</carousel>
-
-								</div>
-							</div>
-
-
-					</div>
-				</div>
-			</div>
-
-			<!-- OTHERS EMPTY -->
-			<div class="container" *ngIf="account.otherTokens.length == 0">
-				<div class="row mt-0 pt-0">
-					<div class="col-12 mt-0 pl-0 pr-0 ml-0 mr-0">
-						
-
-							<div class="container pt-0 mt-0">
-								<div class="row qlc-table-header-white pt-0 mt-0">
-									<div class="col-12 pt-0 mt-0">Other token Balances (0)</div>
-								</div>
-							</div>
-							<div class="container" style="padding-bottom:1px !important;">
-								<div class="row pt-1">
-
-										<div class="col-3 mt-3">
-											<img src="assets/img/token-none.png" class="w-100 icon-token">
-										</div>
-										<div class="col-9 pr-0 pl-0">
-											<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-												<div class="col-12 pb-0">NaN</div>
-											</div>
-											<div class="row qlc-table-row-white sub-page pt-0 pb-2 mb-2">
-												<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
-											</div>
-										</div>
-
-								</div>
-							</div>
-
-
-					</div>
-				</div>
-			</div>
-
-
-		</div>
-		
-		<div class="container mt-2">
-			<div class="row">
-				<div class="col-12 pl-0 pr-0">
-					<button [routerLink]="'/myaccount/' + account.id" type="submit" class="btn btn-primary w-100 pl-2 pr-2"><span class="superlight">({{ account.pendingCount }} Pending)</span></button>
-				</div>
-			</div>
-		</div>
-		
-	</div>
-	<!-- // END ADDRESS -->
-	
-	
-	<!-- NEW WALLET BUTTON -->
-	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0  pl-md-0 pr-md-0 pl-sm-2 pl-3 pr-3">
-		<button type="submit" class="btn btn-primary button-newaccount" (click)="createAccount()" *ngIf="accounts.length">
-			{{ 'ACCOUNTS.title_button_wallet' | translate }}
-		</button>
-	</div>
-	<!-- // END NEW WALLET BUTTON -->
-	
-
-
-	<!-- ADDRESS -->
-	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let neowallet of neowallets" >
-		<div class="content-box-blue h-auto pb-3 neo-background-light" style="min-height: 172px;">
-			<div class="container">
-				
-				<div class="row qlc-table-header-blue neo-background-light">
-					<div class="col-12 white">Address <span *ngIf="neowallet.addressBookName" class="force-wrap">({{ neowallet.addressBookName }})</span></div>
-				</div>
-				<div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer neo-background-light">
-					<div class="col-12 text-break pr-3" 
-					[routerLink]="'/myneowallet/' + neowallet.id"
-					tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}"
-					>{{ neowallet.id }}</div>
-				</div>
-				
-			</div>
-		</div>
-		<!-- BALANCES -->
-		<div class="content-box-white h-auto mt-2 pb-2">
-			<div class="container">
-				<div class="row qlc-table-header-white">
-					<div class="col-12">Balances</div>
-				</div>
-			</div>
-			<!-- QLC -->
-			<div class="container">
-				<div class="row">
-					<div class="col-3 mt-3">
-						<img src="assets/img/token-neo.png" class="w-100 icon-token">
-					</div>
-					<div class="col-9 pr-0 pl-0">
-						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} NEO</div>
-							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['NEO'].networks['1'].hash])">NaN NEO</div>
-						</div>
-						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- QSMS -->
-			<div class="container">
-				<div class="row">
-					<div class="col-3 mt-3">
-						<img src="assets/img/token-gas.png" class="w-100 icon-token">
-					</div>
-					<div class="col-9 pr-0 pl-0">
-						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} GAS</div>
-							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['GAS'].networks['1'].hash])">NaN GAS</div>
-						</div>
-						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- QGAS -->
-			<div class="container">
-				<div class="row">
-					<div class="col-3 mt-3">
-						<img src="assets/img/token-qlc.png" class="w-100 icon-token">
-					</div>
-					<div class="col-9 pr-0 pl-0">
-						<div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-							<div class="col-12 pb-0" *ngIf="neowallet.balances != null && neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash]">{{ neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash].amount | currency:'':'':'1.2-8' }} QLC</div>
-							<div class="col-12 pb-0" *ngIf="neowallet.balances == null || (neowallet.balances != null && !neowallet.balances[neoService.tokenList['QLC'].networks['1'].hash])">NaN QLC</div>
-						</div>
-						<div class="row qlc-table-row-white sub-page pt-0">
-							<div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-	</div>
-	<!-- // END ADDRESS -->
-	
-	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0 pl-3 pr-3">
-		<button type="submit" class="btn btn-primary button-newaccount neo-background" [routerLink]="'/create-neo-wallet/'">
-			Add New NEO Wallet
-		</button>
-	</div>
-</div>
-
-</div>
+<ng-template #nanTemplate>
+  <div class="col-12 pb-0">NaN</div>
+</ng-template>
+<ng-template #showLoadingTemplate>
+  <div class="col-12 pb-0">
+    <!--<div class="lds-dual-ring"></div>-->
+    <img src="assets/img/preloaders/preloader-black-38px.svg" style="margin-top:-2px;width:24px;height:auto;opacity:0.65;">
+  </div>
+</ng-template>
 
 
 

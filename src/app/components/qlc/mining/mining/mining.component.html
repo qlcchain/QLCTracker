@@ -1,0 +1,170 @@
+<app-user-submenu></app-user-submenu>
+
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+      <div class="container">
+        <div class="row">
+          <!-- TITLE -->
+          <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
+            <div class="content-title">
+              <h1 class="neo">Mining Status</h1>
+            </div>
+          </div>
+          <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-2 pr-2">
+            <!--<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background-light" routerLink="/dashboard">
+              Back to Dashboard
+            </button>-->
+          </div>
+          <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 " routerLink="/mining/reward">
+              Check My Miners Rewards
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-blocks">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Latest POV Height</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ povHeadersCount | currency:'':'':'1.0-0' }} </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-miners">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Number of miners</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ minersNum | currency:'':'':'1.0-0' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-signatures">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Difficulty</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 text-truncate">{{ prepareDifficulty(povLatestHeader.normDifficulty) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-transactions">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Total mined Qgas Amount</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ totalQgasMined | qlc: 8 | currency:'':'':'1.2-2' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container pl-2 pr-2 mt-3">
+    <div class="row">
+        <div class="col-md-12 col-12 mb-0 mt-2 pl-3 pr-3 pb-2">
+          <div class="content-box-white pl-4 pr-4 pt-4 pb-4 ml-2 mr-2 ml-md-0 mr-md-0">
+    
+              <p class="pt-1"><span class="title-modal-blue mt-0 mb-4">Miner Reward Rules:</span></p>
+              <p></p>
+                
+              <ul style="margin-left:-24px;">
+                <li>Active your QLC Chain account.</li>
+                <li>Got 100K staked voting power.</li>
+                <li>Run a QLC Chain node and Mining service. Recommended Mining Configuration: CPU/GPU/ASIC miner together with gqlc-stratum.</li>
+              </ul>
+            
+              
+          </div>
+        </div>
+    </div>
+</div>
+<div class="container pl-2 pr-2 mt-3">
+  <div class="content-box-white">
+    <div class="container">
+      
+      
+      <div class="row qlc-table-header">
+        <div class="col-xl-2 col-lg-2 col-md-1 col-sm-2 col-2 pl-4">Status</div>
+        <div class="col-xl-3 col-lg-2 col-md-3 col-sm-6 col-6 text-truncate">Miner Address</div>
+        <div class="col-xl-1 col-lg-1 pr-sm-0 pr-4 d-none d-lg-block text-center">Main Block</div>
+        <div class="col-xl-1 col-lg-1 pr-sm-0 pr-4 d-none d-lg-block text-center">Reward</div>
+        <div class="col-xl-2 col-lg-2 pr-lg-0 col-md-4 pr-md-5 col-sm-4 col-4 pr-md-0 pr-4 text-right">Blocks height</div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 d-none d-md-block col-5 pr-4 text-right">Time</div>
+      </div>
+      
+      <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let miner of minerStats">
+        <div class="col-xl-2 col-lg-2 col-md-1 col-sm-2 col-2 pl-4 pb-0">
+          <span class="qlc-icon icon-Online24h-{{ miner.isDayOnline }}" style="height:24px;" title="24 Hours Online: {{ miner.isDayOnline }}"></span>
+          <span class="d-none d-sm-none d-lg-inline-block txState">
+            <span class="text-bold-grey">24h Online</span>
+          </span>
+          <br>
+          <span class="qlc-icon icon-Online1h-{{ miner.isHourOnline }}" style="height:24px;" title="Last Hour Online: {{ miner.isHourOnline }}"></span>
+          <span class="d-none d-sm-none d-lg-inline-block txState">
+            <span class="text-bold-grey">1h Online</span>
+          </span>
+        </div>
+        <div class="d-none d-xl-block col-xl-3 pb-0">
+          <a [routerLink]="'/account/' + miner.address">{{ miner.address | squeeze : '20,20' }}</a>
+        </div>
+        <div class="d-none d-lg-block d-xl-none col-lg-2 pb-0">
+          <a [routerLink]="'/account/' + miner.address">{{ miner.address | squeeze : '10,10' }}</a>
+        </div>
+        <div class="d-none d-md-block d-lg-none col-md-3 pb-0">
+          <a [routerLink]="'/account/' + miner.address">{{ miner.address | squeeze : '10,10' }}</a><br>
+          <span class="text-color-lightgrey text-tiny">Main Block: </span>{{ miner.mainBlockNum }}<br>
+          <span class="text-color-lightgrey text-tiny">Reward: </span>{{ miner.mainRewardAmount | qlc: '8' | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} QGAS
+        </div>
+        <div class="d-none d-sm-block d-md-none col-sm-6 pb-0">
+          <a [routerLink]="'/account/' + miner.address">{{ miner.address | squeeze : '16,16' }}</a><br>
+          <span class="text-color-lightgrey text-tiny">Main Block: </span>{{ miner.mainBlockNum }}<br>
+          <span class="text-color-lightgrey text-tiny">Reward: </span>{{ miner.mainRewardAmount | qlc: '8' | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} QGAS
+        </div>
+        <div class="d-block d-sm-none col-5 pb-0">
+          <a [routerLink]="'/account/' + miner.address">{{ miner.address | squeeze : '8,8' }}</a><br>
+          <span class="text-color-lightgrey text-tiny">Main Block: </span>{{ miner.mainBlockNum }}<br>
+          <span class="text-color-lightgrey text-tiny">Reward: </span>{{ miner.mainRewardAmount | qlc: '8' | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} QGAS
+        </div>
+        <div class="col-xl-1 col-lg-1 d-none d-lg-block pr-sm-0 pr-4 text-center">
+            {{ miner.mainBlockNum }}
+        </div>
+        <div class="col-xl-1 col-lg-1 d-none d-lg-block pr-sm-0 pr-4 text-center">
+          {{ miner.mainRewardAmount | qlc: '8' | squeezeNumber: '8,2' | currency:'':'':'1.2-8' }} <br>QGAS
+        </div>
+        <div class="col-xl-2 col-lg-2 pr-lg-0 col-md-4 pr-md-5 col-sm-4 col-5 pb-0 pr-md-0 pr-4 text-right" >
+          <span class="text-color-lightgrey text-tiny">First Block Height:</span> {{ miner.firstBlockHeight }}
+          <br>
+          <span class="text-color-lightgrey text-tiny">Last Block Height:</span> {{ miner.lastBlockHeight }}               
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12 pr-4 text-right pl-0">
+          <span class="text-color-lightgrey text-tiny">First Block Time:</span> {{ miner.firstBlockTime | date: 'short' }}
+          <br>
+          <span class="text-color-lightgrey text-tiny">Last Block Time:</span> {{ miner.lastBlockTime | date: 'short' }}
+        </div>
+      </div>
+    </div>
+    
+    
+  </div>
+</div>
+

@@ -1,5 +1,7 @@
+<app-user-submenu></app-user-submenu>
+
 <!-- LATEST TRANSACTIONS -->
-<div class="container mt-0 qlc-content-first">
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
     <div class="row">
         <div class="col-12 pl-0 pr-0 pb-2">
             <!-- LATEST TRANSACTIONS -->
@@ -12,14 +14,14 @@
                             </div>
                         </div>
                         <div class="col-md-3 col-12 pl-md-2 pr-md-0 pl-3 pr-3 pb-3">
-							<button (click)="loadAccount()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100">
-							  REFRESH
-							</button>
+							<!--<button routerLink="/wallets" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100">
+                                Back to my Wallets
+							</button>-->
 						</div>
                         <div class="col-md-3 col-12 pl-2 pr-2">
-                                <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/myaccounts">
-                                    Back to my Wallets
-                                </button>
+                            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" (click)="loadAccount()" >
+                                REFRESH
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -257,7 +259,7 @@
                         </div>
                         <div class="row pt-3 pr-0">
                             <div class="col-12 pr-0">
-                                <a routerLink="/send/{{ accountId }}" class="menu-myaccount menu-icon-send pr-0">Send Tokens</a>
+                                <a routerLink="/wallets/qlc/send/{{ accountId }}" class="menu-myaccount menu-icon-send pr-0">Send Tokens</a>
                                 <a (click)="openModal(qrCode)" class="menu-myaccount menu-icon-qrcode pr-0">Show QR Code</a>
                                 <a (click)="editName()" class="menu-myaccount menu-icon-rename pr-0">Rename Account</a>
                                 <a routerLink="/account/{{ accountId }}" class="menu-myaccount menu-icon-details pr-0">Account Details</a>
@@ -303,12 +305,12 @@
             </div>
             <div class="row qlc-table-header" *ngIf="this.settings.settings.receive != 'auto'">
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
-                <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-5 text-truncate">Address / Transaction ID</div>
+                <div class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
-                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-2 pr-4 text-right">Time</div>
-                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 d-none d-sm-block col-2 pr-4 text-right">Receive</div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 d-sm-inline-block col-2 d-none pr-4 text-right">Time</div>
+                <div class="col-xl-2 col-lg-2 d-lg-inline-block col-md-3 d-md-none col-sm-3 d-sm-none d-none col-2 pr-4 text-right"></div>
             </div>
-            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let pending of walletAccount.pendingBlocks">
+            <div class="row qlc-table-row qlc-table-row-twolines closed pb-3 " *ngFor="let pending of walletAccount.pendingBlocks">
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
                   <span class="qlc-icon icon-Receive" title="Receive"></span>
                   <span class="d-none d-sm-none d-md-inline-block txState">
@@ -316,19 +318,65 @@
                     <span class="text-bold-grey">Receive</span>
                   </span>
                 </div>
-                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate" *ngIf="this.settings.settings.receive == 'auto'">
-                    <span class="text-color-lightgrey">from:</span> 
-                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a>
-                    <a [routerLink]="'/transaction/' + pending.hash"><br>
-                        <span class="text-tiny">{{ pending.hash }}</span>
-                    </a>
+                <div class="d-none d-xl-block col-xl-6 pb-0" *ngIf="this.settings.settings.receive == 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash }}</span></a>
                 </div>
-                <div class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-7 text-truncate" *ngIf="this.settings.settings.receive != 'auto'">
-                    <span class="text-color-lightgrey">from:</span> 
-                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account }}</a>
-                    <a [routerLink]="'/transaction/' + pending.hash"><br>
-                        <span class="text-tiny">{{ pending.hash }}</span>
-                    </a>
+                <div class="d-none d-lg-block d-xl-none col-lg-7 pb-0" *ngIf="this.settings.settings.receive == 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '23,23' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '22,22' }}</span></a>
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-5 pb-0" *ngIf="this.settings.settings.receive == 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '18,18' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '18,18' }}</span></a>
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-5 pb-0" *ngIf="this.settings.settings.receive == 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '10,10' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '10,10' }}</span></a>
+                </div>
+                <div class="d-block d-sm-none col-7 pb-0" *ngIf="this.settings.settings.receive == 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '10,10' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '10,10' }}</span></a>
+                </div>
+                <div class="d-none d-xl-block col-xl-4 pb-0" *ngIf="this.settings.settings.receive != 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '25,25' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '25,25' }}</span></a>
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-4 pb-0" *ngIf="this.settings.settings.receive != 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '25,25' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '25,25' }}</span></a>
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-5 pb-0" *ngIf="this.settings.settings.receive != 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '18,18' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '18,18' }}</span></a>
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-5 pb-0" *ngIf="this.settings.settings.receive != 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '10,10' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '10,10' }}</span></a>
+                </div>
+                <div class="d-block d-sm-none col-7 pb-0" *ngIf="this.settings.settings.receive != 'auto'">
+                    <span class="text-color-lightgrey">From:</span> 
+                    <a [routerLink]="'/account/' + (pending.account)">{{ pending.account | squeeze : '10,10' }}</a><br>
+                    <span class="text-color-lightgrey">Hash:</span>
+                    <a [routerLink]="'/transaction/' + pending.hash"><span class="text-tiny">{{ pending.hash | squeeze : '10,10' }}</span></a>
                 </div>
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
                   pending.type == 'Send' ? 'text-color-red' : 'text-color-green'
@@ -339,8 +387,8 @@
                 <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-12 pr-4 text-right">
                   {{ pending.timestamp * 1000 | date: 'short' }}
                 </div>
-                <div class="col-xl-2 col-lg-2 col-12 pr-4 text-right" *ngIf="this.settings.settings.receive != 'auto'">
-                    <button type="submit" class="btn btn-primary" (click)="receive(pending)" style="min-width:100%;"  [disabled]="walletService.processingPending">
+                <div class="col-xl-2 col-lg-2 col-12 pr-4 text-right pb-0 mb-0" *ngIf="this.settings.settings.receive != 'auto'">
+                    <button type="submit" class="btn btn-primary mb-0 ml-0 mr-1 pl-3 pr-3 pt-2 pb-1" (click)="receive(pending)" style="height:auto; min-height:auto; min-width:auto !important; margin-top:-6px;"  [disabled]="walletService.processingPending">
                         RECEIVE
                     </button>
                 </div>
@@ -396,14 +444,62 @@
                   <span class="text-bold-grey">{{ history.type }}</span>
                 </span>
               </div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{history.type == 'Send' || history.type == 'ContractSend' ? 'to' : 'from'}}: </span> 
-                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a>
-                <a [routerLink]="'/transaction/' + history.hash"><br>
-                  <span class="text-tiny">{{ history.hash }}</span>
-                </a>
+              <div class="d-none d-xl-block col-xl-6 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br class="d-inline-block d-sm-inline-block d-md-inline-block d-lg-none d-xl-none">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
+              <div class="d-none d-lg-block d-xl-none col-lg-5 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address | squeeze : '23,23' }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash | squeeze : '22,22' }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br class="d-inline-block d-sm-inline-block d-md-inline-block d-lg-none d-xl-none">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
+              </div>
+              <div class="d-none d-md-block d-lg-none col-md-5 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address | squeeze : '15,15' }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash | squeeze : '15,15' }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br class="d-inline-block d-sm-inline-block d-md-inline-block d-lg-none d-xl-none">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
+              </div>
+              <div class="d-none d-sm-block d-md-none col-sm-5 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address | squeeze : '10,10' }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash | squeeze : '9,9' }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br class="d-inline-block d-sm-inline-block d-md-inline-block d-lg-none d-xl-none">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
+              </div>
+              <div class="d-block d-sm-none col-7 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{history.type == 'Send' || history.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (history.link_as_account || history.address)">{{ history.link_as_account || history.address | squeeze : '13,13' }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + history.hash"><span>{{ history.hash | squeeze : '13,13' }}</span></a><br>
+                <span *ngIf="history.povConfirmHeight > 0">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm height: </span> 
+                  <a [routerLink]="'/pov/height/' + history.povConfirmHeight">{{ history.povConfirmHeight }}</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br class="d-inline-block d-sm-inline-block d-md-inline-block d-lg-none d-xl-none">
+                  <span class="text-color-lightgrey text-tiny">PoV confirm count: </span> {{ history.povConfirmCount }}
+                </span>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right pl-0 {{
                 history.type == 'Send' || history.type == 'ContractSend' ? 'text-color-red' : 'text-color-green'
               }}">
                 <span data-toggle="tooltip" data-placement="top" title="">{{history.type == 'Send' || history.type == 'ContractSend' ? '-' : '+'}} {{ history.amount | qlc: history.tokenInfo.decimals | currency:'':'':'1.0-'+history.tokenInfo.decimals }}</span>

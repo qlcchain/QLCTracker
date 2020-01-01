@@ -8,6 +8,7 @@ import { WorkPoolService } from 'src/app/services/work-pool.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { timer } from 'rxjs';
+import { QLCBlockService } from 'src/app/services/qlc-block.service';
 
 const nacl = window['nacl'];
 
@@ -46,6 +47,7 @@ export class MystakingsComponent implements OnInit {
 		private workPool: WorkPoolService,
 		private notifications: NotificationService,
 		private trans: TranslateService,
+    private blockService: QLCBlockService
   ) {
 
   }
@@ -168,7 +170,7 @@ export class MystakingsComponent implements OnInit {
                             : await this.nep5api.benefitPledge(txid)
                             ;
       if (!pledgeResult.result) {
-        this.invokeSteps.push({ msg: 'Pledge ERROR.', link: '/staking-create', linkText: 'Please use RECOVER to recover a failed TX.'});
+        this.invokeSteps.push({ msg: 'Pledge ERROR.', link: '/staking/qlc/create', linkText: 'Please use RECOVER to recover a failed TX.'});
         return;
       }
       const preparedPledge = pledgeResult.result;
@@ -282,6 +284,12 @@ export class MystakingsComponent implements OnInit {
   }
 
   async processBlock(block, keyPair, txid, txData) {
+    const povFittest = await this.api.getFittestHeader();
+    if (povFittest.error || !povFittest.result) {
+      console.log('ERROR - no fittest header');
+      return;
+    }
+    block.poVHeight = povFittest.result.height;
 		const blockHash = await this.api.blockHash(block);
 		const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
 		const signature = this.util.hex.fromUint8(signed);
@@ -313,6 +321,12 @@ export class MystakingsComponent implements OnInit {
   }
   
   async processInvokeBlock(block, keyPair, txid) {
+    const povFittest = await this.api.getFittestHeader();
+    if (povFittest.error || !povFittest.result) {
+      console.log('ERROR - no fittest header');
+      return;
+    }
+    block.poVHeight = povFittest.result.height;
 		const blockHash = await this.api.blockHash(block);
 		const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
 		const signature = this.util.hex.fromUint8(signed);
@@ -342,7 +356,5 @@ export class MystakingsComponent implements OnInit {
 			return null;
 		}
 	}
-
-
 
 }

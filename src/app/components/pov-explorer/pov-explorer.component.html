@@ -1,0 +1,153 @@
+<div class="container mt-0 qlc-content-first">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+      <div class="container">
+        <div class="row">
+          <!-- TITLE -->
+          <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+            <div class="content-title">
+              <h1 class="neo">POV Explorer</h1>
+            </div>
+          </div>
+          
+          <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 " (click)="refresh()">
+              {{ refreshButton }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-blocks">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Latest POV Height</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ povHeadersCount | currency:'':'':'1.0-0' }} </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-miners">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Number of miners</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ minersNum | currency:'':'':'1.0-0' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-signatures">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Difficulty</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12 text-truncate">{{ prepareDifficulty(povLatestHeader.normDifficulty) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-transactions">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">Total mined Qgas</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">{{ totalQgasMined | qlc: 8 | currency:'':'':'1.2-2' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container pl-2 pr-2 mt-3">
+  <div class="content-box-white">
+    
+    
+    
+    <div class="container">
+      
+      <div class="row qlc-table-header">
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-3 pl-4">Height</div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-7 col-6 text-truncate">Hash / Miner Account</div>
+        <div class="col-xl-1 col-lg-1 col-md-2 text-md-center pr-md-3 col-sm-2 col-3 text-right pr-4">Tx Num</div>
+        <div class="col-xl-1 d-lg-block col-lg-1 d-none col-md-2 col-sm-2 col-2 text-center">Algo<span class="d-none d-xl-inline">rithm</span></div>
+        <div class="col-xl-1 d-lg-block col-lg-1 d-none col-md-2 col-sm-2 col-2 text-center">Difficulty</div>
+        <div class="col-xl-1 d-lg-block col-lg-1 d-none col-md-2 col-sm-2 col-2 text-right">AuxPow</div>
+        <div class="col-xl-2 col-lg-2 d-none d-md-block col-md-2 col-sm-3 col-6 pr-4 text-right">Time</div>
+      </div>
+      
+      <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let povHeader of povHeaders">
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-3 pl-4 pb-0 pr-0">
+          <span class="">
+            <span class="qlc-icon icon-block" title="Block {{ povHeader.basHdr.height | currency:'':'':'1.0-0' }}"></span>
+            <span class="text-bold-grey"><a [routerLink]="'/pov/height/' + povHeader.basHdr.height">{{ povHeader.basHdr.height | currency:'':'':'1.0-0' }}</a></span>
+          </span>
+        </div>
+        <div class="d-none d-xl-block col-xl-4 pb-0">
+            <span class="text-color-lightgrey text-tiny">Hash: </span><a [routerLink]="'/pov/hash/' + povHeader.basHdr.hash">{{ povHeader.basHdr.hash  | squeeze : '20,20' }}</a> <br>
+            <span class="text-color-lightgrey text-tiny">Miner: </span><a [routerLink]="'/account/' + povHeader.cbtx.txOuts[0].address">{{ povHeader.cbtx.txOuts[0].address  | squeeze : '20,20' }}</a>
+        </div>
+        <div class="d-none d-lg-block d-xl-none col-lg-4 pb-0">
+            <span class="text-color-lightgrey text-tiny">Hash: </span><a [routerLink]="'/pov/hash/' + povHeader.basHdr.hash">{{ povHeader.basHdr.hash  | squeeze : '16,16' }}</a> <br>
+            <span class="text-color-lightgrey text-tiny">Miner: </span><a [routerLink]="'/account/' + povHeader.cbtx.txOuts[0].address">{{ povHeader.cbtx.txOuts[0].address  | squeeze : '16,16' }}</a>
+        </div>
+        <div class="d-none d-md-block d-lg-none col-md-6 pb-0">
+            <span class="text-color-lightgrey text-tiny">Hash: </span><a [routerLink]="'/pov/hash/' + povHeader.basHdr.hash">{{ povHeader.basHdr.hash  | squeeze : '18,18' }}</a> <br>
+            <span class="text-color-lightgrey text-tiny">Miner: </span><a [routerLink]="'/account/' + povHeader.cbtx.txOuts[0].address">{{ povHeader.cbtx.txOuts[0].address  | squeeze : '20,20' }}</a> <br>
+            <span class="text-color-lightgrey text-tiny">Algorithm: </span>{{ povHeader.algoName }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="text-color-lightgrey text-tiny">AuxPOW: </span>{{ (povHeader.auxHdr != null ? 'Yes' : 'No' ) }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="text-color-lightgrey text-tiny">Difficulty: </span>{{ prepareDifficulty(povHeader.normDifficulty) }}
+        </div>
+        <div class="d-none d-sm-block d-md-none col-sm-7 pb-0">
+            <span class="text-color-lightgrey text-tiny">Hash: </span><a [routerLink]="'/pov/hash/' + povHeader.basHdr.hash">{{ povHeader.basHdr.hash  | squeeze : '15,15' }}</a> <br>
+            <span class="text-color-lightgrey text-tiny">Miner: </span><a [routerLink]="'/account/' + povHeader.cbtx.txOuts[0].address">{{ povHeader.cbtx.txOuts[0].address  | squeeze : '15,15' }}</a> <br>
+            <span class="text-color-lightgrey text-tiny">Algorithm: </span>{{ povHeader.algoName }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="text-color-lightgrey text-tiny">AuxPOW: </span>{{ (povHeader.auxHdr != null ? 'Yes' : 'No' ) }}<br>
+            <span class="text-color-lightgrey text-tiny">Difficulty: </span>{{ prepareDifficulty(povHeader.normDifficulty) }}
+        </div>
+        <div class="d-block d-sm-none col-6 pb-0">
+            <span class="text-color-lightgrey text-tiny">Hash: </span><a [routerLink]="'/pov/hash/' + povHeader.basHdr.hash">{{ povHeader.basHdr.hash  | squeeze : '8,8' }}</a> <br>
+            <span class="text-color-lightgrey text-tiny">Miner: </span><a [routerLink]="'/account/' + povHeader.cbtx.txOuts[0].address">{{ povHeader.cbtx.txOuts[0].address  | squeeze : '8,8' }}</a> <br>
+            <span class="text-color-lightgrey text-tiny">Algorithm: </span>{{ povHeader.algoName }}<br>
+            <span class="text-color-lightgrey text-tiny">AuxPOW: </span>{{ (povHeader.auxHdr != null ? 'Yes' : 'No' ) }}<br>
+            <span class="text-color-lightgrey text-tiny">Difficulty: </span>{{ prepareDifficulty(povHeader.normDifficulty) }}
+        </div>
+        <div class="col-xl-1 col-lg-1 col-md-2 text-md-center pr-md-2 col-sm-2 col-3 pb-0 text-truncate pr-4 text-right">
+          {{ povHeader.cbtx.txNum }}
+        </div>
+        <div class="col-xl-1 col-lg-1 d-lg-block col-sm-2 d-none col-2 text-center">{{ povHeader.algoName }}</div>
+        <div class="col-xl-1 col-lg-1 d-lg-block col-md-2 d-none col-sm-2 col-2 text-center text-truncate">{{ prepareDifficulty(povHeader.normDifficulty) }}</div>
+        <div class="col-xl-1 col-lg-1 d-lg-block col-md-2 d-none col-sm-2 col-2 text-center">{{ (povHeader.auxHdr != null ? 'Yes' : 'No' ) }}</div>
+        
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12 pr-4 text-right">
+          {{ povHeader.basHdr.timestamp * 1000 | date: 'short' }}
+        </div>
+      </div>
+    </div>
+    
+    
+  </div>
+  <div class="col-lg-12 mb-0 mt-4 pl-md-2 pr-md-2 text-center" *ngIf="pages.length > 1">
+    <a class="btn btn-primary btn-blue btn-box" *ngIf="activePage != 1" (click)="goTo(activePage-1)">&lt;</a>
+    <span *ngFor="let page of pages">
+      <a class="btn btn-primary btn-white btn-box" [ngClass]="{'active' : page == activePage}" (click)="goTo(page)" *ngIf="page != '...'">{{ page }}</a>
+      <span *ngIf="page == '...'">&nbsp;...&nbsp;</span>
+    </span>
+    <a class="btn btn-primary btn-blue btn-box" *ngIf="activePage < allPages" (click)="goTo(activePage+1)">&gt;</a>
+  </div>
+</div>

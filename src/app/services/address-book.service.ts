@@ -6,7 +6,7 @@ import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 	providedIn: 'root'
 })
 export class AddressBookService {
-	storeKey = `sms-billing-addressbook`;
+	storeKey = `qlcTracker-addressbook`;
 
 	msg1 = '';
 

@@ -1,0 +1,326 @@
+<app-user-submenu></app-user-submenu>
+
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+	<div class="row">
+		<div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+		<div class="container">
+			<div class="row">
+			<!-- TITLE -->
+			<div class="col-lg-5 col-md-6 col-12 mt-2 pl-2 pr-2">
+				<div class="content-title">
+				<h1 class="neo"><!--{{ 'REPRESENTATIVES.representatives_title' | translate }}-->Representatives <span class="d-inline d-md-none d-lg-inline">Overview</span></h1>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-3 col-12 pl-2 pr-md-0 pr-2">
+				<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-md-5 mr-lg-4 mr-xl-3 " style="min-width: 200px;" routerLink="/representation/reward">
+					CHECK MY <span class="d-none d-lg-inline">REPRESENTATIVES</span> REWARDS
+				</button>
+			</div>
+			<div class="col-md-3 col-12 pl-md-0 pl-2 pr-2 pr-md-2 pt-md-0 pt-2">
+				<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" style="min-width: 200px;"  routerLink="/representation/list">
+					REP List
+				</button>
+			</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<div class="container mt-0 pl-0 pr-0 mb-5 pb-5">
+	<div class="row">
+		
+		
+		<!-- REPRESENTATIVES -->
+		
+		<div class="col-md-8 col-12 mb-0 mt-2 pl-4 pr-4 pb-2">
+			<div class="content-box-white pl-4 pr-4 pt-4 pb-4 ml-2 mr-2 ml-md-0 mr-md-0">
+
+					<p class="pt-1"><span class="title-modal-blue mt-0 mb-4">Representatives Reward Rules:</span></p>
+					<p></p>
+						
+					<ul style="margin-left:-24px;">
+						<li>Got 3M voting power: Staking by yourself or Got vote power by other account that set your account as his representatives.</li>
+						<li>Run a node with your account and start to vote, check the doc to run a node (Jump to our doc website: <a href="https://docs.qlcchain.online/tutorial/node/install.html#start-go-qlc-node" target="_blank">https://docs.qlcchain.online/tutorial/node/install.html#start-go-qlc-node</a>).</li>
+						<li>All Representatives will get 40% of all POV mining Rewards every 120 POV blocks, you can get your part base on the ratio of your voting power and the whole online voting power.</li>
+					</ul>
+				
+					
+			</div>
+		</div>
+
+		<div class="col-md-4 col-12 mb-0 mt-2 pl-2 pl-md-0 pr-2 pr-md-0 pb-2">
+			<div class="content-box-white pl-4 pr-4 pt-4 pb-4 ml-4 ml-md-0 mr-4">
+				<p class="pt-1"><span class="title-modal-blue mt-0 mb-4">Recommended Node Configuration:</span></p>
+			
+				<ul style="margin-left:-24px;">
+					<li>CPU: <strong>4 cores</strong></li>
+					<li>Memory: <strong>8G</strong></li>
+					<li>Storage: <strong>80G SSD</strong></li>
+					<li>Network: <strong>100Mbs with public IP address</strong> </li>
+				</ul>
+			</div>
+		</div>		
+
+		<!-- REPRESENTATIVES -->
+		<div class="col-12 mt-4">
+			<!-- TITLE -->
+			<div class="col-12 mt-2 pl-3 pr-3 pl-md-2">
+				<div class="content-title">
+					<h1 class="neo">Your Delegations</h1>
+				</div>
+			</div>
+			<div class="col-lg-12 mt-0 pl-md-2 pr-md-2">
+				<div class="col-12 pt-1 pb-2 pl-0">	
+					<h6>{{ 'REPRESENTATIVES.representatives_text' | translate }}</h6>
+				</div>
+			</div>
+		</div>
+		
+		<!-- LIST -->
+		<div class="col-lg-12 mb-0 mt-2 pl-4 pr-4 pl-md-4 pr-md-4">
+			
+			<div class="container pr-4 pl-4 pl-md-3 pr-md-3">
+				
+				<div class="row qlc-table-header">
+					<div class="col-xl-3 col-lg-3 col-md-3 col-sm-9 col-8 pl-4">YOUR ACCOUNT <span class="d-inline d-md-none">& YOUR REP</span></div>
+					<div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-2 d-none d-md-block">YOUR WEIGHT</div>
+					<div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-4 d-none d-md-block text-truncate">YOUR REPRESENTATIVE</div>
+					<div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 d-none d-md-block">REP {{ 'REPRESENTATIVES.weight' | translate }}</div>
+					<div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 pl-4 text-right">{{ 'REPRESENTATIVES.status' | translate }}</div>
+				</div>
+				
+				<div *ngFor="let rep of representativeOverview">
+					<div class="row qlc-table-row closed" *ngFor="let account of rep.accounts">
+						<div class="col-xl-3 col-lg-3 col-md-3 col-sm-9 col-10 pl-4">
+							
+							<span class="d-inline d-md-none">
+								<span class="text-color-lightgrey text-tiny" style="width:76px; display:inline-block;">Your Account: </span>
+							</span>
+							<span>
+								<span class="d-none d-xl-inline">
+									<a [routerLink]="'/wallets/qlc/' + account.id">{{ account.id | squeeze : '16,16' }}</a>
+								</span>
+								<span class="d-none d-lg-inline d-xl-none">
+									<a [routerLink]="'/wallets/qlc/' + account.id">{{ account.id | squeeze : '14,14' }}</a>
+								</span>
+								<span class="d-none d-md-inline d-lg-none">
+									<a [routerLink]="'/wallets/qlc/' + account.id">{{ account.id | squeeze : '9,9' }}</a>
+								</span>
+								<span class="d-none d-sm-inline d-md-none">
+									<a [routerLink]="'/wallets/qlc/' + account.id">{{ account.id | squeeze : '18,18' }}</a>
+								</span>
+								<span class="d-inline d-sm-none">
+									<a [routerLink]="'/wallets/qlc/' + account.id">{{ account.id | squeeze : '11,11' }}</a>
+								</span>
+							</span>
+							<span class="d-block d-md-none pt-1 pb-1">
+								<span class="text-color-lightgrey text-tiny" style="width:76px; display:inline-block;">Your Weight: </span>{{ account.votingWeight | qlc:8 | currency:'':'':'1.2-2' }}
+							</span>
+
+							<span class="d-inline d-md-none">
+								<span class="text-color-lightgrey text-tiny" style="width:76px; display:inline-block;">Your Rep: </span>
+							</span>
+							<span class="d-inline d-md-none" (click)="addSelectedAccounts(rep.accounts)" style="cursor: pointer;">
+								<span tooltip="{{ 'REPRESENTATIVES.select_accounts' | translate }}" container="body"> 
+									<span *ngIf="rep.label">{{ rep.label }}</span> 
+								
+									<span *ngIf="!rep.label" class="d-none d-xl-inline">{{ rep.id | squeeze : '15,15' }}</span>
+									<span *ngIf="!rep.label" class="d-none d-lg-inline d-xl-none">{{ rep.id | squeeze : '12,12' }}</span>
+									<span *ngIf="!rep.label" class="d-none d-md-inline d-lg-none">{{ rep.id | squeeze : '8,8' }}</span>
+									<span *ngIf="!rep.label" class="d-none d-sm-inline d-md-none">{{ rep.id | squeeze : '16,16' }}</span>
+									<span *ngIf="!rep.label" class="d-inline d-sm-none">{{ rep.id | squeeze : '8,8' }}</span>
+								</span>
+								<span class="icon online ml-2" *ngIf="rep.online" tooltip="{{ 'REPRESENTATIVES.online' | translate }}" container="body"></span>
+								<span class="icon offline ml-2" *ngIf="!rep.online" tooltip="{{ 'REPRESENTATIVES.offline' | translate }}" container="body"></span>
+							</span>
+							<span class="d-block d-md-none pt-1">
+								<span class="text-color-lightgrey text-tiny" style="width:76px; display:inline-block;">Rep Weight: </span>{{ rep.delegatedWeight | qlc:8 | currency:'':'':'1.2-2' }}
+							</span>
+
+
+						</div>
+
+						<div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 col-7 d-none d-md-block">
+							{{ account.votingWeight | qlc:8 | currency:'':'':'1.2-2' }}
+						</div>
+						
+						<div class="col-xl-3 col-lg-3 col-md-3 col-sm-5 col-7 d-none d-md-block" (click)="addSelectedAccounts(rep.accounts)" style="cursor: pointer;">
+							<span class="icon online" *ngIf="rep.online" tooltip="{{ 'REPRESENTATIVES.online' | translate }}" container="body"></span>
+							<span class="icon offline" *ngIf="!rep.online" tooltip="{{ 'REPRESENTATIVES.offline' | translate }}" container="body"></span>
+							<span tooltip="{{ 'REPRESENTATIVES.select_accounts' | translate }}" container="body"> 
+								<span *ngIf="rep.label">{{ rep.label }}</span> 
+							
+								<span *ngIf="!rep.label" class="d-none d-xl-inline">{{ rep.id | squeeze : '15,15' }}</span>
+								<span *ngIf="!rep.label" class="d-none d-lg-inline d-xl-none">{{ rep.id | squeeze : '12,12' }}</span>
+								<span *ngIf="!rep.label" class="d-none d-md-inline d-lg-none">{{ rep.id | squeeze : '8,8' }}</span>
+								<span *ngIf="!rep.label" class="d-none d-sm-inline d-md-none">{{ rep.id | squeeze : '12,12' }}</span>
+								<span *ngIf="!rep.label" class="d-inline d-sm-none">{{ rep.id | squeeze : '8,8' }}</span>
+							
+								<span class="d-block d-md-none">
+									<span class="text-color-lightgrey text-tiny">Your Weight: </span> {{ account.votingWeight | qlc:8 | currency:'':'':'1.2-2' }}
+								</span>
+								<span class="d-block d-md-none">
+									<span class="text-color-lightgrey text-tiny">Rep Weight: </span> {{ rep.delegatedWeight | qlc:8 | currency:'':'':'1.2-2' }}
+								</span>
+							</span>
+						</div>
+
+						<div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-7 d-none d-md-block">
+							{{ rep.delegatedWeight | qlc:8 | currency:'':'':'1.2-2' }}
+						</div>
+
+						<div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-2 pl-0 pr-xl-3 pr-md-2 pr-3 text-right">
+							<span *ngIf="rep.status === 'alert'" tooltip="{{ 'REPRESENTATIVES.status_alert' | translate }}">
+								<span class="d-none d-sm-inline">{{ 'REPRESENTATIVES.change' | translate }}</span> <span class="icon avoid ml-2"></span>
+							</span>
+							<span *ngIf="rep.status === 'warn'" tooltip="{{ 'REPRESENTATIVES.status_warn' | translate }}">
+								<span class="d-none d-sm-inline">{{ 'REPRESENTATIVES.change' | translate }}</span> <span class="icon avoid ml-2"></span>
+							</span>
+							<span *ngIf="rep.status === 'trusted'" tooltip="{{ 'REPRESENTATIVES.status_trusted' | translate }}">
+								<span class="d-none d-sm-inline">{{ 'REPRESENTATIVES.trusted' | translate }}</span> <span class="icon trusted ml-2"></span>
+							</span>
+							<span *ngIf="rep.status === 'known'" tooltip="{{ 'REPRESENTATIVES.status_known' | translate }}">
+								<span class="d-none d-sm-inline">{{ 'REPRESENTATIVES.known' | translate }}</span> <span class="icon trusted ml-2"></span>
+							</span>
+							<span *ngIf="rep.status === 'none'" tooltip="{{ 'REPRESENTATIVES.status_none' | translate }}">
+								<span class="d-none d-sm-inline">{{ 'REPRESENTATIVES.unknown' | translate }}</span> <span class="icon avoid ml-2"></span>
+							</span>
+						</div>
+				</div>
+				
+			</div>
+			
+		</div>
+		
+	</div>
+	
+	
+	
+	
+	<!-- CLICK TO CHANGE TEXT -->
+	<div class="col-12 mt-0 pl-4 pr-4">
+		<!-- TITLE -->
+		<div class="col-lg-12 mt-0 ">
+			
+			<div class="row qlc-table-row closed" *ngIf="!representativeOverview || !representativeOverview.length">
+				<div class="col-12">
+					<div class="text-center">{{ 'REPRESENTATIVES.no_voting_delegate' | translate }}</div>
+				</div>
+			</div>
+			
+			<div class="row align-items-center rowFooter col-12 pt-4">
+				<div class="px-0 col-12 text-left">{{ 'REPRESENTATIVES.select_all_acc_with_rep' | translate }}</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	<!-- CHANGE REPS -->
+	<div class="col-12 mt-3 pt-3 pl-2 pr-2 pl-md-4 pr-md-4">
+		<div class="content-title ml-4 mr-4 ml-md-0 mr-md-0">
+			<h1>{{ 'REPRESENTATIVES.change_reps' | translate }}</h1>
+		</div>
+	</div>
+	
+	<div class="col-12 ml-2 mr-0 pl-4 pr-4 pl-md-3 pr-md-3 mt-2 ">
+		<div class="content-box-white mr-3">
+			
+			<div class="col-12 pl-4 pt-4 pb-4 pr-4">
+				<div class="row align-items-top">
+					<div class="col-xl-2 col-lg-3 col-md-3 col-12 pb-md-0 text-truncate dataName form-label-custom-2 pt-0 pb-3 pb-md-0">
+						{{ 'REPRESENTATIVES.accounts_to_change' | translate }}
+					</div>
+					<div class="col-xl-10 col-lg-9 col-md-9 col-12 text-left text-truncate">
+						<div class="form-group">
+							<select class="custom-select" [(ngModel)]="changeAccountID" (change)="newAccountID(changeAccountID)">
+								<option [value]="null">{{ 'REPRESENTATIVES.select_accounts_to_change' | translate }}</option>
+								<option [value]="'all'">{{ 'REPRESENTATIVES.all_accounts' | translate }}</option>
+								<ng-container *ngFor="let account of accounts">
+									<option [value]="account.id" *ngIf="account.accountMeta.coinBalance >= 0"
+										>{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id | squeeze : '8,8' }} ({{
+											account.accountMeta.coinBalance | qlc:8 | currency:'':'':'1.2-2'
+										}}) 
+									</option>
+								</ng-container>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row align-items-top" *ngFor="let account of selectedAccounts">
+					<div class="col-xl-2 col-lg-3 col-md-3 pb-3 pb-md-0 d-none d-md-block text-truncate dataName mb-2"></div>
+					<div class="col-xl-9 col-lg-8 col-md-8 col-10 text-left text-truncate mb-2">
+						<span class="name" *ngIf="account.addressBookName">{{ account.addressBookName }} </span>
+						<span class="address">{{ account.id }}</span>
+					</div>
+					<div class="col-lg-1 col-md-1 col-2 text-right mb-2 pr-2">
+						<a (click)="removeSelectedAccount(account)" class="icon delete"></a>
+					</div>
+				</div>
+				
+				<div class="row align-items-top">
+					<div class="col-xl-2 col-lg-3 col-md-3 col-12 pb-md-0 text-truncate dataName form-label-custom-2 pt-0 pb-3 pb-md-0">{{ 'REPRESENTATIVES.new_rep' | translate }}</div>
+					<div class="col-xl-10 col-lg-9 col-md-9 col-12 text-left text-truncate">
+						<div class="form-group">
+							<select class="custom-select contacts" [(ngModel)]="representativeSelect" (change)="selectRep()">
+								<option *ngFor="let rep of (representativeResults$ | async)" [value]="rep.id"
+								>{{ rep.name }} {{ rep.id }}</option
+								>
+							</select>
+							<input
+							type="text"
+							class="form-control newrepresentative"
+							placeholder="{{ 'REPRESENTATIVES.new_rep_placeholder' | translate }}"
+							onfocus="this.placeholder = ''"
+							(blur)="validateRepresentative()"
+							(keyup)="searchRepresentatives()"
+							(focus)="searchRepresentatives()"
+							[(ngModel)]="toRepresentativeID"
+							#repInput
+							/>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row align-items-center rowButtons pt-md-3 pt-3 pb-2">
+					<div class="col-xl-2 col-lg-3 col-md-3 col-12 pb-md-0 text-truncate dataName form-label-custom-2 pt-0 pb-3 pb-md-0 d-none d-md-block"></div>
+					<div class="col-xl-4 col-lg-4 col-md-5 col-12 text-left text-truncate">
+						<button
+						type="submit"
+						class="btn btn-primary w-100 pl-2 pr-2"
+						(click)="changeRepresentatives()"
+						*ngIf="!changingRepresentatives"
+						>
+						{{ 'REPRESENTATIVES.update_rep' | translate }}
+					</button>
+					<button type="submit" class="btn btn-primary" *ngIf="changingRepresentatives">
+						{{ 'REPRESENTATIVES.updating_rep' | translate }}
+					</button>
+				</div>
+			</div>
+		</div>
+		
+		
+		
+	</div>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>			 
+
+
+
+

@@ -1,0 +1,151 @@
+<!-- LATEST TRANSACTIONS -->
+<div class="container mt-0 qlc-content-first">
+  <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+          <!-- LATEST TRANSACTIONS -->
+          <div class="container">
+                  <div class="row">
+                      <!-- TITLE -->
+                      <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+                          <div class="content-title">
+                              <h1 class="neo">NEO Node Settings - {{ neoService.getNetwork() }}</h1>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+                          <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background-light" routerLink="/wallets">
+                              Back to my Wallets
+                          </button>
+                      </div>
+                  </div>
+              </div>
+      </div>
+  </div>
+</div>
+
+
+<div class="container pb-2">
+  <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
+      <!-- LEFT -->
+      <div class="col-lg-9 col-md-12 col-sm-12 order-lg-1 order-2 pl-0 pr-0 mb-3">
+        <div class="container">
+        <div class="row">
+          <div class="col-12 pb-2 pl-2 pr-2">
+              <div class="content-box-blue h-auto pb-3 neo-background-light">
+                  <div class="container">
+                      <div class="row qlc-table-header-blue neo-background-light">
+                          <div class="col-12 white">Selected NEO node</div>
+                      </div>
+                      <div class="row qlc-table-row-blue row-text-mid mt-3 neo-background-light">
+                          <div class="col-12 text-break pr-3" *ngIf="neoService.selectedNode != ''">{{ neoService.selectedNode }}<a ngxClipboard [cbContent]="walletId"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+                          <div class="col-12 text-break pr-3" *ngIf="neoService.selectedNode === ''">Automatic</div>
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+          
+      </div>
+      
+      <!-- RIGHT -->
+      <div class="col-lg-3 col-md-12 col-sm-12 order-lg-2 order-1 pl-0 pr-0 mb-xs-3 mb-3">
+          
+          
+          <div class="col-12 pl-2 pr-2 mt-0">
+              <div class="content-box-darkblue pb-4 pr-0 neo-background">
+                  
+                  <div class="container">
+                      
+                      <div class="row pt-3 pr-0">
+                          <div class="col-12 pr-0">
+                              <a (click)="getNodes()" class="menu-myaccount menu-icon-details pr-0" target="_blank">Get NEO nodes</a>
+                          </div>
+                      </div>
+                      
+                  </div>
+                  
+              </div>
+          </div>
+          
+      </div>
+      
+  </div>
+</div>
+
+<!-- NODES TRANSACTIONS -->
+<div class="container mt-0 mb-3">
+  <div class="row">
+    
+    <div class="col-12 pl-0 pr-0">
+      
+      <!-- TITLE -->
+      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+        <div class="content-title">
+          <h1>NEO Nodes</h1>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+
+
+          <div class="container">
+
+            <div class="row qlc-table-header">
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">URL</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Height</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right"></div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Options</div>
+            </div>
+            <div class="row qlc-table-row qlc-table-row-twolines closed">
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
+                Automatic (Best option for most users)
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right">
+
+              </div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                <button (click)="neoService.selectedNode = ''" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background-light" *ngIf="neoService.selectedNode != ''">
+                    Select
+                </button>
+                <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background" *ngIf="neoService.selectedNode === ''">
+                    Selected
+                </button>
+              </div>
+            </div>
+            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let node of neoNodes">
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
+                {{ node.url }}
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+                {{ node.height }}
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right">
+
+              </div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                <button (click)="neoService.selectedNode = node.url" *ngIf="neoService.selectedNode != node.url" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background-light" >
+                    Select
+                </button>
+                <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background" *ngIf="neoService.selectedNode === node.url">
+                    Selected
+                </button>
+              </div>
+            </div>
+
+
+            
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+    
+  </div>
+</div>

@@ -12,7 +12,9 @@ const fs = require('fs-extra');
 const chmod = require('chmod-plus');
 const findProcess = require('find-process');
 const pidusage = require('pidusage');
-const fkill = require('fkill');
+//const PeerId = require('peer-id');
+
+const inly = require('inly');
 
 const DownloadManager = require("electron-download-manager");
 
@@ -52,8 +54,20 @@ console.log(`path: ` + toExecutableName('gqlc'));
 const userData = app.getPath('userData');
 
 const defaultWalletData = {
-	version: 'v1.0.2',
+	version: 'v1.3.0',
 	nodeData: {
+		version: '',
+		filename: '',
+		gitrev: '',
+		platform: ''
+	},
+	minerData: {
+		version: '',
+		filename: '',
+		gitrev: '',
+		platform: ''
+	},
+	poolData: {
 		version: '',
 		filename: '',
 		gitrev: '',
@@ -69,6 +83,11 @@ function getConfig() {
 		const cfg = JSON.parse(rawData);
 		if (cfg.version == 'v1.0.1') {
 			console.log('found version v1.0.1, updating');
+			fs.writeFileSync(wallletConfigPath, JSON.stringify(defaultWalletData, null, 4));
+			return defaultWalletData;
+		}
+		if (cfg.version == 'v1.0.2') {
+			console.log('found version v1.0.2, updating');
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(defaultWalletData, null, 4));
 			return defaultWalletData;
 		}
@@ -154,6 +173,53 @@ ipcMain.on('node-process', (event, data) => {
 	}
 });
 
+//miner
+
+ipcMain.on('miner-start', (event, data) => {
+	//log.log('miner-start');
+	startMiner(data.qlc_address,data.algo);
+});
+
+ipcMain.on('miner-stop', (event, data) => {
+	//log.log('miner-stop');
+	killMinerHandler();
+});
+
+ipcMain.on('miner-restart', async (event, data) => {
+	//log.log('miner-restart');
+	await killMinerHandler();
+	startMiner(data.qlc_address,data.algo);
+});
+
+ipcMain.on('miner-update', (event, data) => {
+	//log.log('pool-update');
+	//log.log(data);
+	//downloadUpdate('v1.2.6.6','7be5c37','win32');
+	downloadMiner(data.version,data.gitrev,data.platform);
+});
+
+ipcMain.on('pool-update', (event, data) => {
+	//log.log('pool-update');
+	//log.log(data);
+	downloadPool(data.version,data.gitrev,data.platform);
+});
+
+ipcMain.on('pool-start', (event, data) => {
+	//log.log('pool-start');
+	startPool(data.qlc_address,data.algo);
+});
+
+ipcMain.on('pool-stop', (event, data) => {
+	//log.log('pool-stop');
+	killPoolHandler();
+});
+
+ipcMain.on('pool-restart', async (event, data) => {
+	//log.log('pool-restart');
+	await killPoolHandler();
+	startPool(data.qlc_address,data.algo);
+});
+
 function getProcessData() {
 	findProcess('name','gqlc')
 		.then(function (list) {
@@ -183,10 +249,28 @@ function onDownloadProgress(progress) {
 	mainWindow.webContents.send('download-progress',progress);
 }
 
+function onMinerDownloadProgress(progress) {
+	log.log(progress);
+	mainWindow.webContents.send('download-miner-progress',progress);
+}
+
+function onPoolDownloadProgress(progress) {
+	log.log(progress);
+	mainWindow.webContents.send('download-pool-progress',progress);
+}
+
 function downloadUpdate(version,gitrev,platform) {
 
 	platformExt = '';
 
+	if (platform == 'win32') {
+		platformExt = '-Windows-x64.zip';
+	} else if (platform == 'darwin') {
+		platformExt = '-macOS-x64.tar.gz';
+	} else if (platform == 'linux') {
+		platformExt = '-Linux-x64.tar.gz';
+	}
+/*
 	if (platform == 'win32') {
 		platformExt = '-windows-6.0-amd64.exe';
 	} else if (platform == 'darwin') {
@@ -194,7 +278,9 @@ function downloadUpdate(version,gitrev,platform) {
 	} else if (platform == 'linux') {
 		platformExt = '-linux-amd64';
 	}
-
+	filename = "gqlc-"+version+"-"+gitrev+platformExt;
+	
+*/
 	filename = "gqlc-"+version+"-"+gitrev+platformExt;
 	log.log('downloadUpdate filename:');
 	log.log(filename);
@@ -222,10 +308,36 @@ function downloadUpdate(version,gitrev,platform) {
 			gitrev,
 			platform
 		}
-	
-		chmod.file(700,path.join(userData, filename));
+		console.log(userData);
+		const versionDir = path.join(userData, version);
+		console.log(versionDir);
+		if (!fs.existsSync(versionDir)) {
+			// create dir and parents
+			fs.ensureDirSync(versionDir);
+		}
+		const extract = inly(path.join(userData, filename), versionDir);
+		extract.on('file', (name) => {
+			console.log(name);
+		});
+		 
+		extract.on('progress', (percent) => {
+			console.log(percent + '%');
+		});
+		 
+		extract.on('error', (error) => {
+			console.error(error);
+		});
+		 
+		extract.on('end', () => {
+			console.log('done');
+			if (platform != 'win32') {
+				chmod.file(700,path.join(versionDir, 'gqlc'));
+				chmod.file(700,path.join(versionDir, 'gqlct'));
+			}
+		});
+		//chmod.file(700,path.join(userData, filename));
 
-		if (filename != previousFileName) { // remove previous node version
+		if (previousFileName != '' && filename != previousFileName) { // remove previous node version
 			const previousFileNamePath = path.join(userData, previousFileName);
 			if (fs.existsSync(previousFileNamePath)) { 
 				fs.unlink(previousFileNamePath);
@@ -234,6 +346,199 @@ function downloadUpdate(version,gitrev,platform) {
 		saveWalletConfigData();
     });
 }
+
+function downloadMiner(version,gitrev,platform) {
+
+	platformExt = '';
+
+	if (platform == 'win32') {
+		platformExt = '-Windows-x64.zip';
+	} else if (platform == 'darwin') {
+		platformExt = '-macOS-x64.tar.gz';
+	} else if (platform == 'linux') {
+		platformExt = '-Linux-x64.tar.gz';
+	}
+
+	filename = "gqlc-miner-"+version+"-"+gitrev+platformExt;
+	log.log('downloadUpdate filename:');
+	log.log(filename);
+
+	DownloadManager.download({
+		url: "https://github.com/qlcchain/qlc-miner/releases/download/"+version+"/"+filename,
+		onProgress:  onMinerDownloadProgress
+	}, function (error, info) {
+        if (error) {
+            log.log(error);
+            return;
+        }
+ 
+		log.log("DONE: " + info.url);
+		const previousFileName = walletConfigData.minerData.filename;
+		mainWindow.webContents.send('download-miner-finished', {
+			version,
+			filename,
+			gitrev,
+			platform
+		});
+		walletConfigData.minerData = {
+			version,
+			filename,
+			gitrev,
+			platform
+		}
+		console.log(userData);
+		const versionDir = path.join(userData, version);
+		console.log(versionDir);
+		if (!fs.existsSync(versionDir)) {
+			// create dir and parents
+			fs.ensureDirSync(versionDir);
+		}
+		const extract = inly(path.join(userData, filename), versionDir);
+		extract.on('file', (name) => {
+			console.log(name);
+		});
+		 
+		extract.on('progress', (percent) => {
+			console.log(percent + '%');
+		});
+		 
+		extract.on('error', (error) => {
+			console.error(error);
+		});
+		 
+		extract.on('end', () => {
+			console.log('done');
+			if (platform != 'win32') {
+				chmod.file(700,path.join(versionDir, 'gqlc-miner'));
+			}
+		});
+
+		if (previousFileName != '' && filename != previousFileName) { // remove previous miner version
+			const previousFileNamePath = path.join(userData, previousFileName);
+			if (fs.existsSync(previousFileNamePath)) { 
+				fs.unlink(previousFileNamePath);
+			}
+		}
+		saveWalletConfigData();
+    });
+}
+
+function downloadPool(version,gitrev,platform) {
+
+	platformExt = '';
+
+	if (platform == 'win32') {
+		platformExt = '-Windows-x64.zip';
+	} else if (platform == 'darwin') {
+		platformExt = '-macOS-x64.tar.gz';
+	} else if (platform == 'linux') {
+		platformExt = '-Linux-x64.tar.gz';
+	}
+
+	filename = "gqlc-pool-"+version+"-"+gitrev+platformExt;
+	log.log('downloadUpdate filename:');
+	log.log(filename);
+
+	DownloadManager.download({
+		url: "https://github.com/qlcchain/qlc-pool/releases/download/"+version+"/"+filename,
+		onProgress:  onPoolDownloadProgress
+	}, function (error, info) {
+        if (error) {
+            log.log(error);
+            return;
+        }
+ 
+		log.log("DONE: " + info.url);
+		const previousFileName = walletConfigData.poolData.filename;
+		mainWindow.webContents.send('download-pool-finished', {
+			version,
+			filename,
+			gitrev,
+			platform
+		});
+		walletConfigData.poolData = {
+			version,
+			filename,
+			gitrev,
+			platform
+		}
+		console.log(userData);
+		const versionDir = path.join(userData, version);
+		console.log(versionDir);
+		if (!fs.existsSync(versionDir)) {
+			// create dir and parents
+			fs.ensureDirSync(versionDir);
+		}
+		const extract = inly(path.join(userData, filename), versionDir);
+		extract.on('file', (name) => {
+			console.log(name);
+		});
+		 
+		extract.on('progress', (percent) => {
+			console.log(percent + '%');
+		});
+		 
+		extract.on('error', (error) => {
+			console.error(error);
+		});
+		 
+		extract.on('end', () => {
+			console.log('done');
+			if (platform != 'win32') {
+				chmod.file(700,path.join(versionDir, 'gqlc-pool'));
+			}
+		});
+
+		if (previousFileName != '' && filename != previousFileName) { // remove previous node version
+			const previousFileNamePath = path.join(userData, previousFileName);
+			if (fs.existsSync(previousFileNamePath)) { 
+				fs.unlink(previousFileNamePath);
+			}
+		}
+		saveWalletConfigData();
+    });
+}
+
+
+	const forceKill = (child, timeout = 5000) => {
+		if (!child.killed) {
+			child.kill();
+		}
+
+		if (child.stdin) {
+			child.stdin.destroy();
+		}
+
+		if (child.stdout) {
+			child.stdout.destroy();
+		}
+
+		if (child.stderr) {
+			child.stderr.destroy();
+		}
+
+		const { pid } = child;
+		child.unref();
+
+		const interval = 500;
+		function poll() {
+			try {
+				process.kill(pid, 0);
+				setTimeout(() => {
+					try {
+						process.kill(pid, 'SIGKILL');
+						console.log('Forcefully killed process PID:', pid);
+					} catch (e) {
+						setTimeout(poll, interval);
+					}
+				}, timeout);
+			} catch (e) {
+				// ignore
+			}
+		}
+
+		return setTimeout(poll, interval);
+	};
 
 	function createWindow() {
 		// Create the browser window.
@@ -278,13 +583,35 @@ function downloadUpdate(version,gitrev,platform) {
 	
 
 	let child = {};
+	let miner = {};
+	let pool = {};
 	//startChild();
 	
 	function startChild() {
 		log.log('start child');
 		log.log(userData);
 		log.log(walletConfigData.nodeData.filename);
-		const cmd = path.join(userData, walletConfigData.nodeData.filename);
+
+		const platform = walletConfigData.nodeData.platform;
+		let platformExt = '';
+		if (platform == 'win32') {
+			platformExt = '.exe';
+		} 
+		console.log(userData);
+		const versionDir = path.join(userData, walletConfigData.nodeData.version);
+		console.log(versionDir);
+		if (!fs.existsSync(versionDir)) {
+			// create dir and parents
+			fs.ensureDirSync(versionDir);
+			console.log('node folder not found');
+		}
+		//const cmd = path.join(userData, walletConfigData.nodeData.filename);
+		const cmd = path.join(versionDir, 'gqlc' + platformExt);
+		if (!fs.existsSync(cmd)) {
+			// try to extract again if file not found
+			//fs.ensureDirSync(versionDir);
+			console.log('node not found');
+		}
 		log.log(`start qglc ${cmd}`);
 		child = crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
 			windowsHide: true,
@@ -318,47 +645,141 @@ function downloadUpdate(version,gitrev,platform) {
 	
 		child.once('loaded', () => {});
 	}
+
+	function startMiner(qlc_address,algo) {
+		log.log('start miner');
+		log.log(userData);
+		log.log(walletConfigData.minerData.filename);
+
+		const platform = walletConfigData.minerData.platform;
+		let platformExt = '';
+		if (platform == 'win32') {
+			platformExt = '.exe';
+		} 
+		console.log(userData);
+		const versionDir = path.join(userData, walletConfigData.minerData.version);
+		console.log(versionDir);
+		if (!fs.existsSync(versionDir)) {
+			// create dir and parents
+			fs.ensureDirSync(versionDir);
+			console.log('miner folder not found');
+		}
+		//const cmd = path.join(userData, walletConfigData.minerData.filename);
+		const cmd = path.join(versionDir, 'gqlc-miner' + platformExt);
+		if (!fs.existsSync(cmd)) {
+			// try to extract again if file not found
+			//fs.ensureDirSync(versionDir);
+			console.log('miner not found');
+		}
+		log.log(`start miner ${cmd}`);
+		//console.log(algo)
+		//console.log(qlc_address);
+		miner = crossSpawn(cmd, ['-nodeurl', 'http://127.0.0.1:9735', '-algo' , algo, '-miner', qlc_address], {
+			windowsHide: true,
+			stdio: ['ignore', 'pipe', 'pipe']
+		});
+
+		if (!miner) {
+			mainWindow.webContents.send('miner-running',{
+				'status' : 0
+			});
+			const err = new Error('miner not started');
+			err.code = 'ENOENT';
+			err.path = cmd;
+			throw err;
+		} else {
+			mainWindow.webContents.send('miner-running',{
+				'status' : 1
+			});
+		}
+		miner.stdout.on('data', data => { 
+			log.log('[miner]', String(data).trim()); 
+			mainWindow.webContents.send('miner-log',String(data).trim());
+		});
+		miner.stderr.on('data', data => {
+			log.log('[miner]', String(data).trim());
+			mainWindow.webContents.send('miner-log',String(data).trim());
+		});
+
+		miner.once('exit', () => {
+			removeMinerExitHandler();
+			global.isMinerStarted = false;
+			log.log(`Miner exiting (PID ${miner.pid})`);
+			forceKill(miner);
+		});
 	
+		miner.once('exit', () => app.removeListener('will-quit', killMinerHandler));
 	
-	const forceKill = (child, timeout = 5000) => {
-		if (!child.killed) {
-			child.kill();
+		miner.once('loaded', () => {});
+	}
+
+	function startPool(qlc_address,algo) {
+		log.log('start pool');
+		log.log(userData);
+		log.log(walletConfigData.poolData.filename);
+
+		const platform = walletConfigData.poolData.platform;
+		let platformExt = '';
+		if (platform == 'win32') {
+			platformExt = '.exe';
+		} 
+		console.log(userData);
+		const versionDir = path.join(userData, walletConfigData.poolData.version);
+		console.log(versionDir);
+		if (!fs.existsSync(versionDir)) {
+			// create dir and parents
+			fs.ensureDirSync(versionDir);
+			console.log('pool folder not found');
 		}
-
-		if (child.stdin) {
-			child.stdin.destroy();
+		//const cmd = path.join(userData, walletConfigData.poolData.filename);
+		const cmd = path.join(versionDir, 'gqlc-pool' + platformExt);
+		if (!fs.existsSync(cmd)) {
+			// try to extract again if file not found
+			//fs.ensureDirSync(versionDir);
+			console.log('pool not found');
 		}
+		log.log(`start pool ${cmd}`);
 
-		if (child.stdout) {
-			child.stdout.destroy();
+		pool = crossSpawn(cmd, ['-nodeurl', 'http://127.0.0.1:9735', '-algo' , algo, '-miner', qlc_address], {
+			windowsHide: true,
+			stdio: ['ignore', 'pipe', 'pipe']
+		});
+
+		if (!pool) {
+			mainWindow.webContents.send('pool-running',{
+				'status' : 0
+			});
+			const err = new Error('pool not started');
+			err.code = 'ENOENT';
+			err.path = cmd;
+			throw err;
+		} else {
+			mainWindow.webContents.send('pool-running',{
+				'status' : 1
+			});
 		}
+		pool.stdout.on('data', data => {
+			log.log('[pool]', String(data).trim());
+			mainWindow.webContents.send('pool-log',String(data).trim());
+		});
+		pool.stderr.on('data', data => {
+			log.log('[pool]', String(data).trim());
+			mainWindow.webContents.send('pool-log',String(data).trim());;
+		});
 
-		if (child.stderr) {
-			child.stderr.destroy();
-		}
-
-		const { pid } = child;
-		child.unref();
-
-		const interval = 500;
-		function poll() {
-			try {
-				process.kill(pid, 0);
-				setTimeout(() => {
-					try {
-						process.kill(pid, 'SIGKILL');
-						console.log('Forcefully killed process PID:', pid);
-					} catch (e) {
-						setTimeout(poll, interval);
-					}
-				}, timeout);
-			} catch (e) {
-				// ignore
-			}
-		}
-
-		return setTimeout(poll, interval);
-	};
+		pool.once('exit', () => {
+			removePoolExitHandler();
+			global.isPoolStarted = false;
+			log.log(`Pool exiting (PID ${pool.pid})`);
+			forceKill(pool);
+		});
+	
+		pool.once('exit', () => app.removeListener('will-quit', killPoolHandler));
+	
+		pool.once('loaded', () => {});
+	}
+	
+	//console.log(child);
 
 	const killHandler = () => { 
 		if (typeof child.kill == 'function') {
@@ -367,22 +788,37 @@ function downloadUpdate(version,gitrev,platform) {
 				'status' : 0
 			});
 		}
-		findProcess('name','gqlc')
-			.then(async function (list) {
-				if (typeof list[0] != 'undefined') {
-					await fkill(list[0].pid, { force: true });
-				} 
-			}, function (err) {
-				log.log(err.stack || err);
-			});
 	};
 	const removeExitHandler = signalExit(killHandler);
+
+	const killMinerHandler = () => { 
+		if (typeof miner.kill == 'function') {
+			miner.kill();
+			mainWindow.webContents.send('miner-running',{
+				'status' : 0
+			});
+		}
+	};
+	const removeMinerExitHandler = signalExit(killMinerHandler);
+
+	
+	const killPoolHandler = () => { 
+		if (typeof pool.kill == 'function') {
+			pool.kill();
+			mainWindow.webContents.send('pool-running',{
+				'status' : 0
+			});
+		}
+	};
+	const removePoolExitHandler = signalExit(killPoolHandler);
 	
 	app.on('ready', () => {
 		// Once the app is ready, launch the wallet window
 		createWindow();
 
 		app.once('will-quit', killHandler);
+		app.once('will-quit', killMinerHandler);
+		app.once('will-quit', killPoolHandler);
 
 		// Detect when the application has been loaded using an xrb: link, send it to the wallet to load
 		app.on('open-url', (event, path) => {
@@ -408,8 +844,30 @@ function downloadUpdate(version,gitrev,platform) {
 
 	// Quit when all windows are closed.
 	app.on('window-all-closed', function() {
-		killHandler();
-		app.quit();		
+		// On OS X it is common for applications and their menu bar
+		// to stay active until the user quits explicitly with Cmd + Q
+
+		if (process.platform !== 'darwin') {
+			// close gqlc
+			console.log(typeof child.kill);
+			if (typeof child.kill == 'function') {
+				child.kill();
+				killHandler();
+			}
+			// close miner
+			console.log(typeof miner.kill);
+			if (typeof miner.kill == 'function') {
+				miner.kill();
+				killMinerHandler();
+			}
+			// close pool
+			console.log(typeof pool.kill);
+			if (typeof pool.kill == 'function') {
+				pool.kill();
+				killPoolHandler();
+			}
+			app.quit();
+		}
 	});
 
 	app.on('activate', function() {

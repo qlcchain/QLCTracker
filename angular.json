@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "smsBilling": {
+    "qlcTracker": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -31,7 +31,6 @@
               "src/scss/styles.scss"
             ],
             "scripts": [
-              "node_modules/particles.js/particles.js",
               "node_modules/jquery/dist/jquery.js"
             ],
             "es5BrowserSupport": true
@@ -56,8 +55,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "5mb",
+                  "maximumError": "7mb"
                 }
               ]
             },
@@ -81,8 +80,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "9mb",
+                  "maximumError": "10mb"
                 }
               ]
             },
@@ -105,8 +104,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "9mb",
+                  "maximumError": "10mb"
                 }
               ]
             },
@@ -123,21 +122,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "smsBilling:build"
+            "browserTarget": "qlcTracker:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "smsBilling:build:production"
+              "browserTarget": "qlcTracker:build:production"
             },
             "testnet": {
-              "browserTarget": "smsBilling:build:testnet"
+              "browserTarget": "qlcTracker:build:testnet"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "smsBilling:build"
+            "browserTarget": "qlcTracker:build"
           }
         },
         "test": {
@@ -151,7 +150,6 @@
               "src/scss/styles.scss"
             ],
             "scripts": [
-              "node_modules/particles.js/particles.js",
               "node_modules/jquery/dist/jquery.js"
             ],
             "assets": [
@@ -174,7 +172,7 @@
         }
       }
     },
-    "smsBilling-e2e": {
+    "qlcTracker-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -183,11 +181,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "smsBilling:serve"
+            "devServerTarget": "qlcTracker:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "smsBilling:serve:production"
+              "devServerTarget": "qlcTracker:serve:production"
             }
           }
         },
@@ -203,5 +201,5 @@
       }
     }
   },
-  "defaultProject": "smsBilling"
+  "defaultProject": "qlcTracker"
 }

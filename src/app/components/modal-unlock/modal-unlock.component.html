@@ -3,14 +3,14 @@
     <span aria-hidden="true">&times;</span>
   </button>
   <div class="row text-center">
-      <div class="col-10 offset-1">
+      <div class="col-12 col-sm-10 offset-sm-1">
           <div class="form-group text-center">
             <img src="assets/img/qlc-icon-lock-red.svg" style="width:80px;height:auto;" class="pt-4">
             <h1 class="pt-4">Unlock Account</h1>
-            <div class="input-group pt-3 pb-3">
-              <input class="form-control pass-field text-center" type="password" [(ngModel)]="unlockPassword" (keyup.enter)="unlockWalletConfirm()" placeholder="Enter your password" appAutofocus>
+            <div class="input-group pt-3 pb-3 w-100">
+              <input class="form-control pass-field text-center w-100" type="password" [(ngModel)]="unlockPassword" (keyup.enter)="unlockWalletConfirm()" placeholder="Enter your password" appAutofocus>
             </div>
-            <button class="btn btn-primary mb-4 w-100 pl-0 pr-0" type="button" (click)="unlockWalletConfirm()">UNLOCK</button>
+            <button class="btn btn-primary mb-4 w-100 pl-0 pr-0" style="min-width: 0px !important;" type="button" (click)="unlockWalletConfirm()">UNLOCK</button>
           </div>
     </div>
   </div>

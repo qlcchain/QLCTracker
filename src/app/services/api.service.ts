@@ -28,7 +28,7 @@ export class ApiService {
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
 	c = new Client(this.HTTP_RPC, () => {});
 	
-	qlcTokenHash = 'a7e8fa30c063e96a489a47bc43909505bd86735da4a109dca28be936118a8582';
+	qlcTokenHash = '45dd217cd9ff89f7b64ceda4886cc68dde9dfa47a8a422d165e2ce6f9a834fad';
 
 	constructor(private http: HttpClient, private node: NodeService) {
 		//this.connectInterval.pipe(takeUntil(() => this.node.status)).subscribe()
@@ -52,6 +52,13 @@ export class ApiService {
 						if ( syncQuery.result == true) {
 							this.node.setSynchronizing();
 							this.connect();
+							if (this.rpcUrl != environment.mainRpcUrl) {
+								const blocksMainQuery = await this.blocksCountMain();
+								const blocksQuery = await this.blocksCount();
+								this.nodeMainBlocksCount = blocksMainQuery.result.count;
+								this.nodeBlocksCount = blocksQuery.result.count;
+								//console.log('mainBlocksCount ' + ' ' + mainBlocksCount + ' nodeBlocksCount ' + ' ' + nodeBlocksCount + ' unchecked ' + ' ' + blocksQuery.result.unchecked)							
+							}
 						} else {
 							if (this.rpcUrl != environment.mainRpcUrl) {
 								const blocksMainQuery = await this.blocksCountMain();
@@ -206,7 +213,7 @@ export class ApiService {
 		}
 	}
 
-	async process(block): Promise<{ result?: string; error?: string }> {
+	async process(block): Promise<{ result?: string; error?: any }> {
 		if (this.node.synchronized === false) {
 			const errorMsg = {
 				error: 'Node is not synchronized.'
@@ -365,8 +372,6 @@ export class ApiService {
 		return result;
 	}
 
-	
-
 	private async request(action, data, rpc = ''): Promise<any> {
 		data.jsonrpc = '2.0';
 		data.method = action;
@@ -452,6 +457,12 @@ export class ApiService {
 	async connectPeersInfo(): Promise<{ result: any; error?: any }> {
 		return await this.request('net_connectPeersInfo', { params: [] });
 	}
+
+	async peersCount(): Promise<{ result: any; error?: any }> {
+		return await this.request('net_peersCount', { params: [] });
+	}
+
+	
 	// net END
 
 	// desktop
@@ -475,7 +486,144 @@ export class ApiService {
 		return await this.request('version', { params: [desktopVersion, nodeVersion, platform, arch] }, 'https://explorer.qlcchain.org/api/node');
 	}
 
+	async minerVersion(desktopVersion, minerVersion, platform, arch): Promise<{ result: any; error?: string }> {
+		return await this.request('miner', { params: [desktopVersion, minerVersion, platform, arch] }, 'https://explorer.qlcchain.org/api/node');
+	}
+
+	async poolVersion(desktopVersion, poolVersion, platform, arch): Promise<{ result: any; error?: string }> {
+		return await this.request('pool', { params: [desktopVersion, poolVersion, platform, arch] }, 'https://explorer.qlcchain.org/api/node');
+	}
+
 	// desktop END
 
+	// news
 
+	async news(): Promise<{ result: any; error?: string }> {
+		return await this.request('news', { params: [] }, 'https://explorer.qlcchain.org/api/news');
+	}
+
+	async newsArchive(): Promise<{ result: any; error?: string }> {
+		return await this.request('archive', { params: [] }, 'https://explorer.qlcchain.org/api/news');
+	}
+	
+	// news END
+
+
+	// pov
+
+	async getFittestHeader(): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getFittestHeader', { params: [ 0 ] });
+	}
+
+	async getLatestHeader(): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getLatestHeader', { params: [ ] });
+	}
+
+	async getHeaderByHeight(height): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getHeaderByHeight', { params: [ height ] });
+	}
+
+	async batchGetHeadersByHeight(start, count = 10, direction = false): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_batchGetHeadersByHeight', { params: [ start, count, direction ] });
+	}
+
+	async getHeaderByHash(height): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getHeaderByHash', { params: [ height ] });
+	}
+
+	async getBlockByHash(hash, offset = 0, limit = 100): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getBlockByHash', { params: [ hash, offset, limit ] });
+	}
+
+	async getBlockByHeight(height, offset = 0, limit = 100): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getBlockByHeight', { params: [ Number(height), offset, limit ] });
+	}
+
+	async getMinerStats(): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getMinerStats', { params: [ [] ] });
+	}
+
+	async getLastNHourInfo(beginTime = 0, endTime = 0): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getLastNHourInfo', { params: [ beginTime, endTime ] });
+	}
+
+	async getHashInfo(beginBlock = 0, endBlock = 0): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getHashInfo', { params: [ beginBlock, endBlock ] });
+	}
+
+	async pov_getLatestAccountState(account): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getLatestAccountState', { params: [ account ] });
+	}
+
+	async pov_getRepStats(): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getRepStats', { params: [ [] ] });
+	}	
+	
+	
+
+	// pov end
+
+	// mining 
+
+	
+	async getAvailRewardInfo(address): Promise<{ result: any; error?: any }> {
+		return await this.request('miner_getAvailRewardInfo', { params: [ address ] });
+	}
+
+	async getRewardSendBlock(coinbase,beneficial,startHeight,endHeight,rewardBlocks,rewardAmount): Promise<{ result: any; error?: any }> {
+		return await this.request('miner_getRewardSendBlock', { params: [ {
+			coinbase,
+			beneficial,
+            startHeight,
+            endHeight,
+			rewardBlocks,
+			rewardAmount: Number(rewardAmount)
+		} ] });
+	}
+	
+
+	async getRewardRecvBlockBySendHash(sentHash): Promise<{ result: any; error?: any }> {
+		return await this.request('miner_getRewardRecvBlockBySendHash', { params: [ sentHash ] });
+	}
+
+	async getRewardRecvBlock(block): Promise<{ result: any; error?: any }> {
+		return await this.request('miner_getRewardRecvBlock', { params: [ block ] });
+	}
+
+	async miner_getRewardHistory(qlcAddress): Promise<{ result: any; error?: any }> {
+		return await this.request('miner_getRewardHistory', { params: [ qlcAddress ] });
+	}
+
+	// mining end
+
+	// representation
+
+	async rep_getAvailRewardInfo(address): Promise<{ result: any; error?: any }> {
+		return await this.request('rep_getAvailRewardInfo', { params: [ address ] });
+	}
+
+	async rep_getRewardSendBlock(account,beneficial,startHeight,endHeight,rewardBlocks,rewardAmount): Promise<{ result: any; error?: any }> {
+		return await this.request('rep_getRewardSendBlock', { params: [ {
+			account,
+			beneficial,
+            startHeight,
+            endHeight,
+			rewardBlocks,
+			rewardAmount: Number(rewardAmount)
+		} ] });
+	}
+	
+	async rep_getRewardRecvBlockBySendHash(sentHash): Promise<{ result: any; error?: any }> {
+		return await this.request('rep_getRewardRecvBlockBySendHash', { params: [ sentHash ] });
+	}
+
+	async rep_getRewardRecvBlock(block): Promise<{ result: any; error?: any }> {
+		return await this.request('rep_getRewardRecvBlock', { params: [ block ] });
+	}	
+
+	async rep_getRewardHistory(qlcAddress): Promise<{ result: any; error?: any }> {
+		return await this.request('rep_getRewardHistory', { params: [ qlcAddress ] });
+	}
+
+	// representation end
 }

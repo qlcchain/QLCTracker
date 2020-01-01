@@ -5,11 +5,11 @@
     <!-- TITLE -->
     <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
       <div class="content-title">
-        <h1>SMS Billing</h1>
+        <h1>Network Status</h1>
       </div>
     </div>
     
-    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+    <!--<div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
       <div class="content-box-blue bg-blue-voting">
         <div class="container">
           <div class="row qlc-table-header-blue">
@@ -23,19 +23,37 @@
           </div>
         </div>
       </div>
+    </div>-->
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+      <div class="content-box-blue bg-blue-blocks">
+        <div class="container">
+          <div class="row qlc-table-header-blue">
+            <div class="col-12">BLOCKS</div>
+          </div>
+          <div class="row qlc-table-row-blue">
+            <div class="col-12">
+              <span *ngIf="ws.povLatestHeader != undefined">{{ ws.povLatestHeader.basHdr.height | currency:'':'':'1.0-0' }}</span>
+            </div>
+          </div>
+          <div class="row qlc-table-header-darkblue">
+            <div class="col-12"><a routerLink="/pov-explorer"><span class="qlc-icon icon-arrow-right-bluelight"></span>All Blocks</a></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
-      <div class="content-box-blue bg-blue-messages">
+      <div class="content-box-blue bg-blue-transactions">
         <div class="container">
           <div class="row qlc-table-header-blue">
-            <div class="col-12">Settled messages</div>
+            <div class="col-12">TRANSACTIONS</div>
           </div>
           <div class="row qlc-table-row-blue">
             <div class="col-12">{{ wallet.blocksCount.count | currency:'':'':'1.0-0' }}</div>
           </div>
           <div class="row qlc-table-header-darkblue">
-            <div class="col-12"><a routerLink="/transactions"><span class="qlc-icon icon-arrow-right-bluelight"></span>All messages</a></div>
+            <div class="col-12"><a routerLink="/transactions"><span class="qlc-icon icon-arrow-right-bluelight"></span>All transactions</a></div>
           </div>
         </div>
       </div>
@@ -45,7 +63,7 @@
       <div class="content-box-blue bg-blue-accounts">
         <div class="container">
           <div class="row qlc-table-header-blue">
-            <div class="col-12">Wallets created</div>
+            <div class="col-12">WALLETS</div>
           </div>
           <div class="row qlc-table-row-blue">
             <div class="col-12">{{ accountsCreated | currency:'':'':'1.0-0' }}</div>
@@ -61,7 +79,7 @@
       <div class="content-box-blue bg-blue-tokens">
         <div class="container">
           <div class="row qlc-table-header-blue">
-            <div class="col-12">Tokens issued</div>
+            <div class="col-12">TOKENS</div>
           </div>
           <div class="row qlc-table-row-blue">
             <div class="col-12">{{ tokensCount | currency:'':'':'1.0-0'}}</div>
@@ -75,7 +93,75 @@
         
   </div>
 </div>
+<div class="container"><div class="row">
 
+  <div class="col-lg-6 col-md-12 col-12 pl-0 pr-0">
+    <!-- LATEST BLOCKS -->
+    <div class="container mt-0 mb-3">
+      <div class="row">
+        
+        <div class="col-12 pl-0 pr-0">
+          
+          <!-- TITLE -->
+          <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+            <div class="content-title">
+              <h1>Latest Blocks</h1>
+            </div>
+          </div>
+    
+          <!-- LIST -->
+          <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+            <div class="content-box-white">
+    
+                <div class="container">
+      
+                    <div class="row qlc-table-header">
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 pl-4">Block</div>
+                      <div class="col-xl-5 col-lg-6 col-md-4 col-sm-6 col-6 text-truncate">Hash / Miner Account</div>
+                      <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-2 col-sm-3 col-3 text-sm-right text-xl-center text-lg-right text-md-center text-right pr-sm-4 pr-md-0 pr-lg-0 pr-4">Tx Num</div>
+                      <div class="col-xl-2 col-lg-3 col-md-3 col-sm-12 d-none d-xl-block d-lg-none d-md-block col-6 pr-4 text-right">Time</div>
+                    </div>
+                    
+                    <div class="row qlc-table-row qlc-table-row-four closed row-anim-in" *ngFor="let povHeader of ws.latest5Blocks">
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 pl-4 pb-0">
+                        <span class="">
+                          <span class="qlc-icon icon-block" title="Block {{ povHeader.basHdr.height | currency:'':'':'1.0-0' }}"></span>
+                          <span class="text-bold-grey"><a [routerLink]="'/pov/height/' + povHeader.basHdr.height">{{ povHeader.basHdr.height | currency:'':'':'1.0-0' }}</a></span>
+                        </span>
+                      </div>
+                      <div class="col-xl-5 col-lg-7 col-md-4 col-sm-7 col-7 pb-0">
+                        <span class="text-color-lightgrey text-tiny">Hash: </span><a [routerLink]="'/pov/hash/' + povHeader.basHdr.hash">{{ povHeader.basHdr.hash | squeeze : '11,10' }}</a><br>
+                        <span class="text-color-lightgrey text-tiny">Miner: </span><a [routerLink]="'/account/' + povHeader.cbtx.txOuts[0].address">{{ povHeader.cbtx.txOuts[0].address | squeeze : '11,10' }}</a><br>
+                        <span class="text-color-lightgrey text-tiny">Algorithm: </span>{{ povHeader.algoName }}<br>
+                        <span class="text-color-lightgrey text-tiny">AuxPOW: </span>{{ (povHeader.auxHdr != null ? 'Yes' : 'No' ) }}
+                        
+                      </div>
+                      <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-2 col-sm-2 col-2 pb-0 pr-sm-4 pr-md-0 pr-lg-0 pr-4 text-sm-right text-md-center text-xl-center text-lg-right text-right ">
+                          {{ povHeader.cbtx.txNum }}
+                      </div>
+                      <div class="col-xl-2 col-lg-12 col-md-3 col-sm-12 col-12 pr-4 text-right text-lg-right pr-lg-4">
+                        {{ povHeader.basHdr.timestamp * 1000 | date: 'short' }}
+                      </div>
+                  </div>
+                </div>
+             
+    
+    
+            </div>
+          </div>
+    
+          <!-- BUTTON -->
+          <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center">
+            <a routerLink="/pov-explorer" class="btn btn-primary btn-blue">ALL BLOCKS</a>
+          </div>
+        
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 col-md-12 col-12 pl-0 pr-0">
 <!-- LATEST TRANSACTIONS -->
 <div class="container mt-0 mb-3">
   <div class="row">
@@ -97,34 +183,39 @@
           <div class="container">
 
             <div class="row qlc-table-header">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Type</div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
+              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 pl-4">Type</div>
+              <div class="col-xl-5 col-lg-7 col-md-4 col-sm-7 col-6 text-truncate">Address / Transaction ID</div>
+              <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-2 pr-md-0 col-sm-2 col-3 pr-sm-4 pr-4 pr-xl-0 text-right text-xl-right">Amount</div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-xl-block d-md-block d-lg-none d-sm-none col-6 pr-4 text-right">Time</div>
             </div>
 
-            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of transactions">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+            <div class="row qlc-table-row qlc-table-row-four closed row-anim-in" *ngFor="let transaction of ws.latest5Transactions">
+              <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 pl-4 pb-0 pr-sm-0">
                 <span class="qlc-icon icon-{{ transaction.type }}" title="{{ transaction.type }}"></span>
-                <span class="d-none d-sm-none d-md-inline-block txState">
-                  <span class="text-color-lightgrey">State</span><br>
-                  <span class="text-bold-grey">{{ transaction.type }}</span>
+                <span class="d-none d-sm-inline-block d-md-inline-block">
+                  <span class="text-bold-grey" *ngIf="transaction.type != 'ContractReward'">{{ transaction.type }}</span>
+                  <span class="text-bold-grey" *ngIf="transaction.type == 'ContractReward'" style="font-size: 11px;">{{ transaction.type }}</span>
                 </span>
               </div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey" *ngIf="transaction.type != 'Change'">{{transaction.type == 'Send' || transaction.type == 'ContractSend' ? 'to' : 'from'}}: </span> 
-                <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)" *ngIf="transaction.type != 'Change'">{{ transaction.link_as_account || transaction.address }}</a>
-                <a [routerLink]="'/transaction/' + transaction.hash"><br>
-                  <span class="text-tiny">{{ transaction.hash }}</span>
-                </a>
+              <div class="col-xl-5 pr-xl-0 col-lg-6 col-md-4 col-sm-6 col-6 pb-0">
+                <span class="text-color-lightgrey text-tiny">{{transaction.type == 'Send' || transaction.type == 'ContractSend' ? 'To' : 'From'}}: </span> 
+                <a [routerLink]="'/account/' + (transaction.link_as_account || transaction.address)">{{ transaction.link_as_account || transaction.address | squeeze : '11,10' }}</a><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <a [routerLink]="'/transaction/' + transaction.hash"><span>{{ transaction.hash | squeeze : '11,10' }}</span></a>
+                <span *ngIf="transaction.povConfirmHeight > 0">
+                  <br><span class="text-color-lightgrey text-tiny">Confirm height:</span>
+                  <a [routerLink]="'/pov/height/' + transaction.povConfirmHeight"> {{ transaction.povConfirmHeight }}</a><br> 
+                  <span class="text-color-lightgrey text-tiny">Confirm count:</span> {{ transaction.povConfirmCount }}
+                </span>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
+              <div class="col-xl-2 pr-xl-0 col-lg-3 pr-lg-4 col-md-2 pr-md-0 col-sm-3 col-3 pb-0 pr-sm-0 pr-sm-4 pr-4 text-xl-right text-right {{
                 transaction.type == 'Send' || transaction.type == 'ContractSend' ? 'text-color-red' : 'text-color-green'
-              }}">
-                <span data-toggle="tooltip" data-placement="top" title="">{{transaction.type == 'Send' || transaction.type == 'ContractSend' ? '-' : '+'}} {{ transaction.amount | qlc:transaction.tokenInfo.decimals | currency:'':'':'1.2-8' }}</span>
+              }}" [ngStyle]="{'font-size: 11px': transaction.type == 'ContractReward'}">
+                <span data-toggle="tooltip" data-placement="top" title="" *ngIf="transaction.tokenInfo && transaction.type != 'ContractReward'" style="font-size: 11px;">{{transaction.type == 'Send' || transaction.type == 'ContractSend' ? '-' : '+'}} {{ transaction.amount | qlc:transaction.tokenInfo.decimals | currency:'':'':'1.2-8' }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="" *ngIf="transaction.tokenInfo && transaction.type == 'ContractReward'" style="font-size: 11px;">{{transaction.type == 'Send' || transaction.type == 'ContractSend' ? '-' : '+'}} {{ transaction.amount | qlc:transaction.tokenInfo.decimals | currency:'':'':'1.2-8' }}</span>
                 <br><span class="text-color-grey">{{ transaction.tokenName }}</span>
               </div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+              <div class="col-xl-2 col-lg-12 col-md-3 col-sm-12 col-12 pr-4 text-right">
                 {{ transaction.timestamp * 1000 | date: 'short' }}
               </div>
               <div class="container transaction-details">
@@ -147,64 +238,81 @@
     
   </div>
 </div>
+</div>
 
+</div></div>
 
-
-<!-- DETAILS -->
+<!-- POV STATUS -->
 
 <div class="container">
   <div class="row equal">
 
     <!-- TITLE -->
-    <div class="col-lg-12 mb-0 pb-0 mt-0 pl-md-2 pr-md-2">
+    <div class="col-lg-12 mb-0 pb-0 mt-4 pl-md-2 pr-md-2">
       <div class="content-title">
-        <h1>Network Status</h1>
+        <h1>Mining Status (POV)</h1>
       </div>
     </div>
     
-    <div class="col-lg-4 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+    <a routerLink="/mining" class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2" style="text-decoration: none;">
       <div class="content-box-white">
         <div class="container">
           <div class="row qlc-table-header-white sub-page">
-            <div class="col-12">Nodes online</div>
+            <div class="col-12">Miners online</div>
           </div>
           <div class="row qlc-table-row-white sub-page pb-0">
-            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ nodesOnline }}</span></div>
+            <div class="col-12 text-wrap pb-1"><span class="row-text-big" style="color: #000000;">{{ minerOnline | currency:'':'':'1.0-0' }}</span></div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ nodesTotal }} total nodes</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ minerCount | currency:'':'':'1.0-0' }} total mining accounts</span></div>
           </div>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="col-lg-4 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2">
+    <a routerLink="/representatives" class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pr-sm-2 pb-2" style="text-decoration: none;">
       <div class="content-box-white">
         <div class="container">
           <div class="row qlc-table-header-white sub-page">
-            <div class="col-12">Voting power online (QLC)</div>
+            <div class="col-12">Voting power online</div>
           </div>
           <div class="row qlc-table-row-white sub-page pb-0">
-            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ votingPower | qlc | number }}</span></div>
+            <div class="col-12 text-wrap pb-1"><span class="row-text-big" style="color: #000000;">{{ votingPower | qlc | number }}</span></div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
             <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ votingPowerPercent }} % of total voting power</span></div>
           </div>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="col-lg-4 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pb-2 pr-sm-2 pl-sm-3">
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pb-2 pr-sm-2 pl-sm-3">
       <div class="content-box-white">
         <div class="container">
           <div class="row qlc-table-header-white sub-page">
-            <div class="col-12">Total transaction counter</div>
+            <div class="col-12">Avg. tx / block</div>
           </div>
           <div class="row qlc-table-row-white sub-page pb-0">
-            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ wallet.blocksCount.count }}</span></div>
+            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ povInfo.AvgTxPerBlock }}</span></div>
           </div>
           <div class="row qlc-table-row-white sub-page pt-0">
-            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ wallet.blocksCount.unchecked }} pending transactions</span></div>
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ povInfo.AllTxNum }} tx in last 24 hours</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pl-sm-2 pb-2">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row qlc-table-header-white sub-page">
+            <div class="col-12">Nodes online</div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pb-0">
+            <div class="col-12 text-wrap pb-1"><span class="row-text-big">{{ nodesOnline | currency:'':'':'1.0-0' }}</span></div>
+          </div>
+          <div class="row qlc-table-row-white sub-page pt-0">
+            <div class="col-12 text-wrap pt-1"><span class="text-blue">{{ nodesTotal | currency:'':'':'1.0-0' }} total nodes</span></div>
           </div>
         </div>
       </div>
@@ -213,6 +321,148 @@
   </div>
 </div>
 
+<!-- POV GRAPHS -->
+
+<div class="container">
+    <div class="row equal">
+
+      
+      <div class="col-lg-6 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+        <div class="content-box-white">
+          <div class="container">
+            <div class="row qlc-table-header-white sub-page">
+              <div class="col-12">
+                <div class="content-title" style="text-transform: none;">
+                  <h1>24h Mining Rewards (QGAS)</h1>
+                </div>
+              </div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pb-0">
+              <div class="col-12">
+                <ngx-chartjs [data]="miningRewardsGraphData" [options]="graphOptions" [redraw]="true" type="line" class="w-100"></ngx-chartjs>
+              </div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pt-0">
+              <div class="col-6 pt-4">
+                  <span>24h avg. mining reward: </span><span class="text-blue">{{ totalMiningReward/24 | currency:'':'':'1.2-2'}} QGAS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-lg-6 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+        <div class="content-box-white">
+          <div class="container">
+            <div class="row qlc-table-header-white sub-page">
+              <div class="col-12">
+                <div class="content-title" style="text-transform: none;">
+                  <h1>24h Transactions</h1>
+                </div>
+              </div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pb-0">
+              <div class="col-12">
+                <ngx-chartjs [data]="transactionsGraphData" [options]="transactionsgraphOptions" redraw="true" type="line" class="w-100"></ngx-chartjs>
+              </div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pt-0">
+              <div class="col-6 pt-4">
+                <span>24h avg. transactions: </span><span class="text-blue">{{ povInfo.AvgTxPerBlock }}</span>
+              </div>
+              <div class="col-6 pt-4">
+                <span>Max transactions in block: </span><span class="text-blue">{{ povInfo.MaxTxPerBlock }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<div class="container">
+    <div class="row equal">
+
+      
+      <div class="col-lg-6 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+        <div class="content-box-white">
+          <div class="container">
+            <div class="row qlc-table-header-white sub-page">
+              <div class="col-12">
+                <div class="content-title" style="text-transform: none;">
+                  <h1>Blocks Last 2 Hours</h1>
+                </div>
+              </div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pb-0">
+              <div class="col-12">
+                <ngx-chartjs [data]="blockHashData" [options]="pieChartOptions" [redraw]="true" type="pie" class="w-100"></ngx-chartjs>
+              </div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pt-0">
+              <div class="col-12 pt-4">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-lg-6 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2">
+        <div class="content-box-white">
+          <div class="container">
+            <div class="row qlc-table-header-white sub-page">
+              <div class="col-12">
+                <div class="content-title" style="text-transform: none;">
+                  <h1>Blocks Last 24 Hours</h1>
+                </div>
+              </div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pb-0">
+              <div class="col-12">
+                <ngx-chartjs [data]="blockHashData24" [options]="pieChartOptions" redraw="true" type="pie" class="w-100"></ngx-chartjs>
+              </div>
+            </div>
+            <div class="row qlc-table-row-white sub-page pt-0">
+              <div class="col-12 pt-4">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<!-- NEWS -->
+<div class="container mt-4 mb-4">
+  <div class="row">
+
+    <!-- TITLE -->
+    <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+      <div class="content-title">
+        <h1>News</h1>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2" *ngFor="let news of newsList">
+      <div class="content-box-white">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 pt-4 pb-4 pl-4 pr-4">
+              <p class="date-mini">{{ news.date | date: 'MM/dd/yyyy' }}</p>
+              <a href="{{ news.link }}" target="_blank" style="text-decoration: none !important;"><h3 class="pb-4 link-blue">{{ news.title }}</h3></a>
+              <p>{{ news.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUTTON -->
+    <div class="col-lg-12 pt-2 pb-5 mb-0 mt-2 pl-md-2 pr-md-2 text-center">
+      <a routerLink="/news" class="btn btn-primary btn-blue">ALL NEWS</a>
+    </div>
+
+  </div>
+</div>
 
 <div class="container mt-4 mb-4">
   <div class="row">

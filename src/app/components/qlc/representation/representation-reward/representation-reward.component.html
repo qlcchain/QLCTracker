@@ -1,0 +1,468 @@
+<app-user-submenu></app-user-submenu>
+
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+  <div class="row">
+    <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+      <div class="container">
+        <div class="row">
+          <!-- TITLE -->
+          <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
+            <div class="content-title">
+              <h1 class="neo">My Representatives</h1>
+            </div>
+          </div>
+          <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-2 pr-2">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 " (click)="checkReps()">
+              Refresh
+            </button>
+          </div>
+          <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 "  routerLink="/representation">
+              Representatives Overview
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container accounts pt-3">
+  <div class="row">
+    
+    <!-- LIST -->
+    <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+      <div class="content-box-white">
+        
+        
+        <div class="container">
+          
+          <div class="row qlc-table-header">
+            <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-6 text-truncate">Address</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Balance</div>
+              <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Voting power</div>
+              <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 pl-4">Main Block</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Reward</div>
+              <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 text-right">Online</div>
+          </div>
+
+          <div class="row qlc-table-row qlc-table-row-twolines closed" *ngIf="repAccounts.length == 0">
+            <div class="col-12 pb-0 text-center">
+              <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">No rewards</span><br>
+                None of your accounts is a Representative</p>
+            </div>
+          </div>
+          
+          <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let rep of repAccounts">
+            <div class="d-none d-xl-block col-xl-5 pb-0">
+              <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '25,25' }}</a>
+            </div>
+            <div class="d-none d-lg-block d-xl-none col-lg-4 pb-0">
+              <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '18,18' }}</a>
+            </div>
+            <div class="d-none d-md-block d-lg-none col-md-4 pb-0">
+              <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '10,10' }}</a>
+            </div>
+            <div class="d-none d-sm-block d-md-none col-sm-4 pb-0">
+              <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '8,8' }}</a>
+            </div>
+            <div class="d-block d-sm-none col-6 pb-0">
+              <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '8,8' }}</a>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+              <span data-toggle="tooltip" data-placement="top" title="">{{ rep.repInfo.total | qlc:8 | currency:'':'':'1.2-8' }}</span>
+            </div>
+            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 pb-0 pr-sm-0 pr-4 text-right" >
+              {{ rep.repInfo.votingPower }} %      
+            </div>
+            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 pl-4">
+              <span *ngIf="rep.repInfo.reward && rep.repInfo.reward.mainBlockNum">{{ rep.repInfo.reward.mainBlockNum }}</span>
+              <span *ngIf="!rep.repInfo.reward || (rep.repInfo.reward && !rep.repInfo.reward.mainBlockNum)">N/A</span>
+            </div>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">
+              <span *ngIf="rep.repInfo.reward && rep.repInfo.reward.mainRewardAmount">{{ rep.repInfo.reward.mainRewardAmount | qlc:8 | currency:'':'':'1.2-2' }} QGAS</span>
+              <span *ngIf="!rep.repInfo.reward || (rep.repInfo.reward && !rep.repInfo.reward.mainRewardAmount)">N/A</span>
+            </div>
+            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 pr-4 text-right">
+              <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online" *ngIf="rep.repInfo.online"></span>
+              <span class="qlc-icon icon-status-offline" data-toggle="tooltip" data-placement="top" title="" data-original-title="Offline" *ngIf="!rep.repInfo.online"></span>
+            </div>
+            <div class="col-12">
+              <span *ngIf="rep.repInfo.eligible && rep.repInfo.eligible === true && !rep.repInfo.reward">
+                <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">Eligible for rewards.</span><br>
+                  Run a node with your account and start to vote, check the doc to run a node:<br>
+                  <a href="https://docs.qlcchain.online/tutorial/node/install.html#start-go-qlc-node" target="_blank">https://docs.qlcchain.online/tutorial/node/install.html#start-go-qlc-node</a>
+                <br><br>
+                If your node is already running, please wait atleast 120 POV blocks.</p>
+              </span>
+              <span *ngIf="rep.repInfo.eligible && rep.repInfo.eligible === false">
+                <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">Not Eligible for rewards</span><br>
+                  Get Balance over 3 M to become eligible for rewards</p>
+              </span>
+            </div>
+          
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div *ngIf="repAccounts.length == 0">
+  <div class="container mt-0">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="neo"><span>Your Rewards</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container accounts pt-3">
+    <div class="row">
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+          <div class="container">
+            <div class="row qlc-table-header">
+              <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-6 text-truncate">Address</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Reward</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Info</div>
+              <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 d-none d-sm-block col-5 pr-4 text-right">Block heights</div>
+            </div>
+            <div class="row qlc-table-row qlc-table-row-twolines closed">
+              <div class="col-12 pb-0 text-center">
+                  <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">No rewards</span><br>
+                    None of your accounts is a Representative</p>
+              </div>
+            </div>              
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-0">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="neo"><span>Reward History</span></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row pb-4">
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-voting">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Reward Amount</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">0,00 QGAS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-blocks">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Reward Blocks</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-blocks">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Last End Height</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+        <div class="content-box-blue bg-blue-transactions">
+          <div class="container">
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">Last Reward Time</div>
+            </div>
+            <div class="row qlc-table-row-blue">
+              <div class="col-12 pb-2" style="font-size:0.7em;">/</div>
+            </div>
+          </div>
+        </div>
+      </div>     
+    </div>
+  </div>
+</div>
+
+<!-- LOOP ALL REWARDS-->
+
+
+<!-- NEW MINING REWARDS -->
+<div *ngFor="let rep of repAccounts">
+
+    <div class="container mt-0">
+      <div class="row">
+        <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+          <div class="container">
+            <div class="row">
+              <!-- TITLE -->
+              <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+                <div class="content-title">
+                  <h1 class="neo"><span *ngIf="rep.repRewards.status == 0">Checking for Rewards...</span></h1>
+                  <h1 class="neo"><span *ngIf="rep.repRewards.status == -1">Your Rewards</span></h1>
+                  <h1 class="neo"><span *ngIf="rep.repRewards.status == 1">Your Rewards</span></h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container accounts pt-3">
+      <div class="row">
+        
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+            
+            
+            <div class="container">
+              
+              <div class="row qlc-table-header">
+                <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4 col-6 text-truncate">Address</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4">Reward</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Info</div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 d-none d-sm-block col-5 pr-4 text-right">Block heights</div>
+              </div>
+              
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngIf="rep.repRewards.status == 1">
+                <div class="d-none d-xl-block col-xl-5 pb-0">
+                  <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '25,25' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ rep.repRewards.data.lastEndHeight }} 
+                </div>
+                <div class="d-none d-lg-block d-xl-none col-lg-4 pb-0">
+                  <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '18,18' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ rep.repRewards.data.lastEndHeight }} 
+                </div>
+                <div class="d-none d-md-block d-lg-none col-md-4 pb-0">
+                  <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '10,10' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ rep.repRewards.data.lastEndHeight }} 
+                </div>
+                <div class="d-none d-sm-block d-md-none col-sm-4 pb-0">
+                  <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '8,8' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ rep.repRewards.data.lastEndHeight }} 
+                </div>
+                <div class="d-block d-sm-none col-6 pb-0">
+                  <a [routerLink]="'/account/' + rep.repInfo.address">{{ rep.repInfo.address | squeeze : '8,8' }}</a><br>
+                  <span class="text-color-lightgrey text-tiny">Last Claimed At Node Height:</span> {{ rep.repRewards.data.lastEndHeight }} 
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+                  <span class="text-color-lightgrey text-tiny"> </span> <span class="text-color-green">+{{ rep.repRewards.data.availRewardAmount | qlc : 8 }}</span> QGAS<br>
+                  <span class="text-color-lightgrey text-tiny">Reward Blocks:</span> {{ rep.repRewards.data.availRewardBlocks }}<br>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right" >
+                  <span class="text-color-lightgrey text-tiny">Block Start Height:</span> {{ rep.repRewards.data.availStartHeight }}<br>
+                  <span class="text-color-lightgrey text-tiny">Block End Height:</span> {{ rep.repRewards.data.availEndHeight }}
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-5 pr-4 text-right">
+                  <span class="text-color-lightgrey text-tiny">Latest Block Height:</span> {{ rep.repRewards.data.latestBlockHeight }} <br>
+                  <span class="text-color-lightgrey text-tiny">Latest Node Reward Height:</span> {{ rep.repRewards.data.nodeRewardHeight }} 
+                </div>
+              
+              </div>
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngIf="rep.repRewards.status == -1">
+                <div class="col-12 pb-0 text-center">
+                  <p class="text-center pt-2 pb-2"><span class="title-modal-blue mt-0 mb-4">You have currently no Rewards</span><br>
+                    The Rewards of the recent 1440 POV blocks are reserved.</p>
+                </div>
+              </div>
+
+              <!-- REWARD CLAIMING -->
+              <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4" *ngIf="rep.repRewards.showGetReward == 1">
+                <div class="w-100">
+                  <div class="row pt-1 pb-2" style="border-bottom: none !important;">
+                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 pl-4">
+                      Beneficial Address
+                    </div>
+                    <div class="col-md-9 text-left" [formGroup]="repRewardForm">
+                      <div class="form-group" >
+                        <select class="custom-select" formControlName="beneficial" >
+                          <option *ngFor="let account of accounts" [value]="account.id"
+                          >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }}</option>
+                        </select>
+                        <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;"></p>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">&nbsp;</div>
+                    <div class="col-lg-9 col-md-9 col-sm-12 col-12 pr-0 pl-md-2 pr-md-2">
+                      <button (click)="getReward(rep.account.id)" type="submit" class="btn btn-primary ml-2" >
+                        GET REWARD
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="rep.repRewards.showProcessingReward == 1">
+                
+                <p class="text-center pt-5"><span class="title-modal-blue mt-0 mb-4">Please wait</span><br>
+                  Processing your reward...</p>
+                  
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-6 offset-md-3 mt-2 mb-5 pb-3">
+                        
+                        <div id="noTrespassingOuterBarG">
+                          <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
+                            <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                            <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="row" *ngIf="rep.repRewards.showError == 1">
+                <div class="col-12">
+                  ERROR - {{ rep.repRewards.errorTxt }}
+                </div>
+              </div>
+              <div class="row" *ngIf="rep.repRewards.showBlockProcessed == 1">
+                <div class="col-12 mb-5 mt-5">
+                    <p class="text-center pt-5"><span class="title-modal-blue mt-0 mb-4">Reward block processed</span><br>
+                      <span class="text-tiny text-color-lightgrey pt-3">Reward block hash</span><br>
+                      <a routerLink="/transaction/{{ rep.repRewards.rewardProcessHash }}">{{ rep.repRewards.rewardProcessHash }}</a></p>
+
+                    <button (click)="checkReps()" type="submit" class="btn btn-primary mt-3 mr-2 ml-2" >
+                      CHECK FOR MORE REWARDS
+                    </button>
+                    <button routerLink="/wallets/qlc/{{ rep.account.id }}" type="submit" class="btn btn-primary mt-3 mr-2 ml-2" >
+                      CLAIM YOUR REWARDS
+                    </button>
+                </div>
+              </div>
+
+              
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- REWARDS HISTORY -->
+
+    <div class="container mt-0">
+      <div class="row">
+        <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+          <div class="container">
+            <div class="row">
+              <!-- TITLE -->
+              <div class="col-md-12 col-12 mt-2 pl-2 pr-2">
+                <div class="content-title">
+                  <h1 class="neo"><span *ngIf="rep.repHistory.status == 0">Checking for Reward History...</span></h1>
+                  <h1 class="neo"><span *ngIf="rep.repHistory.status == -1">Reward History</span></h1>
+                  <h1 class="neo"><span *ngIf="rep.repHistory.status == 1">Reward History</span></h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row pb-4">
+
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+          <div class="content-box-blue bg-blue-voting">
+            <div class="container">
+              <div class="row qlc-table-header-blue">
+                <div class="col-12">Reward Amount</div>
+              </div>
+              <div class="row qlc-table-row-blue">
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="rep.repHistory.status == 1">{{ rep.repHistory.data.rewardAmount | qlc : 8 | number: '1.2-2' }} QGAS</div>
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="rep.repHistory.status == -1">0,00 QGAS</div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+          <div class="content-box-blue bg-blue-blocks">
+            <div class="container">
+              <div class="row qlc-table-header-blue">
+                <div class="col-12">Reward Blocks</div>
+              </div>
+              <div class="row qlc-table-row-blue">
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="rep.repHistory.status == 1">{{ rep.repHistory.data.rewardBlocks }}</div>
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="rep.repHistory.status == -1">/</div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+          <div class="content-box-blue bg-blue-blocks">
+            <div class="container">
+              <div class="row qlc-table-header-blue">
+                <div class="col-12">Last End Height</div>
+              </div>
+              <div class="row qlc-table-row-blue">
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="rep.repHistory.status == 1">{{ rep.repHistory.data.lastEndHeight }}</div>
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="rep.repHistory.status == -1">/</div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pb-2">
+          <div class="content-box-blue bg-blue-transactions">
+            <div class="container">
+              <div class="row qlc-table-header-blue">
+                <div class="col-12">Last Reward Time</div>
+              </div>
+              <div class="row qlc-table-row-blue">
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="rep.repHistory.status == 1">{{ rep.repHistory.data.lastRewardTime * 1000 | date: 'short' }}</div>
+                <div class="col-12 pb-2" style="font-size:0.7em;" *ngIf="rep.repHistory.status == -1">/</div>
+              </div>
+            </div>
+          </div>
+        </div>        
+    
+      </div>
+    </div>
+
+
+
+
+
+
+
+</div>

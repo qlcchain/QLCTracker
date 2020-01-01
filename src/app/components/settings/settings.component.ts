@@ -319,6 +319,11 @@ export class SettingsComponent implements OnInit {
 		this.modalRef = this.modalService.show(template);
 	}
 
+	newWallet() {
+		this.router.navigate(['/createwallet/']);
+		this.modalRef.hide();
+	}
+
 	async clearWorkCache() {
 		try {
 			this.workPool.clearCache();
@@ -510,7 +515,7 @@ export class SettingsComponent implements OnInit {
     const file = files[0];
     const reader = new FileReader();
     reader.onload = event => {
-      const fileData = event.target['result'];
+      const fileData = <string> event.target['result'];
       try {
         const importData = JSON.parse(fileData);
         if (!importData.length || !importData[0].account) {

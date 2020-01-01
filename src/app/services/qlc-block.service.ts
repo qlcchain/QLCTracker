@@ -9,6 +9,7 @@ import { AppSettingsService } from './app-settings.service';
 //import { WalletService } from './wallet.service';
 // import { LedgerService } from './ledger.service';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { timer } from 'rxjs';
 
 const nacl = window['nacl'];
 
@@ -28,6 +29,9 @@ export class QLCBlockService {
 	msg5 = '';
 	msg6 = '';
 	msg7 = '';
+
+	
+	private confirmTxTimer = timer(500);
 
 	constructor(
 		private api: ApiService,
@@ -121,11 +125,19 @@ export class QLCBlockService {
 			const rewardReceiveBlock = await this.api.getReceiveRewardBlock(sourceBlock);
 			//console.log(rewardReceiveBlock);
 			if (rewardReceiveBlock.result) {
-				const processResponse = await this.api.process(rewardReceiveBlock.result);
-				if (processResponse && processResponse.result) {
+				//pov
+				let block = rewardReceiveBlock.result;
+				const povFittest = await this.api.getFittestHeader();
+				if (povFittest.error || !povFittest.result || !povFittest.result.basHdr) {
+					console.log('ERROR - no fittest header');
+					return;
+				}
+				block.povHeight = povFittest.result.basHdr.height;
+				const processResponse = await this.api.process(block);
+				if (processResponse.result) {
 					return processResponse.result;
 				} else {
-					return null;
+					return false;
 				}
 			}
 			if (rewardReceiveBlock.error) {
@@ -133,6 +145,51 @@ export class QLCBlockService {
 			}
 			return;
 		}
+
+		// Miner / Rep reward
+		// Miner link = 0000000000000000000000000000000000000000000000000000000000000015
+		// Rep link = 0000000000000000000000000000000000000000000000000000000000000017
+		if (sendBlock.type == 'ContractSend' && (sendBlock.link == '0000000000000000000000000000000000000000000000000000000000000015')) {
+			// proccess Miner reward block
+			
+			const rewardRecvBlockQuery = await this.api.getRewardRecvBlockBySendHash(sendBlock.hash);
+			if (rewardRecvBlockQuery.result) {
+				const processResponse = await this.processBlockWithPov(rewardRecvBlockQuery.result, walletAccount.keyPair);
+				if (processResponse.result) {
+					return processResponse.result;
+				} else {
+					return false;
+				}
+			}
+
+			if (rewardRecvBlockQuery.error) {
+				console.log(rewardRecvBlockQuery.error.message);
+			}
+			
+			return;
+		}
+
+		if (sendBlock.type == 'ContractSend' && (sendBlock.link == '0000000000000000000000000000000000000000000000000000000000000017')) {
+			// proccess Rep reward block
+			
+			const rewardRecvBlockQuery = await this.api.rep_getRewardRecvBlockBySendHash(sendBlock.hash);
+			if (rewardRecvBlockQuery.result) {
+				const processResponse = await this.processBlockWithPov(rewardRecvBlockQuery.result, walletAccount.keyPair);
+				if (processResponse.result) {
+					return processResponse.result;
+				} else {
+					return false;
+				}
+			}
+
+			if (rewardRecvBlockQuery.error) {
+				console.log(rewardRecvBlockQuery.error.message);
+			}
+			
+			return;
+		}
+
+
 
 		// if (srcBlockInfo.result[0].address == 'qlc_3pj83yuemoegkn6ejskd8bustgunmfqpbhu3pnpa6jsdjf9isybzffwq7s4p' || srcBlockInfo.result[0].address == 'qlc_1kk5xst583y8hpn9c48ruizs5cxprdeptw6s5wm6ezz6i1h5srpz3mnjgxao') {
 		// 	// proccess reward block
@@ -157,6 +214,13 @@ export class QLCBlockService {
 	}
 
 	async processBlock(block, keyPair) {
+		//pov
+		const povFittest = await this.api.getFittestHeader();
+		if (povFittest.error || !povFittest.result) {
+			console.log('ERROR - no fittest header');
+			return;
+		}
+		block.povHeight = povFittest.result.basHdr.height;
 		const blockHash = await this.api.blockHash(block);
 		const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
 		const signature = this.util.hex.fromUint8(signed);
@@ -178,12 +242,77 @@ export class QLCBlockService {
 
 		const processResponse = await this.api.process(block);
 		if (processResponse && processResponse.result) {
+			const confirm = await this.confirmTx(processResponse.result);
+			console.log('confirm');
+			console.log(confirm);
 			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
 			this.workPool.removeFromCache(generateWorkFor);
 			return processResponse;
 		} else {
 			return null;
 		}
+	}
+
+	async processBlockWithPov(block, keyPair) {
+		const blockHash = await this.api.blockHash(block);
+		const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
+		const signature = this.util.hex.fromUint8(signed);
+
+		block.signature = signature;
+		let generateWorkFor = block.previous;
+		if (block.previous === this.zeroHash) {
+			const publicKey = await this.api.accountPublicKey(block.address);
+			generateWorkFor = publicKey.result;
+		}
+
+		if (!this.workPool.workExists(generateWorkFor)) {
+			this.notifications.sendInfo(this.msg3);
+		}
+		//console.log('generating work');
+		const work = await this.workPool.getWork(generateWorkFor);
+		//console.log('work >>> ' + work);
+		block.work = work;
+
+		const processResponse = await this.api.process(block);
+		if (processResponse && processResponse.result) {
+			const confirm = await this.confirmTx(processResponse.result);
+			console.log('confirm');
+			console.log(confirm);
+			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
+			this.workPool.removeFromCache(generateWorkFor);
+			return processResponse;
+		} else if (processResponse && processResponse.error) {
+			return processResponse;
+		} else {
+			return null;
+		}
+	}
+
+	async confirmTx(hash) {
+		console.log('confirmingTx ' + hash);
+		let notConfirmed = true;
+
+		while(notConfirmed) {
+			const blockConfirmedQuery = await this.api.blockConfirmedStatus(hash);
+			if (typeof blockConfirmedQuery.result != 'undefined') {
+				if (blockConfirmedQuery.result === true) {
+					console.log('confirmed');
+					notConfirmed = false;
+				} else {
+					console.log('not confirmed');
+					await this.sleep(500);
+				}
+			} else {
+				console.log('not confirmed');
+				await this.sleep(500);
+			}
+		}
+		return hash;
+	}
+
+	sleep(ms) {
+		console.log('sleep' + ms);
+		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
 	sendLedgerDeniedNotification() {

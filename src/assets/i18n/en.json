@@ -290,7 +290,7 @@
 		"offline": "Representative is offline",
 		"no_voting_delegate": "None of your accounts have delegated any voting weight yet, you must receive a transaction to change your representative!",
 		"select_all_acc_with_rep": "Click on a representative to select all of the accounts delegated to it",
-		"change_reps": "Change your representatives",
+		"change_reps": "Change Your Representatives",
 		"accounts_to_change": "Accounts to Change",
 		"select_accounts_to_change": "Select Accounts to Change",
 		"all_accounts": "All Accounts",

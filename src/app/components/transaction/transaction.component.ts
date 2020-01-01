@@ -39,6 +39,12 @@ export class TransactionComponent implements OnInit {
     this.load();
   }
 
+  ngOnDestroy() {
+		if (this.routerSub) {
+			this.routerSub.unsubscribe();
+		}
+	}
+
   load() {
     if (this.node.status === true) {
       this.loadTransactionDetails();
@@ -68,14 +74,16 @@ export class TransactionComponent implements OnInit {
     const transaction = await this.api.blocksInfo([this.transactionHash]);
 
     this.transaction = transaction.result[0];
-    console.log(this.transaction);
+    //console.log(this.transaction);
     this.transactionJSON = JSON.stringify(this.transaction, null, 4);
 
     if (tokenMap.hasOwnProperty(this.transaction.token)) {
       this.transaction.tokenInfo = tokenMap[this.transaction.token];
     }
 
-    if (this.transaction.type == 'Open' || this.transaction.type == 'ContractReward') { // link is block hash
+    if (this.transaction.type === 'Online' || this.transaction.type === 'Change') {
+      this.transaction.link_as_account = this.transaction.address;
+    } else if (this.transaction.type == 'Open' || this.transaction.type == 'ContractReward' || this.transaction.type == 'Receive') { // link is block hash
       const link_as_account = await this.api.blockAccount(this.transaction.link);
       if (!link_as_account.error && typeof (link_as_account.result[0]) != 'undefined' && link_as_account.result.length > 0) {
         this.transaction.link_as_account = this.transaction.address;

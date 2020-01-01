@@ -1,4 +1,5 @@
-<div class="send-screen-1" *ngIf="activePanel == 'send'">
+<app-user-submenu></app-user-submenu>
+<div class="send-screen-1 qlc-content-home qlc-after-submenu" *ngIf="activePanel == 'send'">
 
 
 
@@ -16,7 +17,7 @@
 								</div>
 							</div>
 							<div class="col-md-3 col-12 pl-md-2 pr-md-2">
-									<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/myaccounts">
+									<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0" routerLink="/wallets">
 										Back to my Wallets
 									</button>
 							</div>
@@ -174,7 +175,7 @@
 																	[(ngModel)]="amount"
 																	placeholder="{{ 'SEND_TOKENS_TAB.amount_placeholder' | translate }}"
 																	onfocus="this.placeholder = ''"
-																	style="height: 42px !important;"
+																	style="height: 42.5px !important;"
 																/>
 																<div class="input-group-append">
 																	<a (click)="setMaxAmount()">
@@ -325,7 +326,7 @@
 
 
 
-<div class="send-screen-2" *ngIf="activePanel == 'confirm'">
+<div class="send-screen-2 qlc-content-home qlc-after-submenu" *ngIf="activePanel == 'confirm'">
 		<!-- SEND FORM -->
 		<div class="container mt-0 qlc-content-first">
 			<div class="row">
@@ -372,10 +373,24 @@
 										<div class="col-lg-6 text-center pt-4 pb-4">
 											<div class="text-label pb-2">{{ 'SEND_TOKENS_TAB.from_account' | translate }}</div>
 											<div class="pl-5 pr-5 text-truncate pt-1 pb-1">
-												<a [routerLink]="'/account/' + fromAccountID" class="name"
-													><span *ngIf="fromAddressBook">{{ fromAddressBook }}</span
-													><span *ngIf="!fromAddressBook">{{ fromAccountID }}</span></a
-												>
+												<a [routerLink]="'/account/' + fromAccountID" class="name">
+													<span *ngIf="fromAddressBook">{{ fromAddressBook }}</span>
+													<span class="d-none d-xl-block" *ngIf="!fromAddressBook">
+														{{ fromAccountID | squeeze : '15,15' }}
+													</span>
+													<span class="d-none d-lg-block d-xl-none" *ngIf="!fromAddressBook">
+														{{ fromAccountID | squeeze : '12,12' }}
+													</span>
+													<span class="d-none d-md-block d-lg-none" *ngIf="!fromAddressBook">
+														{{ fromAccountID | squeeze : '20,20' }}
+													</span>
+													<span class="d-none d-sm-block d-md-none" *ngIf="!fromAddressBook">
+														{{ fromAccountID | squeeze : '15,15' }}
+													</span>
+													<span class="d-block d-sm-none" *ngIf="!fromAddressBook">
+														{{ fromAccountID | squeeze : '12,12' }}
+													</span>
+												</a>
 											</div>
 											<div class="pl-5 pr-5 pb-4">
 												<a [routerLink]="'/account/' + fromAccountID" class="address">{{ fromAccountID }}</a>
@@ -386,10 +401,24 @@
 										<div class="col-lg-6 text-center pt-4 pb-4">
 											<div class="text-label pb-2">{{ 'SEND_TOKENS_TAB.to_account' | translate }}</div>
 											<div class="pl-5 pr-5 text-truncate pt-1 pb-1">
-												<a [routerLink]="'/account/' + toAccountID" class="name"
-													><span *ngIf="toAddressBook">{{ toAddressBook }}</span
-													><span *ngIf="!toAddressBook">{{ toAccountID }}</span></a
-												>
+												<a [routerLink]="'/account/' + toAccountID" class="name">
+													<span *ngIf="toAddressBook">{{ toAddressBook }}</span>
+													<span class="d-none d-xl-block" *ngIf="!toAddressBook">
+														{{ toAccountID | squeeze : '15,15' }}
+													</span>
+													<span class="d-none d-lg-block d-xl-none" *ngIf="!toAddressBook">
+														{{ toAccountID | squeeze : '12,12' }}
+													</span>
+													<span class="d-none d-md-block d-lg-none" *ngIf="!toAddressBook">
+														{{ toAccountID | squeeze : '20,20' }}
+													</span>
+													<span class="d-none d-sm-block d-md-none" *ngIf="!toAddressBook">
+														{{ toAccountID | squeeze : '15,15' }}
+													</span>
+													<span class="d-block d-sm-none" *ngIf="!toAddressBook">
+														{{ toAccountID | squeeze : '12,12' }}
+													</span>
+												</a>
 											</div>
 											<div class="pl-5 pr-5 pb-4">
 												<a [routerLink]="'/account/' + toAccountID" class="address">{{ toAccountID }}</a>

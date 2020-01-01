@@ -1,5 +1,6 @@
+<app-user-submenu></app-user-submenu>
 <!-- STAKINGS LIST -->
-<div class="container mt-0 qlc-content-first" *ngIf="step == 0">
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="step == 0">
   <div class="row">
     <div class="col-12 pl-0 pr-0">
         <div class="container">
@@ -7,16 +8,16 @@
                   <!-- TITLE -->
                   <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
                     <div class="content-title">
-                      <h1 style="display:inline-block;">My Stakings</h1>
+                      <h1 style="display:inline-block;">My QLC Stakings</h1>
                     </div>
                   </div>
                   <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
-                    <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" routerLink="/myaccounts">
+                    <!--<button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" routerLink="/wallets">
                       BACK TO MY WALLETS
-                    </button>
+                    </button>-->
                   </div>
                   <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
-                    <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 ml-xl-2 ml-lg-4 ml-md-5 ml-0 w-100" routerLink="/staking-create">
+                    <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 ml-xl-2 ml-lg-4 ml-md-5 ml-0 w-100" routerLink="/staking/qlc/create">
                       INVOKE NEW STAKING
                     </button>
                   </div>
@@ -56,14 +57,14 @@
                     
                   </span>
                 </div>
-                <div class="col-xl-4 col-lg-4 order-lg-2 pl-lg-2 col-md-8 order-md-6 pl-md-4 col-sm-8 order-sm-5 pl-sm-4 col-12 pl-4 order-6 pb-0 text-truncate">
+                <div class="col-xl-4 col-lg-4 order-lg-2 pl-lg-2 col-md-8 order-md-6 pl-md-4 col-sm-8 order-sm-5 pl-sm-4 col-12 pl-4 order-6 pb-0">
                   <span class="text-color-lightgrey" >From: </span> 
                   <a href="{{ neoService.getExplorer() }}/address/{{pledge.multiSigAddress}}" target="_blank" >{{ pledge.multiSigAddress }}</a><br>
                   <span class="text-color-lightgrey" >To: </span> 
-                  <a routerLink="/myaccount/{{ pledge.beneficial }}" >{{ pledge.beneficial }}</a><br>
+                  <a routerLink="/wallets/qlc/{{ pledge.beneficial }}" >{{ pledge.beneficial | squeeze : '20,20' }}</a><br>
                   <!-- <a (click)="neoService.contractGetLockInfo(pledge.nep5TxId)">Check</a>-->
                   <a href="{{ neoService.getExplorer() }}/transaction/{{pledge.nep5TxId}}" target="_blank">
-                    <span class="text-tiny">{{ pledge.nep5TxId }}</span> 
+                    <span class="text-tiny">{{ pledge.nep5TxId | squeeze : '25,25' }}</span> 
                   </a>
                 </div>
                 <div class="col-xl-1 col-lg-1 order-lg-3 col-md-2 order-md-2 col-sm-3 order-sm-2 col-4 order-3 pb-0 pr-sm-0 pl-4 pr-0 text-sm-right text-left text-blue">
@@ -219,10 +220,10 @@
                         <span class="text-bold-grey">Confidant ISO</span>
                       </span>
                     </div>
-                    <div class="col-xl-6 col-lg-6 col-md-6 pl-md-2 col-sm-5 col-4 pb-0 pl-sm-4 pr-sm-0 pl-4 text-left text-truncate">
+                    <div class="col-xl-6 col-lg-6 col-md-6 pl-md-2 col-sm-5 col-4 pb-0 pl-sm-4 pr-sm-0 pl-4 text-left" style="word-break: break-all">
                       <!--From: <a routerLink="/account/{{ reward.from }}" >{{ reward.from }}</a><br>
                       To: <a routerLink="/account/{{ reward.to }}" >{{ reward.to }}</a>-->
-                      <a routerLink="/myaccount/{{ reward.account }}" >{{ reward.account }}</a>
+                      <a routerLink="/wallets/qlc/{{ reward.account }}" >{{ reward.account | squeeze : '25,25' }}</a>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-3 pb-0 pr-sm-0 text-right text-color-green">
                       <span data-toggle="tooltip" data-placement="top" title="+9.00 $">+{{ reward.amount | qlc | currency:'':'':'1.2-8' }}</span>
@@ -296,10 +297,10 @@
                 <span class="text-color-lightgrey" >From: </span> 
                 <a href="{{ neoService.getExplorer() }}/address/{{pledge.multiSigAddress}}" target="_blank" >{{ pledge.multiSigAddress }}</a><br>
                 <span class="text-color-lightgrey" >To: </span> 
-                <a routerLink="/myaccount/{{ pledge.beneficial }}" >{{ pledge.beneficial }}</a><br>
+                <a routerLink="/wallets/qlc/{{ pledge.beneficial }}" >{{ pledge.beneficial | squeeze : '20,20' }}</a><br>
                 <!-- <a (click)="neoService.contractGetLockInfo(pledge.nep5TxId)">Check</a>-->
                 <a href="{{ neoService.getExplorer() }}/transaction/{{pledge.nep5TxId}}" target="_blank">
-                  <span class="text-tiny">{{ pledge.nep5TxId }}</span> 
+                  <span class="text-tiny">{{ pledge.nep5TxId | squeeze : '25,25' }}</span> 
                 </a>
               </div>
               <div class="col-xl-1 col-lg-1 order-lg-3 col-md-2 order-md-2 col-sm-3 order-sm-2 col-4 order-3 pb-0 pr-sm-0 pl-4 pr-0 text-sm-right text-left text-blue">
@@ -349,7 +350,7 @@
 
 
   <!-- LOADING -->
-  <div class="container mt-0 qlc-content-first">
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
     <div class="row">
       <div class="col-12 pl-0 pr-0 pb-2">
         <div class="container">
@@ -421,7 +422,7 @@
 <div class="revoke-screen-2" *ngIf="step == 2">
 
   <!-- COMPLETE -->
-  <div class="container mt-0 qlc-content-first">
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
     <div class="row">
       <div class="col-12 pl-0 pr-0 pb-2">
         <div class="container">
@@ -498,7 +499,7 @@
 <!-- CONTINUE INVOKE -->
 <div class="stake-screen-1"  *ngIf='step == 3'>
   <!-- LOADING -->
-  <div class="container mt-0 qlc-content-first">
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
     <div class="row">
       <div class="col-12 pl-0 pr-0 pb-2">
         <div class="container">
@@ -576,7 +577,7 @@
 
 
   <!-- COMPLETE -->
-  <div class="container mt-0 qlc-content-first">
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
     <div class="row">
       <div class="col-12 pl-0 pr-0 pb-2">
         <div class="container">
