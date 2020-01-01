@@ -19,6 +19,7 @@
     "qlc:build-testnet": "ng build --configuration=testnet",
     "qlc:build": "ng build --configuration=production",
     "qlc:build-desktop": "ng build --configuration=desktop --base-href ./",
+    "qlc:build-desktop-high-mem": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --configuration=desktop --base-href ./",
     "qlc:build-desktop-testnet": "ng build --configuration=desktop-testnet --base-href ./",
     "desktop:dev": "electron desktop/main.js",
     "desktop:local": "electron-builder",
