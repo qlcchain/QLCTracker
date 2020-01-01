@@ -4,6 +4,8 @@
   "main": "desktop/main.js",
   "author": "QLC Chain Team <admin@qlink.mobi>",
   "description": "QLC Wallet and Explorer",
+  "homepage": "https://explorer.qlcchain.org",
+  "license": "MIT",
   "scripts": {
     "postinstall": "node patch.js",
     "ng": "ng",
