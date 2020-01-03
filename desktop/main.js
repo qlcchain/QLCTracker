@@ -94,6 +94,7 @@ function getConfig() {
 		return cfg;
 	} else {
 		console.log('creating new walletConfig file');
+		fs.ensureFileSync(wallletConfigPath);
 		fs.writeFileSync(wallletConfigPath, JSON.stringify(defaultWalletData, null, 4));
 		return defaultWalletData;
 	}
