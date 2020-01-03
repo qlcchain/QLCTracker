@@ -24,7 +24,7 @@ script:
       security import keystore.p12 -k build.keychain -P $KEYCHAIN_PASSWORD -T /usr/bin/codesign;
       security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASSWORD build.keychain;
       npm install;
-      npm run qlc:build-desktop;
+      npm run qlc:build-desktop-high-mem;
       npm run desktop:full;
     fi
    

@@ -94,6 +94,7 @@ function getConfig() {
 		return cfg;
 	} else {
 		console.log('creating new walletConfig file');
+		fs.ensureFileSync(wallletConfigPath);
 		fs.writeFileSync(wallletConfigPath, JSON.stringify(defaultWalletData, null, 4));
 		return defaultWalletData;
 	}
@@ -910,24 +911,24 @@ function downloadPool(version,gitrev,platform) {
 					{
 						label: 'View GitHub',
 						click() {
-							loadExternal('https://github.com/qlcchain/sms-billing');
+							loadExternal('https://github.com/qlcchain/QLCTracker');
 						}
 					},
 					{
 						label: 'Submit Issue',
 						click() {
-							loadExternal('https://github.com/qlcchain/sms-billing/issues/new');
+							loadExternal('https://github.com/qlcchain/QLCTracker/issues/new');
 						}
 					},
 					{ type: 'separator' },
 					{
 						type: 'normal',
-						label: `sms-billing Version: ${walletConfigData.version}`
+						label: `QLCTracker Version: ${walletConfigData.version}`
 					},
 					{
 						label: 'View Latest Updates',
 						click() {
-							loadExternal('https://github.com/qlcchain/sms-billing/releases');
+							loadExternal('https://github.com/qlcchain/QLCTracker/releases');
 						}
 					},
 					{ type: 'separator' },
@@ -943,7 +944,7 @@ function downloadPool(version,gitrev,platform) {
 
 		if (process.platform === 'darwin') {
 			template.unshift({
-				label: 'sms-billing',
+				label: 'QLCTracker',
 				submenu: [
 					{ role: 'about' },
 					{ type: 'separator' },
