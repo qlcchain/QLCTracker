@@ -78,6 +78,7 @@ import { MiningRewardComponent } from './components/qlc/mining/mining-reward/min
 import { UserSubmenuComponent } from './components/user-dashboard/user-submenu/user-submenu.component';
 import { StakingDashboardComponent } from './components/staking-dashboard/staking-dashboard.component';
 import { SqueezeNumberPipe } from './pipes/squeeze-number.pipe';
+import { PortalComponent } from './components/portal/portal.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -137,7 +138,8 @@ export function createTranslateLoader(http: HttpClient) {
     MiningRewardComponent,
     UserSubmenuComponent,
     StakingDashboardComponent,
-    SqueezeNumberPipe
+    SqueezeNumberPipe,
+    PortalComponent
   ],
   imports: [
     BrowserModule,

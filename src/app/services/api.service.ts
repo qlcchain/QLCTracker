@@ -508,6 +508,14 @@ export class ApiService {
 	
 	// news END
 
+	// portal
+
+	async portalApply(data): Promise<{ status: any; error?: string }> {
+		return await this.request('apply', { params: [data] }, 'https://explorer.qlcchain.org/api/portal');
+	}
+	
+	// portal END
+
 
 	// pov
 
