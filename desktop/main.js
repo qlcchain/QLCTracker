@@ -791,9 +791,11 @@ function downloadPool(version,gitrev,platform) {
 	const killHandler = () => { 
 		if (typeof child.kill == 'function') {
 			child.kill();
-			mainWindow.webContents.send('node-running',{
-				'status' : 0
-			});
+			if (mainWindow != null) {
+				mainWindow.webContents.send('node-running',{
+					'status' : 0
+				});
+			}
 		}
 	};
 	const removeExitHandler = signalExit(killHandler);
