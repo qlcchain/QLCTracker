@@ -786,8 +786,6 @@ function downloadPool(version,gitrev,platform) {
 		pool.once('loaded', () => {});
 	}
 	
-	//console.log(child);
-
 	const killHandler = () => { 
 		if (typeof child.kill == 'function') {
 			child.kill();
