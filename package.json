@@ -1,6 +1,6 @@
 {
   "name": "qlctracker",
-  "version": "v1.3.0",
+  "version": "v1.3.1",
   "main": "desktop/main.js",
   "author": "QLC Chain Team <admin@qlink.mobi>",
   "description": "QLC Wallet and Explorer",
@@ -79,7 +79,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.22",
+    "@angular-devkit/build-angular": "^0.803.23",
     "@angular/cli": "^8.3.22",
     "@angular/compiler-cli": "^8.2.14",
     "@angular/language-service": "^8.2.14",

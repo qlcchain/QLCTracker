@@ -54,7 +54,7 @@ console.log(`path: ` + toExecutableName('gqlc'));
 const userData = app.getPath('userData');
 
 const defaultWalletData = {
-	version: 'v1.3.0',
+	version: 'v1.3.1',
 	nodeData: {
 		version: '',
 		filename: '',
@@ -90,6 +90,12 @@ function getConfig() {
 			console.log('found version v1.0.2, updating');
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(defaultWalletData, null, 4));
 			return defaultWalletData;
+		}
+		if (cfg.version == 'v1.3.0') {
+			console.log('found version v1.3.0, updating');
+			cfg.version = 'v1.3.1';
+			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
+			return cfg;
 		}
 		return cfg;
 	} else {
@@ -815,8 +821,17 @@ function downloadPool(version,gitrev,platform) {
 	
 	app.on('ready', () => {
 		// Once the app is ready, launch the wallet window
+		const { powerMonitor } = require('electron');
+		powerMonitor.on('suspend', () => {
+			console.log('The system is going to sleep');
+			killHandler();
+		})
+		
+		powerMonitor.on('resume', () => {
+			console.log('The system is resuming');
+		})
 		createWindow();
-
+		
 		app.once('will-quit', killHandler);
 		app.once('will-quit', killMinerHandler);
 		app.once('will-quit', killPoolHandler);
