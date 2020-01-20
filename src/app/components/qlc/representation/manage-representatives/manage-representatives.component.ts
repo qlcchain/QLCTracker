@@ -121,8 +121,8 @@ export class ManageRepresentativesComponent implements OnInit {
 		this.activePanel = 0;
 	}
 
-	copied() {
-		this.notificationService.sendSuccess(this.msg5);
+	copied(accountID) {
+		this.notificationService.sendSuccess(accountID + ' ' + this.msg5);
 	}
 
 	async getOnlineRepresentatives() {

@@ -6,10 +6,15 @@
       <div class="container">
         <div class="row">
           <!-- TITLE -->
-          <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+          <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
             <div class="content-title">
               <h1>Representatives</h1>
             </div>
+          </div>
+          <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2" *ngIf="wallet.isConfigured()">
+            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 "  routerLink="/representation/manage">
+              Manage
+            </button>
           </div>
           <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2" *ngIf="wallet.isConfigured()">
             <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 "  routerLink="/representation">
@@ -254,7 +259,7 @@
                   <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Reward: &nbsp;</span>N/A
                 </div>
                 <div class="col-xl-1 col-lg-1 order-lg-6 pr-lg-3 text-lg-right pr-lg-0 order-4 col-md-4 text-md-left col-sm-3 col-3 text-left pr-4 pl-4">
-                  <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online" *ngIf="rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="rep.online">Offline</span>
+                  <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online" *ngIf="rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="rep.online">Online</span>
                   <span class="qlc-icon icon-status-offline" data-toggle="tooltip" data-placement="top" title="" data-original-title="Offline" *ngIf="!rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="!rep.online">Offline</span>
                 </div>
                 <div class="container transaction-details"></div>
@@ -349,7 +354,7 @@
                   <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block">Reward: &nbsp;</span>N/A
                 </div>
                 <div class="col-xl-1 col-lg-1 order-lg-6 pr-lg-3 text-lg-right pr-lg-0 order-4 col-md-4 text-md-left col-sm-3 col-3 text-left pr-4 pl-4">
-                  <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online" *ngIf="rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="rep.online">Offline</span>
+                  <span class="qlc-icon icon-status-online" data-toggle="tooltip" data-placement="top" title="" data-original-title="Online" *ngIf="rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="rep.online">Online</span>
                   <span class="qlc-icon icon-status-offline" data-toggle="tooltip" data-placement="top" title="" data-original-title="Offline" *ngIf="!rep.online"></span> <span class="text-color-lightgrey text-tiny d-lg-none d-inline-block" *ngIf="!rep.online">Offline</span>
                 </div>
                 <div class="container transaction-details"></div>

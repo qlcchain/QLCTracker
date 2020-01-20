@@ -327,6 +327,16 @@
 		"cancel": "Cancel",
 		"save_new_representative": "Save New Representative"
 	},
+	"MANAGE_REPS_WARNINGS": {
+		"msg1": "Account and name are required",
+		"msg2": "Account ID is not a valid account",
+		"msg3": "Successfully saved new representative!",
+		"msg4": "Unable to save entry:",
+		"msg5": "Account address copied to clipboard!",
+		"msg6": "Unable to determine online status of representatives",
+		"msg7": "Successfully deleted representative",
+		"msg8": "Unable to delete representative:"
+	},
 	"REPS_WARNINGS": {
 		"msg1": "Unable to determine online status of representatives",
 		"msg2": "Account must be unlocked",
