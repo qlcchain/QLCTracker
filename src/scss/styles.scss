@@ -1252,6 +1252,8 @@ a.qlc-top-mainnet-red:hover {
 }
 .bs-tooltip-top .arrow::before, .bs-tooltip-auto[x-placement^="top"] .arrow::before {
     border-top-color: #595757;
+    top: auto;
+    bottom: 0;
 }
 .table-button-expand {
     display: block;
