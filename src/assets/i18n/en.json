@@ -409,5 +409,6 @@
     "TYPE": "TYPE",
     "COPY_TO_CLIPBOARD": "Copy to clipboard",
     "SEND_TOKENS": "Send Tokens",
-	"EDIT_NAME": "Edit Name"
+	"EDIT_NAME": "Edit Name",
+	"VIEW_ACCOUNT_DETAILS": "View Account Details"
 }
