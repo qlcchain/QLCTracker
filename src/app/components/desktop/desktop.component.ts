@@ -148,7 +148,7 @@ export class DesktopComponent implements OnInit {
 
   showPoolControl = false;
 
-  private checkProccesInterval$ = interval(1000);
+  private checkProccesInterval$ = interval(5000);
 
 
   @ViewChild('template', { read: TemplateRef, static:true }) template: TemplateRef<any>;
@@ -309,20 +309,26 @@ export class DesktopComponent implements OnInit {
           if (this.showSynchronizingNode === false) {
             this.api.connect();
             this.showSynchronizingNode = true;
+            this.node.setSynchronizingPov();
+            this.node.setSynchronizingTransactions();
           }
           
         }
       } else {
-        this.node.running = false;
-        this.node.synchronized = false;
-        this.showSynchronizingNode = false;
-        this.nodeMemoryUsage = 0;
-        this.nodeCPUUsage = 0;
-        this.nodeUptime = '';
-        if (this.startingDesktop === false && this.stoppedDesktop === false && this.updateCheckDesktop === false) {
-          this.showStartNode = true;
-          this.stoppedDesktop = true;
-          this.openNodeStoppedModal(this.templateNodeStopped);
+        if (this.node.running === true) {
+          this.node.setOffline('Node stopped.');
+          this.node.running = false;
+          this.node.synchronized = false;
+          this.showNodeStopped = true;
+          this.showSynchronizingNode = false;
+          this.nodeMemoryUsage = 0;
+          this.nodeCPUUsage = 0;
+          this.nodeUptime = '';
+          if (this.stoppedDesktop === false && this.updateCheckDesktop === false) {
+            this.showStartNode = true;
+            this.stoppedDesktop = true;
+            this.openNodeStoppedModal(this.templateNodeStopped);
+          }
         }
       }
     });
@@ -472,6 +478,7 @@ export class DesktopComponent implements OnInit {
   }
 
   openNodeStoppedModal(template: TemplateRef<any>) {
+    this.modalRef.hide();
     this.api.nodeBlocksCount = 0;
     this.api.nodeMainBlocksCount = 0;
     this.showStartNode = true;
@@ -520,6 +527,7 @@ export class DesktopComponent implements OnInit {
     this.ipc.send('node-stop','');
     this.stoppingNode = true;
     this.showNodeStopped = true;
+    this.node.setOffline('Node stopped.');
   }
 
   nodeRestart() {

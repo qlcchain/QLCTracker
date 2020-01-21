@@ -11,6 +11,8 @@ export class NodeService {
 
   status:boolean = null; // null - loading, false - offline, true - online
   synchronized:boolean = null; // null - loading, false - not synchronized, true - synchronized
+  synchronizedTransactions:boolean = null; // null - loading, false - not synchronized, true - synchronized
+  synchronizedPov:boolean = null; // null - loading, false - not synchronized, true - synchronized
   break:boolean = null; // null - loading, false - node ok, true - old version, don't process
   running:boolean = false; // local node status, false - not running, true - running
   
@@ -26,6 +28,8 @@ export class NodeService {
     
     this.status = false;
     this.synchronized = null;
+    this.synchronizedTransactions = null;
+    this.synchronizedPov = null;
     const errMessage = message;
     this.notifications.removeNotification('node-syncing');
     this.notifications.sendError(errMessage, { identifier: 'node-offline', length: 0 });
@@ -43,17 +47,45 @@ export class NodeService {
   }
 
   setSynchronizing() {
-    if (this.synchronized === null) {
+    if (this.synchronized === null || this.synchronized === true) {
       this.notifications.sendInfo('Node is synchronizing. Please wait.', { identifier: 'node-syncing', length: 0 });
       this.synchronized = false;
     }
   }
 
+  setSynchronizingTransactions() {
+    if (this.synchronizedTransactions === null || this.synchronizedTransactions === true) {
+      this.synchronizedTransactions = false;
+      this.setSynchronizing();
+    }
+  }
+
+  setSynchronizingPov() {
+    if (this.synchronizedPov === null || this.synchronizedPov === true) {
+      this.synchronizedPov = false;
+      this.setSynchronizing();
+    }
+  }
+
   setSynchronized() {
-    if (this.synchronized === false) {
+    if (this.synchronized === false && this.synchronizedPov === true && this.synchronizedTransactions === true) {
       this.notifications.removeNotification('node-syncing');
       this.notifications.sendSuccess('Node synchronized.', { identifier: 'node-synced', length: 2000 });
       this.synchronized = true;
+    }
+  }
+
+  setSynchronizedTransactions() {
+    if (this.synchronizedTransactions === false || this.synchronizedTransactions === null) {
+      this.synchronizedTransactions = true;
+      this.setSynchronized();
+    }
+  }
+
+  setSynchronizedPov() {
+    if (this.synchronizedPov === false || this.synchronizedPov === null) {
+      this.synchronizedPov = true;
+      this.setSynchronized();
     }
   }
 
