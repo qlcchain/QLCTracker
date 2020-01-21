@@ -43,10 +43,10 @@
               <div class="col-xl-5 col-lg-7 col-md-6 col-sm-5 col-6 text-truncate">
                   <span *ngIf="representative.trusted" class="icon trusted" tooltip="Representative marked as trusted" container="body"></span>
                   <span *ngIf="representative.warn" class="icon avoid" tooltip="Representative marked as avoid" container="body"></span>
-                  <a [routerLink]="'/account/' + representative.id" class="address" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}" container="body">{{ representative.id }}</a>
+                  <a [routerLink]="'/account/' + representative.id" class="address" tooltip="{{ 'VIEW_ACCOUNT_DETAILS' | translate }}" container="body">{{ representative.id | squeeze : '18,18' }}</a>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 text-right">
-                  <a ngxClipboard [cbContent]="representative.id" (cbOnSuccess)="copied()" tooltip="{{ 'COPY_TO_CLIPBOARD' | translate }}" class="icon copy" container="body"></a>
+                  <a ngxClipboard [cbContent]="representative.id" (cbOnSuccess)="copied(representative.id)" tooltip="{{ 'COPY_TO_CLIPBOARD' | translate }}" class="icon copy"></a>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 text-right">
                   <a (click)="deleteRepresentative(representative.id)" tooltip="{{ 'REPRESENTATIVES_LIST.delete_rep' | translate }}" class="icon delete" container="body"></a>
