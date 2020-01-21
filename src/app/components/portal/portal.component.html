@@ -1,0 +1,362 @@
+<div class="container mt-4 mb-4 qlc-content-home">
+    <div class="row">
+        
+        <!-- TITLE -->
+        <div class="col-lg-12 mb-0 pb-0 mt-2 pl-md-2 pr-md-2">
+            <div class="content-title">
+                <h1>Application portal</h1>
+            </div>
+        </div>
+        <!--
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pr-sm-2 pb-2" *ngFor="let news of newsList">
+                <div class="content-box-white">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 pt-4 pb-4 pl-4 pr-4">
+                                <p class="date-mini">{{ news.date | date: 'MM/dd/yyyy' }}</p>
+                                <a href="{{ news.link }}" target="_blank" class="link-blue"><h3 class="pb-4 link-blue">{{ news.title }}</h3></a>
+                                <p>{{ news.content }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        -->
+    </div>
+    
+    <div class="container accounts" >
+        <div class="row">
+            <!-- FORM -->
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" [formGroup]="applicationForm" *ngIf="sending_status === 2">
+                <div class="container pl-0 pr-0">
+                    <div class="row pl-0 pr-0">
+                        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+                            <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+                                <div class="row">
+                                    <div class="col-12 pt-3 text-center">
+                                        <h1>Application sent!</h1>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" [formGroup]="applicationForm" *ngIf="sending_status !== 2">
+                <div class="container pl-0 pr-0">
+                    <div class="row pl-0 pr-0">
+                        
+                        
+                        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+                            <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+                                
+                                <div class="container ml-1 pr-3 pl-3">
+                                    
+                                    <div class="row defaultTable sendTokens">
+                                        <div class="col-12">
+                                            
+                                            <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+                                                <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-14px;">
+                                                    APPLICATION TYPE
+                                                </div>
+                                                <div class="col-md-9 text-left">
+                                                    <div class="form-group">
+                                                        <input type="radio" name="applicationType" formControlName="applicationType" value="1" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> Voting Node</label>
+                                                        <input type="radio" name="applicationType" formControlName="applicationType" value="2" id="s2"><label for="s2" style="padding-left:10px;padding-right:30px;"> Mining node</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                    TELEGRAM HANDLE
+                                                </div>
+                                                <div class="col-md-9 text-left">
+                                                    <div class="form-group">
+                                                        <input
+                                                        type="text"
+                                                        formControlName="telegram"
+                                                        class="form-control form-my-border"
+                                                        placeholder="Telegram handle"
+                                                        onfocus="this.placeholder = ''"
+                                                        style="height: 42px !important;"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                    EMAIL ADDRESS
+                                                </div>
+                                                <div class="col-md-9 text-left">
+                                                    <div class="form-group">
+                                                        <div class="form-group">
+                                                            <input
+                                                            type="text"
+                                                            formControlName="email_address"
+                                                            class="form-control form-my-border"
+                                                            placeholder="Email address"
+                                                            onfocus="this.placeholder = ''"
+                                                            style="height: 42px !important;"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                    QLC Address
+                                                </div>
+                                                <div class="col-md-9 text-left">
+                                                    <div class="form-group">
+                                                        <div class="form-group">
+                                                            <input
+                                                            type="text"
+                                                            formControlName="qlc_address"
+                                                            class="form-control form-my-border"
+                                                            placeholder="Your activated QLC Chain-based wallet address"
+                                                            onfocus="this.placeholder = ''"
+                                                            style="height: 42px !important;"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div *ngIf="this.applicationForm.value.applicationType == 1">
+                                                
+                                                
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-2 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                                                        HARDWARE DEVICE
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group mb-1">
+                                                                <input type="radio" name="hardwareType" formControlName="hardwareType" value="1" id="hard1"><label for="hard1" style="padding-left:10px;padding-right:30px;"> Home computer</label>
+                                                                <input type="radio" name="hardwareType" formControlName="hardwareType" value="2" id="hard2"><label for="hard2" style="padding-left:10px;padding-right:30px;"> VPS (atleast min configuration)</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                        OPERATION SYSTEM
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <input
+                                                                type="text"
+                                                                formControlName="os"
+                                                                class="form-control form-my-border"
+                                                                placeholder="Operation system (Windows, Linux, Mac, ...)"
+                                                                onfocus="this.placeholder = ''"
+                                                                style="height: 42px !important;"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                        CPU capacity
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <input
+                                                                type="text"
+                                                                formControlName="cpu"
+                                                                class="form-control form-my-border"
+                                                                placeholder="CPU capacity (4x 2Ghz, 6x 2Ghz, ...)"
+                                                                onfocus="this.placeholder = ''"
+                                                                style="height: 42px !important;"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                        MEMORY
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <input
+                                                                type="text"
+                                                                formControlName="memory"
+                                                                class="form-control form-my-border"
+                                                                placeholder="8GB, 10GB"
+                                                                onfocus="this.placeholder = ''"
+                                                                style="height: 42px !important;"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                        STORAGE
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <input
+                                                                type="text"
+                                                                formControlName="storage"
+                                                                class="form-control form-my-border"
+                                                                placeholder="Storage (40gb, 60gb, ...)"
+                                                                onfocus="this.placeholder = ''"
+                                                                style="height: 42px !important;"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                        BANDWIDTH
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <input
+                                                                type="text"
+                                                                formControlName="bandwidth"
+                                                                class="form-control form-my-border"
+                                                                placeholder="Bandwidth (100Mbs, 200Mbs, ...)"
+                                                                onfocus="this.placeholder = ''"
+                                                                style="height: 42px !important;"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-2 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                                                        STATIC IP ADDRESS
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group mb-1">
+                                                                <input type="radio" name="ipAddress" formControlName="ipAddress" value="1" id="ip1"><label for="ip1" style="padding-left:10px;padding-right:30px;"> Yes</label>
+                                                                <input type="radio" name="ipAddress" formControlName="ipAddress" value="2" id="ip2"><label for="ip2" style="padding-left:10px;padding-right:30px;"> No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div *ngIf="this.applicationForm.value.applicationType == 2">
+                                                
+                                                
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-2 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                                                        HARDWARE MODEL
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group mb-1">
+                                                                <input type="radio" name="hardwareModel" formControlName="hardwareModel" value="1" id="hardmodel1"><label for="hardmodel1" style="padding-left:10px;padding-right:30px;"> CPU</label>
+                                                                <input type="radio" name="hardwareModel" formControlName="hardwareModel" value="2" id="hardmodel2"><label for="hardmodel2" style="padding-left:10px;padding-right:30px;"> GPU</label>
+                                                                <input type="radio" name="hardwareModel" formControlName="hardwareModel" value="3" id="hardmodel3"><label for="hardmodel3" style="padding-left:10px;padding-right:30px;"> ASIC</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                        MINING ALGORITHM
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <input type="radio" name="miningAlgo" formControlName="miningAlgo" value="1" id="miningalgo1"><label for="miningalgo1" style="padding-left:10px;padding-right:30px;"> SHA256D</label>
+                                                                <input type="radio" name="miningAlgo" formControlName="miningAlgo" value="2" id="miningalgo2"><label for="miningalgo2" style="padding-left:10px;padding-right:30px;"> SCRYPT</label>
+                                                                <input type="radio" name="miningAlgo" formControlName="miningAlgo" value="3" id="miningalgo3"><label for="miningalgo3" style="padding-left:10px;padding-right:30px;"> X11</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-3" style="border-bottom: 1px solid #edeef4;">
+                                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+                                                        COMPUTATIONAL POWER
+                                                    </div>
+                                                    <div class="col-md-9 text-left">
+                                                        <div class="form-group">
+                                                            <div class="form-group">
+                                                                <input
+                                                                type="text"
+                                                                formControlName="computational_power"
+                                                                class="form-control form-my-border"
+                                                                placeholder="Computational power"
+                                                                onfocus="this.placeholder = ''"
+                                                                style="height: 42px !important;"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                            <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
+                                                <div class="col-md-3"></div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+                                                    <button (click)="checkForm()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="sending_status !== 0" >
+                                                        {{ button_text }}
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        
+
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- EXPLAINER -->
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+                <div class="content-box-blue h-100 pb-3">
+                    <div class="container">
+                        
+                        <div class="row qlc-table-header-blue">
+                            <div class="col-12">RECOMMENDED CONFIGURATION</div>
+                        </div>
+                        <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
+                            <hr style="height:1px;width:100%;border:none;background:#7ca7e5;display:block;" />
+                            
+                            <p style="width:100%;" class="mt-2"><strong>FOR VOTING NODE (Minimum)</strong></p>
+                            <p>
+                                <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">CPU:</span> 4 cores<br>
+                                <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Memory:</span> 8 G<br>
+                                <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Storage:</span> 80G SSD<br>
+                                <span style="color:#7ca7e5;margin-top:4px;display:inline-block;">Bandwidth:</span> <br>100Mbs with public IP address<br>
+                            </p>
+                            
+                            <hr style="height:1px;width:100%;border:none;background:#7ca7e5;display:block;" />
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>

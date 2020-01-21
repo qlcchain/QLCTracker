@@ -20,7 +20,7 @@ export class ApiService {
 	connectTimer = null;
 	reconnectTime = 1000;
 	reconnectInterval = 500;
-	reconnectTimeMax = 10000;
+	reconnectTimeMax = 8000;
 
 	public nodeBlocksCount = 0;
 	public nodeMainBlocksCount = 0;
@@ -40,18 +40,26 @@ export class ApiService {
 		this.connectTimer = source.subscribe(async val => {
 			if (!environment.desktop || (environment.desktop && this.node.running)) {
 				this.reconnectTime = this.reconnectTime + this.reconnectInterval;
-					if (this.reconnectTime > this.reconnectTimeMax)
-						this.reconnectTime = this.reconnectTimeMax;
+
+				if (this.reconnectTime > this.reconnectTimeMax)
+					this.reconnectTime = this.reconnectTimeMax;
 
 				try {
 					const syncQuery = await this.syncing();
 					//console.log(syncQuery);
 					if (typeof syncQuery.result != undefined) {
 						this.node.setOnline();
+						if (this.node.synchronizedPov !== true) {
+							const povSyncQuery = await this.pov_getPovStatus();
+							if (povSyncQuery.result && (povSyncQuery.result.syncState === 0 || povSyncQuery.result.syncState === 1)) {
+								this.node.setSynchronizingPov();
+							} else if (povSyncQuery.result && povSyncQuery.result.syncState === 2) {
+								this.node.setSynchronizedPov();
+							}
+						}
 						
 						if ( syncQuery.result == true) {
-							this.node.setSynchronizing();
-							this.connect();
+							this.node.setSynchronizingTransactions();
 							if (this.rpcUrl != environment.mainRpcUrl) {
 								const blocksMainQuery = await this.blocksCountMain();
 								const blocksQuery = await this.blocksCount();
@@ -60,39 +68,44 @@ export class ApiService {
 								//console.log('mainBlocksCount ' + ' ' + mainBlocksCount + ' nodeBlocksCount ' + ' ' + nodeBlocksCount + ' unchecked ' + ' ' + blocksQuery.result.unchecked)							
 							}
 						} else {
-							if (this.rpcUrl != environment.mainRpcUrl) {
+							if (this.node.synchronizedTransactions !== true && this.rpcUrl != environment.mainRpcUrl) {
 								const blocksMainQuery = await this.blocksCountMain();
 								const blocksQuery = await this.blocksCount();
 								this.nodeMainBlocksCount = blocksMainQuery.result.count;
 								this.nodeBlocksCount = blocksQuery.result.count;
 								//console.log('mainBlocksCount ' + ' ' + mainBlocksCount + ' nodeBlocksCount ' + ' ' + nodeBlocksCount + ' unchecked ' + ' ' + blocksQuery.result.unchecked)
 								if (this.nodeBlocksCount < this.nodeMainBlocksCount) {
-									this.node.setSynchronizing();
-									this.connect();
+									this.node.setSynchronizingTransactions();
 								} else {
-									this.node.setSynchronized();
-								}
-								return;
-								
+									this.node.setSynchronizedTransactions();
+								}								
 							} else {
-								this.node.setSynchronized();
+								this.node.setSynchronizedTransactions();
 							}
+						}
+						if (this.node.synchronized !== true) {
+							this.connect();
+							return;
 						}
 					} else if (syncQuery.error) {
 						console.log(syncQuery.error);
 						this.connect();
+						return;
 					} else {
 						console.log('error connecting');
 						this.connect();
+						return;
 					}
 				} catch (error) {
 					console.log('error connecting');
 					console.log(error);
 					this.node.setOffline('ERROR - Node offline, reconnecting ...');
 					this.connect();
+					return;
 				}
 			} else {
 				this.connect();
+				return;
 			}
 
 			
@@ -508,6 +521,14 @@ export class ApiService {
 	
 	// news END
 
+	// portal
+
+	async portalApply(data): Promise<{ status: any; error?: string }> {
+		return await this.request('apply', { params: [data] }, 'https://explorer.qlcchain.org/api/portal');
+	}
+	
+	// portal END
+
 
 	// pov
 
@@ -558,8 +579,10 @@ export class ApiService {
 	async pov_getRepStats(): Promise<{ result: any; error?: any }> {
 		return await this.request('pov_getRepStats', { params: [ [] ] });
 	}	
-	
-	
+
+	async pov_getPovStatus(): Promise<{ result: any; error?: any }> {
+		return await this.request('pov_getPovStatus', { params: [ ] });
+	}	
 
 	// pov end
 

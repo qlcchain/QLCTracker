@@ -40,6 +40,7 @@ import { CanActivateRouteGuard } from './app-routing.guard';
 import { RepresentationRewardComponent } from './components/qlc/representation/representation-reward/representation-reward.component';
 import { MiningRewardComponent } from './components/qlc/mining/mining-reward/mining-reward.component';
 import { StakingDashboardComponent } from './components/staking-dashboard/staking-dashboard.component';
+import { PortalComponent } from './components/portal/portal.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -94,6 +95,7 @@ const routes: Routes = [
   { path: 'pov/:type/:hash', component: PovViewComponent },
   { path: 'news', component: NewsComponent },
   { path: 'dashboard', component: UserDashboardComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'portal', component: PortalComponent },
   { path: '**', component: HomeComponent }
 ];
 
