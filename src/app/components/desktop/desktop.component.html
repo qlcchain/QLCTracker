@@ -33,7 +33,7 @@
     <div class="modal-body text-center pb-0" *ngIf="showStartingNode">
         Starting node...
     </div>
-    <div class="modal-body text-center pb-4" *ngIf="showSynchronizingNode && (api.nodeMainBlocksCount != api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">
+    <div class="modal-body text-center pb-4" *ngIf="showSynchronizingNode && (api.nodeMainBlocksCount > api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">
         Synchronizing Transactions please wait...<br>
         <progressbar *ngIf="api.nodeMainBlocksCount != 0" [max]="api.nodeMainBlocksCount" type="info" [value]="api.nodeBlocksCount" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ api.nodeBlocksCount }}/{{ api.nodeMainBlocksCount }}</progressbar>
     </div>
@@ -621,14 +621,14 @@
     <div class="modal-body text-center pb-0" *ngIf="showStartingNode">
         Starting node...
     </div>
-    <div class="modal-body text-center pb-4" *ngIf="showSynchronizingNode && (api.nodeMainBlocksCount != api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">
+    <div class="modal-body text-center pb-4" *ngIf="showSynchronizingNode && (api.nodeMainBlocksCount > api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">
         Synchronizing Transactions please wait...<br>
         <progressbar *ngIf="api.nodeMainBlocksCount != 0" [max]="api.nodeMainBlocksCount" type="info" [value]="api.nodeBlocksCount" [striped]="true" [animate]="true" style="height:26px; margin-top:16px; vertical-align: middle; background: #495057;">{{ api.nodeBlocksCount }}/{{ api.nodeMainBlocksCount }}</progressbar>
     </div>
     <div class="modal-body text-center pb-4" *ngIf="showSynchronizingNode && node.synchronizedPov !== true">
         Synchronizing POV please wait...<br>
     </div>
-    <div class="modal-body text-center" *ngIf="showSynchronizingNode && node.synchronized === true && api.nodeMainBlocksCount == api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">
+    <div class="modal-body text-center" *ngIf="showSynchronizingNode && node.synchronized === true && api.nodeMainBlocksCount <= api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">
         <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;" class="mt-2 mb-4"><br>
         The node is synchronized and ready to use.<br>
         <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Close" (click)="closeNodeStoppedModal()">Close</button>

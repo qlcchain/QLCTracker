@@ -187,7 +187,7 @@ export class CreatewalletComponent implements OnInit {
 		reader.onload = event => {
 			const fileData = event.target['result'];
 			try {
-				const importData = JSON.parse(fileData);
+				const importData = JSON.parse(String(fileData));
 				if (!importData.seed || !importData.hasOwnProperty('accountsIndex')) {
 					return this.notifications.sendError(this.msg20);
 				}
