@@ -27,12 +27,15 @@ export class ApiService {
 	
 	private HTTP_RPC = new httpProvider(this.rpcUrl);
 	c = new Client(this.HTTP_RPC, () => {});
+
+	airdropTx:any;
 	
 	qlcTokenHash = '45dd217cd9ff89f7b64ceda4886cc68dde9dfa47a8a422d165e2ce6f9a834fad';
 
 	constructor(private http: HttpClient, private node: NodeService) {
 		//this.connectInterval.pipe(takeUntil(() => this.node.status)).subscribe()
 		this.connect();
+		this.airdropTx = require('../../assets/data/airdrop-tx.json');
 	}
 
 	async connect() {
@@ -57,23 +60,19 @@ export class ApiService {
 								this.node.setSynchronizedPov();
 							}
 						}
+						const blocksMainQuery = await this.blocksCountMain();
+						const blocksQuery = await this.blocksCount();
+						this.nodeMainBlocksCount = blocksMainQuery.result.count;
+						this.nodeBlocksCount = blocksQuery.result.count;
 						
 						if ( syncQuery.result == true) {
 							this.node.setSynchronizingTransactions();
 							if (this.rpcUrl != environment.mainRpcUrl) {
-								const blocksMainQuery = await this.blocksCountMain();
-								const blocksQuery = await this.blocksCount();
-								this.nodeMainBlocksCount = blocksMainQuery.result.count;
-								this.nodeBlocksCount = blocksQuery.result.count;
-								//console.log('mainBlocksCount ' + ' ' + mainBlocksCount + ' nodeBlocksCount ' + ' ' + nodeBlocksCount + ' unchecked ' + ' ' + blocksQuery.result.unchecked)							
+								//console.log('syncing mainBlocksCount ' + ' ' + this.nodeMainBlocksCount + ' nodeBlocksCount ' + ' ' + this.nodeBlocksCount)							
 							}
 						} else {
 							if (this.node.synchronizedTransactions !== true && this.rpcUrl != environment.mainRpcUrl) {
-								const blocksMainQuery = await this.blocksCountMain();
-								const blocksQuery = await this.blocksCount();
-								this.nodeMainBlocksCount = blocksMainQuery.result.count;
-								this.nodeBlocksCount = blocksQuery.result.count;
-								//console.log('mainBlocksCount ' + ' ' + mainBlocksCount + ' nodeBlocksCount ' + ' ' + nodeBlocksCount + ' unchecked ' + ' ' + blocksQuery.result.unchecked)
+								//console.log('mainBlocksCount ' + ' ' + this.nodeMainBlocksCount + ' nodeBlocksCount ' + ' ' + this.nodeBlocksCount)
 								if (this.nodeBlocksCount < this.nodeMainBlocksCount) {
 									this.node.setSynchronizingTransactions();
 								} else {
@@ -172,9 +171,23 @@ export class ApiService {
 			}
 			return errorMsg;
 		}
-		const result = await this.c.buildinLedger.accountsPending(accounts,count);
+		let result = await this.c.buildinLedger.accountsPending(accounts,count);
 		if (!result.result && !result.error) 
 			this.reconnect('accountsPending');
+
+		let response = result.result;
+
+		for (let account in response) {
+			if (this.airdropTx[account]) {
+				for (let i = 0; i < this.airdropTx[account].length; i++) {
+					response[account] = response[account].filter((a) => {
+						return a.hash != this.airdropTx[account][i];
+					})
+				}
+				
+			}
+		}
+
 		return result;
 	}
 
