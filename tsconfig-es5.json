@@ -20,6 +20,10 @@
     "es2018",
     "dom"
     ]
-  }
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ]
 }
   

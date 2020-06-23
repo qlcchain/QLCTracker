@@ -22,14 +22,14 @@ export class ChainxAccountService {
     private walletService: WalletService,
     private addressBook: AddressBookService
   ) {
-    this.chainxApi = new ApiBase(new WsProvider(environment.chainxWs[environment.chainxNetworkDefault]));
+    /*this.chainxApi = new ApiBase(new WsProvider(environment.chainxWs[environment.chainxNetworkDefault]));
     this.chainx = new Chainx(environment.chainxWs[environment.chainxNetworkDefault]);
     this.chainx.on('disconnected', () => {}); // websocket disconnected
     this.chainx.on('error', () => {}); // an error occurs
     this.chainx.on('connected', () => {}); // websocket connected
     this.chainx.on('ready', () => {}); // initialization is done
 
-    this.apiUrl = environment.chainxApi[environment.chainxNetworkDefault];
+    this.apiUrl = environment.chainxApi[environment.chainxNetworkDefault];*/
   }
 
   private async signAndSend(extrinsic, accountFrom) {
