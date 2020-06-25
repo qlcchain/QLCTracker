@@ -621,9 +621,32 @@ function downloadPool(version,gitrev,platform) {
 		//const cmd = path.join(userData, walletConfigData.nodeData.filename);
 		const cmd = path.join(versionDir, 'gqlc' + platformExt);
 		if (!fs.existsSync(cmd)) {
-			// try to extract again if file not found
 			//fs.ensureDirSync(versionDir);
+			// try to extract again if file not found
 			console.log('node not found');
+			
+			const extract = inly(path.join(userData, walletConfigData.nodeData.filename), versionDir);
+			extract.on('file', (name) => {
+				console.log(name);
+			});
+			
+			extract.on('progress', (percent) => {
+				console.log(percent + '%');
+			});
+			
+			extract.on('error', (error) => {
+				console.error(error);
+			});
+			
+			extract.on('end', () => {
+				console.log('done');
+				if (platform != 'win32') {
+					chmod.file(700,path.join(versionDir, 'gqlc'));
+					chmod.file(700,path.join(versionDir, 'gqlct'));
+				}
+				startChild();
+			});
+			return;
 		}
 		log.log(`start qglc ${cmd}`);
 		child = crossSpawn(cmd, ['--config', config, '--configParams=rpc.rpcEnabled=true'], {
@@ -643,20 +666,20 @@ function downloadPool(version,gitrev,platform) {
 			mainWindow.webContents.send('node-running',{
 				'status' : 1
 			});
+			child.stdout.on('data', data => log.log('[node]', String(data).trim()));
+			child.stderr.on('data', data => log.log('[node]', String(data).trim()));
+	
+			child.once('exit', () => {
+				removeExitHandler();
+				global.isNodeStarted = false;
+				log.log(`Node exiting (PID ${child.pid})`);
+				forceKill(child);
+			});
+		
+			child.once('exit', () => app.removeListener('will-quit', killHandler));
+		
+			child.once('loaded', () => {});
 		}
-		child.stdout.on('data', data => log.log('[node]', String(data).trim()));
-		child.stderr.on('data', data => log.log('[node]', String(data).trim()));
-
-		child.once('exit', () => {
-			removeExitHandler();
-			global.isNodeStarted = false;
-			log.log(`Node exiting (PID ${child.pid})`);
-			forceKill(child);
-		});
-	
-		child.once('exit', () => app.removeListener('will-quit', killHandler));
-	
-		child.once('loaded', () => {});
 	}
 
 	function startMiner(qlc_address,algo) {
