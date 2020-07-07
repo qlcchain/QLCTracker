@@ -54,7 +54,7 @@ console.log(`path: ` + toExecutableName('gqlc'));
 const userData = app.getPath('userData');
 
 const defaultWalletData = {
-	version: 'v1.3.2',
+	version: 'v1.3.3',
 	nodeData: {
 		version: '',
 		filename: '',
@@ -93,13 +93,19 @@ function getConfig() {
 		}
 		if (cfg.version == 'v1.3.0') {
 			console.log('found version v1.3.0, updating');
-			cfg.version = 'v1.3.2';
+			cfg.version = 'v1.3.3';
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
 		if (cfg.version == 'v1.3.1') {
 			console.log('found version v1.3.1, updating');
-			cfg.version = 'v1.3.2';
+			cfg.version = 'v1.3.3';
+			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
+			return cfg;
+		}
+		if (cfg.version == 'v1.3.2') {
+			console.log('found version v1.3.2, updating');
+			cfg.version = 'v1.3.3';
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
@@ -560,7 +566,7 @@ function downloadPool(version,gitrev,platform) {
 			width: 1300,
 			height: 900,
 			webPreferences: { webSecurity: true, nodeIntegration: true },
-			icon: path.join(__dirname, '../dist/assets/favicon/favicon.ico')
+			icon: path.join(__dirname, '../build/icon.ico')
 		});
 		// const options = { extraHeaders: "pragma: no-cache\n" };
 

@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+
 export class IpcService {
   
   private readonly _ipc: IpcRenderer | undefined = undefined;
@@ -28,7 +29,7 @@ export class IpcService {
     }
   }
 
-  public on(channel: string, cb: Function): void {
+  public on(channel: string, cb: any): void {
     if (this._ipc !== undefined) {
       this._ipc.on(channel, cb);
     }
