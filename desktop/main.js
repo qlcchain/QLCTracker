@@ -160,8 +160,30 @@ ipcMain.on('node-restart', async (event, data) => {
 ipcMain.on('node-update', (event, data) => {
 	//log.log('node-update');
 	//log.log(data);
-	//downloadUpdate('v1.2.6.6','7be5c37','win32');
 	downloadUpdate(data.version,data.gitrev,data.platform);
+});
+
+var deleteFolderRecursive = function(path) {
+  console.log('deleteFolderRecursive',path);
+  if( fs.existsSync(path) ) {
+    fs.readdirSync(path).forEach(function(file,index){
+      var curPath = path + "/" + file;
+      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
+
+ipcMain.on('delete-ledger', (event, data) => {
+  log.log('delete-ledger');
+  const ledgerPath = path.join(configDir, 'ledger');
+  console.log(ledgerPath);
+  deleteFolderRecursive(ledgerPath);
+  mainWindow.webContents.send('delete-ledger-finish',{});
 });
 
 ipcMain.on('node-data', (event, data) => {

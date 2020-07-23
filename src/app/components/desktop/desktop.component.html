@@ -14,6 +14,14 @@
     <div class="modal-body text-center pb-0" *ngIf="showDownload">
         <span *ngIf="showDownloadUpdate">New node version {{ newVersion.version }} found. <em>Click download to proceed</em></span>
         <span *ngIf="showDownloadNew">Found latest version {{ newVersion.version }} <em>Click download to proceed</em></span>
+        <div *ngIf="deleteLedgerWarningShowOnUpdate">
+            <span *ngIf="deleteLedgerWarning">Warning: It is recommended to delete old ledger data. Click Delete</span>
+            <div *ngIf="deleteLedgerWarning">
+                <button type="button" class="btn btn-danger mt-4 mb-4" (click)="deleteLedger()">Delete</button>
+            </div>
+            <span *ngIf="deleteLedgerWarningProgress">Deleting ledger data</span>
+            <span *ngIf="deleteLedgerWarningFinish">Ledger data delted. Please procceed.</span>
+        </div>
         <button type="button" class="btn btn-primary mt-4 mb-4" (click)="nodeUpdate()">Download</button>
     </div>
     <div class="modal-body text-center pb-4" *ngIf="showDownloading">
@@ -28,6 +36,14 @@
     </div>
   
     <div class="modal-body text-center pb-0" *ngIf="showStartNode">
+        <div>
+            <span *ngIf="deleteLedgerWarning">Warning: If you are experiencing problems running the node it is recommended to delete old ledger data. Click Delete</span>
+            <div *ngIf="deleteLedgerWarning">
+                <button type="button" class="btn btn-danger mt-4 mb-4" (click)="deleteLedger()">Delete</button>
+            </div>
+            <span *ngIf="deleteLedgerWarningProgress">Deleting ledger data</span>
+            <span *ngIf="deleteLedgerWarningFinish">Ledger data delted. Please procceed.</span>
+        </div>
         <button type="button" class="btn btn-primary mt-4 mb-4" (click)="nodeStart()">Start node</button>
     </div>
     <div class="modal-body text-center pb-0" *ngIf="showStartingNode">
@@ -647,6 +663,14 @@
     </div>
     <div class="modal-body text-center pb-0" *ngIf="showDownload">
         <span *ngIf="showDownloadUpdate">New node version {{ newVersion.version }} found. <em>Click download to proceed</em></span>
+        <div *ngIf="deleteLedgerWarningShowOnUpdate">
+            <span *ngIf="deleteLedgerWarning">Warning: It is recommended to delete old ledger data. Click Delete</span>
+            <div *ngIf="deleteLedgerWarning">
+                <button type="button" class="btn btn-danger mt-4 mb-4" (click)="deleteLedger()">Delete</button>
+            </div>
+            <span *ngIf="deleteLedgerWarningProgress">Deleting ledger data</span>
+            <span *ngIf="deleteLedgerWarningFinish">Ledger data delted. Please procceed.</span>
+        </div>
         <button type="button" class="btn btn-primary mt-4 mb-4" (click)="nodeUpdate()">Download</button>
     </div>
     <div class="modal-body text-center pb-4" *ngIf="showDownloading">

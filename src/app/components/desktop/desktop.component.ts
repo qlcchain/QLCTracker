@@ -62,6 +62,11 @@ export class DesktopComponent implements OnInit {
 
   showNodeControl = true;
 
+  deleteLedgerWarning = true;
+  deleteLedgerWarningProgress = false;
+  deleteLedgerWarningFinish = false;
+  deleteLedgerWarningShowOnUpdate = false;
+
   downloadProgress = 0;
   newVersion = '';
 
@@ -222,6 +227,10 @@ export class DesktopComponent implements OnInit {
       this.showDownloadNew = false;
       this.showDownloading = true;
     });
+    this.ipc.on('delete-ledger-finish', (event, data) => {
+      this.deleteLedgerWarningProgress = false;
+      this.deleteLedgerWarningFinish = true;
+    });
     this.ipc.on('download-finished', (event, data) => {
       //console.log('got event');
       //console.log(event);
@@ -298,11 +307,11 @@ export class DesktopComponent implements OnInit {
       this.poolLog.push(data);
     });
     this.ipc.on('node-running', (event, data) => {
-      //console.log('got node-running event');
-      //console.log('got data');
+      //console.log('got node-running event',event);
+      //console.log('got data',data);
       //console.log(data);
       if (data.status == 1) {
-        if (this.stoppingNode === false) {
+        if (this.stoppingNode === false && !this.showStartNode && !this.showDownload && !this.showDownloading && !this.showDownloadFinished && !this.showNoUpdate) {
           this.node.running = true;
           this.showStartNode = false;
           this.showStartingNode = false;
@@ -396,6 +405,9 @@ export class DesktopComponent implements OnInit {
             this.showDownloadNew = true;
           } else {
             this.showDownloadUpdate = true;
+            if (latest.result.version === 'v1.4.0') {
+              this.deleteLedgerWarningShowOnUpdate = true;
+            }
           }
 
         } else {
@@ -451,6 +463,12 @@ export class DesktopComponent implements OnInit {
     if (this.minerAccounts[0]) {
       this.selectedMinerAccount = this.minerAccounts[0].id;
     }
+  }
+
+  async deleteLedger() {
+    this.ipc.send('delete-ledger','');
+    this.deleteLedgerWarning = false;
+    this.deleteLedgerWarningProgress = true;
   }
 
 
