@@ -588,7 +588,7 @@ function downloadPool(version,gitrev,platform) {
 			width: 1300,
 			height: 900,
 			webPreferences: { webSecurity: true, nodeIntegration: true },
-			icon: path.join(__dirname, '../build/icon.ico')
+			icon: path.join(__dirname, '../build/icon.png')
 		});
 		// const options = { extraHeaders: "pragma: no-cache\n" };
 
