@@ -113,7 +113,7 @@
     "productName": "QLCTracker",
     "asar": true,
     "files": [
-      "build/icon.ico",
+      "build/icon.png",
       "dist/**/*",
       "node_modules/**/*",
       "package.json",
