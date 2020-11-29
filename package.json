@@ -57,6 +57,7 @@
     "electron-log": "^3.0.9",
     "electron-updater": "^4.3.1",
     "electron-util": "^0.11.0",
+    "ethers": "^5.0.23",
     "find-process": "^1.4.3",
     "fs-extra": "^8.1.0",
     "inly": "^4.0.5",

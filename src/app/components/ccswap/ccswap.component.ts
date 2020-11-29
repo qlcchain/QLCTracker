@@ -16,6 +16,7 @@ import { ApiConfidantService } from 'src/app/services/api-confidant.service';
 import { minAmountValidator } from '../../directives/amount-validator.directive';
 
 import { environment } from 'src/environments/environment';
+import { EtherWalletService } from 'src/app/services/ether-wallet.service';
 
 const nacl = window['nacl'];
 
@@ -183,13 +184,15 @@ export class CcswapComponent implements OnInit {
 		private workPool: WorkPoolService,
 		private notifications: NotificationService,
     private trans: TranslateService,
-    private confidantApi: ApiConfidantService
+    private confidantApi: ApiConfidantService,
+    private etherService: EtherWalletService
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
   }
 
   ngOnInit() {
     this.loadBalances();
+    this.etherService.initEther();
   }
   
 
