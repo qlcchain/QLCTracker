@@ -41,6 +41,7 @@ import { RepresentationRewardComponent } from './components/qlc/representation/r
 import { MiningRewardComponent } from './components/qlc/mining/mining-reward/mining-reward.component';
 import { StakingDashboardComponent } from './components/staking-dashboard/staking-dashboard.component';
 import { PortalComponent } from './components/portal/portal.component';
+import { CcswapComponent } from './components/ccswap/ccswap.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -85,6 +86,7 @@ const routes: Routes = [
   { path: 'staking/qlc', component: MystakingsComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'staking/qlc/create', component: StakingCreateComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'staking/qlc/revoke', component: StakingRevokeComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'ccswap', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'staking/chainx', component: ChainxStakingComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'staking/chainx/invoke', component: ChainxStakingComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'mining', component: MiningComponent, canActivate: [CanActivateRouteGuard] },

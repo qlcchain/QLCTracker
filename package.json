@@ -9,7 +9,7 @@
   "scripts": {
     "postinstall": "node patch.js",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --open --port=9999",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -75,6 +75,7 @@
     "to-executable-name": "^2.0.0",
     "tslib": "^1.13.0",
     "uuid": "^3.4.0",
+    "web3": "^1.3.0",
     "xhr2": "^0.1.4",
     "zone.js": "^0.10.3"
   },

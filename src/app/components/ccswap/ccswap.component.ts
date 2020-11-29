@@ -20,11 +20,11 @@ import { environment } from 'src/environments/environment';
 const nacl = window['nacl'];
 
 @Component({
-  selector: 'app-staking-create',
-  templateUrl: './staking-create.component.html',
-  styleUrls: ['./staking-create.component.scss']
+  selector: 'app-ccswap',
+  templateUrl: './ccswap.component.html',
+  styleUrls: ['./ccswap.component.scss']
 })
-export class StakingCreateComponent implements OnInit {
+export class CcswapComponent implements OnInit {
 
   step = 1;
   recover = 0;
@@ -49,8 +49,8 @@ export class StakingCreateComponent implements OnInit {
 
   staking = {
     'main' : [{
-      name: 'For Vote',
-      minAmount : 1,
+      name: 'For Swap',
+      minAmount : 0,
       minTime: 10
     },
     {
@@ -60,12 +60,12 @@ export class StakingCreateComponent implements OnInit {
     },
     {
       name: 'For Minting',
-      minAmount : 500000,
+      minAmount : 1,
       minTime: 180
     }],
     'test' : [{
-      name: 'For Vote',
-      minAmount : 1,
+      name: 'For Swap',
+      minAmount : 0,
       minTime: 10
     },
     {
@@ -269,25 +269,21 @@ export class StakingCreateComponent implements OnInit {
   checkForm() {
     this.markFormGroupTouched(this.stakingForm);
     if (this.stakingForm.value.stakingType == 0) {
-      if (this.stakingForm.get('amounToStake').status == 'VALID' &&
-          this.stakingForm.get('durationInDays').status == 'VALID' &&
-          this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
+      if (this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
           this.stakingForm.get('toQLCWallet').status == 'VALID' 
       ) {
         this.step = 2;
         window.scrollTo(0, 0);
       } 
     } else if (this.stakingForm.value.stakingType == 1) {
-      if (this.stakingForm.get('amounToStake').status == 'VALID' &&
-          this.stakingForm.get('durationInDays').status == 'VALID' &&
-          this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
+      if (this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
           this.stakingForm.get('toQLCWallet').status == 'VALID' 
       ) {
         this.step = 2;
         window.scrollTo(0, 0);
       }
     }
-    if (this.stakingForm.status === 'VALID' && this.invalidTokenSymbol == 0 && this.invalidTokenName == 0 ) {
+    if (this.stakingForm.status === 'VALID') {
       this.step = 2;
       window.scrollTo(0, 0);
     }
@@ -615,7 +611,7 @@ export class StakingCreateComponent implements OnInit {
       pType = 'mintage';
     }
     
-    if (transaction.txid) {
+    if (1===1) {
       const waitTimer = timer(20000).subscribe( async (data) => {
         
       this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.', checkimg: 1});
