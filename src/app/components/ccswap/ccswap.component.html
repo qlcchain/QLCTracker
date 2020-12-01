@@ -105,9 +105,9 @@
                                     </div>
                                     <div class="col-md-9 text-left">
                                       <div class="form-group">
-                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> NEP5 QLC -->ERC20 QLC</label>
-                                        <!-- <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="1" id="s2" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[1].minAmount)"><label for="s2" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[1].minAmount)"> For Confidant</label> -->
-                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="2" id="s3" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= 1)"><label for="s3" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= 1)"> ERC20 QLC → NEP5 QLC</label>
+                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> Deposit</label>
+                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="1" id="s2" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[1].minAmount)"><label for="s2" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[1].minAmount)"> For Confidant</label>
+                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="2" id="s3"><label for="s3" style="padding-left:10px;padding-right:30px;"> Withdraw</label>
                                       </div>
                                     </div>
                                   </div>
@@ -141,8 +141,8 @@
                                     <div class="col-md-9 text-left">
                                       <div class="form-group" *ngIf="recover == 0">
                                         <select class="custom-select" formControlName="toQLCWallet">
-                                          <option *ngFor="let account of accounts" [value]="account.id"
-                                            >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }}</option>
+                                          <option *ngFor="let account of etheraccounts" [value]="account.id"
+                                            >{{ account }}</option>
                                         </select>
                                         <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 QLC Chain address you want to receive your QGAS to</p>
                                       </div>
@@ -316,7 +316,7 @@
                                       SWAP TO
                                     </div>
                                     <div class="col-md-9 pb-3 text-left">
-                                      {{ stakingForm.value.toQLCWallet }}
+                                      {{ etheraccounts[0] }}
                                     </div>
                                   </div>
             

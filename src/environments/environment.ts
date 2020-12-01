@@ -7,15 +7,19 @@ export const environment = {
   desktop: false,
   version: '1.3.3',
   qlcChainNetwork: 'main', // test or main
-  neoNetwork: 'main', // test or main
+  neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
   mainRpcUrl: {
     'test': '',
     'main': 'https://rpc.qlcchain.online'
   },
   rpcUrl: {
-    'test': '',
+    'test': 'http://seed2.ngd.network:20332/',
     'main': 'https://rpc.qlcchain.online'
+  },
+  swapUrl: {
+    'test': 'http://seed2.ngd.network:20332/',
+    'main': 'http://seed2.ngd.network:10332/'
   },
   wsUrl: {
     'test': '',
@@ -29,16 +33,28 @@ export const environment = {
     'test': '',
     'main': '3078aa0e095defba3f00e0af12810187ecfb586a'
   },
+  neo5swapSmartContract: {
+    'test': 'bfcbb52d61bc6d3ef2c8cf43f595f4bf5cac66c5',
+    'main': ''
+  },
+  etherswapSmartContract: {
+    'test': '0xE2484A4178Ce7FfD5cd000030b2a5de08c0Caf8D',
+    'main': ''
+  },
+  testSmartContract: {
+    'test': '0x40E3dCC2EC0B8f7381332614630Aa9EF19b18cA2',
+    'main': ''
+  },
   neoPublicKey: {
     'test': '',
     'main': '02c6e68c61480003ed163f72b41cbb50ded29d79e513fd299d2cb844318b1b8ad5'
   },
   neoScanApi: {
-    'test': 'https://neoscan-testnet.io/api/test_net',
+    'test': 'https://testnet.api.neotube.io/api',
     'main': 'https://api.neoscan.io/api/main_net'
   },
   neoScan: {
-    'test': 'https://neoscan-testnet.io',
+    'test': 'https://testnet.api.neotube.io',
     'main': 'https://neoscan.io'
   },
   neonNetwork: {

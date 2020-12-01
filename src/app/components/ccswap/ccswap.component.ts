@@ -17,6 +17,7 @@ import { minAmountValidator } from '../../directives/amount-validator.directive'
 
 import { environment } from 'src/environments/environment';
 import { EtherWalletService } from 'src/app/services/ether-wallet.service';
+import { AnyARecord } from 'dns';
 
 const nacl = window['nacl'];
 
@@ -46,37 +47,38 @@ export class CcswapComponent implements OnInit {
 
   accounts = this.walletService.wallet.accounts;
   neowallets = this.walletService.wallet.neowallets;
+  etheraccounts: any[];
   stakingTypes;
 
   staking = {
     'main' : [{
-      name: 'For Swap',
+      name: 'For Deposit',
       minAmount : 0,
       minTime: 10
     },
     {
       name: 'For Confidant',
-      minAmount : 2000,
+      minAmount : 0,
       minTime: 90
     },
     {
-      name: 'For Minting',
-      minAmount : 1,
+      name: 'For Withdraw',
+      minAmount : 0,
       minTime: 180
     }],
     'test' : [{
-      name: 'For Swap',
+      name: 'For Deposit',
       minAmount : 0,
       minTime: 10
     },
     {
       name: 'For Confidant',
-      minAmount : 10,
+      minAmount : 0,
       minTime: 10
     },
     {
-      name: 'For Minting',
-      minAmount : 20,
+      name: 'For Withdraw',
+      minAmount : 0,
       minTime: 10
     }]
   };
@@ -192,9 +194,18 @@ export class CcswapComponent implements OnInit {
 
   ngOnInit() {
     this.loadBalances();
-    this.etherService.initEther();
+    this.etherService.getBalance();
+    this.getEtherAccounts();
+
+
   }
   
+  async getEtherAccounts(){
+    const accounts: any[] = await this.etherService.getAccounts();
+    console.log('ccswap.getEtherAccounts', accounts);
+    this.etheraccounts = accounts;
+    return accounts;
+  }
 
   async checkTxid() {
     if (this.walletService.walletIsLocked()) {
@@ -400,9 +411,9 @@ export class CcswapComponent implements OnInit {
       }
     }
     if (this.stakingForm.value.toQLCWallet == '') {
-      console.log('qlcwallets',this.accounts)
-      if (this.accounts[0] != undefined && this.accounts[0].id != undefined) {
-        this.stakingForm.get('toQLCWallet').setValue(this.accounts[0].id);
+      console.log('qlcwallets',this.etheraccounts)
+      if (this.etheraccounts[0] != undefined) {
+        this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
       }
     }
 
@@ -415,7 +426,7 @@ export class CcswapComponent implements OnInit {
 
   checkIfMinAmount() {
     const minAmount = this.stakingForm.value.stakingType == 1 ? this.stakingTypes[this.stakingForm.value.stakingType].minAmount*this.macaddresses.length : this.stakingTypes[this.stakingForm.value.stakingType].minAmount;
-    if (this.stakingForm.value.amounToStake < minAmount) {
+    if (this.stakingForm.value.amounToStake <= minAmount) {
       this.stakingForm.get('amounToStake').setValue(minAmount);
     }
     if (new BigNumber(this.stakingForm.value.amounToStake).isGreaterThan(new BigNumber(this.stakingForm.value.availableQLCBalance))) {
@@ -452,20 +463,8 @@ export class CcswapComponent implements OnInit {
       Validators.minLength(1),
       minAmountValidator(this.stakingTypes[Number(this.stakingForm.value.stakingType)].minAmount)
     ]);
-    let now = new Date();
-    if (this.stakingForm.value.durationInDays == '') {
-      this.stakingForm.get('durationInDays').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minTime);
       this.stakingForm.get('amounToStake').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minAmount);
-    }
-    //if (this.stakingForm.value.durationInDays<this.stakingTypes[this.stakingForm.value.stakingType].minTime) {
-      this.stakingForm.get('durationInDays').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minTime);
-    //}
-    //if (this.stakingForm.value.amounToStake<this.stakingTypes[this.stakingForm.value.stakingType].minAmount) {
-      this.stakingForm.get('amounToStake').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minAmount);
-    //}
-    this.checkIfMinAmount();
-    now.setDate(now.getDate() + Number(this.stakingForm.value.durationInDays));
-    this.stakingForm.get('endDate').setValue(now);
+      this.checkIfMinAmount();
   }
 
   async confirmInvoke() {
