@@ -44,43 +44,46 @@ abi = neo5toerc20swap;
   }
     // deposit/getEthOwnerSign
     async getEthOwnerSign(txid: any) {
-      const data = await axios.post(this.url + '/deposit/getEthOwnerSign', {
+      const data = await axios.post(this.url + '/deposit/getEthOwnerSign',  {
+          hash: txid
+      },
+      {
         headers: {
           authorization: this.neo5toerc20swapjwtauth.authorization
-      },
-      params: {
-          hash: txid
       }
-      });
+        }
+      );
       return data;
     }
         // deposit/packNeoTransaction
         async packNeoTransaction(amount: any, nep5SenderAddr: any, erc20ReceiverAddr: any) {
           const data = await axios.post(this.url + '/deposit/packNeoTransaction', {
-            headers: {
-              authorization: this.neo5toerc20swapjwtauth.authorization
-          },
-          params: {
             amount,
             nep5SenderAddr,
             erc20ReceiverAddr
+            },
+            {
+              headers: {
+                authorization: this.neo5toerc20swapjwtauth.authorization
             }
-          });
+              }
+          );
           return data;
         }
         // deposit/sendNeoTransaction
         async sendNeoTransaction(signature: string, txHash: string, publicKey: string, nep5SenderAddr: string){
           const data = await axios.post(this.url + '/deposit/sendNeoTransaction', {
-            headers: {
-              authorization: this.neo5toerc20swapjwtauth.authorization
-          },
-          params: {
             signature,
             txHash,
             publicKey,
             nep5SenderAddr
+            },
+            {
+              headers: {
+                authorization: this.neo5toerc20swapjwtauth.authorization
             }
-          });
+              }
+          );
           return data;
         }
         // deposit end
@@ -89,13 +92,14 @@ abi = neo5toerc20swap;
         // withdraw/ethTransactionConfirmed
         async ethTransactionConfirmed(txid: any) {
           const data = await axios.post(this.url + '/withdraw/ethTransactionConfirmed', {
+              hash: txid
+          },
+          {
             headers: {
               authorization: this.neo5toerc20swapjwtauth.authorization
-          },
-          params: {
-              hash: txid
           }
-          });
+            }
+          );
           return data;
         }
         // withdraw end
@@ -103,7 +107,7 @@ abi = neo5toerc20swap;
     // info start method:get
     // info/swapInfoByTxHash
     async swapInfoByTxHash(txid: any) {
-      const data = await axios.get(this.url + '/info/swapInfoByTxHash', {
+      const data = await axios.get(this.url + '/info/swapInfoByTxHash',{
       params: {
           hash: txid
       },

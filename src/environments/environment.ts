@@ -58,7 +58,7 @@ export const environment = {
     main: ''
   },
   neoPublicKey: {
-    test: '',
+    test: '02c6e68c61480003ed163f72b41cbb50ded29d79e513fd299d2cb844318b1b8ad5',
     main: '02c6e68c61480003ed163f72b41cbb50ded29d79e513fd299d2cb844318b1b8ad5'
   },
   neoScanApi: {

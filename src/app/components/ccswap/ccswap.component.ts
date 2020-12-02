@@ -193,6 +193,7 @@ export class CcswapComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.etherService.swapInfoByTxHash('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     this.etherService.neoTransactionConfirmed('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     this.loadBalances();
     this.getEtherAccounts();
