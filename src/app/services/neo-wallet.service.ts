@@ -44,9 +44,11 @@ export class NeoWalletService {
   private apiAddress = environment.neoScanApi[environment.neoNetwork];
   private network = environment.neonNetwork[environment.neoNetwork];
   private neoscan = environment.neoScan[environment.neoNetwork];
+  private neoswap = environment.swapUrl[environment.neoNetwork];
 
   private smartContractScript = environment.neoSmartContract[environment.neoNetwork];
-  
+  private neoswapsmartContractScript = environment.neo5swapSmartContract[environment.neoNetwork];
+
   tokenList = [];
 
   claimingTimer = null;
@@ -258,6 +260,17 @@ export class NeoWalletService {
     return balance.balance;
   }
 
+  async getNeoRpcBalance(address) {
+      const balance = await axios.post(this.neoswap,{
+        'jsonrpc': "2.0",
+        'method': "getnep5balances",
+        'params': [address],
+        'id': 1
+      });
+      console.log('getNeoRpcBalance.balance',balance);
+    return balance.data.result.balance;
+  }
+
   async getLastTransactions(address) {
     const lastTransactionsResults = await this.request('/v1/get_address_abstracts/'+address+'/0');
     const tokens = Object.keys(this.tokenList);
@@ -454,6 +467,48 @@ export class NeoWalletService {
       //console.log('string ' + u.hexstring2str(res.result.stack[0].value));
     });
 
+  }  
+
+  async neo5toerc20swapaccountLock(neoWalletAddress,erc20Amount,erc20WalletAddress) {
+    const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === neoWalletAddress);
+    const wif = await this.decrypt(selectedWallet.encryptedwif,this.walletService.wallet.password);
+    if (wif === false) {
+      return false;
+    }
+    const account = await new wallet.Account(wif);
+    const amountWithDecimals = new BigNumber(erc20Amount).multipliedBy(100000000);
+    const apiProvider = new myProvider(environment.swapUrl[environment.neoNetwork]); 
+    console.log('apiProvider',apiProvider);
+    const invoke = {
+      scriptHash: this.neoswapsmartContractScript, // Scripthash for the contract
+      operation: 'lock', // name of operation to perform.
+      args: [
+        sc.ContractParam.byteArray(neoWalletAddress,'address'), // neo address
+        sc.ContractParam.integer(amountWithDecimals.toNumber()), // qlc amount // check integer limit for big numbers !! should be 2,147,483,647 that's max 21 qlc ?
+        sc.ContractParam.byteArray(erc20WalletAddress,'address'), // erc20 address
+      ],
+    };
+    const script = await Neon.create.script(invoke);
+    const invokeConfig = {
+      api: apiProvider, // The API Provider that we rely on for balance and rpc information
+      account: account, // The sending Account
+      script: script // The Smart Contract invocation script
+    };
+
+    const returnTokeninvokeConfig = await Neon.doInvoke(invokeConfig)
+    .then(config2 => {
+      return config2.response;
+    })
+    .catch(err => {
+      return err;
+    });
+    const returnData = {
+      lockTxId : returnTokeninvokeConfig.txid
+    };
+    console.log('returnData',returnData);
+    return returnData;
+    
+    
   }  
 
   async contractLock(neoWalletAddress,qlcAmount,qlcWalletAddress,durationInDays) {

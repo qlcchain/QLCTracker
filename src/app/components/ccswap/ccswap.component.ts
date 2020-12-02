@@ -375,13 +375,11 @@ export class CcswapComponent implements OnInit {
 			this.neowallets[i].balances = [];
       this.neowallets[i].addressBookName = this.addressBookService.getAccountName(this.neowallets[i].id);
 
-      const balance:any = await this.neoService.getNeoScanBalance(this.neowallets[i].id);
+      const balance:any = await this.neoService.getNeoRpcBalance(this.neowallets[i].id);
 
       for (const asset of balance) {
 				this.neowallets[i].balances[asset.asset_hash] = { 
-					amount : new BigNumber(asset.amount).toFixed(),
-					asset: asset.asset,
-					asset_symbol: asset.asset_symbol,
+					amount : new BigNumber(asset.amount).dividedBy(Math.pow(10,8)).toNumber(),
 					asset_hash: asset.asset_hash
 				}
 			}
@@ -411,7 +409,6 @@ export class CcswapComponent implements OnInit {
       }
     }
     if (this.stakingForm.value.toQLCWallet == '') {
-      console.log('qlcwallets',this.etheraccounts)
       if (this.etheraccounts[0] != undefined) {
         this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
       }
@@ -664,7 +661,7 @@ export class CcswapComponent implements OnInit {
 
 
   async contractLock() {
-    const txData = await this.neoService.contractLock(this.stakingForm.value.fromNEOWallet,this.stakingForm.value.amounToStake,this.stakingForm.value.toQLCWallet,this.stakingForm.value.durationInDays);
+    const txData = await this.neoService.neo5toerc20swapaccountLock(this.stakingForm.value.fromNEOWallet,this.stakingForm.value.amounToStake,this.stakingForm.value.toQLCWallet);
     if (txData === false) {
       return false;
     }
