@@ -32,13 +32,13 @@ abi = neo5toerc20swap;
   // depost start method:post
   // deposit/neoTransactionConfirmed
   async neoTransactionConfirmed(txid: any) {
-    const data = await axios.post(this.url + '/deposit/neoTransactionConfirmed', {
-      headers: {
-        authorization: this.neo5toerc20swapjwtauth.authorization
-    },
-    params: {
-        hash: txid
-    }
+    const data = await axios.post(this.url + '/deposit/neoTransactionConfirmed', 
+    {
+      hash: txid},
+  {
+    headers: {
+      authorization: this.neo5toerc20swapjwtauth.authorization
+  }
     });
     return data;
   }
@@ -158,9 +158,8 @@ abi = neo5toerc20swap;
       return data;
     }
 
-  async getEthMint(amount: any, nep5Hash: any, signature: any) {
+  async getEthMint(amount: any, nep5Hash: any, signature: any,account: any) {
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-    const accounts = await new this.web3.eth.getAccounts;
 
     //  const balance = await this.web3.eth.getBalance(this.accounts[0]);
     //  console.log("balance",balance);
@@ -169,10 +168,11 @@ abi = neo5toerc20swap;
   //  	const dataresult = result;
   //  	console.log('result',dataresult);
   //  });
- 	Contract.methods.mint(amount,nep5Hash,signature).send({
-     from: accounts[0]
- }).then(result => {
- 		console.log('result',result)
- 	})
+ 	// tslint:disable-next-line: align
+    Contract.methods.mint(amount, nep5Hash, signature).send({
+        from: account
+    }).then(result => {
+      console.log('result', result);
+    });
  }
 }
