@@ -475,6 +475,7 @@ export class CcswapComponent implements OnInit {
     let txData;
     if (this.recover == 1 && this.recovering_txid == 1) {
       txData = await this.neoService.contractGetLockInfo(this.recoverForm.value.recover_txid);
+      console.log('confirmInvoke.txData',txData);
     } else {
       this.invokeSteps.push({ msg: 'Locking '+ this.stakingForm.value.amounToStake +' QLC on NEO network.'});
       txData = await this.contractLock();
