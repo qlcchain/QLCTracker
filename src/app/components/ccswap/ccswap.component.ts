@@ -649,15 +649,19 @@ export class CcswapComponent implements OnInit {
           console.log('getEthOwnerSign.data.value', getEthOwnerSign.data.value);
           console.log('this.etheraccounts[0]', this.etheraccounts[0]);
           const ethMint = await this.etherService.getEthMint(amountWithDecimals, txid, getEthOwnerSign.data.value, this.etheraccounts[0]);
-          console.log('ethMintData', ethMint);
+            const id = setInterval(async () => {
+              const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(txid);
+              // tslint:disable-next-line: triple-equals
+              if (swapInfoByTxHash.data.state == 1) {
+                console.log('cleardInterval.id', id);
+                clearInterval(id);
+                this.invokeSteps.push({ msg: 'Mint ERC20 TOKEN succesfully,the whole process successfully ', checkimg: 1 });
+                this.step = 4;
+                window.scrollTo(0, 0);
+              }
+            },1000);
+          
         }
-      }
-      // tslint:disable-next-line: triple-equals
-      if (swapInfoByTxHash.data.state == 1) {
-        console.log('cleardInterval.id', id);
-        this.invokeSteps.push({ msg: 'Mint ERC20 TOKEN succesfully,the whole process successfully ', checkimg: 1 });
-        this.step = 4;
-        window.scrollTo(0, 0);
       }
       }, 10000);
       console.log('setInternal.id', id);

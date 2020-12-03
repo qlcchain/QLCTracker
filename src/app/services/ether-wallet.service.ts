@@ -130,7 +130,7 @@ abi = neo5toerc20swap;
       return data;
     }
 
-    // https://raw.githubusercontent.com/info/swapInfoList
+    // info/swapInfoList
     async swapInfoList(page: any, pagesize: any) {
       const data = await axios.get(this.url + '/info/swapInfoList', {
       params: {
@@ -144,7 +144,7 @@ abi = neo5toerc20swap;
       return data;
     }
 
-    // https://raw.githubusercontent.com/info/swapInfosByAddress
+    // info/swapInfosByAddress
     async swapInfosByAddress(address: any, page: any, pagesize: any) {
       const data = await axios.get(this.url + '/info/swapInfosByAddress', {
       params: {
@@ -181,7 +181,7 @@ abi = neo5toerc20swap;
     console.log('getEthMint.nep5Hash', nep5Hash);
     console.log('getEthMint.signature', signature);
     console.log('getEthMint.account', account);
-    Contract.methods.mint(amount, nep5Hash, signature).send({
+    Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).send({
         from: account
     }).then(result => {
       console.log('result', result);

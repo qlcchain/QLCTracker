@@ -469,7 +469,7 @@ export class NeoWalletService {
   }  
 
   // 签名某个交易
-  async signTheTransaction(neoWalletAddress, unsignedData) {
+  async signTheTransaction(neoWalletAddress: string, unsignedData: string): Promise<any> {
     const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === neoWalletAddress);
     // 生成私钥
     const wif = await this.decrypt(selectedWallet.encryptedwif, this.walletService.wallet.password);
@@ -477,7 +477,6 @@ export class NeoWalletService {
     if (wif === false) {
       return false;
     }
-    console.log('wif', wif);
     // 通过私钥生成公钥
     const account = await new wallet.Account(wif);
     const publicKey = account.publicKey;
