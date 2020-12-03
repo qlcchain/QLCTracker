@@ -10,7 +10,7 @@ import axios from 'axios';
 export class EtherWalletService {
 web3: any;
 accounts: any;
-address: any = environment.neo5swapSmartContract[environment.neoNetwork];
+address: any = environment.etherswapSmartContract[environment.neoNetwork];
 private url: string = environment.neo5toerc20swapwrapperurl[environment.neoNetwork];
 private neo5toerc20swapjwtauth = environment.neo5toerc20swapjwtauth[environment.neoNetwork];
 abi = neo5toerc20swap;
@@ -32,7 +32,7 @@ abi = neo5toerc20swap;
   // depost start method:post
   // deposit/neoTransactionConfirmed
   async neoTransactionConfirmed(txid: any) {
-    const data = await axios.post(this.url + '/deposit/neoTransactionConfirmed', 
+    const data = await axios.post(this.url + '/deposit/neoTransactionConfirmed',
     {
       hash: txid},
   {
@@ -71,7 +71,7 @@ abi = neo5toerc20swap;
           return data;
         }
         // deposit/sendNeoTransaction
-        async sendNeoTransaction(signature: string, txHash: string, publicKey: string, nep5SenderAddr: string){
+        async sendNeoTransaction(signature: string, txHash: string, publicKey: string, nep5SenderAddr: string) {
           const data = await axios.post(this.url + '/deposit/sendNeoTransaction', {
             signature,
             txHash,
@@ -105,9 +105,21 @@ abi = neo5toerc20swap;
         // withdraw end
 
     // info start method:get
+    // info/checkNeoTransaction
+    async checkNeoTransaction(txid: any) {
+      const data = await axios.get(this.url + '/info/checkNeoTransaction', {
+      params: {
+          hash: txid
+      },
+      headers: {
+        authorization: this.neo5toerc20swapjwtauth.authorization
+    }
+      });
+      return data;
+    }
     // info/swapInfoByTxHash
     async swapInfoByTxHash(txid: any) {
-      const data = await axios.get(this.url + '/info/swapInfoByTxHash',{
+      const data = await axios.get(this.url + '/info/swapInfoByTxHash', {
       params: {
           hash: txid
       },
@@ -162,17 +174,13 @@ abi = neo5toerc20swap;
       return data;
     }
 
-  async getEthMint(amount: any, nep5Hash: any, signature: any,account: any) {
+  // mint erc20 token
+  async getEthMint(amount: any, nep5Hash: any, signature: any, account: any) {
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-
-    //  const balance = await this.web3.eth.getBalance(this.accounts[0]);
-    //  console.log("balance",balance);
-  //  Contract.addFunc(110,20, function(err, result){ console.log(result) });
-  //  Contract.methods.addFunc(110,20).call().then((result: any) => {
-  //  	const dataresult = result;
-  //  	console.log('result',dataresult);
-  //  });
- 	// tslint:disable-next-line: align
+    console.log('getEthMint.amount', amount);
+    console.log('getEthMint.nep5Hash', nep5Hash);
+    console.log('getEthMint.signature', signature);
+    console.log('getEthMint.account', account);
     Contract.methods.mint(amount, nep5Hash, signature).send({
         from: account
     }).then(result => {

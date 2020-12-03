@@ -10,7 +10,7 @@ import { UtilService } from 'src/app/services/util.service';
 import { WorkPoolService } from 'src/app/services/work-pool.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { TranslateService } from '@ngx-translate/core';
-import { timer } from 'rxjs';
+import { timer, Observable, interval } from 'rxjs';
 import { ApiConfidantService } from 'src/app/services/api-confidant.service';
 
 import { minAmountValidator } from '../../directives/amount-validator.directive';
@@ -182,9 +182,9 @@ export class CcswapComponent implements OnInit {
     private neoService: NeoWalletService,
     private nep5api: ApiNEP5Service,
     private api: ApiService,
-		  private util: UtilService,
-		  private workPool: WorkPoolService,
-		  private notifications: NotificationService,
+    private util: UtilService,
+    private workPool: WorkPoolService,
+    private notifications: NotificationService,
     private trans: TranslateService,
     private confidantApi: ApiConfidantService,
     private etherService: EtherWalletService
@@ -194,7 +194,7 @@ export class CcswapComponent implements OnInit {
 
   ngOnInit() {
     // this.etherService.swapInfoByTxHash('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
-    this.etherService.neoTransactionConfirmed('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
+    // this.etherService.neoTransactionConfirmed('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     this.loadBalances();
     this.getEtherAccounts();
   }
@@ -465,8 +465,9 @@ export class CcswapComponent implements OnInit {
 
   async confirmInvoke() {
     const walletAccount = await this.walletService.getWalletAccount(this.stakingForm.value.toQLCWallet);
-		  if (this.walletService.walletIsLocked()) {
-			return this.notifications.sendWarning('ERROR wallet locked');
+    console.log('confirmInvoke.walletAccount', walletAccount);
+    if (this.walletService.walletIsLocked()) {
+      return this.notifications.sendWarning('ERROR wallet locked');
     }
     this.step = 3;
     window.scrollTo(0, 0);
@@ -484,28 +485,53 @@ export class CcswapComponent implements OnInit {
       this.invokeSteps.push({ msg: 'ERROR - Wrong NEO Wallet password.'});
       return;
     }
-    if (txData.lockTxId == undefined) {
+    // tslint:disable-next-line: triple-equals
+    if (txData.txHash == undefined) {
       this.invokeSteps.push({ msg: 'ERROR - No TXID received. Please try again later.'});
       return;
     }
-    this.invokeSteps.push({ msg: 'TXID received. Preparing confirmed.', checkimg: 1});
-    // 这里需要判断lock产生的交易是否成功，成功后调用 NeoTransactionConfirmed
-    let pType = 'vote';
-    if (this.stakingForm.value.stakingType == 1) {
-      pType = 'network';
-    } else if (this.stakingForm.value.stakingType == 2) {
-      pType = 'mintage';
-    }
-    const pledgeResult = await this.etherService.neoTransactionConfirmed(txData.lockTxId);
-    console.log('etherService.neoTransactionConfirmed', pledgeResult);
-    if (pledgeResult.status) {
-        this.invokeSteps.push({ msg: 'TXID confirmed.', checkimg: 1});
-        this.confirmInvokeWaitForTXIDConfirm(txData, walletAccount);
-    } else {
-      this.invokeSteps.push({ msg: 'TXID confirmation error.', checkimg: 0});
+    console.log('confirmInvoke.txHash', txData.txHash);
+    // 签名交易信息
+    // tslint:disable-next-line: triple-equals
+    if (txData.unsignedData != undefined) {
+      const signData = await this.neoService.signTheTransaction(this.stakingForm.value.fromNEOWallet, txData.unsignedData);
+      console.log('signData', signData);
+      // tslint:disable-next-line: triple-equals
+      if (signData.signature != undefined) {
+        // tslint:disable-next-line: max-line-length
+        const sendNeoTransaction = await this.etherService.sendNeoTransaction(signData.signature, txData.txHash, signData.publicKey, this.stakingForm.value.fromNEOWallet);
+        console.log('sendNeoTransaction', sendNeoTransaction);
+        this.invokeSteps.push({ msg: 'TXID received. Preparing confirmed.', checkimg: 1});
+        if (sendNeoTransaction.data.value) {
+        const mintData = await this.mintERC20Token(txData, this.stakingForm.value.amounToStake);
+      } else {
+        this.invokeSteps.push({ msg: 'TXID confirmation error.', checkimg: 0});
+      }
+      }
     }
   }
-
+  async invokeNeoContractFunction() {
+    console.log('invokeNeoContractFunction');
+    // 这里需要判断lock产生的交易是否成功，成功后调用 NeoTransactionConfirmed
+    // const checkLockTransaction = await this.etherService.neoTransactionConfirmed(txData.lockTxId);
+    // console.log('checkLockTransaction', checkLockTransaction);
+    // if (checkLockTransaction.data.value) {
+    //   this.invokeSteps.push({ msg: 'TXID received. Preparing confirmed.', checkimg: 1});
+    //   const neoTransactionConfirmed = await this.etherService.neoTransactionConfirmed(txData.lockTxId);
+    //   console.log('etherService.neoTransactionConfirmed', neoTransactionConfirmed);
+    //   if (neoTransactionConfirmed.data.value) {
+    //       this.invokeSteps.push({ msg: 'TXID confirmed.', checkimg: 1});
+    //       console.log('stakingForm.value.amounToStake', this.stakingForm.value.amounToStake);
+    //       console.log('confirmInvoke.txData', txData);
+    //       this.mintERC20Token(txData, this.stakingForm.value.amounToStake);
+    //   } else {
+    //     this.invokeSteps.push({ msg: 'TXID confirmation error.', checkimg: 0});
+    //   }
+    // } else {
+    //   this.invokeSteps.push({ msg: 'LockTransaction fail', checkimg: 1});
+    //   return;
+    // }
+  }
   async continueInvokeProccess() {
 		if (this.walletService.walletIsLocked()) {
 			return this.notifications.sendError('ERROR - wallet locked');
@@ -591,84 +617,70 @@ export class CcswapComponent implements OnInit {
     }
   }
 
-  async confirmInvokeWaitForTXIDConfirm(txData, walletAccount) {
+  async mintERC20Token(txData, toswapAmount) {
     if (this.walletService.walletIsLocked()) {
       this.step = 1;
       window.scrollTo(0, 0);
-			   return this.notifications.sendWarning('ERROR wallet locked');
+      return this.notifications.sendWarning('ERROR wallet locked');
     }
-    const txid = txData.lockTxId;
-    const transaction = await this.neoService.getTransaction(txid);
-
-
-    let pType = 'vote';
-    if (this.stakingForm.value.stakingType == 1) {
-      pType = 'network';
-    } else if (this.stakingForm.value.stakingType == 2) {
-      pType = 'mintage';
-    }
-
-    if (1 === 1) {
-      const waitTimer = timer(20000).subscribe( async (data) => {
-
-      this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.', checkimg: 1});
-
-      const pledgeResult = (pType == 'mintage')
-                            ? await this.nep5api.mintagePledge(txid)
-                            : await this.nep5api.benefitPledge(txid)
-                            ;
-
-      if (pledgeResult.error) {
-        if (pledgeResult.error.message == 'get lockinfo error: value is not lockinfo struct : map[type:ByteArray value:]') {
+    const txid = txData.txHash;
+    if (txid) {
+      const id = setInterval(async () => {
+      const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(txid);
+      console.log('swapInfoByTxHash', swapInfoByTxHash);
+      if (swapInfoByTxHash.data.error) {
+        // const waitTimer = timer(2000, 1000).subscribe( async (data) => {
+        //   this.mintERC20Token(txData, toswapAmount);
+        // });
           this.invokeSteps.push({ msg: 'ERROR. TXID is not a lock.', checkimg: 1});
+          return;
+      }
+      // tslint:disable-next-line: triple-equals
+      if (swapInfoByTxHash.data.state == 0) {
+        console.log('cleardInterval.id', id);
+        clearInterval(id);
+        this.invokeSteps.push({ msg: 'TXID confirmed. Preparing to mint ERC20 Token.', checkimg: 1});
+        const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
+        console.log('getEthOwnerSign', getEthOwnerSign);
+        if (getEthOwnerSign.data.value) {
+          const amountWithDecimals = new BigNumber(toswapAmount).multipliedBy(100000000);
+          console.log('amountWithDecimals', amountWithDecimals);
+          console.log('txid', txid);
+          console.log('getEthOwnerSign.data.value', getEthOwnerSign.data.value);
+          console.log('this.etheraccounts[0]', this.etheraccounts[0]);
+          const ethMint = await this.etherService.getEthMint(amountWithDecimals, txid, getEthOwnerSign.data.value, this.etheraccounts[0]);
+          console.log('ethMintData', ethMint);
         }
-        return;
       }
-      if (!pledgeResult.result) {
-        console.log('pledgeResult error repeating');
-        const waitTimer = timer(5000).subscribe( (data) => {
-          this.confirmInvokeWaitForTXIDConfirm(txData, walletAccount);
-        });
-        return;
+      // tslint:disable-next-line: triple-equals
+      if (swapInfoByTxHash.data.state == 1) {
+        console.log('cleardInterval.id', id);
+        this.invokeSteps.push({ msg: 'Mint ERC20 TOKEN succesfully,the whole process successfully ', checkimg: 1 });
+        this.step = 4;
+        window.scrollTo(0, 0);
       }
-      const pledge = pledgeResult.result;
-
-      this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...', checkimg: 1});
-      const pledgetxid = await this.processBlock(pledge, walletAccount.keyPair, txid);
-
-      this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result, checkimg: 1 });
-      this.step = 4;
-      window.scrollTo(0, 0);
-      if (pType == 'network') {
-        const setMac = await this.confidantApi.confirmMacAddresses(this.stakingForm.value.email_address, this.stakingForm.value.security_code, this.macaddresses, this.stakingForm.value.toQLCWallet, this.stakingForm.value.fromNEOWallet, txid);
-        this.macaddresses = [];
-        this.checkSecurityCode();
-      }
-      });
+      }, 10000);
+      console.log('setInternal.id', id);
     } else {
-      console.log('no txid yet ... repeating');
-      // wait for neoscan to confirm transaction
-      const waitTimer = timer(5000).subscribe( (data) => {
-        this.confirmInvokeWaitForTXIDConfirm(txData, walletAccount);
-      });
+      console.log('please unlock your wallet ... repeating');
     }
   }
 
-
-
-
-
   async contractLock() {
     // tslint:disable-next-line: max-line-length
-    const txData = await this.neoService.neo5toerc20swapaccountLock(this.stakingForm.value.fromNEOWallet, this.stakingForm.value.amounToStake, this.etheraccounts[0]);
-    if (txData === false) {
-      return false;
-    }
+    // const txData = await this.neoService.neo5toerc20swapaccountLock(this.stakingForm.value.fromNEOWallet, this.stakingForm.value.amounToStake, this.etheraccounts[0]);
+    const amountWithDecimals = new BigNumber(this.stakingForm.value.amounToStake).multipliedBy(100000000);
+    console.log('amountWithDecimals', amountWithDecimals);
+    const txData = await this.etherService.packNeoTransaction(amountWithDecimals, this.stakingForm.value.fromNEOWallet, this.etheraccounts[0]);
+    console.log('contractLock.txData', txData);
+    // if (txData === false) {
+    //   return false;
+    // }
     // tslint:disable-next-line: triple-equals
-    if (txData.lockTxId == undefined) {
+    if (txData.data.txHash == undefined) {
       return this.contractLock();
     }
-    return txData;
+    return txData.data;
   }
   async getPreparePledge(txData, pType) {
     const request1 = {

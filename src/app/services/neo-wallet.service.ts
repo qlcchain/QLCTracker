@@ -466,9 +466,32 @@ export class NeoWalletService {
       //console.log(res.result.stack);
       //console.log('string ' + u.hexstring2str(res.result.stack[0].value));
     });
-
   }  
 
+  // 签名某个交易
+  async signTheTransaction(neoWalletAddress, unsignedData) {
+    const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === neoWalletAddress);
+    // 生成私钥
+    const wif = await this.decrypt(selectedWallet.encryptedwif, this.walletService.wallet.password);
+
+    if (wif === false) {
+      return false;
+    }
+    console.log('wif', wif);
+    // 通过私钥生成公钥
+    const account = await new wallet.Account(wif);
+    const publicKey = account.publicKey;
+    console.log('account', account);
+    console.log('publicKey', publicKey);
+    // 通过私钥签名具体交易信息
+    const signature = await wallet.sign(unsignedData, wif);
+    console.log('signature', signature);
+    const signData = {
+      signature,
+      publicKey
+    };
+    return signData;
+  }
   async neo5toerc20swapaccountLock(neoWalletAddress, neo5qlcAmount, erc20WalletAddress) {
     const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === neoWalletAddress);
     const wif = await this.decrypt(selectedWallet.encryptedwif, this.walletService.wallet.password);
@@ -476,15 +499,12 @@ export class NeoWalletService {
     if (wif === false) {
       return false;
     }
+    console.log('wif', wif);
     const account = await new wallet.Account(wif);
+    console.log('account', account);
 
-    // multisig
-    const multisigAcct = wallet.Account.createMultiSig(2, [
-      account.publicKey,
-      environment.neoPublicKey[environment.neoNetwork]
-    ]);
     // const amountWithDecimals = new BigNumber(erc20Amount).multipliedBy(100000000);
-    const providerapi = new myProvider(this.selectedNode); 
+    const providerapi = new myProvider(this.selectedNode);
     console.log('providerapi', providerapi);
     console.log('amount', amountWithDecimals);
     console.log('neoWalletAddress', neoWalletAddress);
@@ -500,22 +520,22 @@ export class NeoWalletService {
       scriptHash: this.neoswapsmartContractScript, // Scripthash for the contract
       operation: 'lock', // name of operation to perform.
       args: [
-        sc.ContractParam.byteArray(neoWalletAddress,'address'), // neo address
-        sc.ContractParam.byteArray(multisigAcct.address,'address'), // multisig neo address
-        sc.ContractParam.byteArray(u.str2hexstring(erc20WalletAddress),'string'), // qlc address
-        sc.ContractParam.integer(amountWithDecimals.toNumber()), // qlc amount // check integer limit for big numbers !! should be 2,147,483,647 that's max 21 qlc ?
-      ] 
+        sc.ContractParam.byteArray(neoWalletAddress, 'address'), // neo address
+        // tslint:disable-next-line: max-line-length
+        sc.ContractParam.integer(amountWithDecimals.toNumber()), // qlc amount
+        sc.ContractParam.byteArray(u.str2hexstring(erc20WalletAddress), 'string'), // qlc address
+      ]
     }
-    //console.log(invoke);
+    console.log(invoke);
 
     
     const script = await Neon.create.script(invoke);
-    //console.log(script);
+    console.log(script);
 
     const invokeConfig = {
       api: apiProvider, // The API Provider that we rely on for balance and rpc information
-      account: account, // The sending Account
-      script: script // The Smart Contract invocation script
+      account, // The sending Account
+      script // The Smart Contract invocation script
     };
 
     const returnTokeninvokeConfig = await Neon.doInvoke(invokeConfig)
