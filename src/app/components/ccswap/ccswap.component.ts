@@ -544,14 +544,16 @@ export class CcswapComponent implements OnInit {
       (a) => a.id == this.stakingForm.value.fromNEOWallet
     );
 
+    console.log('ccswap.tokenList', this.neoService.tokenList);
+
     this.stakingForm
       .get('availableQLCBalance')
       .setValue(
         selectedNEOWallet.balances[
-          this.neoService.tokenList.QLC.networks['1'].hash
+          this.neoService.tokenList['QLC'].networks['1'].hash
         ] !== undefined
           ? selectedNEOWallet.balances[
-              this.neoService.tokenList.QLC.networks['1'].hash
+              this.neoService.tokenList['QLC'].networks['1'].hash
             ].amount
           : 0
       );
@@ -878,6 +880,7 @@ export class CcswapComponent implements OnInit {
       console.log('result', burnERC20Token);
       console.log('cleardInterval.id', id);
       clearInterval(id);
+
       this.invokeSteps.push({
         msg: 'The whole process successfully ',
         checkimg: 1,
