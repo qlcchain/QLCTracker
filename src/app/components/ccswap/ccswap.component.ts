@@ -18,6 +18,7 @@ import { minAmountValidator } from '../../directives/amount-validator.directive'
 import { environment } from 'src/environments/environment';
 import { EtherWalletService } from 'src/app/services/ether-wallet.service';
 import { AnyARecord } from 'dns';
+import { tx } from '@cityofzion/neon-js';
 
 const nacl = window['nacl'];
 
@@ -96,7 +97,7 @@ export class CcswapComponent implements OnInit {
       Validators.compose([
         Validators.required,
         Validators.pattern('^([a-zA-Z0-9])*'),
-        Validators.maxLength(64),
+        Validators.maxLength(128),
         Validators.minLength(64),
       ])
     ),
@@ -276,90 +277,62 @@ export class CcswapComponent implements OnInit {
     return accounts;
   }
 
-  async checkTxid() {
+  async continueUndoneTransaction() {
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning('ERROR wallet locked');
     }
-    this.continueInvokePledge = {};
-    this.checkingTxid = 1;
-    this.recoverErrorMsg = '';
-    this.recoverSteps = [];
-
-    // check if TXID is a lock
-    const txData = await this.neoService.contractGetLockInfo(
-      this.recoverForm.value.recover_txid
+    console.log('txid', this.recoverForm.get('recover_txid').value);
+    console.log('txid.slice', this.recoverForm.get('recover_txid').value.slice(2));
+    const txid = this.recoverForm.get('recover_txid').value.slice(2);
+    const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
+      txid
     );
-    if (txData == false) {
-      this.recoverSteps.push({ msg: 'Wrong NEO wallet password.' });
-      return;
-    }
-    if (txData.neoAddress != '') {
-      this.recoverSteps.push({ msg: 'TXID lock found.' });
-      const walletAccount = await this.walletService.getWalletAccount(
-        txData.beneficial
-      );
-      if (!walletAccount) {
-        this.recoverSteps.push({
-          msg:
-            'ERROR - QLC address not found. Please add the connected QLC address and try again.',
-        });
-        this.checkingTxid = 0;
-        return;
-      }
-      const neoWallet = await this.walletService.getNeoWallet(
-        txData.neoAddress
-      );
-      if (!neoWallet) {
-        this.recoverSteps.push({
-          msg:
-            'ERROR - NEO address not found. Please add the connected NEO address and try again.',
-        });
-        this.checkingTxid = 0;
-        return;
-      }
-
-      this.recoverSteps.push({ msg: 'Checking pledge status.' });
-      const pledgeInfoByTransactionID = await this.nep5api.pledgeInfoByTransactionID(
-        this.recoverForm.value.recover_txid
-      );
-      if (pledgeInfoByTransactionID.result) {
-        const pledgeInfo = pledgeInfoByTransactionID.result;
-        if (
-          pledgeInfo.state != 'PledgeStart' &&
-          pledgeInfo.state != 'PledgeProcess'
-        ) {
-          this.recoverSteps.push({ msg: 'ERROR - Pledge already proccessed.' });
-          this.checkingTxid = 0;
-          return;
-        }
-      }
-
-      this.checkingTxid = 0;
-      this.recovering_txid = 1;
-      this.stakingForm.get('fromNEOWallet').setValue(txData.neoAddress);
-      this.stakingForm.get('toQLCWallet').setValue(txData.beneficial);
-      this.stakingForm
-        .get('amounToStake')
-        .setValue(
-          new BigNumber(txData.amount).dividedBy(Math.pow(10, 8)).toNumber()
+    // const txid = swapInfoByTxHash.data.neoHash.slice(2);
+    if (swapInfoByTxHash.data.state == 0) {
+      this.step = 3;
+      console.log('txid.slice', txid);
+      const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
+      console.log('getEthOwnerSign', getEthOwnerSign);
+      if (getEthOwnerSign.data.value) {
+        const amountWithDecimals = swapInfoByTxHash.data.amount;
+        console.log('amountWithDecimals', amountWithDecimals);
+        console.log('txid', txid);
+        console.log(
+          'getEthOwnerSign.data.value',
+          getEthOwnerSign.data.value
         );
-      this.stakingForm.get('endDate').setValue(txData.lockEnd);
-      this.recoverSteps.push({
-        msg: 'Checking possible stakings by amount locked.',
-      });
+        const ethMint = await this.etherService.getEthMint(
+          amountWithDecimals,
+          txid,
+          getEthOwnerSign.data.value,
+          swapInfoByTxHash.data.ethUserAddr
+        );
+        // tslint:disable-next-line: no-shadowed-variable
+        const id = setInterval(async () => {
+          // tslint:disable-next-line: no-shadowed-variable
+          const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
+            txid,
+          );
+          // tslint:disable-next-line: triple-equals
+          if (swapInfoByTxHash.data.state == 1) {
+            console.log('cleardInterval.id', id);
+            clearInterval(id);
+            this.invokeSteps.push({
+              msg:
+                'Mint ERC20 TOKEN succesfully,the whole process successfully ',
+              checkimg: 1,
+            });
+            this.step = 4;
+            window.scrollTo(0, 0);
+          }
+        }, 5000);
+      }
     } else {
-      if (txData.lockInfo == 'not_lock') {
-        this.recoverSteps.push({ msg: 'ERROR - TXID is not a lock.' });
-      }
-      if (txData.lockInfo == 'not_txid') {
-        this.recoverSteps.push({
-          msg: 'ERROR - TXID not found, try again after a few blocks.',
-        });
-      }
-      this.checkingTxid = 0;
-    }
+      this.recoverSteps.push({ msg: 'ERROR - TXID not found'});
+      return;
 
-    return;
+    }
+    
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {
@@ -739,120 +712,7 @@ export class CcswapComponent implements OnInit {
     //   return;
     // }
   }
-  async continueInvokeProccess() {
-    if (this.walletService.walletIsLocked()) {
-      return this.notifications.sendError('ERROR - wallet locked');
-    }
-    this.invokeSteps = [];
-    const pledge = this.continueInvokePledge;
-    console.log(pledge);
-    const walletAccount = await this.walletService.getWalletAccount(
-      pledge.beneficial
-    );
-    this.step = 3;
-    window.scrollTo(0, 0);
-    this.invokeSteps.push({ msg: 'Continuing invoke.' });
-    this.invokeSteps.push({
-      msg: 'Checking TXID on NEO network.',
-      checkimg: 1,
-    });
 
-    this.confirmInvokeWaitForTXIDConfirmByPledge(pledge, walletAccount);
-  }
-
-  async confirmInvokeWaitForTXIDConfirmByPledge(pledge, walletAccount) {
-    if (this.walletService.walletIsLocked()) {
-      this.step = 1;
-      window.scrollTo(0, 0);
-      return this.notifications.sendError('ERROR - wallet locked');
-    }
-    if (walletAccount == undefined || walletAccount.keyPair == undefined) {
-      this.recoverSteps = [];
-      this.recoverSteps.push({
-        msg:
-          'ERROR - Beneficial account'  + pledge.beneficial + ' not found.',
-      });
-      this.continueInvokePledge = {};
-      this.continueInvoke = 0;
-      this.checkingTxid = 0;
-      this.step = 1;
-      window.scrollTo(0, 0);
-      return this.notifications.sendError(
-        'ERROR - Beneficial account not found'
-      );
-    }
-
-    const txid = pledge.nep5TxId;
-
-    const transaction = await this.neoService.getTransaction(txid);
-    // console.log('txid is ');
-    // console.log(txid);
-
-    const pType = pledge.pType;
-
-    if (transaction.txid) {
-      const waitTimer = timer(20000).subscribe(async (data) => {
-        // console.log(transaction);
-        // console.log('txid confirmed');
-        this.invokeSteps.push({
-          msg: 'TXID confirmed. Preparing QLC Chain pledge.',
-          checkimg: 1,
-        });
-
-        const pledgeResult =
-          pType == 'mintage'
-            ? await this.nep5api.mintagePledge(txid)
-            : await this.nep5api.benefitPledge(txid);
-        if (pledgeResult.error) {
-          if (
-            pledgeResult.error.message ==
-            'get lockinfo error: value is not lockinfo struct : map[type:ByteArray value:]'
-          ) {
-            this.invokeSteps.push({
-              msg: 'ERROR. TXID is not a lock.',
-              checkimg: 1,
-            });
-          }
-          return;
-        }
-        if (!pledgeResult.result) {
-          this.invokeSteps.push({
-            msg: 'Pledge ERROR.',
-            link: '/staking-create',
-            linkText: 'Please use RECOVER to recover a failed TX.',
-          });
-          /*console.log('pledgeResult error repeating');
-        const waitTimer = timer(5000).subscribe( (data) => {
-          this.confirmInvokeWaitForTXIDConfirm(pledge,walletAccount);
-        });*/
-          return;
-        }
-        const preparedPledge = pledgeResult.result;
-
-        this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...' });
-        const pledgetxid = await this.processBlock(
-          preparedPledge,
-          walletAccount.keyPair,
-          txid
-        );
-
-        this.invokeSteps.push({
-          msg:
-            'Pledge succesfully processed. Txid on QLC Chain is: ' +
-            pledgetxid.result,
-          checkimg: 1,
-        });
-        this.step = 4;
-        window.scrollTo(0, 0);
-      });
-    } else {
-      console.log('no txid yet ... repeating');
-      // wait for neoscan to confirm transaction
-      const waitTimer = timer(5000).subscribe((data) => {
-        this.confirmInvokeWaitForTXIDConfirmByPledge(pledge, walletAccount);
-      });
-    }
-  }
 
   // brun ERC20 Token
   async burnERC20Token() {

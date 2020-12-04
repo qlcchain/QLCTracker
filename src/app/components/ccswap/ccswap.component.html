@@ -45,10 +45,36 @@
                             <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
               
                                 <div class="row pt-1 mt-4 pl-4 pr-4">
-                                   <!-- to do -->
+              
                                     <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4 mt-4">
-                                      <!-- undone transactions -->
-                                      Under development
+                                      RECOVER TXID
+                                    </div>
+                                    <div class="col-md-9 text-left mb-4 mt-4">
+                                      <div class="input-group">
+                                        <input
+                                          type="text"
+                                          class="form-control form-my-border"
+                                          placeholder="NEO txid"
+                                          onfocus="this.placeholder = ''"
+                                          style="height: 42px !important;"
+                                          formControlName="recover_txid"
+                                        />
+                                      </div>
+                                      
+                                      <span *ngFor="let validation of recover_validation_messages.recover_txid">
+                                        <span class="error-message pt-2" *ngIf="recoverForm.get('recover_txid').hasError(validation.type) && (recoverForm.get('recover_txid').dirty || recoverForm.get('recover_txid').touched)" style="color:#c10f0f;">{{validation.message}}<br></span>
+                                      </span>
+                                      <h5 class="pt-3" *ngFor="let step of recoverSteps">{{ step.msg }}</h5>
+                                    </div>
+                                    
+                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
+                                    <div class="col-md-4 text-left mb-4">
+                                      <button (click)="continueUndoneTransaction()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="checkingTxid == 1 || recoverForm.get('recover_txid').status != 'VALID' ">
+                                        CHECK TXID
+                                      </button>
+                                    </div>
+                                    <div class="col-md-5 pt-3" *ngIf="checkingTxid == 1">
+                                      <span class="security-email-sending" class="w-100"><p><img src="assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Checking txid ...</p></span>  
                                     </div>
             
             
