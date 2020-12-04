@@ -24,14 +24,14 @@ const nacl = window['nacl'];
 @Component({
   selector: 'app-ccswap',
   templateUrl: './ccswap.component.html',
-  styleUrls: ['./ccswap.component.scss']
+  styleUrls: ['./ccswap.component.scss'],
 })
 export class CcswapComponent implements OnInit {
-
   step = 1;
   recover = 0;
   zeroHash = '0000000000000000000000000000000000000000000000000000000000000000';
   checkingTxid = 0;
+  // tslint:disable-next-line: variable-name
   recovering_txid = 0;
   continueInvoke = 0;
   continueInvokePledge: any;
@@ -48,59 +48,77 @@ export class CcswapComponent implements OnInit {
   accounts = this.walletService.wallet.accounts;
   neowallets = this.walletService.wallet.neowallets;
   etheraccounts: any[];
+  metamask: any;
   stakingTypes;
 
   staking = {
-    main : [{
-      name: 'For Deposit',
-      minAmount : 0,
-      minTime: 10
-    },
-    {
-      name: 'For Confidant',
-      minAmount : 0,
-      minTime: 90
-    },
-    {
-      name: 'For Withdraw',
-      minAmount : 0,
-      minTime: 180
-    }],
-    test : [{
-      name: 'For Deposit',
-      minAmount : 0,
-      minTime: 10
-    },
-    {
-      name: 'For Confidant',
-      minAmount : 0,
-      minTime: 10
-    },
-    {
-      name: 'For Withdraw',
-      minAmount : 0,
-      minTime: 10
-    }]
+    main: [
+      {
+        name: 'For Deposit',
+        minAmount: 1,
+        minTime: 10,
+      },
+      {
+        name: 'For Confidant',
+        minAmount: 1,
+        minTime: 90,
+      },
+      {
+        name: 'For Withdraw',
+        minAmount: 1,
+        minTime: 180,
+      },
+    ],
+    test: [
+      {
+        name: 'For Deposit',
+        minAmount: 1,
+        minTime: 10,
+      },
+      {
+        name: 'For Confidant',
+        minAmount: 1,
+        minTime: 10,
+      },
+      {
+        name: 'For Withdraw',
+        minAmount: 1,
+        minTime: 10,
+      },
+    ],
   };
 
   msg3 = '';
 
   recoverForm = new FormGroup({
-    recover_txid: new FormControl('', Validators.compose([
-      Validators.required,
-      Validators.pattern('^([a-zA-Z0-9])*'),
-      Validators.maxLength(64),
-      Validators.minLength(64)
-    ])),
+    recover_txid: new FormControl(
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.pattern('^([a-zA-Z0-9])*'),
+        Validators.maxLength(64),
+        Validators.minLength(64),
+      ])
+    ),
   });
 
+  // tslint:disable-next-line: variable-name
   recover_validation_messages = {
     recover_txid: [
       { type: 'required', message: 'Txid is required' },
-      { type: 'minlength', message: 'Txid must be at least 64 characters long' },
-      { type: 'maxlength', message: 'Txid cannot be more than 64 characters long' },
-      { type: 'pattern', message: 'Txid must contain only letters and numbers' }
-    ]
+      {
+        type: 'minlength',
+        message: 'Txid must be at least 64 characters long',
+      },
+      {
+        type: 'maxlength',
+        message: 'Txid cannot be more than 64 characters long',
+      },
+      {
+        type: 'pattern',
+        message: 'Txid must contain only letters and numbers',
+      },
+    ],
   };
 
   recoverErrorMsg = '';
@@ -113,62 +131,113 @@ export class CcswapComponent implements OnInit {
     endDate: new FormControl(''),
     amounToStake: new FormControl(''),
     durationInDays: new FormControl(''),
-    tokenName: new FormControl('', Validators.compose([
-      Validators.required,
-      Validators.pattern('^([a-zA-Z_]+[ ]?)*[a-zA-Z_]$'),
-      Validators.maxLength(40),
-      Validators.minLength(1)
-    ])),
-    tokenSymbol: new FormControl('', Validators.compose([
-      Validators.required,
-      Validators.pattern('^([a-zA-Z_]+[ ]?)*[a-zA-Z_]$'),
-      Validators.maxLength(10),
-      Validators.minLength(1)
-    ])),
-    tokenSupply: new FormControl('', Validators.compose([
-      Validators.required,
-      Validators.pattern('[1-9][0-9]*'),
-      Validators.maxLength(20),
-      Validators.minLength(3)
-    ])),
-    tokenDecimals: new FormControl('', Validators.compose([
-      Validators.required,
-      Validators.pattern('[0-9]+'),
-      Validators.maxLength(2),
-      Validators.minLength(1)
-    ])),
+    tokenName: new FormControl(
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.pattern('^([a-zA-Z_]+[ ]?)*[a-zA-Z_]$'),
+        Validators.maxLength(40),
+        Validators.minLength(1),
+      ])
+    ),
+    tokenSymbol: new FormControl(
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.pattern('^([a-zA-Z_]+[ ]?)*[a-zA-Z_]$'),
+        Validators.maxLength(10),
+        Validators.minLength(1),
+      ])
+    ),
+    tokenSupply: new FormControl(
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.pattern('[1-9][0-9]*'),
+        Validators.maxLength(20),
+        Validators.minLength(3),
+      ])
+    ),
+    tokenDecimals: new FormControl(
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.pattern('[0-9]+'),
+        Validators.maxLength(2),
+        Validators.minLength(1),
+      ])
+    ),
     email_address: new FormControl(''),
     security_code: new FormControl(''),
   });
 
+  // tslint:disable-next-line: variable-name
   staking_validation_messages = {
     tokenName: [
       { type: 'required', message: 'Token Name is required' },
-      { type: 'minlength', message: 'Token Name must be at least 1 characters long' },
-      { type: 'maxlength', message: 'Token Name cannot be more than 40 characters long' },
-      { type: 'pattern', message: 'Token Name must contain only letters, space or underscore' }
+      {
+        type: 'minlength',
+        message: 'Token Name must be at least 1 characters long',
+      },
+      {
+        type: 'maxlength',
+        message: 'Token Name cannot be more than 40 characters long',
+      },
+      {
+        type: 'pattern',
+        message: 'Token Name must contain only letters, space or underscore',
+      },
     ],
     tokenSymbol: [
       { type: 'required', message: 'Token Symbol is required' },
-      { type: 'minlength', message: 'Token Symbol must be at least 1 characters long' },
-      { type: 'maxlength', message: 'Token Symbol cannot be more than 40 characters long' },
-      { type: 'pattern', message: 'Token Symbol must contain only letters, space or underscore' }
+      {
+        type: 'minlength',
+        message: 'Token Symbol must be at least 1 characters long',
+      },
+      {
+        type: 'maxlength',
+        message: 'Token Symbol cannot be more than 40 characters long',
+      },
+      {
+        type: 'pattern',
+        message: 'Token Symbol must contain only letters, space or underscore',
+      },
     ],
     tokenSupply: [
       { type: 'required', message: 'Token Supply is required' },
-      { type: 'minlength', message: 'Token Supply must be at least 3 characters long' },
-      { type: 'maxlength', message: 'Token Supply cannot be more than 20 characters long' },
-      { type: 'pattern', message: 'Token Supply must contain only numbers and it must not start with 0' }
+      {
+        type: 'minlength',
+        message: 'Token Supply must be at least 3 characters long',
+      },
+      {
+        type: 'maxlength',
+        message: 'Token Supply cannot be more than 20 characters long',
+      },
+      {
+        type: 'pattern',
+        message:
+          'Token Supply must contain only numbers and it must not start with 0',
+      },
     ],
     tokenDecimals: [
       { type: 'required', message: 'Token Decimals is required' },
-      { type: 'minlength', message: 'Token Decimals must be at least 1 characters long' },
-      { type: 'maxlength', message: 'Token Decimals cannot be more than 2 characters long' },
-      { type: 'pattern', message: 'Token Decimals must contain only numbers and it must not start with 0' }
+      {
+        type: 'minlength',
+        message: 'Token Decimals must be at least 1 characters long',
+      },
+      {
+        type: 'maxlength',
+        message: 'Token Decimals cannot be more than 2 characters long',
+      },
+      {
+        type: 'pattern',
+        message:
+          'Token Decimals must contain only numbers and it must not start with 0',
+      },
     ],
     terms: [
-      { type: 'pattern', message: 'You must accept terms and conditions' }
-    ]
+      { type: 'pattern', message: 'You must accept terms and conditions' },
+    ],
   };
 
   invalidTokenSymbol = 0;
@@ -195,6 +264,7 @@ export class CcswapComponent implements OnInit {
   ngOnInit() {
     // this.etherService.swapInfoByTxHash('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     // this.etherService.neoTransactionConfirmed('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
+    this.metamask = this.etherService.metamask;
     this.loadBalances();
     this.getEtherAccounts();
   }
@@ -208,7 +278,7 @@ export class CcswapComponent implements OnInit {
 
   async checkTxid() {
     if (this.walletService.walletIsLocked()) {
-			return this.notifications.sendWarning('ERROR wallet locked');
+      return this.notifications.sendWarning('ERROR wallet locked');
     }
     this.continueInvokePledge = {};
     this.checkingTxid = 1;
@@ -216,32 +286,49 @@ export class CcswapComponent implements OnInit {
     this.recoverSteps = [];
 
     // check if TXID is a lock
-    const txData = await this.neoService.contractGetLockInfo(this.recoverForm.value.recover_txid);
-    if (txData === false) {
-      this.recoverSteps.push({ msg: 'Wrong NEO wallet password.'});
+    const txData = await this.neoService.contractGetLockInfo(
+      this.recoverForm.value.recover_txid
+    );
+    if (txData == false) {
+      this.recoverSteps.push({ msg: 'Wrong NEO wallet password.' });
       return;
     }
     if (txData.neoAddress != '') {
-      this.recoverSteps.push({ msg: 'TXID lock found.'});
-      const walletAccount = await this.walletService.getWalletAccount(txData.beneficial);
+      this.recoverSteps.push({ msg: 'TXID lock found.' });
+      const walletAccount = await this.walletService.getWalletAccount(
+        txData.beneficial
+      );
       if (!walletAccount) {
-        this.recoverSteps.push({ msg: 'ERROR - QLC address not found. Please add the connected QLC address and try again.'});
+        this.recoverSteps.push({
+          msg:
+            'ERROR - QLC address not found. Please add the connected QLC address and try again.',
+        });
         this.checkingTxid = 0;
         return;
       }
-      const neoWallet = await this.walletService.getNeoWallet(txData.neoAddress);
+      const neoWallet = await this.walletService.getNeoWallet(
+        txData.neoAddress
+      );
       if (!neoWallet) {
-        this.recoverSteps.push({ msg: 'ERROR - NEO address not found. Please add the connected NEO address and try again.'});
+        this.recoverSteps.push({
+          msg:
+            'ERROR - NEO address not found. Please add the connected NEO address and try again.',
+        });
         this.checkingTxid = 0;
         return;
       }
 
-      this.recoverSteps.push({ msg: 'Checking pledge status.'});
-      const pledgeInfoByTransactionID = await this.nep5api.pledgeInfoByTransactionID(this.recoverForm.value.recover_txid);
+      this.recoverSteps.push({ msg: 'Checking pledge status.' });
+      const pledgeInfoByTransactionID = await this.nep5api.pledgeInfoByTransactionID(
+        this.recoverForm.value.recover_txid
+      );
       if (pledgeInfoByTransactionID.result) {
         const pledgeInfo = pledgeInfoByTransactionID.result;
-        if (pledgeInfo.state != 'PledgeStart' && pledgeInfo.state != 'PledgeProcess') {
-          this.recoverSteps.push({ msg: 'ERROR - Pledge already proccessed.'});
+        if (
+          pledgeInfo.state != 'PledgeStart' &&
+          pledgeInfo.state != 'PledgeProcess'
+        ) {
+          this.recoverSteps.push({ msg: 'ERROR - Pledge already proccessed.' });
           this.checkingTxid = 0;
           return;
         }
@@ -251,26 +338,32 @@ export class CcswapComponent implements OnInit {
       this.recovering_txid = 1;
       this.stakingForm.get('fromNEOWallet').setValue(txData.neoAddress);
       this.stakingForm.get('toQLCWallet').setValue(txData.beneficial);
-      this.stakingForm.get('amounToStake').setValue(new BigNumber(txData.amount).dividedBy(Math.pow(10, 8)).toNumber() );
+      this.stakingForm
+        .get('amounToStake')
+        .setValue(
+          new BigNumber(txData.amount).dividedBy(Math.pow(10, 8)).toNumber()
+        );
       this.stakingForm.get('endDate').setValue(txData.lockEnd);
-      this.recoverSteps.push({ msg: 'Checking possible stakings by amount locked.'});
-
+      this.recoverSteps.push({
+        msg: 'Checking possible stakings by amount locked.',
+      });
     } else {
       if (txData.lockInfo == 'not_lock') {
-        this.recoverSteps.push({ msg: 'ERROR - TXID is not a lock.'});
+        this.recoverSteps.push({ msg: 'ERROR - TXID is not a lock.' });
       }
       if (txData.lockInfo == 'not_txid') {
-        this.recoverSteps.push({ msg: 'ERROR - TXID not found, try again after a few blocks.'});
+        this.recoverSteps.push({
+          msg: 'ERROR - TXID not found, try again after a few blocks.',
+        });
       }
       this.checkingTxid = 0;
     }
 
     return;
-
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {
-    ( Object as any).values(formGroup.controls).forEach(control => {
+    (Object as any).values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
 
       if (control.controls) {
@@ -279,24 +372,37 @@ export class CcswapComponent implements OnInit {
     });
   }
 
-  checkForm() {
+  async checkForm() {
+    // const burnEth = await this.burnERC20Token();
+    // console.log('burnEth', burnEth);
     this.markFormGroupTouched(this.stakingForm);
+    // tslint:disable-next-line: triple-equals
+    console.log('this.stakingForm.value.stakingType', this.stakingForm.value.stakingType);
+    console.log('fromNEOWallet.status', this.stakingForm.get('fromNEOWallet').status);
+    console.log('toQLCWallet.status', this.stakingForm.get('toQLCWallet').status);
     if (this.stakingForm.value.stakingType == 0) {
-      if (this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
-          this.stakingForm.get('toQLCWallet').status == 'VALID'
+      if (
+        // tslint:disable-next-line: triple-equals
+        this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
+        // tslint:disable-next-line: triple-equals
+        this.stakingForm.get('toQLCWallet').status == 'VALID'
       ) {
+        console.log('step', this.step);
         this.step = 2;
         window.scrollTo(0, 0);
       }
-    } else if (this.stakingForm.value.stakingType == 1) {
-      if (this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
-          this.stakingForm.get('toQLCWallet').status == 'VALID'
+    } else if (this.stakingForm.value.stakingType == 2) {
+      if (
+        // tslint:disable-next-line: triple-equals
+        this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
+        // tslint:disable-next-line: triple-equals
+        this.stakingForm.get('toQLCWallet').status == 'VALID'
       ) {
         this.step = 2;
         window.scrollTo(0, 0);
       }
     }
-    if (this.stakingForm.status === 'VALID') {
+    if (this.stakingForm.status == 'VALID') {
       this.step = 2;
       window.scrollTo(0, 0);
     }
@@ -308,12 +414,15 @@ export class CcswapComponent implements OnInit {
     window.scrollTo(0, 0);
   }
 
-
   async checkTokenSymbol() {
     const tokensResult = await this.api.tokens();
     if (tokensResult.result) {
       const tokens = tokensResult.result;
-      const findToken = tokens.find((token) => String(token.tokenSymbol).toLowerCase() ==  String(this.stakingForm.value.tokenSymbol).toLowerCase());
+      const findToken = tokens.find(
+        (token) =>
+          String(token.tokenSymbol).toLowerCase() ==
+          String(this.stakingForm.value.tokenSymbol).toLowerCase()
+      );
       if (findToken) {
         this.invalidTokenSymbol = 1;
       } else {
@@ -326,7 +435,11 @@ export class CcswapComponent implements OnInit {
     const tokensResult = await this.api.tokens();
     if (tokensResult.result) {
       const tokens = tokensResult.result;
-      const findToken = tokens.find((token) => String(token.tokenName).toLowerCase() ==  String(this.stakingForm.value.tokenName).toLowerCase());
+      const findToken = tokens.find(
+        (token) =>
+          String(token.tokenName).toLowerCase() ==
+          String(this.stakingForm.value.tokenName).toLowerCase()
+      );
       if (findToken) {
         this.invalidTokenName = 1;
       } else {
@@ -337,13 +450,18 @@ export class CcswapComponent implements OnInit {
 
   async sendSecurityCode() {
     this.sendingSecurityCode = 1;
-    const confirm = await this.confidantApi.sendSecurityCode(this.stakingForm.value.email_address);
+    const confirm = await this.confidantApi.sendSecurityCode(
+      this.stakingForm.value.email_address
+    );
     this.sendingSecurityCode = 2;
   }
 
   async checkSecurityCode() {
     this.confidantConfirmed = 3;
-    const confirm = await this.confidantApi.checkSecurityCode(this.stakingForm.value.email_address, this.stakingForm.value.security_code);
+    const confirm = await this.confidantApi.checkSecurityCode(
+      this.stakingForm.value.email_address,
+      this.stakingForm.value.security_code
+    );
     this.confidants = [];
     if (confirm.valid == 1) {
       this.confidantConfirmed = 1;
@@ -351,37 +469,44 @@ export class CcswapComponent implements OnInit {
     } else {
       this.confidantConfirmed = 2;
     }
-
   }
 
-
-
   loadLang() {
-		this.trans.get('SERVICE_WARNINGS_QLC_SERVICE.msg3').subscribe((res: string) => {
-			this.msg3 = res;
-		});
+    this.trans
+      .get('SERVICE_WARNINGS_QLC_SERVICE.msg3')
+      .subscribe((res: string) => {
+        this.msg3 = res;
+      });
   }
 
   back() {
     this.step = 1;
     window.scrollTo(0, 0);
     this.macaddresses = [];
-
   }
 
   async loadBalances() {
-		for (let i = 0; i < this.neowallets.length; i++) {
-			this.neowallets[i].balances = [];
-   this.neowallets[i].addressBookName = this.addressBookService.getAccountName(this.neowallets[i].id);
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < this.neowallets.length; i++) {
+      this.neowallets[i].balances = [];
+      this.neowallets[
+        i
+      ].addressBookName = this.addressBookService.getAccountName(
+        this.neowallets[i].id
+      );
 
-   const balance: any = await this.neoService.getNeoRpcBalance(this.neowallets[i].id);
+      const balance: any = await this.neoService.getNeoRpcBalance(
+        this.neowallets[i].id
+      );
 
-   for (const asset of balance) {
-				this.neowallets[i].balances[asset.asset_hash] = {
-					amount : new BigNumber(asset.amount).dividedBy(Math.pow(10, 8)).toNumber(),
-					asset_hash: asset.asset_hash
-				};
-			}
+      for (const asset of balance) {
+        this.neowallets[i].balances[asset.asset_hash] = {
+          amount: new BigNumber(asset.amount)
+            .dividedBy(Math.pow(10, 8))
+            .toNumber(),
+          asset_hash: asset.asset_hash,
+        };
+      }
 
       /*
 			const balance:any = await this.neoService.getBalance(this.neowallets[i].id);
@@ -395,76 +520,130 @@ export class CcswapComponent implements OnInit {
         this.neowallets[i].balances[token] = newTokenBalance;
 			}*/
     }
-  this.selectAccount();
-  this.setDuration();
+    this.selectAccount();
+    this.setDuration();
   }
 
   selectAccount() {
-		if (this.stakingForm.value.fromNEOWallet == '') {
+    if (this.stakingForm.value.fromNEOWallet == '') {
       console.log('neowallets', this.neowallets);
-      if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
+      if (
+        this.neowallets[0] != undefined &&
+        this.neowallets[0].id != undefined
+      ) {
         this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
-
       }
     }
-  if (this.stakingForm.value.toQLCWallet == '') {
+    if (this.stakingForm.value.toQLCWallet == '') {
       if (this.etheraccounts[0] != undefined) {
         this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
       }
     }
 
-  const selectedNEOWallet = this.neowallets.find(a => a.id === this.stakingForm.value.fromNEOWallet);
+    const selectedNEOWallet = this.neowallets.find(
+      (a) => a.id == this.stakingForm.value.fromNEOWallet
+    );
 
-  this.stakingForm.get('availableQLCBalance').setValue((selectedNEOWallet.balances[this.neoService.tokenList.QLC.networks['1'].hash] != undefined ? selectedNEOWallet.balances[this.neoService.tokenList.QLC.networks['1'].hash].amount : 0));
+    this.stakingForm
+      .get('availableQLCBalance')
+      .setValue(
+        selectedNEOWallet.balances[
+          this.neoService.tokenList.QLC.networks['1'].hash
+        ] !== undefined
+          ? selectedNEOWallet.balances[
+              this.neoService.tokenList.QLC.networks['1'].hash
+            ].amount
+          : 0
+      );
 
-  this.checkIfMinAmount();
+    this.checkIfMinAmount();
   }
 
   checkIfMinAmount() {
-    const minAmount = this.stakingForm.value.stakingType == 1 ? this.stakingTypes[this.stakingForm.value.stakingType].minAmount * this.macaddresses.length : this.stakingTypes[this.stakingForm.value.stakingType].minAmount;
+    const minAmount =
+      this.stakingForm.value.stakingType == 1
+        ? this.stakingTypes[this.stakingForm.value.stakingType].minAmount *
+          this.macaddresses.length
+        : this.stakingTypes[this.stakingForm.value.stakingType].minAmount;
     if (this.stakingForm.value.amounToStake <= minAmount) {
       this.stakingForm.get('amounToStake').setValue(minAmount);
     }
-    if (new BigNumber(this.stakingForm.value.amounToStake).isGreaterThan(new BigNumber(this.stakingForm.value.availableQLCBalance))) {
-      this.stakingForm.get('amounToStake').setValue(new BigNumber(this.stakingForm.value.availableQLCBalance).integerValue(BigNumber.ROUND_FLOOR));
+    if (
+      new BigNumber(this.stakingForm.value.amounToStake).isGreaterThan(
+        new BigNumber(this.stakingForm.value.availableQLCBalance)
+      )
+    ) {
+      this.stakingForm
+        .get('amounToStake')
+        .setValue(
+          new BigNumber(
+            this.stakingForm.value.availableQLCBalance
+          ).integerValue(BigNumber.ROUND_FLOOR)
+        );
     }
     this.stakingForm.get('amounToStake').markAsTouched();
   }
 
-  async addMacAdd(mac_address) {
-    const findMacAddress = await this.macaddresses.findIndex(o => o.mac_address === mac_address);
-    if (findMacAddress != -1) {
+  // tslint:disable-next-line: variable-name
+  async addMacAdd(mac_address: any) {
+    const findMacAddress = await this.macaddresses.findIndex(
+      (o) => o.mac_address == mac_address
+    );
+    if (findMacAddress !== -1) {
       await this.macaddresses.splice(findMacAddress, 1);
     } else {
-      const findConfidant = await this.confidants.find(o => o.mac_address === mac_address);
+      const findConfidant = await this.confidants.find(
+        (o) => o.mac_address == mac_address
+      );
       this.macaddresses.push(findConfidant);
     }
 
-    this.stakingForm.get('amounToStake').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minAmount * this.macaddresses.length);
-    this.stakingForm.get('amounToStake').setValidators([
-      Validators.required,
-      Validators.pattern('[1-9][0-9]*'),
-      Validators.maxLength(40),
-      Validators.minLength(1),
-      minAmountValidator(this.stakingTypes[Number(this.stakingForm.value.stakingType)].minAmount * this.macaddresses.length)
-    ]);
+    this.stakingForm
+      .get('amounToStake')
+      .setValue(
+        this.stakingTypes[this.stakingForm.value.stakingType].minAmount *
+          this.macaddresses.length
+      );
+    this.stakingForm
+      .get('amounToStake')
+      .setValidators([
+        Validators.required,
+        Validators.pattern('[1-9][0-9]*'),
+        Validators.maxLength(40),
+        Validators.minLength(1),
+        minAmountValidator(
+          this.stakingTypes[Number(this.stakingForm.value.stakingType)]
+            .minAmount * this.macaddresses.length
+        ),
+      ]);
     this.checkIfMinAmount();
   }
 
   setDuration() {
-    this.stakingForm.get('amounToStake').setValidators([
-      Validators.required,
-      Validators.pattern('[1-9][0-9]*'),
-      Validators.maxLength(40),
-      Validators.minLength(1),
-      minAmountValidator(this.stakingTypes[Number(this.stakingForm.value.stakingType)].minAmount)
-    ]);
-    this.stakingForm.get('amounToStake').setValue(this.stakingTypes[this.stakingForm.value.stakingType].minAmount);
+    this.stakingForm
+      .get('amounToStake')
+      .setValidators([
+        Validators.required,
+        Validators.pattern('[1-9][0-9]*'),
+        Validators.maxLength(40),
+        Validators.minLength(1),
+        minAmountValidator(
+          this.stakingTypes[Number(this.stakingForm.value.stakingType)]
+            .minAmount
+        ),
+      ]);
+    this.stakingForm
+      .get('amounToStake')
+      .setValue(
+        this.stakingTypes[this.stakingForm.value.stakingType].minAmount
+      );
     this.checkIfMinAmount();
   }
 
   async confirmInvoke() {
-    const walletAccount = await this.walletService.getWalletAccount(this.stakingForm.value.toQLCWallet);
+    const walletAccount = await this.walletService.getWalletAccount(
+      this.stakingForm.value.toQLCWallet
+    );
     console.log('confirmInvoke.walletAccount', walletAccount);
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning('ERROR wallet locked');
@@ -474,39 +653,65 @@ export class CcswapComponent implements OnInit {
     this.invokeSteps = [];
     let txData;
     // tslint:disable-next-line: triple-equals
-    if (this.recover == 1 && this.recovering_txid == 1) {
-      txData = await this.neoService.contractGetLockInfo(this.recoverForm.value.recover_txid);
-      console.log('confirmInvoke.txData', txData);
+    if (this.stakingForm.value.stakingType == 2) {
+      this.step = 3;
+      const burnEth = await this.burnERC20Token();
+      console.log('burnEth', burnEth);
     } else {
-      this.invokeSteps.push({ msg: 'Locking ' + this.stakingForm.value.amounToStake + ' QLC on NEO network.'});
+      this.invokeSteps.push({
+        msg:
+          'Locking ' +
+          this.stakingForm.value.amounToStake +
+          ' QLC on NEO network.',
+      });
       txData = await this.contractLock();
-    }
-    if (txData === false) {
-      this.invokeSteps.push({ msg: 'ERROR - Wrong NEO Wallet password.'});
-      return;
-    }
-    // tslint:disable-next-line: triple-equals
-    if (txData.txHash == undefined) {
-      this.invokeSteps.push({ msg: 'ERROR - No TXID received. Please try again later.'});
-      return;
-    }
-    console.log('confirmInvoke.txHash', txData.txHash);
-    // 签名交易信息
-    // tslint:disable-next-line: triple-equals
-    if (txData.unsignedData != undefined) {
-      const signData = await this.neoService.signTheTransaction(this.stakingForm.value.fromNEOWallet, txData.unsignedData);
-      console.log('signData', signData);
-      // tslint:disable-next-line: triple-equals
-      if (signData.signature != undefined) {
-        // tslint:disable-next-line: max-line-length
-        const sendNeoTransaction = await this.etherService.sendNeoTransaction(signData.signature, txData.txHash, signData.publicKey, this.stakingForm.value.fromNEOWallet);
-        console.log('sendNeoTransaction', sendNeoTransaction);
-        this.invokeSteps.push({ msg: 'TXID received. Preparing confirmed.', checkimg: 1});
-        if (sendNeoTransaction.data.value) {
-        const mintData = await this.mintERC20Token(txData, this.stakingForm.value.amounToStake);
-      } else {
-        this.invokeSteps.push({ msg: 'TXID confirmation error.', checkimg: 0});
+
+      if (txData == false) {
+        this.invokeSteps.push({ msg: 'ERROR - Wrong NEO Wallet password.' });
+        return;
       }
+      // tslint:disable-next-line: triple-equals
+      if (txData.txHash == undefined) {
+        this.invokeSteps.push({
+          msg: 'ERROR - No TXID received. Please try again later.',
+        });
+        return;
+      }
+      console.log('confirmInvoke.txHash', txData.txHash);
+      // 签名交易信息
+      // tslint:disable-next-line: triple-equals
+      if (txData.unsignedData != undefined) {
+        const signData = await this.neoService.signTheTransaction(
+          this.stakingForm.value.fromNEOWallet,
+          txData.unsignedData
+        );
+        console.log('signData', signData);
+        // tslint:disable-next-line: triple-equals
+        if (signData.signature != undefined) {
+          // tslint:disable-next-line: max-line-length
+          const sendNeoTransaction = await this.etherService.sendNeoTransaction(
+            signData.signature,
+            txData.txHash,
+            signData.publicKey,
+            this.stakingForm.value.fromNEOWallet
+          );
+          console.log('sendNeoTransaction', sendNeoTransaction);
+          this.invokeSteps.push({
+            msg: 'TXID received. Preparing confirmed.',
+            checkimg: 1,
+          });
+          if (sendNeoTransaction.data.value) {
+            const mintData = await this.mintERC20Token(
+              txData,
+              this.stakingForm.value.amounToStake
+            );
+          } else {
+            this.invokeSteps.push({
+              msg: 'TXID confirmation error.',
+              checkimg: 0,
+            });
+          }
+        }
       }
     }
   }
@@ -533,37 +738,46 @@ export class CcswapComponent implements OnInit {
     // }
   }
   async continueInvokeProccess() {
-		if (this.walletService.walletIsLocked()) {
-			return this.notifications.sendError('ERROR - wallet locked');
+    if (this.walletService.walletIsLocked()) {
+      return this.notifications.sendError('ERROR - wallet locked');
     }
-  this.invokeSteps = [];
-  const pledge = this.continueInvokePledge;
-  console.log(pledge);
-  const walletAccount = await this.walletService.getWalletAccount(pledge.beneficial);
-  this.step = 3;
-  window.scrollTo(0, 0);
-  this.invokeSteps.push({ msg: 'Continuing invoke.'});
-  this.invokeSteps.push({ msg: 'Checking TXID on NEO network.', checkimg: 1});
+    this.invokeSteps = [];
+    const pledge = this.continueInvokePledge;
+    console.log(pledge);
+    const walletAccount = await this.walletService.getWalletAccount(
+      pledge.beneficial
+    );
+    this.step = 3;
+    window.scrollTo(0, 0);
+    this.invokeSteps.push({ msg: 'Continuing invoke.' });
+    this.invokeSteps.push({
+      msg: 'Checking TXID on NEO network.',
+      checkimg: 1,
+    });
 
-  this.confirmInvokeWaitForTXIDConfirmByPledge(pledge, walletAccount);
-
+    this.confirmInvokeWaitForTXIDConfirmByPledge(pledge, walletAccount);
   }
 
   async confirmInvokeWaitForTXIDConfirmByPledge(pledge, walletAccount) {
     if (this.walletService.walletIsLocked()) {
       this.step = 1;
       window.scrollTo(0, 0);
-			   return this.notifications.sendError('ERROR - wallet locked');
+      return this.notifications.sendError('ERROR - wallet locked');
     }
     if (walletAccount == undefined || walletAccount.keyPair == undefined) {
       this.recoverSteps = [];
-      this.recoverSteps.push({ msg: 'ERROR - Beneficial account "' + pledge.beneficial + '" not found.'});
+      this.recoverSteps.push({
+        msg:
+          'ERROR - Beneficial account'  + pledge.beneficial + ' not found.',
+      });
       this.continueInvokePledge = {};
       this.continueInvoke = 0;
       this.checkingTxid = 0;
       this.step = 1;
       window.scrollTo(0, 0);
-			   return this.notifications.sendError('ERROR - Beneficial account not found');
+      return this.notifications.sendError(
+        'ERROR - Beneficial account not found'
+      );
     }
 
     const txid = pledge.nep5TxId;
@@ -575,46 +789,103 @@ export class CcswapComponent implements OnInit {
     const pType = pledge.pType;
 
     if (transaction.txid) {
-      const waitTimer = timer(20000).subscribe( async (data) => {
-      // console.log(transaction);
-      // console.log('txid confirmed');
-      this.invokeSteps.push({ msg: 'TXID confirmed. Preparing QLC Chain pledge.', checkimg: 1});
+      const waitTimer = timer(20000).subscribe(async (data) => {
+        // console.log(transaction);
+        // console.log('txid confirmed');
+        this.invokeSteps.push({
+          msg: 'TXID confirmed. Preparing QLC Chain pledge.',
+          checkimg: 1,
+        });
 
-      const pledgeResult = (pType == 'mintage')
-                            ? await this.nep5api.mintagePledge(txid)
-                            : await this.nep5api.benefitPledge(txid)
-                            ;
-
-      if (pledgeResult.error) {
-        if (pledgeResult.error.message == 'get lockinfo error: value is not lockinfo struct : map[type:ByteArray value:]') {
-          this.invokeSteps.push({ msg: 'ERROR. TXID is not a lock.', checkimg: 1});
+        const pledgeResult =
+          pType == 'mintage'
+            ? await this.nep5api.mintagePledge(txid)
+            : await this.nep5api.benefitPledge(txid);
+        if (pledgeResult.error) {
+          if (
+            pledgeResult.error.message ==
+            'get lockinfo error: value is not lockinfo struct : map[type:ByteArray value:]'
+          ) {
+            this.invokeSteps.push({
+              msg: 'ERROR. TXID is not a lock.',
+              checkimg: 1,
+            });
+          }
+          return;
         }
-        return;
-      }
-      if (!pledgeResult.result) {
-        this.invokeSteps.push({ msg: 'Pledge ERROR.', link: '/staking-create', linkText: 'Please use RECOVER to recover a failed TX.'});
-        /*console.log('pledgeResult error repeating');
+        if (!pledgeResult.result) {
+          this.invokeSteps.push({
+            msg: 'Pledge ERROR.',
+            link: '/staking-create',
+            linkText: 'Please use RECOVER to recover a failed TX.',
+          });
+          /*console.log('pledgeResult error repeating');
         const waitTimer = timer(5000).subscribe( (data) => {
           this.confirmInvokeWaitForTXIDConfirm(pledge,walletAccount);
         });*/
-        return;
-      }
-      const preparedPledge = pledgeResult.result;
+          return;
+        }
+        const preparedPledge = pledgeResult.result;
 
-      this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...'});
-      const pledgetxid = await this.processBlock(preparedPledge, walletAccount.keyPair, txid);
+        this.invokeSteps.push({ msg: 'Pledge prepared. Processing ...' });
+        const pledgetxid = await this.processBlock(
+          preparedPledge,
+          walletAccount.keyPair,
+          txid
+        );
 
-      this.invokeSteps.push({ msg: 'Pledge succesfully processed. Txid on QLC Chain is: ' + pledgetxid.result, checkimg: 1 });
-      this.step = 4;
-      window.scrollTo(0, 0);
+        this.invokeSteps.push({
+          msg:
+            'Pledge succesfully processed. Txid on QLC Chain is: ' +
+            pledgetxid.result,
+          checkimg: 1,
+        });
+        this.step = 4;
+        window.scrollTo(0, 0);
       });
     } else {
       console.log('no txid yet ... repeating');
       // wait for neoscan to confirm transaction
-      const waitTimer = timer(5000).subscribe( (data) => {
+      const waitTimer = timer(5000).subscribe((data) => {
         this.confirmInvokeWaitForTXIDConfirmByPledge(pledge, walletAccount);
       });
     }
+  }
+
+  // brun ERC20 Token
+  async burnERC20Token() {
+    if (this.walletService.walletIsLocked()) {
+      this.step = 1;
+      window.scrollTo(0, 0);
+      return this.notifications.sendWarning('ERROR wallet locked');
+    }
+    const amountWithDecimals = new BigNumber(1).multipliedBy(100000000);
+    const account = this.etheraccounts[0];
+    const neo5Address = this.stakingForm.get('fromNEOWallet').value;
+    const burnERC20Token = await this.etherService.getEthBurn(
+      neo5Address,
+      amountWithDecimals,
+      account
+    );
+    const id = setInterval(async () => {
+    console.log('burnERC20Token', burnERC20Token);
+    console.log('localstorage.txhash', localStorage.getItem('txHash'));
+    const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
+      localStorage.getItem('txHash')
+    );
+      // tslint:disable-next-line: triple-equals
+    if (swapInfoByTxHash.data.state == 3) {
+      console.log('result', burnERC20Token);
+      console.log('cleardInterval.id', id);
+      clearInterval(id);
+      this.invokeSteps.push({
+        msg: 'The whole process successfully ',
+        checkimg: 1,
+      });
+      this.step = 4;
+      window.scrollTo(0, 0);
+    }
+  }, 5000);
   }
 
   async mintERC20Token(txData, toswapAmount) {
@@ -626,43 +897,66 @@ export class CcswapComponent implements OnInit {
     const txid = txData.txHash;
     if (txid) {
       const id = setInterval(async () => {
-      const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(txid);
-      console.log('swapInfoByTxHash', swapInfoByTxHash);
-      if (swapInfoByTxHash.data.error) {
-        // const waitTimer = timer(2000, 1000).subscribe( async (data) => {
-        //   this.mintERC20Token(txData, toswapAmount);
-        // });
-          this.invokeSteps.push({ msg: 'ERROR. TXID is not a lock.', checkimg: 1});
+        const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(txid);
+        console.log('swapInfoByTxHash', swapInfoByTxHash);
+        if (swapInfoByTxHash.data.error) {
+          // const waitTimer = timer(2000, 1000).subscribe( async (data) => {
+          //   this.mintERC20Token(txData, toswapAmount);
+          // });
+          this.invokeSteps.push({
+            msg: 'ERROR. TXID is not a lock.',
+            checkimg: 1,
+          });
           return;
-      }
-      // tslint:disable-next-line: triple-equals
-      if (swapInfoByTxHash.data.state == 0) {
-        console.log('cleardInterval.id', id);
-        clearInterval(id);
-        this.invokeSteps.push({ msg: 'TXID confirmed. Preparing to mint ERC20 Token.', checkimg: 1});
-        const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
-        console.log('getEthOwnerSign', getEthOwnerSign);
-        if (getEthOwnerSign.data.value) {
-          const amountWithDecimals = new BigNumber(toswapAmount).multipliedBy(100000000);
-          console.log('amountWithDecimals', amountWithDecimals);
-          console.log('txid', txid);
-          console.log('getEthOwnerSign.data.value', getEthOwnerSign.data.value);
-          console.log('this.etheraccounts[0]', this.etheraccounts[0]);
-          const ethMint = await this.etherService.getEthMint(amountWithDecimals, txid, getEthOwnerSign.data.value, this.etheraccounts[0]);
+        }
+        // tslint:disable-next-line: triple-equals
+        if (swapInfoByTxHash.data.state == 0) {
+          console.log('cleardInterval.id', id);
+          clearInterval(id);
+          this.invokeSteps.push({
+            msg: 'TXID confirmed. Preparing to mint ERC20 Token.',
+            checkimg: 1,
+          });
+          const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
+          console.log('getEthOwnerSign', getEthOwnerSign);
+          if (getEthOwnerSign.data.value) {
+            const amountWithDecimals = new BigNumber(toswapAmount).multipliedBy(
+              100000000
+            );
+            console.log('amountWithDecimals', amountWithDecimals);
+            console.log('txid', txid);
+            console.log(
+              'getEthOwnerSign.data.value',
+              getEthOwnerSign.data.value
+            );
+            console.log('this.etheraccounts[0]', this.etheraccounts[0]);
+            const ethMint = await this.etherService.getEthMint(
+              amountWithDecimals,
+              txid,
+              getEthOwnerSign.data.value,
+              this.etheraccounts[0]
+            );
+            // tslint:disable-next-line: no-shadowed-variable
             const id = setInterval(async () => {
-              const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(txid);
+              // tslint:disable-next-line: no-shadowed-variable
+              const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
+                txid
+              );
               // tslint:disable-next-line: triple-equals
               if (swapInfoByTxHash.data.state == 1) {
                 console.log('cleardInterval.id', id);
                 clearInterval(id);
-                this.invokeSteps.push({ msg: 'Mint ERC20 TOKEN succesfully,the whole process successfully ', checkimg: 1 });
+                this.invokeSteps.push({
+                  msg:
+                    'Mint ERC20 TOKEN succesfully,the whole process successfully ',
+                  checkimg: 1,
+                });
                 this.step = 4;
                 window.scrollTo(0, 0);
               }
-            },1000);
-          
+            }, 5000);
+          }
         }
-      }
       }, 10000);
       console.log('setInternal.id', id);
     } else {
@@ -673,11 +967,17 @@ export class CcswapComponent implements OnInit {
   async contractLock() {
     // tslint:disable-next-line: max-line-length
     // const txData = await this.neoService.neo5toerc20swapaccountLock(this.stakingForm.value.fromNEOWallet, this.stakingForm.value.amounToStake, this.etheraccounts[0]);
-    const amountWithDecimals = new BigNumber(this.stakingForm.value.amounToStake).multipliedBy(100000000);
+    const amountWithDecimals = new BigNumber(
+      this.stakingForm.value.amounToStake
+    ).multipliedBy(100000000);
     console.log('amountWithDecimals', amountWithDecimals);
-    const txData = await this.etherService.packNeoTransaction(amountWithDecimals, this.stakingForm.value.fromNEOWallet, this.etheraccounts[0]);
+    const txData = await this.etherService.packNeoTransaction(
+      amountWithDecimals,
+      this.stakingForm.value.fromNEOWallet,
+      this.etheraccounts[0]
+    );
     console.log('contractLock.txData', txData);
-    // if (txData === false) {
+    // if (txData == false) {
     //   return false;
     // }
     // tslint:disable-next-line: triple-equals
@@ -690,14 +990,17 @@ export class CcswapComponent implements OnInit {
     const request1 = {
       beneficial: txData.beneficial,
       amount: txData.amount,
-      pType
+      pType,
     };
     const request2 = {
       multiSigAddress: txData.multiSigAddress,
       publicKey: txData.publicKey,
-      lockTxId: txData.lockTxId
+      lockTxId: txData.lockTxId,
     };
-    const preparedPledge = await this.nep5api.prepareBenefitPledge(request1, request2);
+    const preparedPledge = await this.nep5api.prepareBenefitPledge(
+      request1,
+      request2
+    );
     if (!preparedPledge.result) {
       return this.getPreparePledge(txData, pType);
     } else {
@@ -711,24 +1014,23 @@ export class CcswapComponent implements OnInit {
       tokenName: this.stakingForm.value.tokenName,
       tokenSymbol: this.stakingForm.value.tokenSymbol,
       totalSupply: this.stakingForm.value.tokenSupply,
-      decimals: Number(this.stakingForm.value.tokenDecimals)
+      decimals: Number(this.stakingForm.value.tokenDecimals),
     };
     const request2 = {
       multiSigAddress: txData.multiSigAddress,
       publicKey: txData.publicKey,
-      lockTxId: txData.lockTxId
+      lockTxId: txData.lockTxId,
     };
-    const preparedPledge = await this.nep5api.prepareMintagePledge(request1, request2);
+    const preparedPledge = await this.nep5api.prepareMintagePledge(
+      request1,
+      request2
+    );
     if (!preparedPledge.result) {
       return this.getPrepareMintagePledge(txData);
     } else {
       return preparedPledge;
     }
   }
-
-
-
-
 
   async processBlock(block, keyPair, txid) {
     const povFittest = await this.api.getFittestHeader();
@@ -737,34 +1039,36 @@ export class CcswapComponent implements OnInit {
       return;
     }
     block.poVHeight = povFittest.result.height;
-		  const blockHash = await this.api.blockHash(block);
-		  const signed = nacl.sign.detached(this.util.hex.toUint8(blockHash.result), keyPair.secretKey);
-		  const signature = this.util.hex.fromUint8(signed);
+    const blockHash = await this.api.blockHash(block);
+    const signed = nacl.sign.detached(
+      this.util.hex.toUint8(blockHash.result),
+      keyPair.secretKey
+    );
+    const signature = this.util.hex.fromUint8(signed);
 
-		  block.signature = signature;
-		  let generateWorkFor = block.previous;
-		  if (block.previous === this.zeroHash) {
-			const publicKey = await this.api.accountPublicKey(block.address);
-			generateWorkFor = publicKey.result;
-		}
+    block.signature = signature;
+    let generateWorkFor = block.previous;
+    if (block.previous == this.zeroHash) {
+      const publicKey = await this.api.accountPublicKey(block.address);
+      generateWorkFor = publicKey.result;
+    }
 
-		  if (!this.workPool.workExists(generateWorkFor)) {
-			this.notifications.sendInfo(this.msg3);
-		}
-		// console.log('generating work');
-		  const work = await this.workPool.getWork(generateWorkFor);
-		// console.log('work >>> ' + work);
+    if (!this.workPool.workExists(generateWorkFor)) {
+      this.notifications.sendInfo(this.msg3);
+    }
+    // console.log('generating work');
+    const work = await this.workPool.getWork(generateWorkFor);
+    // console.log('work >>> ' + work);
     block.work = work;
 
     const processResponse = await this.nep5api.process(block, txid);
 
-		  if (processResponse && processResponse.result) {
-			this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
-			this.workPool.removeFromCache(generateWorkFor);
-			return processResponse;
-		} else {
-			return null;
-		}
+    if (processResponse && processResponse.result) {
+      this.workPool.addWorkToCache(processResponse.result); // Add new hash into the work pool
+      this.workPool.removeFromCache(generateWorkFor);
+      return processResponse;
+    } else {
+      return null;
+    }
   }
-
 }

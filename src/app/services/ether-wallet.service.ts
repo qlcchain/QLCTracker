@@ -10,6 +10,7 @@ import axios from 'axios';
 export class EtherWalletService {
 web3: any;
 accounts: any;
+metamask: boolean;
 address: any = environment.etherswapSmartContract[environment.neoNetwork];
 private url: string = environment.neo5toerc20swapwrapperurl[environment.neoNetwork];
 private neo5toerc20swapjwtauth = environment.neo5toerc20swapjwtauth[environment.neoNetwork];
@@ -19,8 +20,10 @@ abi = neo5toerc20swap;
     ((window as any).web3 && (window as any).web3.currentProvider)) {
       (window as any).ethereum.enable();
       this.web3 = new Web3((window as any).web3.currentProvider);
+      this.metamask = true;
     } else {
       console.log('Please connect the metamask first!');
+      this.metamask = false;
     }
   }
   // get erc20 account address
@@ -187,4 +190,18 @@ abi = neo5toerc20swap;
       console.log('result', result);
     });
  }
+ // burn erc20 token
+ async getEthBurn(nep5Address: any, amount: any, account: any): Promise<any> {
+  const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+  console.log('getEthBurn.amount', amount);
+  console.log('getEthBurn.nep5Hash', nep5Address);
+  console.log('account', account);
+  Contract.methods.burn(nep5Address, amount).send({
+      from: account
+  }).then(result => {
+    localStorage.setItem('txHash', result.transactionHash);
+    console.log('getEthBurn.result', result);
+    return result;
+  });
+}
 }

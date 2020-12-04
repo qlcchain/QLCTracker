@@ -1,6 +1,12 @@
 <app-user-submenu></app-user-submenu>
 
-            <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1'>
+<div class="stake-screen-1" *ngIf="!this.metamask">
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+  请连接metamask钱包交易！
+</div>
+</div>
+
+            <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && this.metamask'>
 
                 <!-- SEND FORM -->
                 <div class="container mt-0 qlc-content-first pb-0 mb-0">
@@ -13,6 +19,11 @@
                                             <div class="content-title">
                                                 <h1>Swap</h1>
                                             </div>
+                                        </div>
+                                        <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+                                          <button type="submit" (click)="recover = !recover" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
+                                            Undone Transactions
+                                          </button>
                                         </div>
                                     </div>
                                 </div>
@@ -34,36 +45,10 @@
                             <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
               
                                 <div class="row pt-1 mt-4 pl-4 pr-4">
-              
+                                   <!-- to do -->
                                     <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4 mt-4">
-                                      RECOVER TXID
-                                    </div>
-                                    <div class="col-md-9 text-left mb-4 mt-4">
-                                      <div class="input-group">
-                                        <input
-                                          type="text"
-                                          class="form-control form-my-border"
-                                          placeholder="NEO txid"
-                                          onfocus="this.placeholder = ''"
-                                          style="height: 42px !important;"
-                                          formControlName="recover_txid"
-                                        />
-                                      </div>
-                                      
-                                      <span *ngFor="let validation of recover_validation_messages.recover_txid">
-                                        <span class="error-message pt-2" *ngIf="recoverForm.get('recover_txid').hasError(validation.type) && (recoverForm.get('recover_txid').dirty || recoverForm.get('recover_txid').touched)" style="color:#c10f0f;">{{validation.message}}<br></span>
-                                      </span>
-                                      <h5 class="pt-3" *ngFor="let step of recoverSteps">{{ step.msg }}</h5>
-                                    </div>
-                                    
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
-                                    <div class="col-md-4 text-left mb-4">
-                                      <button (click)="checkTxid()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="checkingTxid == 1 || recoverForm.get('recover_txid').status != 'VALID' ">
-                                        CHECK TXID
-                                      </button>
-                                    </div>
-                                    <div class="col-md-5 pt-3" *ngIf="checkingTxid == 1">
-                                      <span class="security-email-sending" class="w-100"><p><img src="assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Checking txid ...</p></span>  
+                                      <!-- undone transactions -->
+                                      Under development
                                     </div>
             
             
@@ -106,8 +91,7 @@
                                     <div class="col-md-9 text-left">
                                       <div class="form-group">
                                         <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> Deposit</label>
-                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="1" id="s2" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[1].minAmount)"><label for="s2" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[1].minAmount)"> For Confidant</label>
-                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="2" id="s3"><label for="s3" style="padding-left:10px;padding-right:30px;"> Withdraw</label>
+                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="2" id="s3" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"><label for="s3" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"> Withdraw</label>
                                       </div>
                                     </div>
                                   </div>
@@ -339,41 +323,7 @@
             
                                   <div class="review-mintage" *ngIf="this.stakingForm.value.stakingType == 2">
             
-                                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                                          TOKEN NAME
-                                        </div>
-                                        <div class="col-md-9 pb-3 text-left">
-                                            {{ stakingForm.value.tokenName }}
-                                        </div>
-                                      </div>
-            
-                                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                                          TOKEN SYMBOL
-                                        </div>
-                                        <div class="col-md-9 pb-3 text-left">
-                                            {{ stakingForm.value.tokenSymbol }}
-                                        </div>
-                                      </div>
-            
-                                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                                          TOKEN SUPPLY
-                                        </div>
-                                        <div class="col-md-9 pb-3 text-left">
-                                            {{ stakingForm.value.tokenSupply }}
-                                        </div>
-                                      </div>
-            
-                                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                                          TOKEN DECIMALS
-                                        </div>
-                                        <div class="col-md-9 pb-3 text-left">
-                                          {{ stakingForm.value.tokenDecimals }}
-                                        </div>
-                                      </div>
+                                  
             
                                   </div>
             
@@ -523,7 +473,7 @@
                                         <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
             
                             <h3>Woohoo!</h3>
-                            <h5 class="pt-3">The invoking of your staking was successful.</h5>
+                            <h5 class="pt-3">The invoking of your swap was successful.</h5>
             
                             <div class="container">
                               <div class="row">
@@ -539,13 +489,13 @@
                                 <div class="row">
                                   <div class="col-md-4 offset-md-4 mb-4">
               
-                                    <button type="submit" class="btn btn-primary" style="min-width:100%;" routerLink="/staking/qlc" >
+                                    <!-- <button type="submit" class="btn btn-primary" style="min-width:100%;" routerLink="/staking/qlc" >
                                       BACK TO MY SWAP
                                     </button>
             
                                     <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;" (click)="invokeNewStaking()">
                                       INVOKE A NEW SWAP
-                                    </button>
+                                    </button> -->
             
                                   </div>
                                 </div>
