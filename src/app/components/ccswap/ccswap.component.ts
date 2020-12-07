@@ -28,6 +28,8 @@ const nacl = window['nacl'];
   styleUrls: ['./ccswap.component.scss'],
 })
 export class CcswapComponent implements OnInit {
+  transactions: any[] = [];
+  etherqlcbalance: any;
   step = 1;
   recover = 0;
   zeroHash = '0000000000000000000000000000000000000000000000000000000000000000';
@@ -266,24 +268,33 @@ export class CcswapComponent implements OnInit {
     // this.etherService.swapInfoByTxHash('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     // this.etherService.neoTransactionConfirmed('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     this.metamask = this.etherService.metamask;
-    this.loadBalances();
+    // get ether balance
     this.getEtherAccounts();
+    this.loadBalances();
+    console.log('accounts', this.accounts);
+    console.log('neowallets', this.neowallets);
+    console.log('etheraccounts', this.etheraccounts);
   }
 
   async getEtherAccounts() {
     const accounts: any[] = await this.etherService.getAccounts();
-    console.log('ccswap.getEtherAccounts', accounts);
+    console.log('getEtherAccounts.accounts', accounts);
     this.etheraccounts = accounts;
+    console.log('this.etheraccounts', this.etheraccounts);
+    const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
+    console.log('getEtherAccounts.etherqlcbalance', etherqlcbalance);
+    this.etherqlcbalance = etherqlcbalance;
+    console.log('this.etherqlcbalance', this.etherqlcbalance);
     return accounts;
   }
 
-  async continueUndoneTransaction() {
+  async continueUndoneTransaction(txhash?: any) {
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning('ERROR wallet locked');
     }
     console.log('txid', this.recoverForm.get('recover_txid').value);
     console.log('txid.slice', this.recoverForm.get('recover_txid').value.slice(2));
-    const txid = this.recoverForm.get('recover_txid').value.slice(2);
+    const txid = txhash ? txhash.slice(2) : this.recoverForm.get('recover_txid').value.slice(2);
     const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
       txid
     );
@@ -330,9 +341,7 @@ export class CcswapComponent implements OnInit {
     } else {
       this.recoverSteps.push({ msg: 'ERROR - TXID not found'});
       return;
-
     }
-    
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {
@@ -467,68 +476,59 @@ export class CcswapComponent implements OnInit {
       ].addressBookName = this.addressBookService.getAccountName(
         this.neowallets[i].id
       );
-
       const balance: any = await this.neoService.getNeoRpcBalance(
         this.neowallets[i].id
       );
-
+      console.log('loadBalances.balance', balance);
       for (const asset of balance) {
+        console.log('asset', asset);
         this.neowallets[i].balances[asset.asset_hash] = {
           amount: new BigNumber(asset.amount)
             .dividedBy(Math.pow(10, 8))
             .toNumber(),
           asset_hash: asset.asset_hash,
         };
+        console.log('this.neowallets[i].balances[asset.asset_hash]', this.neowallets[i].balances[asset.asset_hash])
       }
-
-      /*
-			const balance:any = await this.neoService.getBalance(this.neowallets[i].id);
-			for (const asset of balance.assetSymbols) {
-				this.neowallets[i].balances[asset] = new BigNumber(balance.assets[asset].balance).toFixed();
-      }
-			for (const token of balance.tokenSymbols) {
-				let newTokenBalance = new BigNumber(balance.tokens[token]).toFixed();
-				if (newTokenBalance == 'NaN')
-					newTokenBalance = '0';
-        this.neowallets[i].balances[token] = newTokenBalance;
-			}*/
     }
     this.selectAccount();
-    this.setDuration();
   }
 
-  selectAccount() {
-    if (this.stakingForm.value.fromNEOWallet == '') {
-      console.log('neowallets', this.neowallets);
-      if (
-        this.neowallets[0] != undefined &&
-        this.neowallets[0].id != undefined
-      ) {
-        this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
-      }
-    }
-    if (this.stakingForm.value.toQLCWallet == '') {
-      if (this.etheraccounts[0] != undefined) {
-        this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
-      }
+  async selectAccount() {
+    this.stakingForm.get('fromNEOWallet').setValue('');
+    this.stakingForm.get('toQLCWallet').setValue('');
+    this.stakingForm
+      .get('availableQLCBalance')
+      .setValue('');
+    // deposit
+    if (this.stakingForm.value.stakingType == 0) {
+      this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
+      this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
     }
 
-    const selectedNEOWallet = this.neowallets.find(
+    // withdraw
+    if (this.stakingForm.value.stakingType == 2) {
+      this.stakingForm.get('fromNEOWallet').setValue(this.etheraccounts[0]);
+      this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
+    }
+    // tslint:disable-next-line: member-ordering
+    const selectedNEOWallet = this.neowallets.find (
+      // tslint:disable-next-line: triple-equals
       (a) => a.id == this.stakingForm.value.fromNEOWallet
     );
 
-    console.log('ccswap.tokenList', this.neoService.tokenList);
-
+    console.log('selectAccount.etherqlcbalance', this.etherqlcbalance);
     this.stakingForm
       .get('availableQLCBalance')
       .setValue(
+        this.stakingForm.value.stakingType == 0 ?
         selectedNEOWallet.balances[
           this.neoService.tokenList['QLC'].networks['1'].hash
         ] !== undefined
           ? selectedNEOWallet.balances[
               this.neoService.tokenList['QLC'].networks['1'].hash
             ].amount
-          : 0
+          : 0 : this.etherqlcbalance
       );
 
     this.checkIfMinAmount();
@@ -713,6 +713,17 @@ export class CcswapComponent implements OnInit {
     // }
   }
 
+  // get transactions
+  async getUndownTransactions(address: any) {
+    this.step = 5;
+    console.log('getUndownTransactions.address', address);
+    const data: any = await this.etherService.swapInfosByAddress(address, 1, 10);
+    console.log('getUndownTransactions.data.info', data);
+    this.transactions = data.data.infos;
+    console.log('getUndownTransactions.transactions', this.transactions);
+
+  }
+
 
   // brun ERC20 Token
   async burnERC20Token() {
@@ -721,9 +732,12 @@ export class CcswapComponent implements OnInit {
       window.scrollTo(0, 0);
       return this.notifications.sendWarning('ERROR wallet locked');
     }
-    const amountWithDecimals = new BigNumber(1).multipliedBy(100000000);
+    const amountWithDecimals = new BigNumber(this.stakingForm.value.amounToStake).multipliedBy(100000000);
     const account = this.etheraccounts[0];
-    const neo5Address = this.stakingForm.get('fromNEOWallet').value;
+    const neo5Address = this.stakingForm.get('toQLCWallet').value;
+    console.log('neo5Address', neo5Address);
+    console.log('account', account);
+    console.log('amountWithDecimals', amountWithDecimals);
     const burnERC20Token = await this.etherService.getEthBurn(
       neo5Address,
       amountWithDecimals,
@@ -735,7 +749,8 @@ export class CcswapComponent implements OnInit {
     const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
       localStorage.getItem('txHash')
     );
-      // tslint:disable-next-line: triple-equals
+    // tslint:disable-next-line: triple-equals
+    console.log('swapInfoByTxHash.data.state', swapInfoByTxHash.data.state);
     if (swapInfoByTxHash.data.state == 3) {
       console.log('result', burnERC20Token);
       console.log('cleardInterval.id', id);
@@ -745,8 +760,10 @@ export class CcswapComponent implements OnInit {
         msg: 'The whole process successfully ',
         checkimg: 1,
       });
-      this.step = 4;
-      window.scrollTo(0, 0);
+      const waitTimer = timer(10000).subscribe( async (data) => {
+        this.step = 4;
+        window.scrollTo(0, 0);
+          });
     }
   }, 5000);
   }

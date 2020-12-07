@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import Web3 from 'web3';
+import BigNumber from 'bignumber.js';
 import { environment } from 'src/environments/environment';
 // import { testContract } from 'src/constants/abi/testContract';
 import { neo5toerc20swap } from 'src/constants/abi/neo5toerc20swap';
@@ -32,6 +33,14 @@ abi = neo5toerc20swap;
     const account: any[] = await new this.web3.eth.getAccounts;
     return account;
   }
+    // get erc20 account balance
+    async getBalance() {
+      // tslint:disable-next-line: new-parens
+      const account = '0x38d3B5fE5AeC14176aA45767bD1f524eD93D98e4';
+      const balance: any[] = await new this.web3.eth.getBalance(account);
+      console.log('balance', balance);
+      return balance;
+    }
   // depost start method:post
   // deposit/neoTransactionConfirmed
   async neoTransactionConfirmed(txid: any) {
@@ -177,6 +186,18 @@ abi = neo5toerc20swap;
       return data;
     }
 
+  // get erc20 contract balance
+  async getEthQLCBalance(account: any) {
+    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+    // console.log('getEthQLCBalance.account', account);
+    Contract.methods.balanceOf(account).call().then(sum => {
+      const balance = new BigNumber(sum)
+      .dividedBy(Math.pow(10, 8))
+      .toNumber();
+      console.log('getEthQLCBalance', balance);
+      return balance;
+  });
+ }
   // mint erc20 token
   async getEthMint(amount: any, nep5Hash: any, signature: any, account: any) {
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);

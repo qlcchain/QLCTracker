@@ -1,10 +1,122 @@
 <app-user-submenu></app-user-submenu>
 
 <div class="stake-screen-1" *ngIf="!this.metamask">
-  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
-  请连接metamask钱包交易！
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu"></div>
+
+<div class="container accounts">
+  <div class="row">
+
+      <!-- INFO -->
+      <div class="col-12 pb-3">
+              <div class="container pl-0 pr-0">
+                  <div class="row pl-0 pr-0">
+
+
+                  <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+                      <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
+
+          <h3>Attention!</h3>
+          <h5 class="pt-3">You'll need to install MetaMask to continue and then load this Dapp with MetaMask.</h5>
+
+          <div class="container">
+              <div class="row">
+                <div class="col-md-4 offset-md-4 mb-4">
+
+                </div>
+              </div>
+            </div>
+
+          
+
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+</div>
+
+
+
+  </div>
+</div>		
+</div>
+
+
+<!-- LATEST TRANSACTIONS -->
+<div class="stake-screen-1" *ngIf='step == 5 && this.metamask'>
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu"></div>
+
+  <div class="container accounts">
+  <div class="row">
+    
+    <div class="col-12 pl-0 pr-0">
+      
+      <!-- TITLE -->
+      <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+        <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+          <div class="content-title">
+            <h1>Swap Transactions</h1>
+            <!-- <h1>Address: {{this.accounts[0].id}}</h1> -->
+          </div>
+        </div>
+      </div>
+      
+      
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+          
+          
+          <div class="container">
+            
+            <div class="row qlc-table-header">
+              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-6 col-6 d-none d-sm-block text-truncate">Address / Transaction ID</div>
+              <div class="col-xl-2 col-lg-2 col-md-3 pr-md-0 col-sm-4 d-none d-sm-block col-4 pr-sm-4 pr-4 text-right">Amount</div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 d-none d-md-block col-6 pr-4 text-right">Transaction Status</div>
+            </div>
+            
+            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of transactions">
+              <div class="d-none d-xl-block col-xl-6 pb-0">
+                <span class="text-color-lightgrey text-tiny">From: </span> 
+                <span>{{(transaction.state== 0 || transaction.state ==1) ? transaction.neoUserAddr : transaction.ethUserAddr}}</span><br>
+                <span class="text-color-lightgrey text-tiny">Hash: </span> 
+                <span>{{(transaction.state== 0 || transaction.state ==1) ? transaction.neoTxHash : transaction.ethTxHash}}</span><br>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 pr-md-0 pr-sm-4 col-4 pb-0 pr-4 text-right d-none d-sm-block">
+                <span data-toggle="tooltip" data-placement="top">{{transaction.amount}}</span>
+              </div>
+              <div class="col-xl-2 col-lg-2 pl-md-3 col-md-2 col-sm-12 col-12 pr-4 text-right">
+                {{transaction.stateStr}}
+              </div>
+              <div class="container transaction-details">
+                
+              </div>
+          </div>
+        </div>
+        
+        
+      </div>
+    </div>
+    
+    
+  </div>
+  
+</div>
+
+
 </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
 
             <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && this.metamask'>
 
@@ -23,6 +135,11 @@
                                         <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
                                           <button type="submit" (click)="recover = !recover" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
                                             Undone Transactions
+                                          </button>
+                                        </div>
+                                        <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+                                          <button type="submit" (click)="this.getUndownTransactions(this.neowallets[0].id)" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
+                                            Swap Transactions
                                           </button>
                                         </div>
                                     </div>
@@ -70,7 +187,7 @@
                                     <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
                                     <div class="col-md-4 text-left mb-4">
                                       <button (click)="continueUndoneTransaction()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="checkingTxid == 1 || recoverForm.get('recover_txid').status != 'VALID' ">
-                                        CHECK TXID
+                                        CONTINUE SWAP
                                       </button>
                                     </div>
                                     <div class="col-md-5 pt-3" *ngIf="checkingTxid == 1">
@@ -116,26 +233,37 @@
                                     </div>
                                     <div class="col-md-9 text-left">
                                       <div class="form-group">
-                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> Deposit</label>
-                                        <input type="radio" name="stakingType" (change)="setDuration()" formControlName="stakingType" value="2" id="s3" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"><label for="s3" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"> Withdraw</label>
+                                        <input type="radio" name="stakingType" (change)="selectAccount()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> NEP5 -> ERC20</label>
+                                        <input type="radio" name="stakingType" (change)="selectAccount()" formControlName="stakingType" value="2" id="s3" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"><label for="s3" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"> ERC20 -> NEP5</label>
                                       </div>
                                     </div>
                                   </div>
             
                                 
             
-                              <div *ngIf="this.stakingForm.value.stakingType != 1 || (this.stakingForm.value.stakingType == 1 && confidantConfirmed == 1 && macaddresses.length > 0)">
+                              <div>
                                   <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
                                     <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
                                       SWAP FROM
                                     </div>
                                     <div class="col-md-9 text-left">
-                                      <div class="form-group" *ngIf="recover == 0">
+                                      <div *ngIf="this.stakingForm.value.stakingType == 0" class="form-group">
                                         <select class="custom-select" formControlName="fromNEOWallet" (change)="selectAccount()">
                                           <option *ngFor="let account of neowallets" [value]="account.id"
                                             >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances[neoService.tokenList['QLC'].networks['1'].hash] != undefined)? ' ('+account.balances[neoService.tokenList['QLC'].networks['1'].hash].amount + ' QLC)' : '') }} </option>
                                         </select>
-                                        <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
+                                        <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
+                                        <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
+
+                                      </div>
+                                      <div *ngIf="this.stakingForm.value.stakingType == 2" class="form-group">
+                                        <select class="custom-select" formControlName="fromNEOWallet">
+                                          <option *ngFor="let account of etheraccounts" [value]="account.id"
+                                            >{{ this.etheraccounts[0] }}</option>
+                                        </select>
+                                        <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
+                                        <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
+
                                       </div>
                                       <div class="form-group" *ngIf="recover == 1">
                                         {{ stakingForm.value.fromNEOWallet }}
@@ -149,12 +277,17 @@
                                       SWAP TO
                                     </div>
                                     <div class="col-md-9 text-left">
-                                      <div class="form-group" *ngIf="recover == 0">
+                                      <div class="form-group" *ngIf="this.stakingForm.value.stakingType == 0">
                                         <select class="custom-select" formControlName="toQLCWallet">
                                           <option *ngFor="let account of etheraccounts" [value]="account.id"
-                                            >{{ account }}</option>
+                                            >{{ this.etheraccounts[0] }}</option>
                                         </select>
-                                        <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 QLC Chain address you want to receive your QGAS to</p>
+                                      </div>
+                                      <div class="form-group" *ngIf="this.stakingForm.value.stakingType == 2">
+                                        <select class="custom-select" formControlName="toQLCWallet" (change)="selectAccount()">
+                                          <option *ngFor="let account of neowallets" [value]="account.id"
+                                            >{{ account.id }} </option>
+                                        </select>
                                       </div>
                                       <div class="form-group" *ngIf="recover == 1">
                                         {{ stakingForm.value.toQLCWallet }}
@@ -316,7 +449,7 @@
                                       SWAP FROM
                                     </div>
                                     <div class="col-md-9 pb-3 text-left">
-                                      {{ stakingForm.value.fromNEOWallet }}
+                                      {{ this.stakingForm.get('fromNEOWallet').value }}
                                     </div>
                                   </div>
             
@@ -326,7 +459,7 @@
                                       SWAP TO
                                     </div>
                                     <div class="col-md-9 pb-3 text-left">
-                                      {{ etheraccounts[0] }}
+                                      {{ this.stakingForm.get('toQLCWallet').value }}
                                     </div>
                                   </div>
             

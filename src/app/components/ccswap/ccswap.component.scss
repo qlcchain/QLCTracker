@@ -26,6 +26,13 @@
 	border-radius: 0;
 	appearance: none;
 }
+.qlc-table-row {
+    min-height: 34px;
+    padding-bottom: 10px;
+}
+.qlc-table-row div {
+    padding-bottom: 10px;
+}
 .custom-select:focus {
 	border-color: #495057;
 	outline: 0;
