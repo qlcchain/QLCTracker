@@ -528,7 +528,7 @@ export class CcswapComponent implements OnInit {
           ? selectedNEOWallet.balances[
               this.neoService.tokenList['QLC'].networks['1'].hash
             ].amount
-          : 0 : this.etherqlcbalance
+          : 0 : localStorage.getItem('qlcbalance')
       );
 
     this.checkIfMinAmount();

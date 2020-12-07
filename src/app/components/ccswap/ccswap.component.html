@@ -83,7 +83,7 @@
                 <span>{{(transaction.state== 0 || transaction.state ==1) ? transaction.neoTxHash : transaction.ethTxHash}}</span><br>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 pr-md-0 pr-sm-4 col-4 pb-0 pr-4 text-right d-none d-sm-block">
-                <span data-toggle="tooltip" data-placement="top">{{transaction.amount}}</span>
+                <span data-toggle="tooltip" data-placement="top">{{transaction.amount/100000000}}</span>
               </div>
               <div class="col-xl-2 col-lg-2 pl-md-3 col-md-2 col-sm-12 col-12 pr-4 text-right">
                 {{transaction.stateStr}}

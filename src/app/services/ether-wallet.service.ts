@@ -195,6 +195,7 @@ abi = neo5toerc20swap;
       .dividedBy(Math.pow(10, 8))
       .toNumber();
       console.log('getEthQLCBalance', balance);
+      localStorage.setItem('qlcbalance', balance.toString());
       return balance;
   });
  }
