@@ -25,6 +25,14 @@ export const environment = {
     test: 'https://testnet.api.neotube.io/api/',
     main: 'https://mainnet.api.neotube.io/api/'
   },
+  etherscan: {
+    test: 'https://rinkeby.etherscan.io/',
+    main: 'https://etherscan.io/'
+  },
+  neotubeSite: {
+    test: 'https://testnet.neotube.io/',
+    main: 'https://neotube.io/address/'
+  },
   wsUrl: {
     test: '',
     main: 'wss://rpc-ws.qlcchain.online'
