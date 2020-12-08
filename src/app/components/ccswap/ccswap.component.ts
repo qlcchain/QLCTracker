@@ -481,17 +481,15 @@ export class CcswapComponent implements OnInit {
         this.neowallets[i].id
       );
       console.log('loadBalances.balance', balance);
-      console.log('loadBalances.balance.assetId', balance.assetId);
-      console.log('loadBalances.balance.balance', balance.balance);
       // rpc noe support https so quit
       // const rpcbalance: any = await this.neoService.getNeoRpcBalance(
       //   this.neowallets[i].id
       // );
       // console.log('loadBalances.rpcbalance', rpcbalance);
       // use neotube
-      this.neowallets[i].balances[balance.assetId] = {
-        amount: balance.balance,
-        asset_hash: balance.assetId,
+      this.neowallets[i].balances[balance?.assetId] = {
+        amount: balance?.balance,
+        asset_hash: balance?.assetId,
       };
       // use neoscan or rpc site neoscan is offline
       // for (const asset of balance) {
