@@ -49,6 +49,7 @@ export class NeoWalletService {
 
   private smartContractScript = environment.neoSmartContract[environment.neoNetwork];
   private neoswapsmartContractScript = environment.neo5swapSmartContract[environment.neoNetwork];
+  private neoqlcsmartContractScript = environment.neo5QLCSmartContract[environment.neoNetwork];
 
   tokenList = [];
 
@@ -277,9 +278,17 @@ export class NeoWalletService {
     const balance: any = await axios.post(this.neotube + 'address', {
       method: 'getallassets',
       params: [address]});
-    console.log('getneoTuboBalance.balance', balance);
-    // console.log('balance.result.assets[2].balance', balance.data.result.assets[2].balance);
-    return balance.data.result.assets[2];
+      // tslint:disable-next-line: align
+      const assets: any[] = balance?.data?.result?.assets;
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < assets.length; i++) {
+        if ( assets[i].assetId == this.neoqlcsmartContractScript) {
+          console.log('getneoTuboBalance.balances', balance);
+          console.log('getneoTuboBalance.balance', balance?.data?.result?.assets[i]);
+          // console.log('balance.result.assets[2].balance', balance.data.result.assets[2].balance);
+          return balance.data.result.assets[i];
+        }
+      }
 }
 
   async getLastTransactions(address) {

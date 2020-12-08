@@ -53,6 +53,10 @@ export const environment = {
     test: 'bfcbb52d61bc6d3ef2c8cf43f595f4bf5cac66c5',
     main: ''
   },
+  neo5QLCSmartContract: {
+    test: 'b9d7ea3062e6aeeb3e8ad9548220c4ba1361d263',
+    main: '0d821bd7b6d53f5c2b40e217c6defc8bbe896cf5'
+  },
   etherswapSmartContract: {
     test: '0xE2484A4178Ce7FfD5cd000030b2a5de08c0Caf8D',
     main: ''
