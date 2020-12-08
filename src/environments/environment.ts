@@ -21,6 +21,10 @@ export const environment = {
     test: 'http://seed2.ngd.network:20332/',
     main: 'http://seed2.ngd.network:10332/'
   },
+  neotube: {
+    test: 'https://testnet.api.neotube.io/api/',
+    main: 'https://mainnet.api.neotube.io/api/'
+  },
   wsUrl: {
     test: '',
     main: 'wss://rpc-ws.qlcchain.online'

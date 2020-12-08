@@ -45,6 +45,7 @@ export class NeoWalletService {
   private network = environment.neonNetwork[environment.neoNetwork];
   private neoscan = environment.neoScan[environment.neoNetwork];
   private neoswap = environment.swapUrl[environment.neoNetwork];
+  private neotube = environment.neotube[environment.neoNetwork];
 
   private smartContractScript = environment.neoSmartContract[environment.neoNetwork];
   private neoswapsmartContractScript = environment.neo5swapSmartContract[environment.neoNetwork];
@@ -261,15 +262,25 @@ export class NeoWalletService {
   }
 
   async getNeoRpcBalance(address) {
-      const balance = await axios.post(this.neoswap,{
-        'jsonrpc': "2.0",
-        'method': "getnep5balances",
-        'params': [address],
-        'id': 1
+      const balance = await axios.post(this.neoswap, {
+        jsonrpc: 2.0,
+        method: 'getnep5balances',
+        params: [address],
+        id: 1
       });
-      console.log('getNeoRpcBalance.balance',balance);
-    return balance.data.result.balance;
+      console.log('getNeoRpcBalance.balance', balance);
+      return balance.data.result.balance;
   }
+
+  // get balance from neotube
+  async getneoTuboBalance(address) {
+    const balance: any = await axios.post(this.neotube + 'address', {
+      method: 'getallassets',
+      params: [address]});
+    console.log('getneoTuboBalance.balance', balance);
+    console.log('balance.result.assets[2].balance', balance.data.result.assets[2].balance);
+    return balance.data.result.assets;
+}
 
   async getLastTransactions(address) {
     const lastTransactionsResults = await this.request('/v1/get_address_abstracts/'+address+'/0');

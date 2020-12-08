@@ -476,20 +476,35 @@ export class CcswapComponent implements OnInit {
       ].addressBookName = this.addressBookService.getAccountName(
         this.neowallets[i].id
       );
-      const balance: any = await this.neoService.getNeoRpcBalance(
+      const balance: any = await this.neoService.getneoTuboBalance(
         this.neowallets[i].id
       );
       console.log('loadBalances.balance', balance);
+      // rpc noe support https so quit
+      // const rpcbalance: any = await this.neoService.getNeoRpcBalance(
+      //   this.neowallets[i].id
+      // );
+      // console.log('loadBalances.rpcbalance', rpcbalance);
+      // use neotube
       for (const asset of balance) {
         console.log('asset', asset);
-        this.neowallets[i].balances[asset.asset_hash] = {
-          amount: new BigNumber(asset.amount)
-            .dividedBy(Math.pow(10, 8))
-            .toNumber(),
-          asset_hash: asset.asset_hash,
+        this.neowallets[i].balances[asset.assetId] = {
+          amount: asset.balance,
+          assetId: asset.assetId,
         };
         console.log('this.neowallets[i].balances[asset.asset_hash]', this.neowallets[i].balances[asset.asset_hash])
       }
+      // use neoscan or rpc site neoscan is offline
+      // for (const asset of balance) {
+      //   console.log('asset', asset);
+      //   this.neowallets[i].balances[asset.asset_hash] = {
+      //     amount: new BigNumber(asset.amount)
+      //       .dividedBy(Math.pow(10, 8))
+      //       .toNumber(),
+      //     asset_hash: asset.asset_hash,
+      //   };
+      //   console.log('this.neowallets[i].balances[asset.asset_hash]', this.neowallets[i].balances[asset.asset_hash])
+      // }
     }
     this.selectAccount();
   }
