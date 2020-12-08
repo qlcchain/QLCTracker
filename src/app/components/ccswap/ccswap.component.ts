@@ -480,20 +480,18 @@ export class CcswapComponent implements OnInit {
         this.neowallets[i].id
       );
       console.log('loadBalances.balance', balance);
+      console.log('loadBalances.balance.assetId', balance.assetId);
+      console.log('loadBalances.balance.balance', balance.balance);
       // rpc noe support https so quit
       // const rpcbalance: any = await this.neoService.getNeoRpcBalance(
       //   this.neowallets[i].id
       // );
       // console.log('loadBalances.rpcbalance', rpcbalance);
       // use neotube
-      for (const asset of balance) {
-        console.log('asset', asset);
-        this.neowallets[i].balances[asset.assetId] = {
-          amount: asset.balance,
-          assetId: asset.assetId,
-        };
-        console.log('this.neowallets[i].balances[asset.asset_hash]', this.neowallets[i].balances[asset.asset_hash])
-      }
+      this.neowallets[i].balances[balance.assetId] = {
+        amount: balance.balance,
+        asset_hash: balance.assetId,
+      };
       // use neoscan or rpc site neoscan is offline
       // for (const asset of balance) {
       //   console.log('asset', asset);
@@ -510,21 +508,37 @@ export class CcswapComponent implements OnInit {
   }
 
   async selectAccount() {
-    this.stakingForm.get('fromNEOWallet').setValue('');
-    this.stakingForm.get('toQLCWallet').setValue('');
-    this.stakingForm
-      .get('availableQLCBalance')
-      .setValue('');
+    // 重新加载余额
+    // this.loadBalances();
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
-      this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
-      this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
+      if (this.stakingForm.value.fromNEOWallet == '') {
+        console.log('neowallets',this.neowallets)
+        if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
+          this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
+        }
+      }
+      if (this.stakingForm.value.toQLCWallet == '') {
+        console.log('qlcwallets',this.accounts)
+        if (this.etheraccounts[0] != undefined) {
+          this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
+        }
+      }
     }
 
     // withdraw
     if (this.stakingForm.value.stakingType == 2) {
-      this.stakingForm.get('fromNEOWallet').setValue(this.etheraccounts[0]);
-      this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
+      if (this.stakingForm.value.fromNEOWallet == '') {
+        if (this.etheraccounts[0] != undefined) {
+          this.stakingForm.get('fromNEOWallet').setValue(this.etheraccounts[0]);
+          
+        }
+      }
+      if (this.stakingForm.value.toQLCWallet == '') {
+        if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
+          this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
+        }
+      }
     }
     // tslint:disable-next-line: member-ordering
     const selectedNEOWallet = this.neowallets.find (

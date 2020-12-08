@@ -278,8 +278,8 @@ export class NeoWalletService {
       method: 'getallassets',
       params: [address]});
     console.log('getneoTuboBalance.balance', balance);
-    console.log('balance.result.assets[2].balance', balance.data.result.assets[2].balance);
-    return balance.data.result.assets;
+    // console.log('balance.result.assets[2].balance', balance.data.result.assets[2].balance);
+    return balance.data.result.assets[2];
 }
 
   async getLastTransactions(address) {
