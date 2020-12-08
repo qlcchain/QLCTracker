@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { WalletService } from 'src/app/services/wallet.service';
 import { AddressBookService } from 'src/app/services/address-book.service';
 import { NeoWalletService } from 'src/app/services/neo-wallet.service';
+import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { ApiNEP5Service } from 'src/app/services/api-nep5.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -761,7 +762,8 @@ export class CcswapComponent implements OnInit {
       window.scrollTo(0, 0);
       return this.notifications.sendWarning('ERROR wallet locked');
     }
-    const amountWithDecimals = new BigNumber(this.stakingForm.value.amounToStake).multipliedBy(100000000);
+    console.log('burnERC20Token.amounToStake', this.stakingForm.value.amounToStake);
+    const amountWithDecimals = Web3.utils.toBN(this.stakingForm.value.amounToStake).mul(Web3.utils.toBN(100000000));
     const account = this.etheraccounts[0];
     const neo5Address = this.stakingForm.get('toQLCWallet').value;
     console.log('neo5Address', neo5Address);
@@ -829,10 +831,9 @@ export class CcswapComponent implements OnInit {
           const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
           console.log('getEthOwnerSign', getEthOwnerSign);
           if (getEthOwnerSign.data.value) {
-            const amountWithDecimals = new BigNumber(toswapAmount).multipliedBy(
-              100000000
-            );
-            console.log('amountWithDecimals', amountWithDecimals);
+            const amountWithDecimals = Web3.utils.toBN(toswapAmount).mul(Web3.utils.toBN(100000000));
+            console.log('mintERC20.toswapAmount', toswapAmount);
+            console.log('mintERC20.amountWithDecimals', amountWithDecimals);
             console.log('txid', txid);
             console.log(
               'getEthOwnerSign.data.value',
