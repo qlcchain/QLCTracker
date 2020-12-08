@@ -86,7 +86,7 @@ const routes: Routes = [
   { path: 'staking/qlc', component: MystakingsComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'staking/qlc/create', component: StakingCreateComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'staking/qlc/revoke', component: StakingRevokeComponent, canActivate: [CanActivateRouteGuard] },
-  { path: 'ccswap', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'swap', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'staking/chainx', component: ChainxStakingComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'staking/chainx/invoke', component: ChainxStakingComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'mining', component: MiningComponent, canActivate: [CanActivateRouteGuard] },
