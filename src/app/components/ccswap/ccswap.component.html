@@ -1,5 +1,6 @@
 <app-user-submenu></app-user-submenu>
 
+<!-- check metamask -->
 <div class="stake-screen-1" *ngIf="!this.metamask">
   <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu"></div>
 
@@ -40,643 +41,560 @@
   </div>
 </div>		
 </div>
+<!-- step 1: choose account to swap -->
+ <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && this.metamask'>
 
-
-<!-- LATEST TRANSACTIONS -->
-<div class="stake-screen-1" *ngIf='step == 5 && this.metamask'>
-  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu"></div>
-
-  <div class="container accounts">
-  <div class="row">
-    
-    <div class="col-12 pl-0 pr-0">
-      
-      <!-- TITLE -->
-      <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
-        <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
-          <div class="content-title">
-            <h1>Swap Transactions</h1>
-            <!-- <h1>Address: {{this.accounts[0].id}}</h1> -->
-          </div>
-        </div>
-      </div>
-      
-      
-      <!-- LIST -->
-      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
-        <div class="content-box-white">
-          
-          
+<!-- SEND FORM -->
+<div class="container mt-0 qlc-content-first pb-0 mb-0">
+  <div class="row pb-0 mb-0">
+      <div class="col-12 pl-0 pr-0 pb-0">
           <div class="container">
-            
-            <div class="row qlc-table-header">
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-6 col-6 d-none d-sm-block text-truncate">Address / Transaction ID</div>
-              <div class="col-xl-2 col-lg-2 col-md-3 pr-md-0 col-sm-4 d-none d-sm-block col-4 pr-sm-4 pr-4 text-right">Amount</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 d-none d-md-block col-6 pr-4 text-right">Transaction Status</div>
+                  <div class="row">
+                      <!-- TITLE -->
+                      <div class="col-md-6 col-12 mt-2 pl-md-2 pr-md-2">
+                          <div class="content-title">
+                              <h1>Swap QLC Tokens</h1>
+                          </div>
+                      </div>
+                      <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+                        <button type="submit" (click)="recover = !recover" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
+                          Undone Transactions
+                        </button>
+                      </div>
+                      <!-- <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
+                        <button type="submit" (click)="this.getUndownTransactions(this.neowallets[0].id)" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
+                          Swap Transactions
+                        </button>
+                      </div> -->
+                  </div>
+              </div>
+      </div>
+  </div>
+</div>
+
+
+<div class="container accounts">
+<div class="row">
+
+  <!-- FORM -->
+  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" >
+      <div class="container pl-0 pr-0">
+        <div class="row pl-0 pr-0">
+
+
+        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4 ng-invalid-ignore" [formGroup]="recoverForm" *ngIf="recover == 1">
+          <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+
+              <div class="row pt-1 mt-4 pl-4 pr-4">
+
+                  <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4 mt-4">
+                    RECOVER TXID
+                  </div>
+                  <div class="col-md-9 text-left mb-4 mt-4">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control form-my-border"
+                        placeholder="NEO txid"
+                        onfocus="this.placeholder = ''"
+                        style="height: 42px !important;"
+                        formControlName="recover_txid"
+                      />
+                    </div>
+                    
+                    <span *ngFor="let validation of recover_validation_messages.recover_txid">
+                      <span class="error-message pt-2" *ngIf="recoverForm.get('recover_txid').hasError(validation.type) && (recoverForm.get('recover_txid').dirty || recoverForm.get('recover_txid').touched)" style="color:#c10f0f;">{{validation.message}}<br></span>
+                    </span>
+                    <h5 class="pt-3" *ngFor="let step of recoverSteps">{{ step.msg }}</h5>
+                  </div>
+                  
+                  <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
+                  <div class="col-md-4 text-left mb-4">
+                    <button (click)="continueUndoneTransaction()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="checkingTxid == 1 || recoverForm.get('recover_txid').status != 'VALID' ">
+                      CONTINUE SWAP
+                    </button>
+                  </div>
+                  <div class="col-md-5 pt-3" *ngIf="checkingTxid == 1">
+                    <span class="security-email-sending" class="w-100"><p><img src="assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Checking txid ...</p></span>  
+                  </div>
+                </div>
             </div>
-            
-            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of transactions">
-              <div class="d-none d-xl-block col-xl-6 pb-0">
-                <span class="text-color-lightgrey text-tiny">From: </span> 
-                <span>{{(transaction.state== 0 || transaction.state ==1) ? transaction.neoUserAddr : transaction.ethUserAddr}}</span><br>
-                <span class="text-color-lightgrey text-tiny">Hash: </span> 
-                <span>{{(transaction.state== 0 || transaction.state ==1) ? transaction.neoTxHash : transaction.ethTxHash}}</span><br>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-4 pr-md-0 pr-sm-4 col-4 pb-0 pr-4 text-right d-none d-sm-block">
-                <span data-toggle="tooltip" data-placement="top">{{transaction.amount/100000000}}</span>
-              </div>
-              <div class="col-xl-2 col-lg-2 pl-md-3 col-md-2 col-sm-12 col-12 pr-4 text-right">
-                {{transaction.stateStr}}
-              </div>
-              <div class="container transaction-details">
-                
-              </div>
-          </div>
         </div>
-        
-        
+        </div>
       </div>
     </div>
-    
-    
+</div>
+</div>
+
+
+<div class="container accounts" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1)">
+  <div class="row">
+
+<!-- FORM -->
+<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" [formGroup]="stakingForm" >
+<div class="container pl-0 pr-0">
+<div class="row pl-0 pr-0">
+
+
+<div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+<div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+
+<div class="container ml-1 pr-3 pl-3">
+
+<div class="row defaultTable sendTokens">
+<div class="col-12">
+
+<div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-14px;">
+SWAP TYPE
+</div>
+<div class="col-md-9 text-left">
+<div class="form-group">
+<input type="radio" name="stakingType" (change)="selectAccount()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> NEP5 -> ERC20</label>
+<input type="radio" name="stakingType" (change)="selectAccount()" formControlName="stakingType" value="2" id="s3" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"><label for="s3" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"> ERC20 -> NEP5</label>
+</div>
+</div>
+</div>
+<div>
+    <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+      <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+        FROM ACCOUNT
+      </div>
+      <div class="col-md-9 text-left">
+        <div *ngIf="this.stakingForm.value.stakingType == 0" class="form-group">
+          <select class="custom-select" formControlName="fromNEOWallet" (change)="selectAccount()">
+            <option *ngFor="let account of neowallets" [value]="account.id"
+              >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances[neoService.tokenList['QLC'].networks['1'].hash] != undefined)? ' ('+account.balances[neoService.tokenList['QLC'].networks['1'].hash].amount + ' QLC)' : '') }} </option>
+          </select>
+          <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
+          <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
+
+        </div>
+        <div *ngIf="this.stakingForm.value.stakingType == 2" class="form-group">
+          <select class="custom-select" formControlName="fromNEOWallet">
+            <option *ngFor="let account of etheraccounts" [value]="account.id"
+              >{{ this.etheraccounts[0] }}</option>
+          </select>
+          <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
+          <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
+
+        </div>
+        <div class="form-group" *ngIf="recover == 1">
+          {{ stakingForm.value.fromNEOWallet }}
+        </div>
+      </div>
+    </div>
+
+
+<div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+TO ACCOUNT
+</div>
+<div class="col-md-9 text-left">
+<div class="form-group" *ngIf="this.stakingForm.value.stakingType == 0">
+<select class="custom-select" formControlName="toQLCWallet">
+<option *ngFor="let account of etheraccounts" [value]="account.id"
+>{{ this.etheraccounts[0] }}</option>
+</select>
+</div>
+<div class="form-group" *ngIf="this.stakingForm.value.stakingType == 2">
+<select class="custom-select" formControlName="toQLCWallet" (change)="selectAccount()">
+<option *ngFor="let account of neowallets" [value]="account.id"
+>{{ account.id }} </option>
+</select>
+</div>
+<div class="form-group" *ngIf="recover == 1">
+{{ stakingForm.value.toQLCWallet }}
+</div>
+</div>
+</div>
+                    
+<div class="row rowContent mb-5 mt-4" style="border-bottom: 1px solid #edeef4;">
+<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">AMOUNT TO SWAP</div>
+<div class="col-md-9">
+<div class="row align-items-top" *ngIf="recover == 0">
+<div class="col-md-6 pb-3 pb-md-0">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text ">
+                QLC
+            </div>
+        </div>
+        <input
+            type="text"
+            class="form-control inlineForm"
+formControlName="amounToStake"
+            placeholder="{{ stakingTypes[this.stakingForm.value.stakingType].minAmount }}"
+onfocus="this.placeholder = ''"
+(change)="checkIfMinAmount()"
+            style="height: 42px !important;"
+        />
+        <div class="input-group-append">
+            <!--<a (click)="setMaxAmount()">
+                <div class="input-group-text maxLink">Max</div>
+</a>-->
+<div class="input-group-text maxLink">&nbsp;</div>
+        </div>
+</div>
+<p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum swap amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount | currency:'':'':'1.2-8' }} QLC</p>
+</div>
+
+<div class="col-md-6">
+<div class="row align-items-top">
+<div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">AVAILABLE BALANCE</div>
+<div class="col-md-6 ">
+<div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.availableQLCBalance | currency:'':'':'1.2-8' }} QLC</strong></div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="form-group" *ngIf="recover == 1">
+{{ stakingForm.value.amounToStake | currency:'':'':'1.2-8' }} QLC
+</div>
+
+</div>
+</div>
+
+
+
+
+<div class="issue-token" *ngIf="this.stakingForm.value.stakingType == 2">
+
+</div>
+<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
+        <div class="col-md-3"></div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+            <button (click)="checkForm()" type="submit" class="btn btn-primary" style="min-width:100%;">
+                REVIEW & INVOKE SWAP
+            </button>
+        </div>
+    </div>
+</div>
+
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+<!-- EXPLAINER -->
+<!-- <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+<div class="content-box-blue h-100 pb-3">
+<div class="container">
+
+<div class="row qlc-table-header-blue">
+<div class="col-12">NEP5 TO ERC20 TOKEN SWAP</div>
+</div>
+<div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
+<hr style="height:1px;width:100%;border:none;background:#7ca7e5;display:block;" />
+<p>
+Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into ERC20 QLC, users can also operate in the reverse direction.<br>
+</p>
+</div>
+</div>
+</div>
+</div>      -->
+</div>
+</div>
+</div>		          
+</div>
+<!-- confirm choose -->
+<div class="stake-screen-1"  *ngIf='step == 2'>
+
+
+
+    <!-- REVIEW A -->
+    <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+        <div class="row">
+            <div class="col-12 pl-0 pr-0 pb-2">
+                <div class="container">
+                        <div class="row">
+                            <!-- TITLE -->
+                            <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                                <div class="content-title">
+                                    <h1>Swap</h1>
+                                </div>
+                            </div>
+                            <!-- to do  -->
+                            <!-- <div class="col-md-3 col-12 pl-md-2 pr-md-2">
+                                    <button (click)="back()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0">
+                                        CHANGE / EDIT
+                                    </button>
+                            </div> -->
+                        </div>
+                    </div>
+            </div>
+        </div>
   </div>
   
-</div>
+
+  <div class="container accounts">
+        <div class="row">
+
+            <!-- STAKING A -->
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3">
+                    <div class="container pl-0 pr-0">
+                        <div class="row pl-0 pr-0">
 
 
-</div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-            <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && this.metamask'>
-
-                <!-- SEND FORM -->
-                <div class="container mt-0 qlc-content-first pb-0 mb-0">
-                    <div class="row pb-0 mb-0">
-                        <div class="col-12 pl-0 pr-0 pb-0">
-                            <div class="container">
-                                    <div class="row">
-                                        <!-- TITLE -->
-                                        <div class="col-md-6 col-12 mt-2 pl-md-2 pr-md-2">
-                                            <div class="content-title">
-                                                <h1>Swap</h1>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
-                                          <button type="submit" (click)="recover = !recover" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
-                                            Undone Transactions
-                                          </button>
-                                        </div>
-                                        <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
-                                          <button type="submit" (click)="this.getUndownTransactions(this.neowallets[0].id)" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
-                                            Swap Transactions
-                                          </button>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-              </div>
-              
-            
-              <div class="container accounts">
-                  <div class="row">
-              
-                    <!-- FORM -->
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" >
-                        <div class="container pl-0 pr-0">
-                          <div class="row pl-0 pr-0">
-              
-              
-                          <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4 ng-invalid-ignore" [formGroup]="recoverForm" *ngIf="recover == 1">
+                        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
                             <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
-              
-                                <div class="row pt-1 mt-4 pl-4 pr-4">
-              
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4 mt-4">
-                                      RECOVER TXID
-                                    </div>
-                                    <div class="col-md-9 text-left mb-4 mt-4">
-                                      <div class="input-group">
-                                        <input
-                                          type="text"
-                                          class="form-control form-my-border"
-                                          placeholder="NEO txid"
-                                          onfocus="this.placeholder = ''"
-                                          style="height: 42px !important;"
-                                          formControlName="recover_txid"
-                                        />
-                                      </div>
-                                      
-                                      <span *ngFor="let validation of recover_validation_messages.recover_txid">
-                                        <span class="error-message pt-2" *ngIf="recoverForm.get('recover_txid').hasError(validation.type) && (recoverForm.get('recover_txid').dirty || recoverForm.get('recover_txid').touched)" style="color:#c10f0f;">{{validation.message}}<br></span>
-                                      </span>
-                                      <h5 class="pt-3" *ngFor="let step of recoverSteps">{{ step.msg }}</h5>
-                                    </div>
-                                    
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
-                                    <div class="col-md-4 text-left mb-4">
-                                      <button (click)="continueUndoneTransaction()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="checkingTxid == 1 || recoverForm.get('recover_txid').status != 'VALID' ">
-                                        CONTINUE SWAP
-                                      </button>
-                                    </div>
-                                    <div class="col-md-5 pt-3" *ngIf="checkingTxid == 1">
-                                      <span class="security-email-sending" class="w-100"><p><img src="assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Checking txid ...</p></span>  
-                                    </div>
-            
-            
-                                    <div class="col-md-4 text-left mb-4" *ngIf="continueInvoke == 1">
-                                      <button (click)="continueInvokeProccess()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="continueInvoke == 0">
-                                        CONTINUE INVOKE
-                                      </button>
-                                    </div>
-                                  </div>
-                              </div>
-                          </div>
-                          </div>
+
+                                <div class="container ml-1 pr-3 pl-3">
+
+                                    <div class="row defaultTable sendTokens">
+                                        <div class="col-12">
+
+                      <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                          SWAP TYPE
+                        </div>
+                        <div class="col-md-9 text-left pb-3">
+                          {{ stakingTypes[stakingForm.value.stakingType].name }}
                         </div>
                       </div>
-                  </div>
-              </div>
-              
-            
-              <div class="container accounts" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1)">
-                    <div class="row">
-            
-                        <!-- FORM -->
-                        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" [formGroup]="stakingForm" >
-                                <div class="container pl-0 pr-0">
-                                    <div class="row pl-0 pr-0">
-            
-            
-                                    <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
-                                        <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
-            
-                                            <div class="container ml-1 pr-3 pl-3">
-            
-                                                <div class="row defaultTable sendTokens">
-                                                    <div class="col-12">
-            
-                                  <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-14px;">
-                                      SWAP TYPE
-                                    </div>
-                                    <div class="col-md-9 text-left">
-                                      <div class="form-group">
-                                        <input type="radio" name="stakingType" (change)="selectAccount()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> NEP5 -> ERC20</label>
-                                        <input type="radio" name="stakingType" (change)="selectAccount()" formControlName="stakingType" value="2" id="s3" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"><label for="s3" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"> ERC20 -> NEP5</label>
-                                      </div>
-                                    </div>
-                                  </div>
-            
-                                
-            
-                              <div>
-                                  <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
-                                      SWAP FROM
-                                    </div>
-                                    <div class="col-md-9 text-left">
-                                      <div *ngIf="this.stakingForm.value.stakingType == 0" class="form-group">
-                                        <select class="custom-select" formControlName="fromNEOWallet" (change)="selectAccount()">
-                                          <option *ngFor="let account of neowallets" [value]="account.id"
-                                            >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances[neoService.tokenList['QLC'].networks['1'].hash] != undefined)? ' ('+account.balances[neoService.tokenList['QLC'].networks['1'].hash].amount + ' QLC)' : '') }} </option>
-                                        </select>
-                                        <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
-                                        <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
 
-                                      </div>
-                                      <div *ngIf="this.stakingForm.value.stakingType == 2" class="form-group">
-                                        <select class="custom-select" formControlName="fromNEOWallet">
-                                          <option *ngFor="let account of etheraccounts" [value]="account.id"
-                                            >{{ this.etheraccounts[0] }}</option>
-                                        </select>
-                                        <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
-                                        <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                          SWAP FROM
+                        </div>
+                        <div class="col-md-9 pb-3 text-left">
+                          {{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0] }}
+                        </div>
+                      </div>
 
-                                      </div>
-                                      <div class="form-group" *ngIf="recover == 1">
-                                        {{ stakingForm.value.fromNEOWallet }}
-                                      </div>
-                                    </div>
-                                  </div>
-            
-            
-                                  <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
-                                      SWAP TO
-                                    </div>
-                                    <div class="col-md-9 text-left">
-                                      <div class="form-group" *ngIf="this.stakingForm.value.stakingType == 0">
-                                        <select class="custom-select" formControlName="toQLCWallet">
-                                          <option *ngFor="let account of etheraccounts" [value]="account.id"
-                                            >{{ this.etheraccounts[0] }}</option>
-                                        </select>
-                                      </div>
-                                      <div class="form-group" *ngIf="this.stakingForm.value.stakingType == 2">
-                                        <select class="custom-select" formControlName="toQLCWallet" (change)="selectAccount()">
-                                          <option *ngFor="let account of neowallets" [value]="account.id"
-                                            >{{ account.id }} </option>
-                                        </select>
-                                      </div>
-                                      <div class="form-group" *ngIf="recover == 1">
-                                        {{ stakingForm.value.toQLCWallet }}
-                                      </div>
-                                    </div>
-                                  </div>
-              
-            
-            
-                                                        
-                                                        <div class="row rowContent mb-5 mt-4" style="border-bottom: 1px solid #edeef4;">
-                                                            <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">AMOUNT TO SWAP</div>
-                                                            <div class="col-md-9">
-                                                                <div class="row align-items-top" *ngIf="recover == 0">
-                                                                    <div class="col-md-6 pb-3 pb-md-0">
-                                                                        <div class="input-group">
-                                                                            <div class="input-group-prepend">
-                                                                                <div class="input-group-text ">
-                                                                                    QLC
-                                                                                </div>
-                                                                            </div>
-                                                                            <input
-                                                                                type="text"
-                                                                                class="form-control inlineForm"
-                                              formControlName="amounToStake"
-                                                                                placeholder="{{ stakingTypes[this.stakingForm.value.stakingType].minAmount }}"
-                                              onfocus="this.placeholder = ''"
-                                              (change)="checkIfMinAmount()"
-                                                                                style="height: 42px !important;"
-                                                                            />
-                                                                            <div class="input-group-append">
-                                                                                <!--<a (click)="setMaxAmount()">
-                                                                                    <div class="input-group-text maxLink">Max</div>
-                                              </a>-->
-                                              <div class="input-group-text maxLink">&nbsp;</div>
-                                                                            </div>
-                                          </div>
-                                          <p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum swap amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount | currency:'':'':'1.2-8' }} QLC</p>
-                                                                    </div>
-            
-                                        <div class="col-md-6">
-                                          <div class="row align-items-top">
-                                            <div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">AVAILABLE BALANCE</div>
-                                            <div class="col-md-6 ">
-                                                <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.availableQLCBalance | currency:'':'':'1.2-8' }} QLC</strong></div>
-                                            </div>
-                                          </div>
-                                        </div>
-            
-                                      </div>
-                                      <div class="form-group" *ngIf="recover == 1">
-                                        {{ stakingForm.value.amounToStake | currency:'':'':'1.2-8' }} QLC
-                                      </div>
-                                                                
-                                                            </div>
-                                                        </div>
-            
-            
-                                
-                                  
-                                  <div class="issue-token" *ngIf="this.stakingForm.value.stakingType == 2">
-            
-                                  </div>
-            
-                                  
-            
-                                                        <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
-                                                            <div class="col-md-3"></div>
-                                                            <div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
-                                                                <button (click)="checkForm()" type="submit" class="btn btn-primary" style="min-width:100%;">
-                                                                    REVIEW & INVOKE SWAP
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                </div>
-                                
-            
+
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                          SWAP TO
+                        </div>
+                        <div class="col-md-9 pb-3 text-left">
+                          {{this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value }}
+                        </div>
+                      </div>
+
+
+                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
+                          AMOUNT TO SWAP
+                        </div>
+                        <div class="col-md-9 pb-3 text-left">
+                          {{ stakingForm.value.amounToStake  | currency:'':'':'1.2-8' }} QLC
+                        </div>
+                      </div>
+  
+                
+
+                      <div class="review-confidant" *ngIf="this.stakingForm.value.stakingType == 1">
+
+
+                      </div>
+
+                      <div class="review-mintage" *ngIf="this.stakingForm.value.stakingType == 2">
+
+                      
+
+                      </div>
+
+                      
+                                            <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
+                                                <div class="col-md-3"></div>
+                                                <div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+                                                    <button (click)="confirmInvoke()" type="submit" class="btn btn-primary" style="min-width:100%;">
+                                                        CONFIRM AND INVOKE NOW
+                                                    </button>
                                                 </div>
                                             </div>
-            
-                                        </div>
+                    </div>
+                    
+
                                     </div>
-            
                                 </div>
+
                             </div>
-                  </div>
-                  
-            
-                  
-                        <!-- EXPLAINER -->
-                        
+                        </div>
+
+                    </div>
                 </div>
+      </div>
+      
+
+      
+            <!-- EXPLAINER -->
             
-            
-                    </div>
-                </div>		
-            
-            
-            
-            </div>
-            
-            <div class="stake-screen-1"  *ngIf='step == 2'>
-            
-            
-            
-                <!-- REVIEW A -->
-                <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
-                    <div class="row">
-                        <div class="col-12 pl-0 pr-0 pb-2">
-                            <div class="container">
-                                    <div class="row">
-                                        <!-- TITLE -->
-                                        <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
-                                            <div class="content-title">
-                                                <h1>Swap</h1>
-                                            </div>
-                                        </div>
-                                        <!-- to do  -->
-                                        <!-- <div class="col-md-3 col-12 pl-md-2 pr-md-2">
-                                                <button (click)="back()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0">
-                                                    CHANGE / EDIT
-                                                </button>
-                                        </div> -->
-                                    </div>
+
+
+        </div>
+  </div>		
+  
+
+
+
+</div>
+<!-- start swap -->
+<div class="stake-screen-1"  *ngIf='step == 3'>
+
+
+
+    <!-- LOADING -->
+    <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+        <div class="row">
+            <div class="col-12 pl-0 pr-0 pb-2">
+                <div class="container">
+                        <div class="row">
+                            <!-- TITLE -->
+                            <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                                <div class="content-title">
+                                    <h1>Invoking in progress</h1>
                                 </div>
+                            </div>
                         </div>
                     </div>
-              </div>
-              
-            
-              <div class="container accounts">
-                    <div class="row">
-            
-                        <!-- STAKING A -->
-                        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3">
-                                <div class="container pl-0 pr-0">
-                                    <div class="row pl-0 pr-0">
-            
-            
-                                    <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
-                                        <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
-            
-                                            <div class="container ml-1 pr-3 pl-3">
-            
-                                                <div class="row defaultTable sendTokens">
-                                                    <div class="col-12">
-            
-                                  <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                                      SWAP TYPE
-                                    </div>
-                                    <div class="col-md-9 text-left pb-3">
-                                      {{ stakingTypes[stakingForm.value.stakingType].name }}
-                                    </div>
-                                  </div>
-            
-                                  <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                                      SWAP FROM
-                                    </div>
-                                    <div class="col-md-9 pb-3 text-left">
-                                      {{ this.stakingForm.get('fromNEOWallet').value }}
-                                    </div>
-                                  </div>
-            
-            
-                                  <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                                      SWAP TO
-                                    </div>
-                                    <div class="col-md-9 pb-3 text-left">
-                                      {{ this.stakingForm.get('toQLCWallet').value }}
-                                    </div>
-                                  </div>
-            
-            
-                                  <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                                    <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                                      AMOUNT TO SWAP
-                                    </div>
-                                    <div class="col-md-9 pb-3 text-left">
-                                      {{ stakingForm.value.amounToStake  | currency:'':'':'1.2-8' }} QLC
-                                    </div>
-                                  </div>
-              
-                            
-            
-                                  <div class="review-confidant" *ngIf="this.stakingForm.value.stakingType == 1">
-            
-            
-                                  </div>
-            
-                                  <div class="review-mintage" *ngIf="this.stakingForm.value.stakingType == 2">
-            
-                                  
-            
-                                  </div>
-            
-                                  
-                                                        <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
-                                                            <div class="col-md-3"></div>
-                                                            <div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
-                                                                <button (click)="confirmInvoke()" type="submit" class="btn btn-primary" style="min-width:100%;">
-                                                                    CONFIRM AND INVOKE NOW
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                </div>
-                                
-            
-                                                </div>
-                                            </div>
-            
-                                        </div>
-                                    </div>
-            
+            </div>
+        </div>
+  </div>
+  
+
+  <div class="container accounts">
+        <div class="row">
+
+            <!-- INFO -->
+            <div class="col-12 pb-3">
+                    <div class="container pl-0 pr-0">
+                        <div class="row pl-0 pr-0">
+
+
+                        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+                            <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
+
+                <h3>Please wait</h3>
+                <h5 class="pt-3">The invoking process can take up to a couple of minutes.</h5>
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3 mt-5 mb-5">
+
+                      <div id="noTrespassingOuterBarG">
+                        <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <p style="color:#c10f0f;" class="pb-3"><strong>Important:</strong> Don't leave or close this page!</p>
+
+                <p class="pt-0 pb-0" *ngFor="let step of invokeSteps"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+      </div>
+      
+
+
+        </div>
+    </div>		
+
+
+
+</div>
+<!-- completed -->
+<div class="stake-screen-1" *ngIf="step == 4">
+
+
+
+    <!-- COMPLETE -->
+    <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+        <div class="row">
+            <div class="col-12 pl-0 pr-0 pb-2">
+                <div class="container">
+                        <div class="row">
+                            <!-- TITLE -->
+                            <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                                <div class="content-title">
+                                    <h1>Invoking complete</h1>
                                 </div>
                             </div>
-                  </div>
-                  
-            
-                  
-                        <!-- EXPLAINER -->
-                        
-            
-            
-                    </div>
-              </div>		
-              
-            
-            
-            
-            </div>
-            
-            <div class="stake-screen-1"  *ngIf='step == 3'>
-            
-            
-            
-                <!-- LOADING -->
-                <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
-                    <div class="row">
-                        <div class="col-12 pl-0 pr-0 pb-2">
-                            <div class="container">
-                                    <div class="row">
-                                        <!-- TITLE -->
-                                        <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
-                                            <div class="content-title">
-                                                <h1>Invoking in progress</h1>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                         </div>
                     </div>
-              </div>
-              
-            
-              <div class="container accounts">
-                    <div class="row">
-            
-                        <!-- INFO -->
-                        <div class="col-12 pb-3">
-                                <div class="container pl-0 pr-0">
-                                    <div class="row pl-0 pr-0">
-            
-            
-                                    <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
-                                        <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
-            
-                            <h3>Please wait</h3>
-                            <h5 class="pt-3">The invoking process can take up to a couple of minutes.</h5>
-            
-                            <div class="container">
-                              <div class="row">
-                                <div class="col-md-6 offset-md-3 mt-5 mb-5">
-            
-                                  <div id="noTrespassingOuterBarG">
-                                    <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
-                                      <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
-                                      <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
-                                    </div>
-                                  </div>
-            
-                                </div>
-                              </div>
-                            </div>
-            
-                            <p style="color:#c10f0f;" class="pb-3"><strong>Important:</strong> Don't leave or close this page!</p>
-            
-                            <p class="pt-0 pb-0" *ngFor="let step of invokeSteps"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
-            
-            
-                                        </div>
-                                    </div>
-            
-                                </div>
-                            </div>
-                  </div>
-                  
-            
-            
-                    </div>
-                </div>		
-            
-            
-            
             </div>
-            
-            <div class="stake-screen-1" *ngIf="step == 4">
-            
-            
-            
-                <!-- COMPLETE -->
-                <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+        </div>
+  </div>
+  
+
+  <div class="container accounts">
+        <div class="row">
+
+            <!-- INFO -->
+            <div class="col-12 pb-3">
+                    <div class="container pl-0 pr-0">
+                        <div class="row pl-0 pr-0">
+
+
+                        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+                            <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
+
+                <h3>Woohoo!</h3>
+                <h5 class="pt-3">The invoking of your swap was successful.</h5>
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-6 offset-md-3 mt-5 mb-5">
+
+                      <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;">
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="container">
                     <div class="row">
-                        <div class="col-12 pl-0 pr-0 pb-2">
-                            <div class="container">
-                                    <div class="row">
-                                        <!-- TITLE -->
-                                        <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
-                                            <div class="content-title">
-                                                <h1>Invoking complete</h1>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                      <div class="col-md-4 offset-md-4 mb-4">
+  
+                        <button type="submit" class="btn btn-primary" style="min-width:100%;" (click)="backtoswap()" >
+                          BACK TO MY SWAP
+                        </button>
+
+                       <!--  <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;" (click)="invokeNewStaking()">
+                          INVOKE A NEW SWAP
+                        </button> -->
+
+                      </div>
+                    </div>
+                  </div>
+
+                
+
+                            </div>
                         </div>
+
                     </div>
-              </div>
-              
-            
-              <div class="container accounts">
-                    <div class="row">
-            
-                        <!-- INFO -->
-                        <div class="col-12 pb-3">
-                                <div class="container pl-0 pr-0">
-                                    <div class="row pl-0 pr-0">
-            
-            
-                                    <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
-                                        <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
-            
-                            <h3>Woohoo!</h3>
-                            <h5 class="pt-3">The invoking of your swap was successful.</h5>
-            
-                            <div class="container">
-                              <div class="row">
-                                <div class="col-md-6 offset-md-3 mt-5 mb-5">
-            
-                                  <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;">
-            
-                                </div>
-                              </div>
-                            </div>
-            
-                            <div class="container">
-                                <div class="row">
-                                  <div class="col-md-4 offset-md-4 mb-4">
-              
-                                    <!-- <button type="submit" class="btn btn-primary" style="min-width:100%;" routerLink="/staking/qlc" >
-                                      BACK TO MY SWAP
-                                    </button>
-            
-                                    <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;" (click)="invokeNewStaking()">
-                                      INVOKE A NEW SWAP
-                                    </button> -->
-            
-                                  </div>
-                                </div>
-                              </div>
-            
-                            
-            
-                                        </div>
-                                    </div>
-            
-                                </div>
-                            </div>
-                  </div>
-                  
-            
-            
-                    </div>
-                </div>		
-            
-            
-            
-            </div>
+                </div>
+      </div>
+      
+
+
+        </div>
+    </div>		
+
+
+
+</div>
 
 
 

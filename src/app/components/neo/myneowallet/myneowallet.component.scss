@@ -23,3 +23,11 @@
 .btn-primary.neo-background:hover {
     background-color: #74aa36 !important;
 }
+.row-anim-in {
+    -webkit-animation: row-anim-in-keyframes 0.35s ease-in-out; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: row-anim-in-keyframes 0.35s ease-in-out; /* Firefox < 16 */
+        -ms-animation: row-anim-in-keyframes 0.35s ease-in-out; /* Internet Explorer */
+         -o-animation: row-anim-in-keyframes 0.35s ease-in-out; /* Opera < 12.1 */
+            animation: row-anim-in-keyframes 0.35s ease-in-out;
+    transform-origin: bottom left;
+}

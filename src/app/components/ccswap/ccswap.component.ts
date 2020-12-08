@@ -289,6 +289,11 @@ export class CcswapComponent implements OnInit {
     return accounts;
   }
 
+  // back to swap
+  backtoswap() {
+    this.step = 1;
+  }
+
   async continueUndoneTransaction(txhash?: any) {
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning('ERROR wallet locked');
@@ -360,29 +365,35 @@ export class CcswapComponent implements OnInit {
     // console.log('burnEth', burnEth);
     this.markFormGroupTouched(this.stakingForm);
     // tslint:disable-next-line: triple-equals
-    console.log('this.stakingForm.value.stakingType', this.stakingForm.value.stakingType);
-    console.log('fromNEOWallet.status', this.stakingForm.get('fromNEOWallet').status);
-    console.log('toQLCWallet.status', this.stakingForm.get('toQLCWallet').status);
     if (this.stakingForm.value.stakingType == 0) {
       if (
         // tslint:disable-next-line: triple-equals
         this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
         // tslint:disable-next-line: triple-equals
-        this.stakingForm.get('toQLCWallet').status == 'VALID'
+        this.stakingForm.get('toQLCWallet').status == 'VALID' &&
+        // tslint:disable-next-line: radix
+        parseInt(this.stakingForm.value.amounToStake) <= parseInt(this.stakingForm
+          .get('availableQLCBalance').value)
       ) {
         console.log('step', this.step);
         this.step = 2;
         window.scrollTo(0, 0);
+      } else {
+        console.log('Not enough balance');
       }
     } else if (this.stakingForm.value.stakingType == 2) {
       if (
         // tslint:disable-next-line: triple-equals
         this.stakingForm.get('fromNEOWallet').status == 'VALID' &&
         // tslint:disable-next-line: triple-equals
-        this.stakingForm.get('toQLCWallet').status == 'VALID'
+        this.stakingForm.get('toQLCWallet').status == 'VALID' &&
+        // tslint:disable-next-line: radix
+        parseInt(this.stakingForm.value.amounToStake) <= parseInt(localStorage.getItem('qlcbalance'))
       ) {
         this.step = 2;
         window.scrollTo(0, 0);
+      } else {
+        console.log('Not enough balance');
       }
     }
     if (this.stakingForm.status == 'VALID') {
@@ -480,8 +491,7 @@ export class CcswapComponent implements OnInit {
       const balance: any = await this.neoService.getneoTuboBalance(
         this.neowallets[i].id
       );
-      console.log('loadBalances.balance', balance);
-      // rpc noe support https so quit
+      // rpc not support https so quit
       // const rpcbalance: any = await this.neoService.getNeoRpcBalance(
       //   this.neowallets[i].id
       // );
@@ -503,7 +513,7 @@ export class CcswapComponent implements OnInit {
       //   console.log('this.neowallets[i].balances[asset.asset_hash]', this.neowallets[i].balances[asset.asset_hash])
       // }
     }
-    this.selectAccount();
+    // this.selectAccount();
   }
 
   async selectAccount() {
@@ -512,13 +522,11 @@ export class CcswapComponent implements OnInit {
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
       if (this.stakingForm.value.fromNEOWallet == '') {
-        console.log('neowallets',this.neowallets)
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
         }
       }
       if (this.stakingForm.value.toQLCWallet == '') {
-        console.log('qlcwallets',this.accounts)
         if (this.etheraccounts[0] != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
         }
@@ -530,7 +538,6 @@ export class CcswapComponent implements OnInit {
       if (this.stakingForm.value.fromNEOWallet == '') {
         if (this.etheraccounts[0] != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(this.etheraccounts[0]);
-          
         }
       }
       if (this.stakingForm.value.toQLCWallet == '') {

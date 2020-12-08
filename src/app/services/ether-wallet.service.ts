@@ -31,16 +31,11 @@ abi = neo5toerc20swap;
   async getAccounts() {
     // tslint:disable-next-line: new-parens
     const account: any[] = await new this.web3.eth.getAccounts;
-    return account;
-  }
-    // get erc20 account balance
-    async getBalance() {
-      // tslint:disable-next-line: new-parens
-      const account = '0x38d3B5fE5AeC14176aA45767bD1f524eD93D98e4';
-      const balance: any[] = await new this.web3.eth.getBalance(account);
-      console.log('balance', balance);
-      return balance;
+    console.log('getAccounts.account', account);
+    if (account) {
+      return account;
     }
+  }
   // depost start method:post
   // deposit/neoTransactionConfirmed
   async neoTransactionConfirmed(txid: any) {
