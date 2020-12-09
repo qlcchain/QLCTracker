@@ -521,6 +521,9 @@ div[class*="col-"] a:hover {
     border-bottom: 1px solid #edeef4;
     min-height: 94px;
 }
+.neo-table-row {
+    min-height: auto;
+}
 .qlc-table-row-twolines {
     padding-bottom:10px;
 }
@@ -2206,16 +2209,31 @@ progressbar bar {
     background-size: 16px 16px;
 }
 .qlc-icon-swap-blue {
-    background: url('../assets/img/swap/qlc-icon-swap-blue.svg') no-repeat 10px 22px;
+    background: url('../assets/img/swap/qlc-icon-swap-blue.svg') no-repeat;
     background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: -5px;
 }
 .qlc-icon-swap-green {
-    background: url('../assets/img/swap/qlc-icon-swap-green.svg') no-repeat 10px 22px;
+    background: url('../assets/img/swap/qlc-icon-swap-green.svg') no-repeat;
     background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: -5px;
 }
 .qlc-icon-swap-red {
-    background: url('../assets/img/swap/qlc-icon-swap-red.svg') no-repeat 10px 22px;
+    background: url('../assets/img/swap/qlc-icon-swap-red.svg') no-repeat;
     background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: -5px;
 }
 .icon-submenu-mining {
     background: url('../assets/img/icons/submenu-mining.svg') no-repeat 10px 22px;
