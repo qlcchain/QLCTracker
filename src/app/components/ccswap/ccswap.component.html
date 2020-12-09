@@ -210,7 +210,7 @@ TO ACCOUNT
 </div>
                     
 <div class="row rowContent mb-5 mt-4" style="border-bottom: 1px solid #edeef4;">
-<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">AMOUNT TO SWAP</div>
+<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">AMOUNT</div>
 <div class="col-md-9">
 <div class="row align-items-top" *ngIf="recover == 0">
 <div class="col-md-6 pb-3 pb-md-0">
@@ -241,7 +241,7 @@ onfocus="this.placeholder = ''"
 
 <div class="col-md-6">
 <div class="row align-items-top">
-<div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">AVAILABLE BALANCE</div>
+<div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">BALANCE</div>
 <div class="col-md-6 ">
 <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.availableQLCBalance | currency:'':'':'1.2-8' }} QLC</strong></div>
 </div>
@@ -387,7 +387,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                           AMOUNT TO SWAP
                         </div>
                         <div class="col-md-9 pb-3 text-left">
-                          {{ stakingForm.value.amounToStake  | currency:'':'':'1.2-8' }} QLC
+                          {{ stakingForm.value.amounToStake}} QLC
                         </div>
                       </div>
   

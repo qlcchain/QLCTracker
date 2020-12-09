@@ -33,6 +33,7 @@ abi = neo5toerc20swap;
     const account: any[] = await new this.web3.eth.getAccounts;
     console.log('getAccounts.account', account);
     if (account) {
+      localStorage.setItem('etheraccount', account[0]);
       return account;
     }
   }
@@ -195,26 +196,28 @@ abi = neo5toerc20swap;
   });
  }
   // mint erc20 token
-  async getEthMint(amount: any, nep5Hash: any, signature: any, account: any) {
+  async getEthMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice?: any) {
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
     console.log('getEthMint.amount', amount);
     console.log('getEthMint.nep5Hash', nep5Hash);
     console.log('getEthMint.signature', signature);
     console.log('getEthMint.account', account);
     Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).send({
-        from: account
+        from: account,
+        gasPrice
     }).then(result => {
       console.log('result', result);
     });
  }
  // burn erc20 token
- async getEthBurn(nep5Address: any, amount: any, account: any): Promise<any> {
+ async getEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
   const Contract = await new this.web3.eth.Contract(this.abi, this.address);
   console.log('getEthBurn.amount', amount);
   console.log('getEthBurn.nep5Hash', nep5Address);
   console.log('account', account);
   Contract.methods.burn(nep5Address, amount).send({
-      from: account
+      from: account,
+      gasPrice
   }).then(result => {
     localStorage.setItem('txHash', result.transactionHash);
     console.log('getEthBurn.result', result);

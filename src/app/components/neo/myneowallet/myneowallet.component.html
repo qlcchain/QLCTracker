@@ -247,9 +247,9 @@
             <div class="row qlc-table-row qlc-table-row closed row-anim-in" *ngFor="let history of swapHistory">
               <div class="text-color-lightgrey text-tiny">
                 <span>
-                    <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red"></span>
-                    <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green"></span>
-                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue"></span>
+                    <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
                     <span *ngIf="(history.state ==2 || history.state ==3)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
                 </span>
@@ -280,12 +280,12 @@
                   {{history.ethTxHash | squeeze : '11,10'}}
                 </a>
               </div>
-              <div class="text-color-lightgrey text-tiny {{
-                (history.state == 0 || history.state ==1) ? 'text-color-red' : 'text-color-green'
-              }}">
-                <span data-toggle="tooltip" data-placement="top" title="-">{{(history.state == 0 || history.state ==1) ? '-' : '+'}} {{ history.amount/100000000 }} QLC</span>
-              </div>
               <div class="text-color-lightgrey text-tiny">
+                <span class="{{
+                  (history.state == 0 || history.state ==1) ? 'text-color-red' : 'text-color-green'
+                }}" data-toggle="tooltip" data-placement="top" title="-">{{(history.state == 0 || history.state ==1) ? '-' : '+'}} {{ history.amount/100000000 }} QLC</span>
+              </div>
+              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
                 <br><span>{{ history.lastModifyTime | date: 'short' }}</span>
               </div>
               <!-- <div class="container transaction-details">

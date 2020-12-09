@@ -364,7 +364,6 @@ export class CcswapComponent implements OnInit {
     // const burnEth = await this.burnERC20Token();
     // console.log('burnEth', burnEth);
     this.markFormGroupTouched(this.stakingForm);
-    // tslint:disable-next-line: triple-equals
     if (this.stakingForm.value.stakingType == 0) {
       if (
         // tslint:disable-next-line: triple-equals
@@ -375,7 +374,6 @@ export class CcswapComponent implements OnInit {
         parseInt(this.stakingForm.value.amounToStake) <= parseInt(this.stakingForm
           .get('availableQLCBalance').value)
       ) {
-        console.log('step', this.step);
         this.step = 2;
         window.scrollTo(0, 0);
       } else {
@@ -513,7 +511,7 @@ export class CcswapComponent implements OnInit {
       //   console.log('this.neowallets[i].balances[asset.asset_hash]', this.neowallets[i].balances[asset.asset_hash])
       // }
     }
-    // this.selectAccount();
+    this.selectAccount();
   }
 
   async selectAccount() {
@@ -521,30 +519,25 @@ export class CcswapComponent implements OnInit {
     // this.loadBalances();
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
-      if (this.stakingForm.value.fromNEOWallet == '') {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
         }
-      }
-      if (this.stakingForm.value.toQLCWallet == '') {
+        console.log('etheraccount', this.etheraccounts[0]);
         if (this.etheraccounts[0] != undefined) {
-          this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
+          console.log('etheraccountagain', this.etheraccounts[0]);
+          console.log('localstorage.getitem.etheraccount', localStorage.getItem('etheraccount'));
+          this.stakingForm.get('toQLCWallet').setValue(localStorage.getItem('etheraccount'));
         }
-      }
     }
 
     // withdraw
     if (this.stakingForm.value.stakingType == 2) {
-      if (this.stakingForm.value.fromNEOWallet == '') {
         if (this.etheraccounts[0] != undefined) {
-          this.stakingForm.get('fromNEOWallet').setValue(this.etheraccounts[0]);
+          this.stakingForm.get('fromNEOWallet').setValue(localStorage.getItem('etheraccount'));
         }
-      }
-      if (this.stakingForm.value.toQLCWallet == '') {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
         }
-      }
     }
     // tslint:disable-next-line: member-ordering
     const selectedNEOWallet = this.neowallets.find (
@@ -557,10 +550,10 @@ export class CcswapComponent implements OnInit {
       .get('availableQLCBalance')
       .setValue(
         this.stakingForm.value.stakingType == 0 ?
-        selectedNEOWallet.balances[
+        selectedNEOWallet?.balances[
           this.neoService.tokenList['QLC'].networks['1'].hash
         ] !== undefined
-          ? selectedNEOWallet.balances[
+          ? selectedNEOWallet?.balances[
               this.neoService.tokenList['QLC'].networks['1'].hash
             ].amount
           : 0 : localStorage.getItem('qlcbalance')
@@ -837,6 +830,9 @@ export class CcswapComponent implements OnInit {
           console.log('getEthOwnerSign', getEthOwnerSign);
           if (getEthOwnerSign.data.value) {
             const amountWithDecimals = Web3.utils.toBN(toswapAmount).mul(Web3.utils.toBN(100000000));
+            // tslint:disable-next-line: max-line-length
+            // need to get from the api:https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T
+            const gasPrice = Web3.utils.toWei('00002', 'ether');
             console.log('mintERC20.toswapAmount', toswapAmount);
             console.log('mintERC20.amountWithDecimals', amountWithDecimals);
             console.log('txid', txid);
@@ -849,7 +845,8 @@ export class CcswapComponent implements OnInit {
               amountWithDecimals,
               txid,
               getEthOwnerSign.data.value,
-              this.etheraccounts[0]
+              this.etheraccounts[0],
+              gasPrice
             );
             // tslint:disable-next-line: no-shadowed-variable
             const id = setInterval(async () => {
