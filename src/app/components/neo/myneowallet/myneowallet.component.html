@@ -235,44 +235,65 @@
           <div class="container">
 
             <div class="row qlc-table-header">
-              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-2 col-sm-3 col-3 text-sm-right text-xl-center text-lg-right text-md-center text-right pr-sm-4 pr-md-0 pr-lg-0 pr-4">TYPE</div>
-              <div class="text-color-lightgrey text-tiny">STATUS</div>
-              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-2 col-sm-3 col-3 text-sm-right text-xl-center text-lg-right text-md-center text-right pr-sm-4 pr-md-0 pr-lg-0 pr-4">SENDER</div>
-              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-2 col-sm-3 col-3 text-sm-right text-xl-center text-lg-right text-md-center text-right pr-sm-4 pr-md-0 pr-lg-0 pr-4">RECIPIENT</div>
-              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-2 col-sm-3 col-3 text-sm-right text-xl-center text-lg-right text-md-center text-right pr-sm-4 pr-md-0 pr-lg-0 pr-4">SWAPID</div>
-              <div class="text-color-lightgrey text-tiny">AMOUNT</div>
-              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-2 col-sm-3 col-3 text-sm-right text-xl-center text-lg-right text-md-center text-right pr-sm-4 pr-md-0 pr-lg-0 pr-4">TIME</div>
+              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">TYPE</div>
+              <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">STATUS</div>
+              <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SENDER</div>
+              <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">RECIPIENT</div>
+              <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SWAPID</div>
+              <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">AMOUNT</div>
+              <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-3 d-none d-md-block text-right pr-sm-4 pr-4">TIME</div>
             </div>
 
-            <div class="row qlc-table-row qlc-table-row closed row-anim-in" *ngFor="let history of swapHistory">
-              <div class="text-color-lightgrey text-tiny">
+            <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of swapHistory">
+              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
                 <span>
-                    <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
                     <span *ngIf="(history.state ==2 || history.state ==3)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
                 </span>
-              </div>
-              <div class="text-color-lightgrey text-tiny">
-                <span class="qlc-icon icon-{{ history.state }}" title="{{ history.state }}"></span>
-                <span class="d-none d-sm-none d-md-inline-block txState">
+                <span class="d-xl-none">
+                  <br>
+                  <br>
+                  Status: 
                   <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
                   <span *ngIf="(history.state ==0)" class="text-blue">Pending</span>
                   <span *ngIf="(history.state ==2)" class="text-color-red">Failed</span>
                 </span>
               </div>
-              <div class="text-color-lightgrey text-tiny">
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
-                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '11,10'}}</a>
-
+              <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">
+                <span>
+                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
+                  <span *ngIf="(history.state ==0)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==2)" class="text-color-red">Failed</span>
+                </span>
               </div>
-              <div class="text-color-lightgrey text-tiny">
+              <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
+                <span class="d-xl-none">Sender: </span>
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+
+                <span class="d-xl-none"><br>Recipient: </span>
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+
+                <span class="d-xl-none"><br>Swapid: </span>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
+                  {{history.neoTxHash | squeeze : '10,9'}}
+                </a>
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                  {{history.ethTxHash | squeeze : '10,9'}}
+                </a>
+                
+                <span class="d-md-none"><br>Time:<br class="d-sm-none"> {{ history.lastModifyTime | date: 'short' }}</span>
+              </div>
+              <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
                 <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '11,10'}}</a>
 
               </div>
-              <div class="text-color-lightgrey text-tiny">
+              <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
                   {{history.neoTxHash | squeeze : '11,10'}}
                 </a>
@@ -280,13 +301,15 @@
                   {{history.ethTxHash | squeeze : '11,10'}}
                 </a>
               </div>
-              <div class="text-color-lightgrey text-tiny">
-                <span class="{{
-                  (history.state == 0 || history.state ==1) ? 'text-color-red' : 'text-color-green'
-                }}" data-toggle="tooltip" data-placement="top" title="-">{{(history.state == 0 || history.state ==1) ? '-' : '+'}} {{ history.amount/100000000 }} QLC</span>
+              <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
+                <span [ngClass]="{
+                  'text-blue': history.state == 0,
+                  'text-color-green': (history.state ==1 || history.state ==3),
+                  'text-color-red': history.state == 2
+                }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
               </div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
-                <br><span>{{ history.lastModifyTime | date: 'short' }}</span>
+              <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">
+                <span>{{ history.lastModifyTime | date: 'short' }}</span>
               </div>
               <!-- <div class="container transaction-details">
 

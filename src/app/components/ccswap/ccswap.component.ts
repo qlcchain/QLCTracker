@@ -127,7 +127,7 @@ export class CcswapComponent implements OnInit {
 
   recoverErrorMsg = '';
 
-  stakingForm = new FormGroup({
+  public stakingForm = new FormGroup({
     stakingType: new FormControl('0'),
     fromNEOWallet: new FormControl('', Validators.required),
     toQLCWallet: new FormControl('', Validators.required),
