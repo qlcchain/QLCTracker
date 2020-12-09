@@ -270,6 +270,7 @@ export class CcswapComponent implements OnInit {
     // this.etherService.neoTransactionConfirmed('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     this.metamask = this.etherService.metamask;
     // get ether balance
+    this.etherService.getThreeGasPrice();
     this.getEtherAccounts();
     this.loadBalances();
     console.log('accounts', this.accounts);

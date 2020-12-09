@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 // import { testContract } from 'src/constants/abi/testContract';
 import { neo5toerc20swap } from 'src/constants/abi/neo5toerc20swap';
 import axios from 'axios';
+import { AnyARecord } from 'dns';
 @Injectable({
   providedIn: 'root'
 })
@@ -37,6 +38,27 @@ abi = neo5toerc20swap;
       return account;
     }
   }
+    // get erc20 account address
+    async getEthAccounts() {
+      // tslint:disable-next-line: new-parens
+      const account: any[] = await new this.web3.eth.getAccounts();
+      console.log('getEthAccounts.account', account);
+    }
+    // get erc20 account address
+    async getEthBalance(address: any) {
+      // tslint:disable-next-line: new-parens
+      const balance: any[] = await new this.web3.eth.getBalance(address);
+      console.log('getEthBalance.balance', balance);
+    }
+    // get erc20 three gasPrice
+    async getThreeGasPrice() {
+      // tslint:disable-next-line: new-parens
+      // tslint:disable-next-line: max-line-length
+      const getThreeGasPriceUrl = 'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T';
+      const data = await axios.get(getThreeGasPriceUrl);
+      console.log('getThreeGasPrice.data', data);
+      return data;
+    }
   // depost start method:post
   // deposit/neoTransactionConfirmed
   async neoTransactionConfirmed(txid: any) {
@@ -153,12 +175,12 @@ abi = neo5toerc20swap;
     }
 
     // info/swapInfosByAddress
-    async swapInfosByAddress(address: any, page: any, pagesize: any) {
+    async swapInfosByAddress(address: any, page: any, pageSize: any) {
       const data = await axios.get(this.url + '/info/swapInfosByAddress', {
       params: {
           address,
           page,
-          pagesize
+          pageSize
       },
       headers: {
         authorization: this.neo5toerc20swapjwtauth.authorization
