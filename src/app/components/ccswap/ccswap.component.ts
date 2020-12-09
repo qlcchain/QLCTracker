@@ -40,6 +40,9 @@ export class CcswapComponent implements OnInit {
   continueInvoke = 0;
   continueInvokePledge: any;
 
+  public neoTxHash = '';
+  public ethTxHash = '';
+
   sendingSecurityCode = 0;
 
   confidantConfirmed = 0;
@@ -292,6 +295,8 @@ export class CcswapComponent implements OnInit {
   // back to swap
   backtoswap() {
     this.step = 1;
+    this.ethTxHash = '';
+    this.neoTxHash = '';
   }
 
   async continueUndoneTransaction(txhash?: any) {
@@ -336,7 +341,7 @@ export class CcswapComponent implements OnInit {
             clearInterval(id);
             this.invokeSteps.push({
               msg:
-                'Mint ERC20 TOKEN succesfully,the whole process successfully ',
+                'Mint ERC20 TOKEN succesfull, the whole process successfull',
               checkimg: 1,
             });
             this.step = 4;
@@ -709,7 +714,7 @@ export class CcswapComponent implements OnInit {
           );
           console.log('sendNeoTransaction', sendNeoTransaction);
           this.invokeSteps.push({
-            msg: 'TXID received. Preparing confirmed.',
+            msg: 'TXID received. Waiting for confirmation.',
             checkimg: 1,
           });
           if (sendNeoTransaction.data.value) {
@@ -787,15 +792,17 @@ export class CcswapComponent implements OnInit {
     const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
       localStorage.getItem('txHash')
     );
+    this.ethTxHash = localStorage.getItem('txHash');
     // tslint:disable-next-line: triple-equals
     console.log('swapInfoByTxHash.data.state', swapInfoByTxHash.data.state);
     if (swapInfoByTxHash.data.state == 3) {
       console.log('result', burnERC20Token);
       console.log('cleardInterval.id', id);
+      this.neoTxHash = swapInfoByTxHash?.data?.neoTxHash;
       clearInterval(id);
 
       this.invokeSteps.push({
-        msg: 'The whole process successfully ',
+        msg: 'Swap successfull',
         checkimg: 1,
       });
       const waitTimer = timer(10000).subscribe( async (data) => {
@@ -813,6 +820,8 @@ export class CcswapComponent implements OnInit {
       return this.notifications.sendWarning('ERROR wallet locked');
     }
     const txid = txData.txHash;
+    
+    this.neoTxHash = txid;
     if (txid) {
       const id = setInterval(async () => {
         const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(txid);
@@ -857,6 +866,7 @@ export class CcswapComponent implements OnInit {
               this.etheraccounts[0],
               gasPrice
             );
+            console.log('ethMint', ethMint)
             // tslint:disable-next-line: no-shadowed-variable
             const id = setInterval(async () => {
               // tslint:disable-next-line: no-shadowed-variable
@@ -866,10 +876,11 @@ export class CcswapComponent implements OnInit {
               // tslint:disable-next-line: triple-equals
               if (swapInfoByTxHash.data.state == 1) {
                 console.log('cleardInterval.id', id);
+                this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
                 clearInterval(id);
                 this.invokeSteps.push({
                   msg:
-                    'Mint ERC20 TOKEN succesfully,the whole process successfully ',
+                    'Mint ERC20 TOKEN succesfull, the whole process is successfull.',
                   checkimg: 1,
                 });
                 this.step = 4;

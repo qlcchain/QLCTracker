@@ -492,7 +492,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                             <!-- TITLE -->
                             <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
                                 <div class="content-title">
-                                    <h1>Invoking in progress</h1>
+                                    <h1>Swapping</h1>
                                 </div>
                             </div>
                         </div>
@@ -500,63 +500,39 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             </div>
         </div>
   </div>
-  
 
-  <div class="container accounts">
-        <div class="row">
-
-            <!-- INFO -->
-            <div class="col-12 pb-3">
-                    <div class="container pl-0 pr-0">
-                        <div class="row pl-0 pr-0">
-
-
-                        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
-                            <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
-
-                <h3>Please wait</h3>
-                <h5 class="pt-3">The invoking process can take up to a couple of minutes.</h5>
-
-                <div class="container">
-                  <div class="row">
-                    <div class="col-md-6 offset-md-3 mt-5 mb-5">
-
-                      <div id="noTrespassingOuterBarG">
-                        <div id="noTrespassingFrontBarG" class="noTrespassingAnimationG">
-                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
-                          <div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div><div class="noTrespassingBarLineG"></div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-
+  <div class="container">
+    <div class="row confirmTransaction">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-white h-auto pb-5">
+          <div class="container mb-3">
+            <div class="row align-items-center fromText pt-5">
+              <div class="col-12 text-label">PLEASE WAIT, THIS MAY TAKE SEVERAL MINUTES</div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                <img src="assets/img/Loader.svg" style="height: 50px; margin: 25px 0 25px 0;">
+              </div>
+            </div>
+            <div class="row align-items-center">
+              
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
                 <p style="color:#c10f0f;" class="pb-3"><strong>Important:</strong> Don't leave or close this page!</p>
-
-                <p class="pt-0 pb-0" *ngFor="let step of invokeSteps"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
-
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-      </div>
-      
-
-
+              </div>
+              <div class="col-12 text-center" *ngFor="let step of invokeSteps">
+                <p class="pt-0 pb-0"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>		
-
-
-
+      </div>
+    </div>
+  </div>
 </div>
 <!-- completed -->
 <div class="stake-screen-1" *ngIf="step == 4">
-
-
-
     <!-- COMPLETE -->
     <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
         <div class="row">
@@ -566,7 +542,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                             <!-- TITLE -->
                             <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
                                 <div class="content-title">
-                                    <h1>Invoking complete</h1>
+                                    <h1>Swap successful</h1>
                                 </div>
                             </div>
                         </div>
@@ -574,65 +550,58 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             </div>
         </div>
   </div>
+  <div class="container">
+    <div class="row confirmTransaction">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-white h-auto pb-5">
+          <div class="container mb-3">
+            <div class="row align-items-center fromText pt-5">
+              <div class="col-12 text-label">YOU HAVE SWAPPED</div>
+            </div>
+            <div class="row align-items-center ">
+              <div class="col-12 sum">
+                <span>{{ stakingForm.value.amounToStake | currency:'':'':'1.2-8'}} QLC</span>
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                <img src="assets/img/swap/qlc-icon-check-success.svg" style="height: 50px; margin: 25px 0 25px 0;">
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center text-label">
+                NEO TRANSACTION HASH
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                {{ neoTxHash }}
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center text-label">
+                ETH TRANSACTION HASH
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                {{ ethTxHash }}
+              </div>
+            </div>
+            
   
-
-  <div class="container accounts">
-        <div class="row">
-
-            <!-- INFO -->
-            <div class="col-12 pb-3">
-                    <div class="container pl-0 pr-0">
-                        <div class="row pl-0 pr-0">
-
-
-                        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
-                            <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
-
-                <h3>Woohoo!</h3>
-                <h5 class="pt-3">The invoking of your swap was successful.</h5>
-
-                <div class="container">
-                  <div class="row">
-                    <div class="col-md-6 offset-md-3 mt-5 mb-5">
-
-                      <img src="assets/img/qlc-icon-staking-success-green.svg" style="height:128px;width:128px;">
-
-                    </div>
-                  </div>
-                </div>
-
-                <div class="container">
-                    <div class="row">
-                      <div class="col-md-4 offset-md-4 mb-4">
-  
-                        <button type="submit" class="btn btn-primary" style="min-width:100%;" (click)="backtoswap()" >
-                          BACK TO MY SWAP
-                        </button>
-
-                       <!--  <button type="submit" class="btn btn-primary mt-3" style="min-width:100%;" (click)="invokeNewStaking()">
-                          INVOKE A NEW SWAP
-                        </button> -->
-
-                      </div>
-                    </div>
-                  </div>
-
-                
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-      </div>
-      
-
-
+            <div class="row align-items-center justify-content-center rowDefault rowButtons pl-4 pr-4 mt-5">
+              <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-2">
+                <button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="backtoswap()">
+                  CONTINUE
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>		
-
-
-
+      </div>
+    </div>
+  </div>
 </div>
 
 
