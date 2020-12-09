@@ -841,7 +841,7 @@ export class CcswapComponent implements OnInit {
             const amountWithDecimals = Web3.utils.toBN(toswapAmount).mul(Web3.utils.toBN(100000000));
             // tslint:disable-next-line: max-line-length
             // need to get from the api:https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T
-            const gasPrice = Web3.utils.toWei('0.000002', 'ether');
+            const gasPrice = Web3.utils.toWei('31', 'gwei');
             console.log('mintERC20.toswapAmount', toswapAmount);
             console.log('mintERC20.amountWithDecimals', amountWithDecimals);
             console.log('txid', txid);
