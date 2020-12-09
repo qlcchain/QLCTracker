@@ -63,8 +63,8 @@
           </button>
         </div>
         <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
-          <button type="submit" (click)="this.getUndownTransactions(this.neowallets[0].id)"  class="btn btn-primary content-header float-right w-100 pl-0 pr-0 ">
-            Swap Transactions
+          <button type="submit"  class="btn btn-primary content-header float-right w-100 pl-0 pr-0 " routerLink="/wallets">
+            Back to my Wallets
           </button>
         </div>
       </div>
@@ -363,7 +363,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                             <!-- TITLE -->
                             <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
                                 <div class="content-title">
-                                    <h1>Swap</h1>
+                                    <h1>Confirm Swap</h1>
                                 </div>
                             </div>
                             <!-- to do  -->
@@ -377,110 +377,106 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             </div>
         </div>
   </div>
-  
 
-  <div class="container accounts">
-        <div class="row">
+  <div class="container">
+    <div class="row confirmTransaction">
 
-            <!-- STAKING A -->
-            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3">
-                    <div class="container pl-0 pr-0">
-                        <div class="row pl-0 pr-0">
-
-
-                        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
-                            <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
-
-                                <div class="container ml-1 pr-3 pl-3">
-
-                                    <div class="row defaultTable sendTokens">
-                                        <div class="col-12">
-
-                      <div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
-                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                          SWAP TYPE
-                        </div>
-                        <div class="col-md-9 text-left pb-3">
-                          {{ stakingTypes[stakingForm.value.stakingType].name }}
-                        </div>
-                      </div>
-
-                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                          SWAP FROM
-                        </div>
-                        <div class="col-md-9 pb-3 text-left">
-                          {{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0] }}
-                        </div>
-                      </div>
+      <!-- ADDRESS -->
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-white h-auto pb-5">
+          <div class="container mb-3">
 
 
-                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                          SWAP TO
-                        </div>
-                        <div class="col-md-9 pb-3 text-left">
-                          {{this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value }}
-                        </div>
-                      </div>
-
-
-                      <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
-                        <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-10px;">
-                          AMOUNT TO SWAP
-                        </div>
-                        <div class="col-md-9 pb-3 text-left">
-                          {{ stakingForm.value.amounToStake}} QLC
-                        </div>
-                      </div>
-  
-                
-
-                      <div class="review-confidant" *ngIf="this.stakingForm.value.stakingType == 1">
-
-
-                      </div>
-
-                      <div class="review-mintage" *ngIf="this.stakingForm.value.stakingType == 2">
-
-                      
-
-                      </div>
-
-                      
-                                            <div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
-                                                <div class="col-md-3"></div>
-                                                <div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
-                                                    <button (click)="confirmInvoke()" type="submit" class="btn btn-primary" style="min-width:100%;">
-                                                        CONFIRM AND INVOKE NOW
-                                                    </button>
-                                                </div>
-                                            </div>
-                    </div>
-                    
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
+                <div class="row align-items-center fromText pt-5">
+                  <div class="col-12 text-label">You are about to swap</div>
                 </div>
-      </div>
+                <div class="row align-items-center ">
+                  <div class="col-12 sum">
+                    <span>{{ stakingForm.value.amounToStake | currency:'':'':'1.0-8'}} QLC</span>
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                </div>
+                <div class="row transfer">
+                  <div class="col-lg-6 text-center pt-4 pb-4">
+                    <div class="text-label pb-2">FROM ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'NEP5' : 'ERC20' }})</div>
+                    <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
+                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0])" class="text-blue">
+                        <span class="d-none d-xl-block">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
+                        </span>
+                        <span class="d-none d-lg-block d-xl-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '12,12' }}
+                        </span>
+                        <span class="d-none d-md-block d-lg-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '20,20' }}
+                        </span>
+                        <span class="d-none d-sm-block d-md-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
+                        </span>
+                        <span class="d-block d-sm-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '12,12' }}
+                        </span>
+                      </a>
+                    </div>
+                    <div class="pl-5 pr-5 pb-4">
+                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0])" class="address">{{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0] }}</a>
+                    </div>
+                    <div class="pt-2 text-bold negative_change text-color-red">-{{ stakingForm.value.amounToStake | currency:'':'':'1.0-8' }} QLC</div>
+                    <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO LOCK' : 'AMOUNT TO BURN' }}</div>
+                  </div>
+                  <div class="col-lg-6 text-center pt-4 pb-4">
+                    <div class="text-label pb-2">TO ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'ERC20' : 'NEP5' }})</div>
+                    <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
+                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value)" class="text-blue">
+                        <span class="d-none d-xl-block">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '15,15' }}
+                        </span>
+                        <span class="d-none d-lg-block d-xl-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '12,12' }}
+                        </span>
+                        <span class="d-none d-md-block d-lg-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '20,20' }}
+                        </span>
+                        <span class="d-none d-sm-block d-md-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '15,15' }}
+                        </span>
+                        <span class="d-block d-sm-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '12,12' }}
+                        </span>
+                      </a>
+                    </div>
+                    <div class="pl-5 pr-5 pb-4">
+                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value)" class="address">{{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) }}</a>
+                    </div>
+                    <div class="pt-2 text-bold positive_change text-color-green">+{{ stakingForm.value.amounToStake | currency:'':'':'1.0-8' }} QLC</div>
+                    <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO MINT' : 'AMOUNT TO UNLOCK' }}</div>
+                  </div>
+                </div>
       
+                <div class="row align-items-center justify-content-center rowDefault rowButtons pl-4 pr-4">
+                  <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 pr-sm-2 text-left text-truncate mobile-break mb-2">
+                    <button type="submit" class="btn-primary btn-red btn-danger w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="step = 1">
+                      {{ 'CANCEL' | translate }}
+                    </button>
+                  </div>
+                  <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-2">
+                    <button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="confirmInvoke()">
+                      CONFIRM & SWAP
+                    </button>
+                  </div>
+                </div>
 
-      
-            <!-- EXPLAINER -->
-            
 
 
+
+          
+          
+          </div>
         </div>
-  </div>		
-  
-
-
-
+      </div>
+    </div>
+  </div>
 </div>
 <!-- start swap -->
 <div class="stake-screen-1"  *ngIf='step == 3'>
