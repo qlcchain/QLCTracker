@@ -45,35 +45,35 @@
  <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && this.metamask'>
 
 <!-- SEND FORM -->
-<div class="container mt-0 qlc-content-first pb-0 mb-0">
-  <div class="row pb-0 mb-0">
-      <div class="col-12 pl-0 pr-0 pb-0">
-          <div class="container">
-                  <div class="row">
-                      <!-- TITLE -->
-                      <div class="col-md-6 col-12 mt-2 pl-md-2 pr-md-2">
-                          <div class="content-title">
-                              <h1>Swap QLC Tokens</h1>
-                          </div>
-                      </div>
-                      <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
-                        <button type="submit" (click)="recover = !recover" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
-                          Undone Transactions
-                        </button>
-                      </div>
-                      <!-- <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-3 pr-3 pb-3">
-                        <button type="submit" (click)="this.getUndownTransactions(this.neowallets[0].id)" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 mr-xl-2 mr-lg-4 mr-md-5 ml-0 w-100" >
-                          Swap Transactions
-                        </button>
-                      </div> -->
-                  </div>
-              </div>
+<div class="row">
+  <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+    <div class="container">
+      <div class="row">
+        <!-- TITLE -->
+        <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
+          <div class="content-title">
+            <h1 class="neo" *ngIf="recover != 1">Swap QLC Tokens</h1>
+            <h1 class="neo" *ngIf="recover == 1">Swap QLC Tokens - Recover</h1>
+          </div>
+        </div>
+        <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-2 pr-2">
+          <button type="submit" (click)="recover = !recover" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background-light">
+            <span *ngIf="recover != 1">Recover Transactions</span>
+            <span *ngIf="recover == 1">Back to swap</span>
+          </button>
+        </div>
+        <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+          <button type="submit" (click)="this.getUndownTransactions(this.neowallets[0].id)"  class="btn btn-primary content-header float-right w-100 pl-0 pr-0 ">
+            Swap Transactions
+          </button>
+        </div>
       </div>
+    </div>
   </div>
 </div>
 
 
-<div class="container accounts">
+<div class="container accounts" *ngIf="recover == 1">
 <div class="row">
 
   <!-- FORM -->
@@ -82,7 +82,7 @@
         <div class="row pl-0 pr-0">
 
 
-        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4 ng-invalid-ignore" [formGroup]="recoverForm" *ngIf="recover == 1">
+        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4 ng-invalid-ignore" [formGroup]="recoverForm">
           <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
 
               <div class="row pt-1 mt-4 pl-4 pr-4">
@@ -137,24 +137,44 @@
 
 
 <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+  <div class="row mt-2 mb-3">
+    <div class="col-6 pr-2" (click)="stakingForm.get('stakingType').setValue(0);selectAccount()">
+        <div class="content-box-white swap-type" [ngClass]="{'selected': stakingForm.value.stakingType == 0, 'unselected': stakingForm.value.stakingType != 0}">
+          <div class="row">
+            <div class="col-6">
+              <img src="assets/img/swap/token-qlc-nep5.png" style="height: 35px; margin: 20px 10px 20px 30px;">
+              NEP5 QLC
+            </div>
+            <div class="col-6 text-right">
+              ERC20 QLC
+              <img src="assets/img/swap/token-qlc-erc20.png" style="height: 35px; margin: 20px 30px 20px 10px;">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="col-6 pl-2" (click)="stakingForm.get('stakingType').setValue(2);selectAccount()">
+      <div class="content-box-white swap-type" [ngClass]="{'selected': stakingForm.value.stakingType == 2, 'unselected': stakingForm.value.stakingType != 2}">
+        <div class="row">
+          <div class="col-6">
+            <img src="assets/img/swap/token-qlc-erc20.png" style="height: 35px; margin: 20px 10px 20px 30px;">
+            ERC20 QLC
+          </div>
+          <div class="col-6 text-right">
+            NEP5 QLC
+            <img src="assets/img/swap/token-qlc-nep5.png" style="height: 35px; margin: 20px 30px 20px 10px;">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
 
 <div class="container ml-1 pr-3 pl-3">
-
 <div class="row defaultTable sendTokens">
 <div class="col-12">
 
-<div class="row pt-0" style="border-bottom: 1px solid #edeef4;">
-<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2" style="margin-top:-14px;">
-SWAP TYPE
-</div>
-<div class="col-md-9 text-left">
-<div class="form-group">
-<input type="radio" name="stakingType" (change)="selectAccount()" formControlName="stakingType" value="0" id="s1"><label for="s1" style="padding-left:10px;padding-right:30px;"> NEP5 -> ERC20</label>
-<input type="radio" name="stakingType" (change)="selectAccount()" formControlName="stakingType" value="2" id="s3" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"><label for="s3" style="padding-left:10px;padding-right:30px;" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1 && stakingForm.value.amounToStake >= stakingTypes[2].minAmount)"> ERC20 -> NEP5</label>
-</div>
-</div>
-</div>
 <div>
     <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
       <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
@@ -303,6 +323,29 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
 </div>
 </div>      -->
 </div>
+
+			<!-- EXPLAINER -->
+			<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+				<div class="content-box-blue h-100 pb-3">
+					<div class="container">
+
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">NEP5 TO ERC20 TOKEN SWAP</div>
+            </div>
+            <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
+              <p>
+                <span style="line-height: 2.1em; display: inline-block;">Nep5 QLC holders can throught the cross-chain swap function convert 1:1 to ERC20 QLC, users can also operate in the reverse direction. </span><br>
+                <span style="line-height: 2.1em; color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Amount:</span> 1 QLC<br>
+                <span style="line-height: 2.1em; color:#7ca7e5;margin-top:4px;display:inline-block;">Ratio:</span> 1:1<br>
+              </p>
+              <p>
+                <a href="" target="_blank" style="text-decoration: underline; font-weight: 400;">Learn more on GitHub</a>
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 </div>		          
 </div>

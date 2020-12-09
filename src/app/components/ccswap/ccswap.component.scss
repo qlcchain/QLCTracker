@@ -3,6 +3,22 @@
     padding: initial;
 }
 
+.swap-type {
+	background: #ffffff url('../../../assets/img/qlc-icon-arrow-transaction-right-grey.svg') no-repeat center center;
+	background-size: 24px 96px;
+	border-top: 0;
+	cursor: pointer;
+}
+
+.selected {
+	background-color: #2069c2;
+	color: #ffffff;
+}
+
+.unselected {
+	opacity: 0.30;
+}
+
 .custom-select {
 	display: inline-block;
 	width: 100%;
