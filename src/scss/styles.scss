@@ -735,6 +735,10 @@ div[class*="col-"] a:hover {
     background: #2069c2 url("../assets/img/bg_box_user_mining.png") no-repeat right top;
     background-size: auto;
 }
+.bg-blue-submenu-swap {
+    background: #2069c2  url('../assets/img/swap/bg_box_user_swap.png') no-repeat right top;
+    background-size: auto;
+}
 .bg-blue-mining-sub {
     background: #2069c2 url("../assets/img/bg_box_user_mining.png") no-repeat right top;
     background-size: auto 145%;
@@ -796,7 +800,7 @@ div[class*="col-"] a:hover {
     font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
     background: none;
     color: #ffffff;
-    font-size: 32px;
+    font-size: 22px;
     font-weight: 500;
     letter-spacing: 0px;
 }
