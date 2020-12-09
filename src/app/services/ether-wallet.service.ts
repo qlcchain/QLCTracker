@@ -28,6 +28,13 @@ abi = neo5toerc20swap;
       this.metamask = false;
     }
   }
+
+  // get erc20 three gasPrices
+  async getThreeGasPrices() {
+    const prices = await axios.get('https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T')
+    return prices
+  }
+
   // get erc20 account address
   async getAccounts() {
     // tslint:disable-next-line: new-parens
