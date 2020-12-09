@@ -453,6 +453,46 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                     <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO MINT' : 'AMOUNT TO UNLOCK' }}</div>
                   </div>
                 </div>
+                
+                <div class="row align-items-center ">
+                  <div class="col-12 sum">
+                  </div>
+                </div>
+
+                <div class="row align-items-center fromText">
+                  <div class="col-12 text-label">GAS PRICE</div>
+                </div>
+
+                <div class="row justify-content-center mt-2">
+                  <div (click)="selectedGasPrice = 'SafeGasPrice'" class="col-2 py-2" [ngClass]="{
+                    'gas-not-selected': selectedGasPrice != 'SafeGasPrice',
+                    'gas-selected': selectedGasPrice == 'SafeGasPrice'
+                  }">
+                    SLOW<br>
+                    <span style="color: #000000">{{gasPrices.SafeGasPrice}} WEI</span>
+                  
+                  </div>
+                  <div (click)="selectedGasPrice = 'ProposeGasPrice'" class="col-2 mx-2 py-2" [ngClass]="{
+                    'gas-not-selected': selectedGasPrice != 'ProposeGasPrice',
+                    'gas-selected': selectedGasPrice == 'ProposeGasPrice'
+                  }">
+                    AVERAGE<br>
+                    <span style="color: #000000">{{gasPrices.ProposeGasPrice}} WEI</span>
+                  </div>
+                  <div (click)="selectedGasPrice = 'FastGasPrice'" class="col-2 py-2" [ngClass]="{
+                    'gas-not-selected': selectedGasPrice != 'FastGasPrice',
+                    'gas-selected': selectedGasPrice == 'FastGasPrice'
+                  }">
+                    FAST<br>
+                    <span style="color: #000000">{{gasPrices.FastGasPrice}} WEI</span>
+                
+                  </div>
+                </div>
+                
+                <div class="row align-items-center ">
+                  <div class="col-12 sum">
+                  </div>
+                </div>
       
                 <div class="row align-items-center justify-content-center rowDefault rowButtons pl-4 pr-4">
                   <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 pr-sm-2 text-left text-truncate mobile-break mb-2">

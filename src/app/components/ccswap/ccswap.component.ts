@@ -42,6 +42,14 @@ export class CcswapComponent implements OnInit {
 
   public neoTxHash = '';
   public ethTxHash = '';
+  public gasPrices = {
+    'FastGasPrice': '0',
+    'LastBlock': '0',
+    'ProposeGasPrice': '0',
+    'SafeGasPrice': '0'
+  };
+
+  public selectedGasPrice = 'ProposeGasPrice';
 
   sendingSecurityCode = 0;
 
@@ -368,7 +376,14 @@ export class CcswapComponent implements OnInit {
   async checkForm() {
     // const burnEth = await this.burnERC20Token();
     // console.log('burnEth', burnEth);
+    const threeGasPrices = await this.etherService.getThreeGasPrices();
+    console.log(threeGasPrices);
+    this.gasPrices = threeGasPrices?.data?.result;
+    //this.selectedGasPrice = Web3.utils.toWei(this.gasPrices.ProposeGasPrice, 'Gwei');
     this.markFormGroupTouched(this.stakingForm);
+    if (parseInt(this.stakingForm.value.amounToStake) < 1) {
+      return this.notifications.sendWarning('1 QLC Minimum');;
+    }
     if (this.stakingForm.value.stakingType == 0) {
       if (
         // tslint:disable-next-line: triple-equals
@@ -399,9 +414,8 @@ export class CcswapComponent implements OnInit {
         console.log('Not enough balance');
       }
     }
+    
     if (this.stakingForm.status == 'VALID') {
-      this.step = 2;
-      window.scrollTo(0, 0);
     }
   }
 
@@ -784,7 +798,8 @@ export class CcswapComponent implements OnInit {
     const burnERC20Token = await this.etherService.getEthBurn(
       neo5Address,
       amountWithDecimals,
-      account
+      account,
+      Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei')
     );
     const id = setInterval(async () => {
     console.log('burnERC20Token', burnERC20Token);
@@ -850,7 +865,6 @@ export class CcswapComponent implements OnInit {
             const amountWithDecimals = Web3.utils.toBN(toswapAmount).mul(Web3.utils.toBN(100000000));
             // tslint:disable-next-line: max-line-length
             // need to get from the api:https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T
-            const gasPrice = Web3.utils.toWei('0.000002', 'ether');
             console.log('mintERC20.toswapAmount', toswapAmount);
             console.log('mintERC20.amountWithDecimals', amountWithDecimals);
             console.log('txid', txid);
@@ -864,7 +878,7 @@ export class CcswapComponent implements OnInit {
               txid,
               getEthOwnerSign.data.value,
               this.etheraccounts[0],
-              gasPrice
+              Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei')
             );
             console.log('ethMint', ethMint)
             // tslint:disable-next-line: no-shadowed-variable

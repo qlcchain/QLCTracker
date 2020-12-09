@@ -253,3 +253,15 @@
 	color: #2069c2;
 	font-size: 20px;
 }
+
+.gas-selected {
+	border: 1px #2069c2 solid;
+	color: #2069c2;
+	cursor: pointer;
+}
+
+.gas-not-selected {
+	border: 1px #CDCCCC solid;
+	color: #CDCCCC;
+	cursor: pointer;
+}
