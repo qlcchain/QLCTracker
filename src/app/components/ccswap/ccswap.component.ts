@@ -519,25 +519,34 @@ export class CcswapComponent implements OnInit {
     // this.loadBalances();
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
+      if (this.stakingForm.value.fromNEOWallet == '') {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
         }
+      }
+      if (this.stakingForm.value.toQLCWallet == '') {
         console.log('etheraccount', this.etheraccounts[0]);
         if (this.etheraccounts[0] != undefined) {
+          this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
           console.log('etheraccountagain', this.etheraccounts[0]);
           console.log('localstorage.getitem.etheraccount', localStorage.getItem('etheraccount'));
           this.stakingForm.get('toQLCWallet').setValue(localStorage.getItem('etheraccount'));
         }
+      }
     }
-
     // withdraw
     if (this.stakingForm.value.stakingType == 2) {
+      if (this.stakingForm.value.fromNEOWallet == '') {
         if (this.etheraccounts[0] != undefined) {
+          this.stakingForm.get('fromNEOWallet').setValue(this.etheraccounts[0]);
           this.stakingForm.get('fromNEOWallet').setValue(localStorage.getItem('etheraccount'));
         }
+      }
+      if (this.stakingForm.value.toQLCWallet == '') {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
         }
+      }
     }
     // tslint:disable-next-line: member-ordering
     const selectedNEOWallet = this.neowallets.find (
@@ -832,7 +841,7 @@ export class CcswapComponent implements OnInit {
             const amountWithDecimals = Web3.utils.toBN(toswapAmount).mul(Web3.utils.toBN(100000000));
             // tslint:disable-next-line: max-line-length
             // need to get from the api:https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T
-            const gasPrice = Web3.utils.toWei('00002', 'ether');
+            const gasPrice = Web3.utils.toWei('0.000002', 'ether');
             console.log('mintERC20.toswapAmount', toswapAmount);
             console.log('mintERC20.amountWithDecimals', amountWithDecimals);
             console.log('txid', txid);
