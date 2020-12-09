@@ -224,11 +224,12 @@ abi = neo5toerc20swap;
     console.log('getEthMint.nep5Hash', nep5Hash);
     console.log('getEthMint.signature', signature);
     console.log('getEthMint.account', account);
-    Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).send({
+    return await Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).send({
         from: account,
         gasPrice
     }).then(result => {
       console.log('result', result);
+      return result;
     });
  }
  // burn erc20 token
@@ -237,7 +238,7 @@ abi = neo5toerc20swap;
   console.log('getEthBurn.amount', amount);
   console.log('getEthBurn.nep5Hash', nep5Address);
   console.log('account', account);
-  Contract.methods.burn(nep5Address, amount).send({
+  return await Contract.methods.burn(nep5Address, amount).send({
       from: account,
       gasPrice
   }).then(result => {
