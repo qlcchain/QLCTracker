@@ -29,6 +29,7 @@ const nacl = window['nacl'];
   styleUrls: ['./ccswap.component.scss'],
 })
 export class CcswapComponent implements OnInit {
+  ethbalance: any;
   transactions: any[] = [];
   etherqlcbalance: any;
   step = 1;
@@ -43,10 +44,10 @@ export class CcswapComponent implements OnInit {
   public neoTxHash = '';
   public ethTxHash = '';
   public gasPrices = {
-    'FastGasPrice': '0',
-    'LastBlock': '0',
-    'ProposeGasPrice': '0',
-    'SafeGasPrice': '0'
+    FastGasPrice: '61',
+    LastBlock: '0',
+    ProposeGasPrice: '32',
+    SafeGasPrice: '23'
   };
 
   public selectedGasPrice = 'ProposeGasPrice';
@@ -280,6 +281,7 @@ export class CcswapComponent implements OnInit {
     // this.etherService.swapInfoByTxHash('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     // this.etherService.neoTransactionConfirmed('4cba62c0c572f3ddf9dc071a3e15233cdd0ad10e3bba035daf4afbd2e68491d2');
     this.metamask = this.etherService.metamask;
+    // tslint:disable-next-line: radix
     // get ether balance
     this.getEtherAccounts();
     this.loadBalances();
@@ -293,6 +295,8 @@ export class CcswapComponent implements OnInit {
     console.log('getEtherAccounts.accounts', accounts);
     this.etheraccounts = accounts;
     console.log('this.etheraccounts', this.etheraccounts);
+    this.ethbalance = await this.etherService.getEthBalance(accounts[0]);
+    console.log('ethbalance', this.ethbalance);
     const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
     console.log('getEtherAccounts.etherqlcbalance', etherqlcbalance);
     this.etherqlcbalance = etherqlcbalance;
@@ -357,6 +361,29 @@ export class CcswapComponent implements OnInit {
           }
         }, 5000);
       }
+    } else if (swapInfoByTxHash.data.state == 4) {
+      // only when state == 4 to call EthTransactionConfirmed to recover withdraw
+      const getEthOwnerSign: any = await this.etherService.ethTransactionConfirmed(txid);
+      if(getEthOwnerSign.value) {
+        const id = setInterval(async () => {
+          // tslint:disable-next-line: no-shadowed-variable
+          const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
+            txid,
+          );
+          // tslint:disable-next-line: triple-equals
+          if (swapInfoByTxHash.data.state == 3) {
+            console.log('cleardInterval.id', id);
+            clearInterval(id);
+            this.invokeSteps.push({
+              msg:
+                'the whole process successfull',
+              checkimg: 1,
+            });
+            this.step = 4;
+            window.scrollTo(0, 0);
+          }
+        }, 5000);
+      }
     } else {
       this.recoverSteps.push({ msg: 'ERROR - TXID not found'});
       return;
@@ -376,14 +403,18 @@ export class CcswapComponent implements OnInit {
   async checkForm() {
     // const burnEth = await this.burnERC20Token();
     // console.log('burnEth', burnEth);
-    const threeGasPrices = await this.etherService.getThreeGasPrices();
-    console.log(threeGasPrices);
-    this.gasPrices = threeGasPrices?.data?.result;
-    //this.selectedGasPrice = Web3.utils.toWei(this.gasPrices.ProposeGasPrice, 'Gwei');
-    this.markFormGroupTouched(this.stakingForm);
-    if (parseInt(this.stakingForm.value.amounToStake) < 1) {
-      return this.notifications.sendWarning('1 QLC Minimum');;
+    const threeGasPrices = await this.etherService.getThreeGasPrice();
+    if (threeGasPrices?.data?.result) {
+      console.log(threeGasPrices);
+      this.gasPrices = threeGasPrices?.data?.result;
     }
+    this.selectedGasPrice = Web3.utils.toWei(this.gasPrices.ProposeGasPrice, 'Gwei');
+    this.markFormGroupTouched(this.stakingForm);
+    // tslint:disable-next-line: radix
+    if (parseInt(this.stakingForm.value.amounToStake) < 1) {
+      return this.notifications.sendWarning('1 QLC Minimum');
+    }
+    // tslint:disable-next-line: radix
     if (this.stakingForm.value.stakingType == 0) {
       if (
         // tslint:disable-next-line: triple-equals
@@ -676,6 +707,10 @@ export class CcswapComponent implements OnInit {
       this.stakingForm.value.toQLCWallet
     );
     console.log('confirmInvoke.walletAccount', walletAccount);
+    // tslint:disable-next-line: radix
+    if (parseInt(this.ethbalance) < parseInt(Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei').toString())) {
+      return this.notifications.sendWarning('Your eth wallet balance is insufficient');
+    }
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning('ERROR wallet locked');
     }
@@ -865,10 +900,6 @@ export class CcswapComponent implements OnInit {
             const amountWithDecimals = Web3.utils.toBN(toswapAmount).mul(Web3.utils.toBN(100000000));
             // tslint:disable-next-line: max-line-length
             // need to get from the api:https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T
-<<<<<<< HEAD
-            const gasPrice = Web3.utils.toWei('31', 'gwei');
-=======
->>>>>>> origin/swap-style
             console.log('mintERC20.toswapAmount', toswapAmount);
             console.log('mintERC20.amountWithDecimals', amountWithDecimals);
             console.log('txid', txid);

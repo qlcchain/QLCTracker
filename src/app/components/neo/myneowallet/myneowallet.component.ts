@@ -183,7 +183,7 @@ export class MyneowalletComponent implements OnInit {
     const swaptransactions: any = await this.etherService.swapInfosByAddress(
       this.walletId,
       1,
-      3
+      20
     );
     this.swapHistory = swaptransactions.data.infos;
     console.log('swapHistory', this.swapHistory);

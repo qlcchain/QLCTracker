@@ -28,43 +28,46 @@ abi = neo5toerc20swap;
       this.metamask = false;
     }
   }
-
-  // get erc20 three gasPrices
-  async getThreeGasPrices() {
-    const prices = await axios.get('https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T')
-    return prices
-  }
-
   // get erc20 account address
   async getAccounts() {
     // tslint:disable-next-line: new-parens
-    const account: any[] = await new this.web3.eth.getAccounts;
-    console.log('getAccounts.account', account);
-    if (account) {
-      localStorage.setItem('etheraccount', account[0]);
-      return account;
-    }
+    return await new this.web3.eth.getAccounts().then(account => {
+      console.log('ether-wallet.service.getAccounts.account', account);
+      if (account) {
+        localStorage.setItem('etheraccount', account[0]);
+        return account;
+      }
+     }).catch(err =>{
+       return err;
+     });
   }
     // get erc20 account address
     async getEthAccounts() {
       // tslint:disable-next-line: new-parens
-      const account: any[] = await new this.web3.eth.getAccounts();
-      console.log('getEthAccounts.account', account);
+      return await new this.web3.eth.getAccounts().then(account => {
+        console.log('ether-wallet.service.getEthAccounts.account', account);
+        return account;
+      });
     }
     // get erc20 account address
     async getEthBalance(address: any) {
       // tslint:disable-next-line: new-parens
-      const balance: any[] = await new this.web3.eth.getBalance(address);
-      console.log('getEthBalance.balance', balance);
+      return await new this.web3.eth.getBalance(address).then(balance =>{
+        console.log('ether-wallet.service.getEthBalance.balance', balance);
+        return balance;
+      });
     }
     // get erc20 three gasPrice
     async getThreeGasPrice() {
       // tslint:disable-next-line: new-parens
       // tslint:disable-next-line: max-line-length
       const getThreeGasPriceUrl = 'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T';
-      const data = await axios.get(getThreeGasPriceUrl);
-      console.log('getThreeGasPrice.data', data);
-      return data;
+      return axios.get(getThreeGasPriceUrl).then(data => {
+        console.log('ether-wallet.service.getThreeGasPrice.data', data);
+        return data;
+      }).catch(err => {
+        return err;
+      });
     }
   // depost start method:post
   // deposit/neoTransactionConfirmed
@@ -219,7 +222,7 @@ abi = neo5toerc20swap;
       const balance = new BigNumber(sum)
       .dividedBy(Math.pow(10, 8))
       .toNumber();
-      console.log('getEthQLCBalance', balance);
+      console.log('ether-wallet.service.getEthQLCBalance', balance);
       localStorage.setItem('qlcbalance', balance.toString());
       return balance;
   });
@@ -227,10 +230,10 @@ abi = neo5toerc20swap;
   // mint erc20 token
   async getEthMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice?: any) {
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-    console.log('getEthMint.amount', amount);
-    console.log('getEthMint.nep5Hash', nep5Hash);
-    console.log('getEthMint.signature', signature);
-    console.log('getEthMint.account', account);
+    console.log('ether-wallet.service.getEthMint.amount', amount);
+    console.log('ether-wallet.service.getEthMint.nep5Hash', nep5Hash);
+    console.log('ether-wallet.service.getEthMint.signature', signature);
+    console.log('ether-wallet.service.getEthMint.account', account);
     return await Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).send({
         from: account,
         gasPrice
@@ -242,9 +245,9 @@ abi = neo5toerc20swap;
  // burn erc20 token
  async getEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
   const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-  console.log('getEthBurn.amount', amount);
-  console.log('getEthBurn.nep5Hash', nep5Address);
-  console.log('account', account);
+  console.log('ether-wallet.service.getEthBurn.amount', amount);
+  console.log('ether-wallet.service.getEthBurn.nep5Hash', nep5Address);
+  console.log('ether-wallet.service.account', account);
   return await Contract.methods.burn(nep5Address, amount).send({
       from: account,
       gasPrice
