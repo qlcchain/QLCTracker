@@ -251,22 +251,22 @@
                     <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
-                    <span *ngIf="(history.state ==2 || history.state ==3)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
+                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
                 </span>
                 <span class="d-xl-none">
                   <br>
                   <br>
                   Status: 
                   <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
-                  <span *ngIf="(history.state ==0)" class="text-blue">Pending</span>
-                  <span *ngIf="(history.state ==2)" class="text-color-red">Failed</span>
+                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
                 </span>
               </div>
               <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">
                 <span>
                   <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
-                  <span *ngIf="(history.state ==0)" class="text-blue">Pending</span>
-                  <span *ngIf="(history.state ==2)" class="text-color-red">Failed</span>
+                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
                 </span>
               </div>
               <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
@@ -275,21 +275,21 @@
                 <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Recipient: </span>
-                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
                 <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Swapid: </span>
                 <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
                   {{history.neoTxHash | squeeze : '10,9'}}
                 </a>
-                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
                   {{history.ethTxHash | squeeze : '10,9'}}
                 </a>
                 
                 <span class="d-md-none"><br>Time:<br class="d-sm-none"> {{ history.lastModifyTime | date: 'short' }}</span>
               </div>
               <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
-                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '11,10'}}</a>
 
               </div>
@@ -297,15 +297,15 @@
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
                   {{history.neoTxHash | squeeze : '11,10'}}
                 </a>
-                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
                   {{history.ethTxHash | squeeze : '11,10'}}
                 </a>
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
                 <span [ngClass]="{
-                  'text-blue': history.state == 0,
+                  'text-blue': (history.state ==0 || history.state ==2),
                   'text-color-green': (history.state ==1 || history.state ==3),
-                  'text-color-red': history.state == 2
+                  'text-color-red': history.state == 4
                 }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">
