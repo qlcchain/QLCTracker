@@ -565,9 +565,9 @@ export class CcswapComponent implements OnInit {
           this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
         }
       }
+      console.log('localStorage.getItem(etheraccount)', localStorage.getItem('etheraccount'));
       if (this.stakingForm.value.toQLCWallet == '') {
-        if (this.etheraccounts[0] != undefined) {
-          this.stakingForm.get('toQLCWallet').setValue(this.etheraccounts[0]);
+        if (localStorage.getItem('etheraccount') != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(localStorage.getItem('etheraccount'));
         }
       }
@@ -575,8 +575,7 @@ export class CcswapComponent implements OnInit {
     // withdraw
     if (this.stakingForm.value.stakingType == 2) {
       if (this.stakingForm.value.fromNEOWallet == '') {
-        if (this.etheraccounts[0] != undefined) {
-          this.stakingForm.get('fromNEOWallet').setValue(this.etheraccounts[0]);
+        if (localStorage.getItem('etheraccount') != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(localStorage.getItem('etheraccount'));
         }
       }
