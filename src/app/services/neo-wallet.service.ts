@@ -269,7 +269,6 @@ export class NeoWalletService {
         params: [address],
         id: 1
       });
-      console.log('getNeoRpcBalance.balance', balance);
       return balance.data.result.balance;
   }
 
@@ -283,9 +282,6 @@ export class NeoWalletService {
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < assets.length; i++) {
         if ( assets[i].assetId == this.neoqlcsmartContractScript) {
-          console.log('getneoTuboBalance.balances', balance);
-          console.log('getneoTuboBalance.balance', balance?.data?.result?.assets[i]);
-          // console.log('balance.result.assets[2].balance', balance.data.result.assets[2].balance);
           return balance.data.result.assets[i];
         }
       }
