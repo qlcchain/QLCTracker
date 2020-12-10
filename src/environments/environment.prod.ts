@@ -31,7 +31,7 @@ export const environment = {
   },
   neotubeSite: {
     test: 'https://testnet.neotube.io/',
-    main: 'https://neotube.io/address/'
+    main: 'https://neotube.io/'
   },
   wsUrl: {
     test: '',
