@@ -43,11 +43,15 @@ export class CcswapComponent implements OnInit {
 
   public neoTxHash = '';
   public ethTxHash = '';
+  // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+  public FastGasPrice = parseInt((Math.random() * ( 80 - 50 + 1) + 50).toString(), 10).toString();
+  public ProposeGasPrice = parseInt((Math.random() * ( 60 - 35 + 1) + 35).toString(), 10).toString();
+  public SafeGasPrice = parseInt((Math.random() * ( 35 - 18 + 1) + 18).toString(), 10).toString();
   public gasPrices = {
-    FastGasPrice: '61',
+    FastGasPrice: this.FastGasPrice,
     LastBlock: '0',
-    ProposeGasPrice: '32',
-    SafeGasPrice: '23'
+    ProposeGasPrice: this.ProposeGasPrice,
+    SafeGasPrice: this.SafeGasPrice
   };
 
   public selectedGasPrice = 'ProposeGasPrice';
