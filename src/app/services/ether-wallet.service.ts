@@ -217,19 +217,55 @@ abi = neo5toerc20swap;
       return result;
     });
  }
- // burn erc20 token
- async getEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
+
+ async estimateGasEthMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice?: any) {
   const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-  console.log('getEthBurn.amount', amount);
-  console.log('getEthBurn.nep5Hash', nep5Address);
-  console.log('account', account);
-  return await Contract.methods.burn(nep5Address, amount).send({
+  console.log('getEthMint.amount', amount);
+  console.log('getEthMint.nep5Hash', nep5Hash);
+  console.log('getEthMint.signature', signature);
+  console.log('getEthMint.account', account);
+
+  return await Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).estimateGas({
       from: account,
       gasPrice
-  }).then(result => {
-    localStorage.setItem('txHash', result.transactionHash);
-    console.log('getEthBurn.result', result);
-    return result;
-  });
-}
+  })
+  .then( (gasAmount) => {
+    return gasAmount
+  })
+  .catch( (error) => {
+    console.log(error)
+  })
+ }
+ // burn erc20 token
+  async getEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
+    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+    console.log('getEthBurn.amount', amount);
+    console.log('getEthBurn.nep5Hash', nep5Address);
+    console.log('account', account);
+    return await Contract.methods.burn(nep5Address, amount).send({
+        from: account,
+        gasPrice
+    }).then(result => {
+      localStorage.setItem('txHash', result.transactionHash);
+      console.log('getEthBurn.result', result);
+      return result;
+    });
+  }
+
+  async estimateGasEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
+    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+    console.log('getEthBurn.amount', amount);
+    console.log('getEthBurn.nep5Hash', nep5Address);
+    console.log('account', account);
+    return await Contract.methods.burn(nep5Address, amount).estimateGas({
+        from: account,
+        gasPrice
+    })
+    .then( (gasAmount) => {
+      return gasAmount
+    })
+    .catch( (error) => {
+      console.log(error)
+    })
+  }
 }
