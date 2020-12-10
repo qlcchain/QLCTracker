@@ -286,6 +286,7 @@ export class CcswapComponent implements OnInit {
     // tslint:disable-next-line: radix
     this.getEtherAccounts();
     this.loadBalances();
+    this.initEthThreeGasFee();
   }
 
   async getEtherAccounts() {
@@ -295,6 +296,15 @@ export class CcswapComponent implements OnInit {
     const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
     this.etherqlcbalance = etherqlcbalance;
     return accounts;
+  }
+  // init eth three gas fee
+  async initEthThreeGasFee(){
+    const threeGasPrices = await this.etherService.getThreeGasPrice();
+    if (threeGasPrices?.data?.result) {
+      console.log(threeGasPrices);
+      this.gasPrices = threeGasPrices?.data?.result;
+    }
+    this.selectedGasPrice = Web3.utils.toWei(this.gasPrices.ProposeGasPrice, 'Gwei');
   }
 
   // back to swap
@@ -394,14 +404,6 @@ export class CcswapComponent implements OnInit {
   }
 
   async checkForm() {
-    // const burnEth = await this.burnERC20Token();
-    // console.log('burnEth', burnEth);
-    const threeGasPrices = await this.etherService.getThreeGasPrice();
-    if (threeGasPrices?.data?.result) {
-      console.log(threeGasPrices);
-      this.gasPrices = threeGasPrices?.data?.result;
-    }
-    this.selectedGasPrice = Web3.utils.toWei(this.gasPrices.ProposeGasPrice, 'Gwei');
     this.markFormGroupTouched(this.stakingForm);
     // tslint:disable-next-line: radix
     if (parseInt(this.stakingForm.value.amounToStake) < 1) {
@@ -688,10 +690,10 @@ export class CcswapComponent implements OnInit {
   }
 
   async confirmInvoke() {
-    const walletAccount = await this.walletService.getWalletAccount(
-      this.stakingForm.value.toQLCWallet
-    );
-    console.log('confirmInvoke.walletAccount', walletAccount);
+    if(this.gasPrices[this.selectedGasPrice] == undefined){
+      console.log('this.gasPrices[this.selectedGasPrice]', this.gasPrices[this.selectedGasPrice]);
+      return this.notifications.sendWarning('Please choose one gas fee');
+    }
     // tslint:disable-next-line: radix
     if (parseInt(this.ethbalance) < parseInt(Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei').toString())) {
       return this.notifications.sendWarning('Your eth wallet balance is insufficient');

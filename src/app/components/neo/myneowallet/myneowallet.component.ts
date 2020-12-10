@@ -186,7 +186,6 @@ export class MyneowalletComponent implements OnInit {
       20
     );
     this.swapHistory = swaptransactions.data.infos;
-    console.log('swapHistory', this.swapHistory);
   }
 
   editName() {
