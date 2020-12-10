@@ -256,14 +256,14 @@ onfocus="this.placeholder = ''"
 <div class="input-group-text maxLink">&nbsp;</div>
         </div>
 </div>
-<p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum swap amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount | currency:'':'':'1.2-8' }} QLC</p>
+<p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum swap amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount}} QLC</p>
 </div>
 
 <div class="col-md-6">
 <div class="row align-items-top">
 <div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">BALANCE</div>
 <div class="col-md-6 ">
-<div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.availableQLCBalance | currency:'':'':'1.2-8' }} QLC</strong></div>
+<div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.availableQLCBalance}} QLC</strong></div>
 </div>
 </div>
 </div>
@@ -392,7 +392,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                 </div>
                 <div class="row align-items-center ">
                   <div class="col-12 sum">
-                    <span>{{ stakingForm.value.amounToStake | currency:'':'':'1.0-8'}} QLC</span>
+                    <span>{{ stakingForm.value.amounToStake}} QLC</span>
                   </div>
                 </div>
                 <div class="row align-items-center">
@@ -422,7 +422,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                     <div class="pl-5 pr-5 pb-4">
                       <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0])" class="address">{{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0] }}</a>
                     </div>
-                    <div class="pt-2 text-bold negative_change text-color-red">-{{ stakingForm.value.amounToStake | currency:'':'':'1.0-8' }} QLC</div>
+                    <div class="pt-2 text-bold negative_change text-color-red">-{{ stakingForm.value.amounToStake}} QLC</div>
                     <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO LOCK' : 'AMOUNT TO BURN' }}</div>
                   </div>
                   <div class="col-lg-6 text-center pt-4 pb-4">
@@ -449,7 +449,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                     <div class="pl-5 pr-5 pb-4">
                       <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value)" class="address">{{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) }}</a>
                     </div>
-                    <div class="pt-2 text-bold positive_change text-color-green">+{{ stakingForm.value.amounToStake | currency:'':'':'1.0-8' }} QLC</div>
+                    <div class="pt-2 text-bold positive_change text-color-green">+{{ stakingForm.value.amounToStake}} QLC</div>
                     <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO MINT' : 'AMOUNT TO UNLOCK' }}</div>
                   </div>
                 </div>
@@ -600,7 +600,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             </div>
             <div class="row align-items-center ">
               <div class="col-12 sum">
-                <span>{{ stakingForm.value.amounToStake | currency:'':'':'1.2-8'}} QLC</span>
+                <span>{{ stakingForm.value.amounToStake}} QLC</span>
               </div>
             </div>
             <div class="row align-items-center">
