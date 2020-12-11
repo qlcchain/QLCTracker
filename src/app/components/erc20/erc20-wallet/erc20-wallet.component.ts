@@ -38,7 +38,7 @@ export class Erc20WalletComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.addresslc = this.address.toLowerCase();
+    //this.addresslc = this.address.toLowerCase();
     this.loadWallet();
   }
   
