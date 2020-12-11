@@ -695,7 +695,9 @@ export class CcswapComponent implements OnInit {
     }
     console.log('this.gasPrices[this.selectedGasPrice]', this.gasPrices[this.selectedGasPrice]);
     // tslint:disable-next-line: radix
-    if (parseInt(this.ethbalance) < parseInt(Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei').toString())) {
+    console.log('parseInt(Web3.utils.fromWei(this.ethbalance))', parseFloat(Web3.utils.fromWei(this.ethbalance, 'ether')));
+    // tslint:disable-next-line: radix
+    if (parseFloat(Web3.utils.fromWei(this.ethbalance, 'ether')) < 0.01) {
       return this.notifications.sendWarning('Your eth wallet balance is insufficient');
     }
     if (this.walletService.walletIsLocked()) {
