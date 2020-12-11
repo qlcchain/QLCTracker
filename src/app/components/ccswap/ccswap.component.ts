@@ -45,7 +45,7 @@ export class CcswapComponent implements OnInit {
   public ethTxHash = '';
   // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
   public FastGasPrice = parseInt((Math.random() * ( 80 - 50 + 1) + 50).toString(), 10).toString();
-  public ProposeGasPrice = parseInt((Math.random() * ( 60 - 35 + 1) + 35).toString(), 10).toString();
+  public ProposeGasPrice = parseInt((Math.random() * ( 50 - 35 + 1) + 35).toString(), 10).toString();
   public SafeGasPrice = parseInt((Math.random() * ( 35 - 18 + 1) + 18).toString(), 10).toString();
   public gasPrices = {
     FastGasPrice: this.FastGasPrice,
@@ -690,7 +690,7 @@ export class CcswapComponent implements OnInit {
   }
 
   async confirmInvoke() {
-    if(this.gasPrices[this.selectedGasPrice] == undefined){
+    if (this.gasPrices[this.selectedGasPrice] == undefined) {
       console.log('this.gasPrices[this.selectedGasPrice]', this.gasPrices[this.selectedGasPrice]);
       return this.notifications.sendWarning('Please choose one gas fee');
     }
@@ -863,18 +863,18 @@ export class CcswapComponent implements OnInit {
       const id = setInterval(async () => {
         const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(txid);
         console.log('swapInfoByTxHash', swapInfoByTxHash);
-        if (swapInfoByTxHash.data.error) {
-          // const waitTimer = timer(2000, 1000).subscribe( async (data) => {
-          //   this.mintERC20Token(txData, toswapAmount);
-          // });
-          this.invokeSteps.push({
-            msg: 'ERROR. TXID is not a lock.',
-            checkimg: 1,
-          });
-          return;
-        }
+        // if (swapInfoByTxHash.Error) {
+        //   // const waitTimer = timer(2000, 1000).subscribe( async (data) => {
+        //   //   this.mintERC20Token(txData, toswapAmount);
+        //   // });
+        //   this.invokeSteps.push({
+        //     msg: 'ERROR. TXID is not a lock.',
+        //     checkimg: 1,
+        //   });
+        //   return;
+        // }
         // tslint:disable-next-line: triple-equals
-        if (swapInfoByTxHash.data.state == 0) {
+        if (swapInfoByTxHash?.data?.state == 0) {
           console.log('cleardInterval.id', id);
           clearInterval(id);
           this.invokeSteps.push({

@@ -159,15 +159,19 @@ abi = neo5toerc20swap;
     }
     // info/swapInfoByTxHash
     async swapInfoByTxHash(txid: any) {
-      const data = await axios.get(this.url + '/info/swapInfoByTxHash', {
-      params: {
-          hash: txid
-      },
-      headers: {
-        authorization: this.neo5toerc20swapjwtauth.authorization
-    }
-      });
-      return data;
+      try {
+        const data: any = await axios.get(this.url + '/info/swapInfoByTxHash', {
+          params: {
+              hash: txid
+          },
+          headers: {
+            authorization: this.neo5toerc20swapjwtauth.authorization
+        }
+          });
+        return data;
+      } catch (error) {
+        return error;
+      }
     }
 
     // info/swapInfoList
