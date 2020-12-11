@@ -46,9 +46,11 @@
                     <button type="submit" (click)="etherService?.connectWallet()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" *ngIf="etherService.checkIfWallet()">
                       CONNECT WALLET
                     </button>
-                    <button type="submit" href="https://metamask.io" target="_blank" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" *ngIf="!etherService.checkIfWallet()">
-                      GET METAMASK
-                    </button>
+                    <a href="https://metamask.io" target="_blank" *ngIf="!etherService.checkIfWallet()">
+                      <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
+                        GET METAMASK
+                      </button>
+                    </a>
                   </div>
                 </div>
               </div>
