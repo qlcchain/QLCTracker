@@ -157,6 +157,18 @@ abi = neo5toerc20swap;
       });
       return data;
     }
+    // info/checkEthTransaction
+    async checkEthTransaction(txid: any) {
+      const data = await axios.get(this.url + '/info/checkEthTransaction', {
+      params: {
+          hash: txid
+      },
+      headers: {
+        authorization: this.neo5toerc20swapjwtauth.authorization
+    }
+      });
+      return data;
+    }
     // info/swapInfoByTxHash
     async swapInfoByTxHash(txid: any) {
       try {
