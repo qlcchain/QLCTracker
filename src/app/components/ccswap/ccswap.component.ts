@@ -45,7 +45,7 @@ export class CcswapComponent implements OnInit {
   public ethTxHash = '';
   // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
   public FastGasPrice = parseInt((Math.random() * ( 80 - 50 + 1) + 50).toString(), 10).toString();
-  public ProposeGasPrice = parseInt((Math.random() * ( 60 - 35 + 1) + 35).toString(), 10).toString();
+  public ProposeGasPrice = parseInt((Math.random() * ( 50 - 35 + 1) + 35).toString(), 10).toString();
   public SafeGasPrice = parseInt((Math.random() * ( 35 - 18 + 1) + 18).toString(), 10).toString();
   public gasPrices = {
     FastGasPrice: this.FastGasPrice,
@@ -286,6 +286,7 @@ export class CcswapComponent implements OnInit {
     // tslint:disable-next-line: radix
     this.getEtherAccounts();
     this.loadBalances();
+    this.initEthThreeGasFee();
   }
 
   async getEtherAccounts() {
@@ -297,6 +298,14 @@ export class CcswapComponent implements OnInit {
     const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
     this.etherqlcbalance = etherqlcbalance;
     return accounts;
+  }
+  // init eth three gas fee
+  async initEthThreeGasFee() {
+    const threeGasPrices = await this.etherService.getThreeGasPrice();
+    if (threeGasPrices?.data?.result) {
+      console.log(threeGasPrices);
+      this.gasPrices = threeGasPrices?.data?.result;
+    }
   }
 
   // back to swap
@@ -317,7 +326,7 @@ export class CcswapComponent implements OnInit {
       txid
     );
     // const txid = swapInfoByTxHash.data.neoHash.slice(2);
-    if (swapInfoByTxHash.data.state == 0) {
+    if (swapInfoByTxHash?.data?.state == 0) {
       this.step = 3;
       console.log('txid.slice', txid);
       const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
@@ -343,7 +352,7 @@ export class CcswapComponent implements OnInit {
             txid,
           );
           // tslint:disable-next-line: triple-equals
-          if (swapInfoByTxHash.data.state == 1) {
+          if (swapInfoByTxHash?.data?.state == 1) {
             console.log('cleardInterval.id', id);
             clearInterval(id);
             this.invokeSteps.push({
@@ -356,7 +365,7 @@ export class CcswapComponent implements OnInit {
           }
         }, 5000);
       }
-    } else if (swapInfoByTxHash.data.state == 4) {
+    } else if (swapInfoByTxHash?.data?.state == 4) {
       // only when state == 4 to call EthTransactionConfirmed to recover withdraw
       const getEthOwnerSign: any = await this.etherService.ethTransactionConfirmed(txid);
       if(getEthOwnerSign.value) {
@@ -366,7 +375,7 @@ export class CcswapComponent implements OnInit {
             txid,
           );
           // tslint:disable-next-line: triple-equals
-          if (swapInfoByTxHash.data.state == 3) {
+          if (swapInfoByTxHash?.data?.state == 3) {
             console.log('cleardInterval.id', id);
             clearInterval(id);
             this.invokeSteps.push({
@@ -396,14 +405,6 @@ export class CcswapComponent implements OnInit {
   }
 
   async checkForm() {
-    // const burnEth = await this.burnERC20Token();
-    // console.log('burnEth', burnEth);
-    const threeGasPrices = await this.etherService.getThreeGasPrice();
-    if (threeGasPrices?.data?.result) {
-      console.log(threeGasPrices);
-      this.gasPrices = threeGasPrices?.data?.result;
-    }
-    this.selectedGasPrice = Web3.utils.toWei(this.gasPrices.ProposeGasPrice, 'Gwei');
     this.markFormGroupTouched(this.stakingForm);
     // tslint:disable-next-line: radix
     if (parseInt(this.stakingForm.value.amounToStake) < 1) {
@@ -700,10 +701,11 @@ export class CcswapComponent implements OnInit {
   }
 
   async confirmInvoke() {
-    const walletAccount = await this.walletService.getWalletAccount(
-      this.stakingForm.value.toQLCWallet
-    );
-    console.log('confirmInvoke.walletAccount', walletAccount);
+    if (this.gasPrices[this.selectedGasPrice] == undefined) {
+      console.log('this.gasPrices[this.selectedGasPrice]', this.gasPrices[this.selectedGasPrice]);
+      return this.notifications.sendWarning('Please choose one gas fee');
+    }
+    console.log('this.gasPrices[this.selectedGasPrice]', this.gasPrices[this.selectedGasPrice]);
     // tslint:disable-next-line: radix
     if (parseInt(this.ethbalance) < parseInt(Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei').toString())) {
       return this.notifications.sendWarning('Your eth wallet balance is insufficient');
@@ -841,8 +843,8 @@ export class CcswapComponent implements OnInit {
     );
     this.ethTxHash = localStorage.getItem('txHash');
     // tslint:disable-next-line: triple-equals
-    console.log('swapInfoByTxHash.data.state', swapInfoByTxHash.data.state);
-    if (swapInfoByTxHash.data.state == 3) {
+    console.log('swapInfoByTxHash.data.state', swapInfoByTxHash?.data?.state);
+    if (swapInfoByTxHash?.data?.state == 3) {
       console.log('result', burnERC20Token);
       console.log('cleardInterval.id', id);
       this.neoTxHash = swapInfoByTxHash?.data?.neoTxHash;
@@ -873,18 +875,18 @@ export class CcswapComponent implements OnInit {
       const id = setInterval(async () => {
         const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(txid);
         console.log('swapInfoByTxHash', swapInfoByTxHash);
-        if (swapInfoByTxHash.data.error) {
-          // const waitTimer = timer(2000, 1000).subscribe( async (data) => {
-          //   this.mintERC20Token(txData, toswapAmount);
-          // });
-          this.invokeSteps.push({
-            msg: 'ERROR. TXID is not a lock.',
-            checkimg: 1,
-          });
-          return;
-        }
+        // if (swapInfoByTxHash.Error) {
+        //   // const waitTimer = timer(2000, 1000).subscribe( async (data) => {
+        //   //   this.mintERC20Token(txData, toswapAmount);
+        //   // });
+        //   this.invokeSteps.push({
+        //     msg: 'ERROR. TXID is not a lock.',
+        //     checkimg: 1,
+        //   });
+        //   return;
+        // }
         // tslint:disable-next-line: triple-equals
-        if (swapInfoByTxHash.data.state == 0) {
+        if (swapInfoByTxHash?.data?.state == 0) {
           console.log('cleardInterval.id', id);
           clearInterval(id);
           this.invokeSteps.push({
@@ -918,7 +920,7 @@ export class CcswapComponent implements OnInit {
                 txid
               );
               // tslint:disable-next-line: triple-equals
-              if (swapInfoByTxHash.data.state == 1) {
+              if (swapInfoByTxHash?.data?.state == 1) {
                 console.log('cleardInterval.id', id);
                 this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
                 clearInterval(id);

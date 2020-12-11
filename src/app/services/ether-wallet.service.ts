@@ -260,9 +260,9 @@ internalTransactions: any[];
       });
       return data;
     }
-    // info/swapInfoByTxHash
-    async swapInfoByTxHash(txid: any) {
-      const data = await axios.get(this.url + '/info/swapInfoByTxHash', {
+    // info/checkEthTransaction
+    async checkEthTransaction(txid: any) {
+      const data = await axios.get(this.url + '/info/checkEthTransaction', {
       params: {
           hash: txid
       },
@@ -271,6 +271,22 @@ internalTransactions: any[];
     }
       });
       return data;
+    }
+    // info/swapInfoByTxHash
+    async swapInfoByTxHash(txid: any) {
+      try {
+        const data: any = await axios.get(this.url + '/info/swapInfoByTxHash', {
+          params: {
+              hash: txid
+          },
+          headers: {
+            authorization: this.neo5toerc20swapjwtauth.authorization
+        }
+          });
+        return data;
+      } catch (error) {
+        return error;
+      }
     }
 
     // info/swapInfoList
