@@ -42,6 +42,7 @@ import { MiningRewardComponent } from './components/qlc/mining/mining-reward/min
 import { StakingDashboardComponent } from './components/staking-dashboard/staking-dashboard.component';
 import { PortalComponent } from './components/portal/portal.component';
 import { CcswapComponent } from './components/ccswap/ccswap.component';
+import { Erc20WalletComponent } from './components/erc20/erc20-wallet/erc20-wallet.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -78,6 +79,8 @@ const routes: Routes = [
   { path: 'wallets/neo/import', component: NeoImportComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'wallets/neo/settings', component: NeoSettingsComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'wallets/neo/:wallet', component: MyneowalletComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'wallets/erc20/:address', component: Erc20WalletComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'wallets/erc20', component: Erc20WalletComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'wallets/chainx/account/create', component: ChainxCreateComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'wallets/chainx/account/:address', component: ChainxAccountComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'wallets/chainx/send', component: ChainxSendComponent, canActivate: [CanActivateRouteGuard] },

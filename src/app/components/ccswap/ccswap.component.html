@@ -2,44 +2,7 @@
 
 <!-- check metamask -->
 <div class="stake-screen-1" *ngIf="!this.metamask">
-  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu"></div>
-
-<div class="container accounts">
-  <div class="row">
-
-      <!-- INFO -->
-      <div class="col-12 pb-3">
-              <div class="container pl-0 pr-0">
-                  <div class="row pl-0 pr-0">
-
-
-                  <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
-                      <div class="content-box-white h-auto mt-2 pl-5 pr-5 text-center pt-5 pb-5">
-
-          <h3>Attention!</h3>
-          <h5 class="pt-3">You'll need to install MetaMask to continue and then load this Dapp with MetaMask.</h5>
-
-          <div class="container">
-              <div class="row">
-                <div class="col-md-4 offset-md-4 mb-4">
-
-                </div>
-              </div>
-            </div>
-
-          
-
-                      </div>
-                  </div>
-
-              </div>
-          </div>
-</div>
-
-
-
-  </div>
-</div>		
+  <app-erc20-wallet></app-erc20-wallet>
 </div>
 <!-- step 1: choose account to swap -->
  <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && this.metamask'>

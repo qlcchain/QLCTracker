@@ -1,0 +1,39 @@
+.erc20-background {
+	background-color: #494c52 !important;
+}
+.erc20-background:hover {
+	background-color: #494c52 !important;
+}
+.erc20-background-light {
+	background-color: #66696e !important;
+}
+.qrcode {
+  width: 100%;
+  img {
+    width: 100%;
+  }
+}
+.connect-background {
+	background: url('../../../../assets/img/swap/bg_box_quicksend_eth.png') no-repeat 10px center;
+  height: 150px;
+  background-size: 185px;
+}
+.erc20 {
+  color: #595757 !important;
+}
+.white {
+  color: #ffffff;
+}
+.btn-primary.erc20-background-light:hover {
+  background-color: #494c52 !important;
+}
+.btn-primary.erc20-background:hover {
+  background-color: #575a60 !important;
+}
+.menu-myaccount:hover {
+  text-decoration: none !important;
+  color: #ababaf !important;
+}
+.overflow-wrap {
+  overflow-wrap: break-word;
+}

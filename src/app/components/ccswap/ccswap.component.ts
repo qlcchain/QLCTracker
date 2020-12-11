@@ -276,7 +276,7 @@ export class CcswapComponent implements OnInit {
     private notifications: NotificationService,
     private trans: TranslateService,
     private confidantApi: ApiConfidantService,
-    private etherService: EtherWalletService
+    public etherService: EtherWalletService
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
   }
@@ -291,6 +291,8 @@ export class CcswapComponent implements OnInit {
   async getEtherAccounts() {
     const accounts: any[] = await this.etherService.getAccounts();
     this.etheraccounts = accounts;
+    console.log('this.etherService.selectedAddress', this.etherService.selectedAddress)
+    //this.etheraccounts = [this.etherService.selectedAddress];
     this.ethbalance = await this.etherService.getEthBalance(accounts[0]);
     const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
     this.etherqlcbalance = etherqlcbalance;
@@ -566,17 +568,27 @@ export class CcswapComponent implements OnInit {
         }
       }
       console.log('localStorage.getItem(etheraccount)', localStorage.getItem('etheraccount'));
-      if (this.stakingForm.value.toQLCWallet == '') {
+      /*if (this.stakingForm.value.toQLCWallet == '') {
         if (localStorage.getItem('etheraccount') != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(localStorage.getItem('etheraccount'));
+        }
+      }*/
+      console.log('this.etherService.selectedAddress', this.etherService.selectedAddress);
+      console.log('this.stakingForm.value.toQLCWallet', this.stakingForm.value.toQLCWallet);
+      if (this.stakingForm.value.toQLCWallet == '') {
+        if (this.etherService.selectedAddress != undefined) {
+          this.stakingForm.get('toQLCWallet').setValue(this.etherService.selectedAddress);
         }
       }
     }
     // withdraw
     if (this.stakingForm.value.stakingType == 2) {
       if (this.stakingForm.value.fromNEOWallet == '') {
-        if (localStorage.getItem('etheraccount') != undefined) {
+        /*if (localStorage.getItem('etheraccount') != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(localStorage.getItem('etheraccount'));
+        }*/
+        if (this.etherService.selectedAddress != undefined) {
+          this.stakingForm.get('fromNEOWallet').setValue(this.etherService.selectedAddress);
         }
       }
       if (this.stakingForm.value.toQLCWallet == '') {
