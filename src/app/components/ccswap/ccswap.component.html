@@ -563,7 +563,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             </div>
             <div class="row align-items-center ">
               <div class="col-12 sum">
-                <span>{{ stakingForm.value.amounToStake}} QLC</span>
+                <span>{{ this.haveswappedamount }} QLC</span>
               </div>
             </div>
             <div class="row align-items-center">
@@ -595,7 +595,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
   
             <div class="row align-items-center justify-content-center rowDefault rowButtons pl-4 pr-4 mt-5">
               <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-2">
-                <button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="backtoswap()">
+                <button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="backtoswap();loadBalances()">
                   CONTINUE
                 </button>
               </div>
@@ -606,13 +606,3 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-

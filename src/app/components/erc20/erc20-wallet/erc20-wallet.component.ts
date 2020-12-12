@@ -12,6 +12,7 @@ import { EtherWalletService } from 'src/app/services/ether-wallet.service';
   styleUrls: ['./erc20-wallet.component.scss']
 })
 export class Erc20WalletComponent implements OnInit {
+  swapHistory: any[] = [];
   address = this.etherService.selectedAddress;
   addresslc: string;
   loading = true;
@@ -24,7 +25,7 @@ export class Erc20WalletComponent implements OnInit {
   transactions: any[];
   erc20Transactions: any[];
   internalTransactions: any[];
-  noWallet: boolean = true;
+  noWallet = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,25 +39,33 @@ export class Erc20WalletComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.getEtherAccounts();
     this.addresslc = this.address.toLowerCase();
     this.loadWallet();
   }
-  
+  async getEtherAccounts() {
+    const accounts: any[] = await this.etherService.getAccounts();
+    const swaptransactions: any = await this.etherService.swapInfosByAddress(
+      accounts[0],
+      1,
+      20
+    );
+    this.swapHistory = swaptransactions.data.infos;
+  }
   loadWallet() {
     if (this.etherService.selectedAddress) {
-      //return this.router.navigate(['wallets/']);
+      // return this.router.navigate(['wallets/']);
       this.noWallet = false;
     }
     this.loading = false;
   }
 
   async getBalances() {
-    console.log(this.address)
-    //const balances = await this.etherService.getBalances(this.address);
+    console.log(this.address);
+    // const balances = await this.etherService.getBalances(this.address);
   }
 
   deleteWallet() {
-    
     this.router.navigate(['myaccounts/']);
   }
 
