@@ -226,7 +226,7 @@
               <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-3 d-none d-md-block text-right pr-sm-4 pr-4">TIME</div>
             </div>
 
-            <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of swapHistory">
+            <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.swapHistory">
               <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
                 <span>
                     <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>

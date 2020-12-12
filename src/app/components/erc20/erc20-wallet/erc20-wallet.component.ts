@@ -39,22 +39,21 @@ export class Erc20WalletComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.getEtherAccounts();
+    // this.getEtherAccounts();
     this.addresslc = this.address.toLowerCase();
     this.loadWallet();
   }
-  async getEtherAccounts() {
-    const accounts: any[] = await this.etherService.getAccounts();
-    const swaptransactions: any = await this.etherService.swapInfosByAddress(
-      accounts[0],
-      1,
-      20
-    );
-    this.swapHistory = swaptransactions.data.infos;
-  }
-  loadWallet() {
+  // async getEtherAccounts() {
+  //   const accounts: any[] = await this.etherService.getAccounts();
+  //   const swaptransactions: any = await this.etherService.swapInfosByAddress(
+  //     accounts[0],
+  //     1,
+  //     20
+  //   );
+  //   this.swapHistory = swaptransactions.data.infos;
+  // }
+  async loadWallet() {
     if (this.etherService.selectedAddress) {
-      // return this.router.navigate(['wallets/']);
       this.noWallet = false;
     }
     this.loading = false;

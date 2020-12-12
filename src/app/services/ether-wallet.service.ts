@@ -10,6 +10,7 @@ import axios from 'axios';
   providedIn: 'root'
 })
 export class EtherWalletService {
+swapHistory: any[];
 web3: any;
 accounts: any;
 metamask: boolean;
@@ -40,15 +41,23 @@ internalTransactions: any[];
     this.web3?.currentProvider.publicConfigStore.on('update', (data) => {
       const ethAddress = (window as any).web3.currentProvider.selectedAddress;
       if (this.selectedAddress !== ethAddress) {
-        this.accounts = [ ethAddress ]
+        this.accounts = [ ethAddress ];
         this.selectedAddress = ethAddress;
         this.getBalances(ethAddress);
         this.getAllTransactions(ethAddress);
+        this.getswapHistory(ethAddress);
       }
     });
   }
-
-  
+  async getswapHistory(address: any) {
+    const swaptransactions: any = await this.swapInfosByAddress(
+      address,
+      1,
+      20
+    );
+    this.swapHistory = swaptransactions.data.infos;
+    console.log('swapHistory', this.swapHistory);
+  }
   async getBalances(address) {
     const qlcBalance = await this.getTokenBalance(address, this.address);
     const qlcBalanceNumber = new BigNumber(qlcBalance?.data?.result)
