@@ -331,6 +331,9 @@ export class CcswapComponent implements OnInit {
     );
     // const txid = swapInfoByTxHash.data.neoHash.slice(2);
     if (swapInfoByTxHash?.data?.state == 0) {
+      this.haveswappedamount = new BigNumber(swapInfoByTxHash.data.amount)
+      .dividedBy(Math.pow(10, 8))
+      .toNumber();
       this.step = 3;
       console.log('txid.slice', txid);
       const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
