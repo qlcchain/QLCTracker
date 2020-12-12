@@ -29,6 +29,7 @@ const nacl = window['nacl'];
   styleUrls: ['./ccswap.component.scss'],
 })
 export class CcswapComponent implements OnInit {
+  haveswappedamount: any;
   ethbalance: any;
   transactions: any[] = [];
   etherqlcbalance: any;
@@ -294,7 +295,7 @@ export class CcswapComponent implements OnInit {
     const accounts: any[] = await this.etherService.getAccounts();
     this.etheraccounts = accounts;
     console.log('this.etherService.selectedAddress', this.etherService.selectedAddress)
-    //this.etheraccounts = [this.etherService.selectedAddress];
+    // this.etheraccounts = [this.etherService.selectedAddress];
     this.ethbalance = await this.etherService.getEthBalance(accounts[0]);
     const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
     this.etherqlcbalance = etherqlcbalance;
@@ -344,7 +345,8 @@ export class CcswapComponent implements OnInit {
           amountWithDecimals,
           txid,
           getEthOwnerSign.data.value,
-          swapInfoByTxHash.data.ethUserAddr
+          swapInfoByTxHash.data.ethUserAddr,
+          Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei')
         );
         // tslint:disable-next-line: no-shadowed-variable
         const id = setInterval(async () => {
@@ -369,7 +371,7 @@ export class CcswapComponent implements OnInit {
     } else if (swapInfoByTxHash?.data?.state == 4) {
       // only when state == 4 to call EthTransactionConfirmed to recover withdraw
       const getEthOwnerSign: any = await this.etherService.ethTransactionConfirmed(txid);
-      if(getEthOwnerSign.value) {
+      if (getEthOwnerSign.value) {
         const id = setInterval(async () => {
           // tslint:disable-next-line: no-shadowed-variable
           const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
@@ -562,8 +564,11 @@ export class CcswapComponent implements OnInit {
   }
 
   async selectAccount() {
+    // reload eth qlc balance when switch tab
+    this.etherService.getEthQLCBalance(localStorage.getItem('etheraccount'));
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
+      // tslint:disable-next-line: max-line-length
       if (this.stakingForm.value.fromNEOWallet == '' || !this.neowallets.find((wallet) => wallet.id == this.stakingForm.value.fromNEOWallet)) {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
@@ -709,7 +714,9 @@ export class CcswapComponent implements OnInit {
     }
     console.log('this.gasPrices[this.selectedGasPrice]', this.gasPrices[this.selectedGasPrice]);
     // tslint:disable-next-line: radix
-    if (parseInt(this.ethbalance) < parseInt(Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei').toString())) {
+    console.log('parseInt(Web3.utils.fromWei(this.ethbalance))', parseFloat(Web3.utils.fromWei(this.ethbalance, 'ether')));
+    // tslint:disable-next-line: radix
+    if (parseFloat(Web3.utils.fromWei(this.ethbalance, 'ether')) < 0.01) {
       return this.notifications.sendWarning('Your eth wallet balance is insufficient');
     }
     if (this.walletService.walletIsLocked()) {
@@ -819,6 +826,7 @@ export class CcswapComponent implements OnInit {
 
   // brun ERC20 Token
   async burnERC20Token() {
+    this.haveswappedamount = this.stakingForm.value.amounToStake;
     if (this.walletService.walletIsLocked()) {
       this.step = 1;
       window.scrollTo(0, 0);
@@ -856,7 +864,7 @@ export class CcswapComponent implements OnInit {
         msg: 'Swap successfull',
         checkimg: 1,
       });
-      const waitTimer = timer(10000).subscribe( async (data) => {
+      const waitTimer = timer(2000).subscribe( async (data) => {
         this.step = 4;
         window.scrollTo(0, 0);
           });
@@ -865,13 +873,13 @@ export class CcswapComponent implements OnInit {
   }
 
   async mintERC20Token(txData, toswapAmount) {
+    this.haveswappedamount = toswapAmount;
     if (this.walletService.walletIsLocked()) {
       this.step = 1;
       window.scrollTo(0, 0);
       return this.notifications.sendWarning('ERROR wallet locked');
     }
     const txid = txData.txHash;
-    
     this.neoTxHash = txid;
     if (txid) {
       const id = setInterval(async () => {

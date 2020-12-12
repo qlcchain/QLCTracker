@@ -10,6 +10,7 @@ import axios from 'axios';
   providedIn: 'root'
 })
 export class EtherWalletService {
+swapHistory: any[];
 web3: any;
 accounts: any;
 metamask: boolean;
@@ -44,15 +45,25 @@ internalTransactions: any[];
         this.metamask = false;
       }
       if (this.selectedAddress !== ethAddress) {
-        this.accounts = [ ethAddress ]
+        this.accounts = [ ethAddress ];
         this.selectedAddress = ethAddress;
         this.getBalances(ethAddress);
         this.getAllTransactions(ethAddress);
+        this.getswapHistory(ethAddress);
       }
     });
   }
-
-  
+  async getswapHistory(address: any) {
+    console.log('getswapHistory.address', address);
+    const swaptransactions: any = await this.swapInfosByAddress(
+      address,
+      1,
+      20
+    );
+    this.swapHistory = swaptransactions.data.infos;
+    console.log('swaptransactions.data.infos', swaptransactions.data.infos);
+    console.log('swapHistory', this.swapHistory);
+  }
   async getBalances(address) {
     if (address && address != '') {
       const qlcBalance = await this.getTokenBalance(address, this.address);
@@ -303,11 +314,11 @@ internalTransactions: any[];
     }
 
     // info/swapInfoList
-    async swapInfoList(page: any, pagesize: any) {
+    async swapInfoList(page: any, pageSize: any) {
       const data = await axios.get(this.url + '/info/swapInfoList', {
       params: {
           page,
-          pagesize
+          pageSize
       },
       headers: {
         authorization: this.neo5toerc20swapjwtauth.authorization
