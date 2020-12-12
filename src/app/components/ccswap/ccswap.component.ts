@@ -276,9 +276,12 @@ export class CcswapComponent implements OnInit {
     private notifications: NotificationService,
     private trans: TranslateService,
     private confidantApi: ApiConfidantService,
-    private etherService: EtherWalletService
+    public etherService: EtherWalletService
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
+    etherService?.web3?.currentProvider.publicConfigStore.on('update', (data) => {
+      this.selectAccount()
+    });
   }
 
   ngOnInit() {
@@ -292,6 +295,8 @@ export class CcswapComponent implements OnInit {
   async getEtherAccounts() {
     const accounts: any[] = await this.etherService.getAccounts();
     this.etheraccounts = accounts;
+    console.log('this.etherService.selectedAddress', this.etherService.selectedAddress)
+    //this.etheraccounts = [this.etherService.selectedAddress];
     this.ethbalance = await this.etherService.getEthBalance(accounts[0]);
     const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
     this.etherqlcbalance = etherqlcbalance;
@@ -561,26 +566,37 @@ export class CcswapComponent implements OnInit {
   async selectAccount() {
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
-      if (this.stakingForm.value.fromNEOWallet == '') {
+      if (this.stakingForm.value.fromNEOWallet == '' || !this.neowallets.find((wallet) => wallet.id == this.stakingForm.value.fromNEOWallet)) {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
         }
       }
       console.log('localStorage.getItem(etheraccount)', localStorage.getItem('etheraccount'));
-      if (this.stakingForm.value.toQLCWallet == '') {
+      /*if (this.stakingForm.value.toQLCWallet == '') {
         if (localStorage.getItem('etheraccount') != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(localStorage.getItem('etheraccount'));
+        }
+      }*/
+      console.log('this.etherService.selectedAddress', this.etherService.selectedAddress);
+      console.log('this.stakingForm.value.toQLCWallet', this.stakingForm.value.toQLCWallet);
+      if (this.stakingForm.value.toQLCWallet == '' || this.stakingForm.value.toQLCWallet != this.etherService.selectedAddress ) {
+        if (this.etherService.selectedAddress != undefined) {
+          console.log('setting add')
+          this.stakingForm.get('toQLCWallet').setValue(this.etherService.selectedAddress);
         }
       }
     }
     // withdraw
     if (this.stakingForm.value.stakingType == 2) {
-      if (this.stakingForm.value.fromNEOWallet == '') {
-        if (localStorage.getItem('etheraccount') != undefined) {
+      if (this.stakingForm.value.fromNEOWallet == '' || this.stakingForm.value.fromNEOWallet != this.etherService.selectedAddress ) {
+        /*if (localStorage.getItem('etheraccount') != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(localStorage.getItem('etheraccount'));
+        }*/
+        if (this.etherService.selectedAddress != undefined) {
+          this.stakingForm.get('fromNEOWallet').setValue(this.etherService.selectedAddress);
         }
       }
-      if (this.stakingForm.value.toQLCWallet == '') {
+      if (this.stakingForm.value.toQLCWallet == '' || !this.neowallets.find((wallet) => wallet.id == this.stakingForm.value.toQLCWallet)) {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
         }

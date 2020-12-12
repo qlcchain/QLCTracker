@@ -10,6 +10,7 @@ import BigNumber from 'bignumber.js';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalUnlockComponent } from '../modal-unlock/modal-unlock.component';
 import { ChainxAccountService } from '../../services/chainx-account.service';
+import { EtherWalletService } from 'src/app/services/ether-wallet.service';
 
 @Component({
   selector: 'app-myaccounts',
@@ -57,7 +58,8 @@ export class MyaccountsComponent implements OnInit {
     private addressBook: AddressBookService,
     public settings: AppSettingsService,
     private trans: TranslateService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    public etherService: EtherWalletService
   ) {
     this.loadLang();
   }

@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 // import { testContract } from 'src/constants/abi/testContract';
 import { neo5toerc20swap } from 'src/constants/abi/neo5toerc20swap';
 import axios from 'axios';
-import { AnyARecord } from 'dns';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,6 +17,15 @@ address: any = environment.etherswapSmartContract[environment.neoNetwork];
 private url: string = environment.neo5toerc20swapwrapperurl[environment.neoNetwork];
 private neo5toerc20swapjwtauth = environment.neo5toerc20swapjwtauth[environment.neoNetwork];
 abi = neo5toerc20swap;
+selectedAddress: string = '';
+balances = {
+  ETH: 0,
+  QLC: 0
+}
+transactions: any[];
+erc20Transactions: any[];
+internalTransactions: any[];
+
   constructor() {
     if ((window as any).ethereum ||
     ((window as any).web3 && (window as any).web3.currentProvider)) {
@@ -27,7 +36,101 @@ abi = neo5toerc20swap;
       console.log('Please connect the metamask first!');
       this.metamask = false;
     }
+
+    this.web3?.currentProvider.publicConfigStore.on('update', (data) => {
+      const ethAddress = (window as any).web3.currentProvider.selectedAddress;
+      if (this.selectedAddress !== ethAddress) {
+        this.accounts = [ ethAddress ]
+        this.selectedAddress = ethAddress;
+        this.getBalances(ethAddress);
+        this.getAllTransactions(ethAddress);
+      }
+    });
   }
+
+  
+  async getBalances(address) {
+    const qlcBalance = await this.getTokenBalance(address, this.address);
+    const qlcBalanceNumber = new BigNumber(qlcBalance?.data?.result)
+    .dividedBy(Math.pow(10, 8))
+    .toNumber();
+    this.balances.QLC = qlcBalanceNumber;
+
+    const ethBalance = await this.getEthBalanceApi(address);
+    const ethBalanceNumber = new BigNumber(ethBalance?.data?.result)
+    .dividedBy(Math.pow(10, 18))
+    .toNumber();
+    this.balances.ETH = ethBalanceNumber;
+  }
+
+  async getAllTransactions(address) {
+    this.transactions = [];
+    this.erc20Transactions = [];
+    this.internalTransactions = [];
+
+    const transactions:any = await this.getTransactions(address, 10);
+    if (transactions.data.result) {
+      this.transactions = transactions.data.result
+    }
+    const erc20Transactions = await this.getERC20Transactions(address, 10);
+    if (erc20Transactions.data.result) {
+      this.erc20Transactions = erc20Transactions.data.result
+    }
+    const internalTransactions = await this.getInternalTransactions(address, 10);
+    if (internalTransactions.data.result) {
+      this.internalTransactions = internalTransactions.data.result
+    }
+  }
+  
+  async getEthBalanceApi(address: string) {
+    const balance = await axios
+      .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=balance&address=${address}&tag=latest&apikey=${environment.ethEtherscanApiKey}`)
+    return balance
+  }
+  
+  async getTokenBalance(address: string, contractaddress: string) {
+    const balance = await axios
+      .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=tokenbalance&address=${address}&contractaddress=${contractaddress}&tag=latest&apikey=${environment.ethEtherscanApiKey}`)
+    return balance
+  }
+
+  async getTransactions(address: string, numOfTransactions: number = null) {
+    const size = numOfTransactions ? `&page=1&offset=${numOfTransactions}` : '';
+    const transactions = await axios
+      .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`)
+    return transactions
+  }
+
+  async getERC20Transactions(address: string, numOfTransactions: number = null) {
+    const size = numOfTransactions ? `&page=1&offset=${numOfTransactions}` : '';
+    const transactions = await axios
+    .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=tokentx&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`)
+    return transactions
+  }
+
+  async getInternalTransactions(address: string, numOfTransactions: number = null) {
+    const size = numOfTransactions ? `&page=1&offset=${numOfTransactions}` : '';
+    const transactions = await axios
+    .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=txlistinternal&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`)
+    return transactions
+  }
+
+  getDefaultNetwork() {
+    return environment.ethNetworkDefault;
+  }
+
+  getExplorer() {
+    return environment.ethExplorer[environment.ethNetworkDefault];
+  }
+
+  async connectWallet() {
+    try {
+      const test = await (window as any).ethereum.enable();
+    } catch (error) {
+      console.log(error)      
+    }
+  }
+
   // get erc20 account address
   async getAccounts() {
     // tslint:disable-next-line: new-parens
@@ -230,19 +333,29 @@ abi = neo5toerc20swap;
       return data;
     }
 
+    checkIfWallet() {
+      if (this.web3?.eth) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   // get erc20 contract balance
   async getEthQLCBalance(account: any) {
-    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-    // console.log('getEthQLCBalance.account', account);
-    Contract.methods.balanceOf(account).call().then(sum => {
-      const balance = new BigNumber(sum)
-      .dividedBy(Math.pow(10, 8))
-      .toNumber();
-      console.log('ether-wallet.service.getEthQLCBalance', balance);
-      localStorage.setItem('qlcbalance', balance.toString());
-      return balance;
-  });
- }
+    if (!this.checkIfWallet()) {
+      return;
+    }
+      const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+      // console.log('getEthQLCBalance.account', account);
+      Contract.methods.balanceOf(account).call().then(sum => {
+        const balance = new BigNumber(sum)
+        .dividedBy(Math.pow(10, 8))
+        .toNumber();
+        console.log('ether-wallet.service.getEthQLCBalance', balance);
+        localStorage.setItem('qlcbalance', balance.toString());
+        return balance;
+      });
+  }
   // mint erc20 token
   async getEthMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice?: any) {
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
@@ -258,19 +371,56 @@ abi = neo5toerc20swap;
       return result;
     });
  }
- // burn erc20 token
- async getEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
+
+ async estimateGasEthMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice?: any) {
   const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-  console.log('ether-wallet.service.getEthBurn.amount', amount);
-  console.log('ether-wallet.service.getEthBurn.nep5Hash', nep5Address);
-  console.log('ether-wallet.service.account', account);
-  return await Contract.methods.burn(nep5Address, amount).send({
+  console.log('getEthMint.amount', amount);
+  console.log('getEthMint.nep5Hash', nep5Hash);
+  console.log('getEthMint.signature', signature);
+  console.log('getEthMint.account', account);
+
+  return await Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).estimateGas({
       from: account,
       gasPrice
-  }).then(result => {
-    localStorage.setItem('txHash', result.transactionHash);
-    console.log('getEthBurn.result', result);
-    return result;
-  });
-}
+  })
+  .then( (gasAmount) => {
+    return gasAmount
+  })
+  .catch( (error) => {
+    console.log(error)
+  })
+ }
+
+ // burn erc20 token
+  async getEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
+    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+    console.log('getEthBurn.amount', amount);
+    console.log('getEthBurn.nep5Hash', nep5Address);
+    console.log('account', account);
+    return await Contract.methods.burn(nep5Address, amount).send({
+        from: account,
+        gasPrice
+    }).then(result => {
+      localStorage.setItem('txHash', result.transactionHash);
+      console.log('getEthBurn.result', result);
+      return result;
+    });
+  }
+
+  async estimateGasEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
+    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+    console.log('getEthBurn.amount', amount);
+    console.log('getEthBurn.nep5Hash', nep5Address);
+    console.log('account', account);
+    return await Contract.methods.burn(nep5Address, amount).estimateGas({
+        from: account,
+        gasPrice
+    })
+    .then( (gasAmount) => {
+      return gasAmount
+    })
+    .catch( (error) => {
+      console.log(error)
+    })
+  }
 }
