@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AddressBookService } from '../../../services/address-book.service';
 import { NotificationService } from '../../../services/notification.service';
 import { EtherWalletService } from 'src/app/services/ether-wallet.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-erc20-wallet',
@@ -12,6 +13,8 @@ import { EtherWalletService } from 'src/app/services/ether-wallet.service';
   styleUrls: ['./erc20-wallet.component.scss']
 })
 export class Erc20WalletComponent implements OnInit {
+  neotubeSite = environment.neotubeSite[environment.neoNetwork];
+  etherscan = environment.etherscan[environment.neoNetwork];
   swapHistory: any[] = [];
   address = this.etherService.selectedAddress;
   addresslc: string;
