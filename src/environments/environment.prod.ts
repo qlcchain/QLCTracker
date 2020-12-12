@@ -9,6 +9,7 @@ export const environment = {
   qlcChainNetwork: 'main', // test or main
   neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
+  ethNetworkDefault: 'rinkeby', // mainnet, ropsten, rinkeby
   mainRpcUrl: {
     test: '',
     main: 'https://rpc.qlcchain.online'
@@ -28,6 +29,17 @@ export const environment = {
   etherscan: {
     test: 'https://rinkeby.etherscan.io/',
     main: 'https://etherscan.io/'
+  },
+  ethExplorer: {
+    mainnet: 'https://etherscan.io',
+    ropsten: 'https://ropsten.etherscan.io',
+    rinkeby: 'https://rinkeby.etherscan.io'
+  },
+  ethEtherscanApiKey: 'QB9XWH5BSIYIVIVZ5A85C8TK3XTH4WPVAK',
+  ethEtherscanApi: {
+    mainnet: 'https://api.etherscan.io',
+    ropsten: 'https://api-ropsten.etherscan.io',
+    rinkeby: 'https://api-rinkeby.etherscan.io'
   },
   neotubeSite: {
     test: 'https://testnet.neotube.io/',
