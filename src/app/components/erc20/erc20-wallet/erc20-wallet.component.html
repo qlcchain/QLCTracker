@@ -1,6 +1,6 @@
 <app-user-submenu></app-user-submenu>
 
-<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="!etherService || etherService?.selectedAddress == ''">
+<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
   <div class="row">
     <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
       <!-- LATEST TRANSACTIONS -->
@@ -23,7 +23,7 @@
     </div>
   </div>
 </div>
-<div class="container pb-2" *ngIf="!etherService || etherService?.selectedAddress == ''">
+<div class="container pb-2" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
   <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
     <!-- LEFT -->
     <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 order-lg-1 pl-0 pr-0 mb-3">

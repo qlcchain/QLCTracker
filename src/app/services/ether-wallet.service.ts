@@ -30,9 +30,8 @@ internalTransactions: any[];
   constructor() {
     if ((window as any).ethereum ||
     ((window as any).web3 && (window as any).web3.currentProvider)) {
-      (window as any).ethereum.enable();
+      //(window as any).ethereum.enable();
       this.web3 = new Web3((window as any).web3.currentProvider);
-      this.metamask = true;
     } else {
       console.log('Please connect the metamask first!');
       this.metamask = false;
@@ -40,6 +39,11 @@ internalTransactions: any[];
 
     this.web3?.currentProvider.publicConfigStore.on('update', (data) => {
       const ethAddress = (window as any).web3.currentProvider.selectedAddress;
+      if (ethAddress) {
+        this.metamask = true;
+      } else {
+        this.metamask = false;
+      }
       if (this.selectedAddress !== ethAddress) {
         this.accounts = [ ethAddress ];
         this.selectedAddress = ethAddress;
@@ -61,17 +65,24 @@ internalTransactions: any[];
     console.log('swapHistory', this.swapHistory);
   }
   async getBalances(address) {
-    const qlcBalance = await this.getTokenBalance(address, this.address);
-    const qlcBalanceNumber = new BigNumber(qlcBalance?.data?.result)
-    .dividedBy(Math.pow(10, 8))
-    .toNumber();
-    this.balances.QLC = qlcBalanceNumber;
-
-    const ethBalance = await this.getEthBalanceApi(address);
-    const ethBalanceNumber = new BigNumber(ethBalance?.data?.result)
-    .dividedBy(Math.pow(10, 18))
-    .toNumber();
-    this.balances.ETH = ethBalanceNumber;
+    if (address && address != '') {
+      const qlcBalance = await this.getTokenBalance(address, this.address);
+      const qlcBalanceNumber = new BigNumber(qlcBalance?.data?.result)
+      .dividedBy(Math.pow(10, 8))
+      .toNumber();
+      this.balances.QLC = qlcBalanceNumber;
+  
+      const ethBalance = await this.getEthBalanceApi(address);
+      const ethBalanceNumber = new BigNumber(ethBalance?.data?.result)
+      .dividedBy(Math.pow(10, 18))
+      .toNumber();
+      this.balances.ETH = ethBalanceNumber;
+    } else {
+      this.balances = {
+        QLC: 0,
+        ETH: 0
+      }
+    }
   }
 
   async getAllTransactions(address) {
@@ -79,17 +90,19 @@ internalTransactions: any[];
     this.erc20Transactions = [];
     this.internalTransactions = [];
 
-    const transactions:any = await this.getTransactions(address, 10);
-    if (transactions.data.result) {
-      this.transactions = transactions.data.result
-    }
-    const erc20Transactions = await this.getERC20Transactions(address, 10);
-    if (erc20Transactions.data.result) {
-      this.erc20Transactions = erc20Transactions.data.result
-    }
-    const internalTransactions = await this.getInternalTransactions(address, 10);
-    if (internalTransactions.data.result) {
-      this.internalTransactions = internalTransactions.data.result
+    if (address && address != '') {
+      const transactions:any = await this.getTransactions(address, 10);
+      if (transactions.data.result) {
+        this.transactions = transactions.data.result
+      }
+      const erc20Transactions = await this.getERC20Transactions(address, 10);
+      if (erc20Transactions.data.result) {
+        this.erc20Transactions = erc20Transactions.data.result
+      }
+      const internalTransactions = await this.getInternalTransactions(address, 10);
+      if (internalTransactions.data.result) {
+        this.internalTransactions = internalTransactions.data.result
+      }
     }
   }
   

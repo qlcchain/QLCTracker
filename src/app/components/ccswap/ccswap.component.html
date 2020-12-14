@@ -1,11 +1,11 @@
 <app-user-submenu></app-user-submenu>
 
 <!-- check metamask -->
-<div class="stake-screen-1" *ngIf="!this.metamask">
+<div class="stake-screen-1" *ngIf="!etherService.metamask">
   <app-erc20-wallet></app-erc20-wallet>
 </div>
 <!-- step 1: choose account to swap -->
- <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && this.metamask'>
+ <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && etherService.metamask'>
 
 <!-- SEND FORM -->
 <div class="row">

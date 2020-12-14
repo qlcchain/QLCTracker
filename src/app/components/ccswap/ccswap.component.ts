@@ -69,7 +69,7 @@ export class CcswapComponent implements OnInit {
   accounts = this.walletService.wallet.accounts;
   neowallets = this.walletService.wallet.neowallets;
   etheraccounts: any[];
-  metamask: any;
+  metamask = this.etherService.metamask;
   stakingTypes;
 
   staking = {
@@ -286,8 +286,6 @@ export class CcswapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.metamask = this.etherService.metamask;
-    // tslint:disable-next-line: radix
     this.getEtherAccounts();
     this.loadBalances();
     this.initEthThreeGasFee();
