@@ -300,6 +300,23 @@
             </div>
           </div>
         </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-3 mt-3">
+              <img src="assets/img/token-qlc.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <ng-container *ngIf="!loading; else showLoadingTemplate">
+                  <div class="col-12 pb-0" >{{ etherService?.balances?.QLC | currency:'':'':'1.2-8' }} QLC</div>
+                </ng-container>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0 pl-3 pr-3">
