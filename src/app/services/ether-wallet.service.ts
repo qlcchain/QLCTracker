@@ -22,7 +22,7 @@ selectedAddress: string = '';
 balances = {
   ETH: 0,
   QLC: 0
-}
+};
 transactions: any[];
 erc20Transactions: any[];
 internalTransactions: any[];
@@ -30,7 +30,7 @@ internalTransactions: any[];
   constructor() {
     if ((window as any).ethereum ||
     ((window as any).web3 && (window as any).web3.currentProvider)) {
-      //(window as any).ethereum.enable();
+      // (window as any).ethereum.enable();
       this.web3 = new Web3((window as any).web3.currentProvider);
     } else {
       console.log('Please connect the metamask first!');
@@ -71,7 +71,6 @@ internalTransactions: any[];
       .dividedBy(Math.pow(10, 8))
       .toNumber();
       this.balances.QLC = qlcBalanceNumber;
-  
       const ethBalance = await this.getEthBalanceApi(address);
       const ethBalanceNumber = new BigNumber(ethBalance?.data?.result)
       .dividedBy(Math.pow(10, 18))
@@ -81,7 +80,7 @@ internalTransactions: any[];
       this.balances = {
         QLC: 0,
         ETH: 0
-      }
+      };
     }
   }
 
@@ -93,50 +92,46 @@ internalTransactions: any[];
     if (address && address != '') {
       const transactions:any = await this.getTransactions(address, 10);
       if (transactions.data.result) {
-        this.transactions = transactions.data.result
+        this.transactions = transactions.data.result;
       }
       const erc20Transactions = await this.getERC20Transactions(address, 10);
       if (erc20Transactions.data.result) {
-        this.erc20Transactions = erc20Transactions.data.result
+        this.erc20Transactions = erc20Transactions.data.result;
       }
       const internalTransactions = await this.getInternalTransactions(address, 10);
       if (internalTransactions.data.result) {
-        this.internalTransactions = internalTransactions.data.result
+        this.internalTransactions = internalTransactions.data.result;
       }
     }
   }
-  
   async getEthBalanceApi(address: string) {
     const balance = await axios
-      .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=balance&address=${address}&tag=latest&apikey=${environment.ethEtherscanApiKey}`)
-    return balance
+      .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=balance&address=${address}&tag=latest&apikey=${environment.ethEtherscanApiKey}`);
+    return balance;
   }
-  
   async getTokenBalance(address: string, contractaddress: string) {
     const balance = await axios
       .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=tokenbalance&address=${address}&contractaddress=${contractaddress}&tag=latest&apikey=${environment.ethEtherscanApiKey}`)
-    return balance
+    return balance;
   }
-
   async getTransactions(address: string, numOfTransactions: number = null) {
     const size = numOfTransactions ? `&page=1&offset=${numOfTransactions}` : '';
     const transactions = await axios
-      .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`)
-    return transactions
+      .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`);
+    return transactions;
   }
 
   async getERC20Transactions(address: string, numOfTransactions: number = null) {
     const size = numOfTransactions ? `&page=1&offset=${numOfTransactions}` : '';
-    const transactions = await axios
-    .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=tokentx&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`)
-    return transactions
+    const transactions = await axios.get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=tokentx&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`);
+    return transactions;
   }
 
   async getInternalTransactions(address: string, numOfTransactions: number = null) {
     const size = numOfTransactions ? `&page=1&offset=${numOfTransactions}` : '';
     const transactions = await axios
-    .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=txlistinternal&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`)
-    return transactions
+    .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=txlistinternal&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${environment.ethEtherscanApiKey}${size}`);
+    return transactions;
   }
 
   getDefaultNetwork() {
@@ -151,7 +146,7 @@ internalTransactions: any[];
     try {
       const test = await (window as any).ethereum.enable();
     } catch (error) {
-      console.log(error)      
+      console.log(error);
     }
   }
 
@@ -164,7 +159,7 @@ internalTransactions: any[];
         localStorage.setItem('etheraccount', account[0]);
         return account;
       }
-     }).catch(err =>{
+     }).catch(err => {
        return err;
      });
   }
@@ -250,6 +245,19 @@ internalTransactions: any[];
                 authorization: this.neo5toerc20swapjwtauth.authorization
             }
               }
+          );
+          return data;
+        }
+        // deposit/ethTransactionConfirmed
+        async depositethTransactionConfirmed(txid: any) {
+          const data = await axios.post(this.url + '/deposit/ethTransactionConfirmed', {
+              hash: txid
+          },
+          {
+            headers: {
+              authorization: this.neo5toerc20swapjwtauth.authorization
+          }
+            }
           );
           return data;
         }
@@ -369,16 +377,16 @@ internalTransactions: any[];
     if (!this.checkIfWallet()) {
       return;
     }
-      const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-      // console.log('getEthQLCBalance.account', account);
-      Contract.methods.balanceOf(account).call().then(sum => {
-        const balance = new BigNumber(sum)
-        .dividedBy(Math.pow(10, 8))
-        .toNumber();
-        console.log('ether-wallet.service.getEthQLCBalance', balance);
-        localStorage.setItem('qlcbalance', balance.toString());
-        return balance;
-      });
+    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+    // console.log('getEthQLCBalance.account', account);
+    Contract.methods.balanceOf(account).call().then(sum => {
+      const balance = new BigNumber(sum)
+      .dividedBy(Math.pow(10, 8))
+      .toNumber();
+      console.log('ether-wallet.service.getEthQLCBalance', balance);
+      localStorage.setItem('qlcbalance', balance.toString());
+      return balance;
+    });
   }
   // mint erc20 token
   async getEthMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice?: any) {
@@ -391,7 +399,8 @@ internalTransactions: any[];
         from: account,
         gasPrice
     }).then(result => {
-      console.log('result', result);
+      localStorage.setItem('EthMinttxHash', result.transactionHash);
+      console.log('getEthMint', result);
       return result;
     });
  }
@@ -408,11 +417,11 @@ internalTransactions: any[];
       gasPrice
   })
   .then( (gasAmount) => {
-    return gasAmount
+    return gasAmount;
   })
   .catch( (error) => {
-    console.log(error)
-  })
+    console.log(error);
+  });
  }
 
  // burn erc20 token
@@ -441,10 +450,10 @@ internalTransactions: any[];
         gasPrice
     })
     .then( (gasAmount) => {
-      return gasAmount
+      return gasAmount;
     })
     .catch( (error) => {
-      console.log(error)
-    })
+      console.log(error);
+    });
   }
 }
