@@ -328,11 +328,6 @@ export class CcswapComponent implements OnInit {
     const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
       txid
     );
-    // check bunr ethTxHash
-    const checkburnEthTransaction = await this.etherService.checkEthTransaction(
-      ethTxHash
-    );
-    console.log('checkburnEthTransaction', checkburnEthTransaction?.data?.value);
     // const txid = swapInfoByTxHash.data.neoHash.slice(2);
     if (swapInfoByTxHash?.data?.state == 0) {
       // deposit:state in(0,1); withdraw:state(2,3,4)
@@ -412,38 +407,35 @@ export class CcswapComponent implements OnInit {
           }
         }, 5000);
       }
-    } else if (swapInfoByTxHash?.data?.state == 4) {
-      this.step = 3;
-      // only when withdrawfail: state == 4 to call EthTransactionConfirmed to recover withdraw
-      // when withdrawfail,only make ethTxHash
-      this.ethTxHash = ethTxHash;
-      this.haveswappedamount = new BigNumber(swapInfoByTxHash.data.amount)
-      .dividedBy(Math.pow(10, 8))
-      .toNumber();
-      const ethTransactionConfirmed: any = await this.etherService.ethTransactionConfirmed(ethTxHash);
-      console.log('withdrawfailetocallethTransactionConfirmed', ethTransactionConfirmed?.data?.value);
-      if (ethTransactionConfirmed?.data?.value) {
-        const id = setInterval(async () => {
-          // tslint:disable-next-line: no-shadowed-variable
-          const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
-            txid,
-          );
-          // tslint:disable-next-line: triple-equals
-          if (swapInfoByTxHash?.data?.state == 3) {
-            this.neoTxHash = swapInfoByTxHash?.data?.neoTxHash;
-            console.log('cleardInterval.id', id);
-            clearInterval(id);
-            this.invokeSteps.push({
-              msg:
-                'the whole process successfull',
-              checkimg: 1,
-            });
-            this.step = 4;
-            window.scrollTo(0, 0);
-          }
-        }, 5000);
+    } else if (swapInfoByTxHash?.data?.state == 1) {
+      // check ethTxHash
+      console.log('ethTxHash', swapInfoByTxHash?.data?.ethTxHash);
+      if (swapInfoByTxHash?.data?.ethTxHash == '') {
+        // when state =1 and ethTxHash ='', call depositethTransactionConfirmed
+        const depositethTransactionConfirmed = await this.etherService.depositethTransactionConfirmed(
+          localStorage.getItem('EthMinttxHash')
+        );
+        this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
+        this.invokeSteps.push({
+          msg:
+            'Mint ERC20 TOKEN succesfull, the whole process successfull',
+          checkimg: 1,
+        });
+        this.step = 4;
+        window.scrollTo(0, 0);
+      } else {
+        return this.notifications.sendWarning('swap completed');
       }
-    } else if (checkburnEthTransaction?.data?.value) {
+    } else if (swapInfoByTxHash?.data?.state == 3) {
+      // state=3 is withdrawdown
+      return this.notifications.sendWarning('swap completed');
+    } else {
+      // check if make ethTxHash
+    const checkburnEthTransaction = await this.etherService.checkEthTransaction(
+      ethTxHash
+    );
+    console.log('checkburnEthTransaction', checkburnEthTransaction?.data?.value);
+    if (checkburnEthTransaction?.data?.value && swapInfoByTxHash?.data?.state != 3) {
       this.step = 3;
       // deal withdraw error
       this.ethTxHash = ethTxHash;
@@ -473,10 +465,9 @@ export class CcswapComponent implements OnInit {
           }
         }, 5000);
       }
-
     } else {
-      this.recoverSteps.push({ msg: 'ERROR - TXID not found'});
-      return;
+      return this.notifications.sendWarning('swap completed');
+    }
     }
   }
 
@@ -1038,6 +1029,16 @@ export class CcswapComponent implements OnInit {
                   const depositethTransactionConfirmed = await this.etherService.depositethTransactionConfirmed(
                     localStorage.getItem('EthMinttxHash')
                   );
+                  console.log('cleardInterval.id', id);
+                  this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
+                  clearInterval(id);
+                  this.invokeSteps.push({
+                    msg:
+                      'Mint ERC20 TOKEN succesfull, the whole process is successfull.',
+                    checkimg: 1,
+                  });
+                  this.step = 4;
+                  window.scrollTo(0, 0);
                 } else {
                   console.log('cleardInterval.id', id);
                   this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;

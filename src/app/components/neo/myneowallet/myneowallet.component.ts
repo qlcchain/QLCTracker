@@ -157,6 +157,13 @@ export class MyneowalletComponent implements OnInit {
       this.walletId = this.wallet.accounts[0].accountMeta.account;
     }
 
+    const swaptransactions: any = await this.etherService.swapInfosByAddress(
+      this.walletId,
+      1,
+      20
+    );
+    this.swapHistory = swaptransactions.data.infos;
+
     this.walletAccount = this.wallet.neowallets.find(
       (a) => a.id === this.walletId
     );
@@ -180,12 +187,6 @@ export class MyneowalletComponent implements OnInit {
     this.walletHistory = transactions.entries;
     const qrCode = await QRCode.toDataURL(`${this.walletId}`);
     this.qrCodeImage = qrCode;
-    const swaptransactions: any = await this.etherService.swapInfosByAddress(
-      this.walletId,
-      1,
-      20
-    );
-    this.swapHistory = swaptransactions.data.infos;
   }
 
   editName() {

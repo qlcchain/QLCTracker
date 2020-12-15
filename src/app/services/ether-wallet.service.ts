@@ -54,15 +54,12 @@ internalTransactions: any[];
     });
   }
   async getswapHistory(address: any) {
-    console.log('getswapHistory.address', address);
     const swaptransactions: any = await this.swapInfosByAddress(
       address,
       1,
       20
     );
     this.swapHistory = swaptransactions.data.infos;
-    console.log('swaptransactions.data.infos', swaptransactions.data.infos);
-    console.log('swapHistory', this.swapHistory);
   }
   async getBalances(address) {
     if (address && address != '') {
