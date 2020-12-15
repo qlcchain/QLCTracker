@@ -42,8 +42,8 @@ export class Erc20WalletComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // this.getEtherAccounts();
     this.addresslc = this.address.toLowerCase();
+    // this.getEtherAccounts();
     this.loadWallet();
   }
   // async getEtherAccounts() {
