@@ -321,12 +321,12 @@ export class CcswapComponent implements OnInit {
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning('ERROR wallet locked');
     }
-    const ethTxHash = this.recoverForm.get('recover_txid').value;
+    const ethTxHash = this.recoverForm.get('recover_txid').value.startsWith('0x') ? this.recoverForm.get('recover_txid').value : '0x' + this.recoverForm.get('recover_txid').value;
     console.log('txid', this.recoverForm.get('recover_txid').value);
     console.log('txid.slice', this.recoverForm.get('recover_txid').value.slice(2));
     const txid = txhash ? txhash.slice(2) : this.recoverForm.get('recover_txid').value.slice(2);
     const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
-      txid
+      ethTxHash
     );
     // const txid = swapInfoByTxHash.data.neoHash.slice(2);
     if (swapInfoByTxHash?.data?.state == 0) {
@@ -358,7 +358,7 @@ export class CcswapComponent implements OnInit {
         const id = setInterval(async () => {
           // tslint:disable-next-line: no-shadowed-variable
           const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
-            txid,
+            ethTxHash,
           );
           // CheckEthTransaction mintErc20Token
           const checkEthTransaction = await this.etherService.checkEthTransaction(
@@ -445,7 +445,7 @@ export class CcswapComponent implements OnInit {
         const id = setInterval(async () => {
           // tslint:disable-next-line: no-shadowed-variable
           const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
-            txid,
+            ethTxHash,
           );
           // tslint:disable-next-line: triple-equals
           if (swapInfoByTxHash?.data?.state == 3) {
