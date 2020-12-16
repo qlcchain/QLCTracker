@@ -50,6 +50,7 @@ internalTransactions: any[];
         this.getBalances(ethAddress);
         this.getAllTransactions(ethAddress);
         this.getswapHistory(ethAddress);
+        this.getAccounts();
       }
     });
   }
@@ -63,16 +64,21 @@ internalTransactions: any[];
   }
   async getBalances(address) {
     if (address && address != '') {
-      const qlcBalance = await this.getTokenBalance(address, this.address);
-      const qlcBalanceNumber = new BigNumber(qlcBalance?.data?.result)
-      .dividedBy(Math.pow(10, 8))
-      .toNumber();
+      // const qlcBalance = await this.getTokenBalance(address, this.address);
+      console.log('getBalances.address', address);
+      const qlcBalance: any = await this.getEthQLCBalance(address);
+      console.log('getBalances.qlcbalance', localStorage.getItem('qlcbalance'));
+      const qlcBalanceNumber: any = localStorage.getItem('qlcbalance');
       this.balances.QLC = qlcBalanceNumber;
-      const ethBalance = await this.getEthBalanceApi(address);
-      const ethBalanceNumber = new BigNumber(ethBalance?.data?.result)
+      // const ethBalance = await this.getEthBalanceApi(address);
+      const ethBalance = await this.getEthBalance(address);
+      const ethBalanceNumber = new BigNumber(ethBalance)
       .dividedBy(Math.pow(10, 18))
       .toNumber();
+      console.log('getBalances.ethBalance', ethBalance);
+      console.log('getBalances.ethBalanceNumber', ethBalanceNumber);
       this.balances.ETH = ethBalanceNumber;
+      console.log('this.balances', this.balances);
     } else {
       this.balances = {
         QLC: 0,
@@ -245,9 +251,22 @@ internalTransactions: any[];
           );
           return data;
         }
-        // deposit/ethTransactionConfirmed
+        // depositethTransactionConfirmed
         async depositethTransactionConfirmed(txid: any) {
           const data = await axios.post(this.url + '/deposit/ethTransactionConfirmed', {
+              hash: txid
+          },
+          {
+            headers: {
+              authorization: this.neo5toerc20swapjwtauth.authorization
+          }
+            }
+          );
+          return data;
+        }
+        // deposit/ethTransactionSent
+        async depositethTransactionSent(txid: any) {
+          const data = await axios.post(this.url + '/deposit/ethTransactionSent', {
               hash: txid
           },
           {
@@ -261,9 +280,22 @@ internalTransactions: any[];
         // deposit end
 
         // withdraw start method:post
-        // withdraw/ethTransactionConfirmed
-        async ethTransactionConfirmed(txid: any) {
+        // withdrawethTransactionConfirmed
+        async withdrawethTransactionConfirmed(txid: any) {
           const data = await axios.post(this.url + '/withdraw/ethTransactionConfirmed', {
+              hash: txid
+          },
+          {
+            headers: {
+              authorization: this.neo5toerc20swapjwtauth.authorization
+          }
+            }
+          );
+          return data;
+        }
+        // withdraw/ethTransactionSent
+        async withdrawethTransactionSent(txid: any) {
+          const data = await axios.post(this.url + '/withdraw/ethTransactionSent', {
               hash: txid
           },
           {
@@ -392,11 +424,13 @@ internalTransactions: any[];
     console.log('ether-wallet.service.getEthMint.nep5Hash', nep5Hash);
     console.log('ether-wallet.service.getEthMint.signature', signature);
     console.log('ether-wallet.service.getEthMint.account', account);
-    return await Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).send({
+    return await Contract.methods.mint(amount, nep5Hash, signature).send({
         from: account,
         gasPrice
     }).then(result => {
       localStorage.setItem('EthMinttxHash', result.transactionHash);
+      // send ethTxHash to hub
+      this.depositethTransactionSent(result.transactionHash);
       console.log('getEthMint', result);
       return result;
     });
@@ -409,7 +443,7 @@ internalTransactions: any[];
   console.log('getEthMint.signature', signature);
   console.log('getEthMint.account', account);
 
-  return await Contract.methods.mint(amount, '0x' + nep5Hash, '0x' + signature).estimateGas({
+  return await Contract.methods.mint(amount, nep5Hash, signature).estimateGas({
       from: account,
       gasPrice
   })
@@ -432,6 +466,8 @@ internalTransactions: any[];
         gasPrice
     }).then(result => {
       localStorage.setItem('txHash', result.transactionHash);
+      // send ethTxHash to hub
+      this.withdrawethTransactionSent(result.transactionHash);
       console.log('getEthBurn.result', result);
       return result;
     });

@@ -29,6 +29,8 @@ const nacl = window['nacl'];
   styleUrls: ['./ccswap.component.scss'],
 })
 export class CcswapComponent implements OnInit {
+  neotubeSite = environment.neotubeSite[environment.neoNetwork];
+  etherscan = environment.etherscan[environment.neoNetwork];
   haveswappedamount: any;
   ethbalance: any;
   transactions: any[] = [];
@@ -281,7 +283,7 @@ export class CcswapComponent implements OnInit {
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
     etherService?.web3?.currentProvider.publicConfigStore.on('update', (data) => {
-      this.selectAccount()
+      this.selectAccount();
     });
   }
 
@@ -321,10 +323,12 @@ export class CcswapComponent implements OnInit {
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning('ERROR wallet locked');
     }
-    const ethTxHash = this.recoverForm.get('recover_txid').value.startsWith('0x') ? this.recoverForm.get('recover_txid').value : '0x' + this.recoverForm.get('recover_txid').value;
-    console.log('txid', this.recoverForm.get('recover_txid').value);
-    console.log('txid.slice', this.recoverForm.get('recover_txid').value.slice(2));
-    const txid = txhash ? txhash.slice(2) : this.recoverForm.get('recover_txid').value.slice(2);
+    console.log('length', this.recoverForm.get('recover_txid').value.length);
+    const ethTxHash = txhash ? txhash : this.recoverForm.get('recover_txid').value.startsWith('0x') ? 
+    this.recoverForm.get('recover_txid').value : '0x' + this.recoverForm.get('recover_txid').value;
+    console.log('this.recoverForm.getvalue', this.recoverForm.get('recover_txid').value);
+    console.log('ethTxHash', ethTxHash);
+    // const txid = txhash ? txhash.slice(2) : this.recoverForm.get('recover_txid').value.slice(2);
     const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
       ethTxHash
     );
@@ -336,21 +340,21 @@ export class CcswapComponent implements OnInit {
       .dividedBy(Math.pow(10, 8))
       .toNumber();
       this.step = 3;
-      console.log('txid.slice', txid);
-      const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
+      console.log('txid.slice', ethTxHash);
+      const getEthOwnerSign = await this.etherService.getEthOwnerSign(ethTxHash);
       console.log('getEthOwnerSign', getEthOwnerSign);
       if (getEthOwnerSign.data.value) {
         const amountWithDecimals = swapInfoByTxHash.data.amount;
         console.log('amountWithDecimals', amountWithDecimals);
-        console.log('txid', txid);
+        console.log('txid', ethTxHash);
         console.log(
           'getEthOwnerSign.data.value',
           getEthOwnerSign.data.value
         );
         const ethMint = await this.etherService.getEthMint(
           amountWithDecimals,
-          txid,
-          getEthOwnerSign.data.value,
+          ethTxHash,
+          '0x' + getEthOwnerSign.data.value,
           swapInfoByTxHash.data.ethUserAddr,
           Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei')
         );
@@ -360,20 +364,8 @@ export class CcswapComponent implements OnInit {
           const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
             ethTxHash,
           );
-          // CheckEthTransaction mintErc20Token
-          const checkEthTransaction = await this.etherService.checkEthTransaction(
-            localStorage.getItem('EthMinttxHash')
-          );
-          console.log('checkEthTransaction', checkEthTransaction?.data?.value);
           // tslint:disable-next-line: triple-equals
           if (swapInfoByTxHash?.data?.state == 1) {
-            // check ethTxHash
-            console.log('ethTxHash', swapInfoByTxHash?.data?.ethTxHash);
-            if (swapInfoByTxHash?.data?.ethTxHash == '') {
-              const depositethTransactionConfirmed = await this.etherService.depositethTransactionConfirmed(
-                localStorage.getItem('EthMinttxHash')
-              );
-            } else {
               this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
               console.log('cleardInterval.id', id);
               clearInterval(id);
@@ -383,65 +375,30 @@ export class CcswapComponent implements OnInit {
                 checkimg: 1,
               });
               this.step = 4;
+              this.loadBalances();
               window.scrollTo(0, 0);
-            }
-          } else if (checkEthTransaction?.data?.value) {
-            // hub can't get eth event
-            // CheckEthTransaction
-            const depositethTransactionConfirmed = await this.etherService.depositethTransactionConfirmed(
-              localStorage.getItem('EthMinttxHash')
-            );
-            // tslint:disable-next-line: triple-equals
-            if (swapInfoByTxHash?.data?.state == 1) {
-              this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
-              console.log('cleardInterval.id', id);
-              clearInterval(id);
-              this.invokeSteps.push({
-                msg:
-                  'Mint ERC20 TOKEN succesfull, the whole process successfull',
-                checkimg: 1,
-              });
-              this.step = 4;
-              window.scrollTo(0, 0);
-            }
           }
         }, 5000);
       }
     } else if (swapInfoByTxHash?.data?.state == 1) {
-      // check ethTxHash
-      console.log('ethTxHash', swapInfoByTxHash?.data?.ethTxHash);
-      if (swapInfoByTxHash?.data?.ethTxHash == '') {
-        // when state =1 and ethTxHash ='', call depositethTransactionConfirmed
-        const depositethTransactionConfirmed = await this.etherService.depositethTransactionConfirmed(
-          localStorage.getItem('EthMinttxHash')
-        );
-        this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
-        this.invokeSteps.push({
-          msg:
-            'Mint ERC20 TOKEN succesfull, the whole process successfull',
-          checkimg: 1,
-        });
-        this.step = 4;
-        window.scrollTo(0, 0);
-      } else {
-        return this.notifications.sendWarning('swap completed');
-      }
-    } else if (swapInfoByTxHash?.data?.state == 3) {
-      // state=3 is withdrawdown
+      // state=1 is depositdown successfull
       return this.notifications.sendWarning('swap completed');
-    } else {
+    } else if (swapInfoByTxHash?.data?.state == 3) {
+      // state=3 is withdrawdown successfull
+      return this.notifications.sendWarning('swap completed');
+    } else if (swapInfoByTxHash?.data?.state == 4) {
       // check if make ethTxHash
     const checkburnEthTransaction = await this.etherService.checkEthTransaction(
       ethTxHash
     );
     console.log('checkburnEthTransaction', checkburnEthTransaction?.data?.value);
-    if (checkburnEthTransaction?.data?.value && swapInfoByTxHash?.data?.state != 3) {
+    if (checkburnEthTransaction?.data?.value) {
       this.step = 3;
       // deal withdraw error
       this.ethTxHash = ethTxHash;
-      const ethTransactionConfirmed: any = await this.etherService.ethTransactionConfirmed(ethTxHash);
-      console.log('withdrawfailetocallethTransactionConfirmed', ethTransactionConfirmed?.data?.value);
-      if (ethTransactionConfirmed?.data?.value) {
+      const withdrawethTransactionConfirmed: any = await this.etherService.withdrawethTransactionConfirmed(ethTxHash);
+      console.log('withdrawfailetocallethTransactionConfirmed', withdrawethTransactionConfirmed?.data?.value);
+      if (withdrawethTransactionConfirmed?.data?.value) {
         const id = setInterval(async () => {
           // tslint:disable-next-line: no-shadowed-variable
           const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
@@ -461,13 +418,15 @@ export class CcswapComponent implements OnInit {
               checkimg: 1,
             });
             this.step = 4;
+            this.loadBalances();
             window.scrollTo(0, 0);
           }
         }, 5000);
       }
-    } else {
-      return this.notifications.sendWarning('swap completed');
     }
+    } else {
+      // don't need to compare state =2
+      return this.notifications.sendWarning('swap completed');
     }
   }
 
@@ -601,6 +560,8 @@ export class CcswapComponent implements OnInit {
   }
 
   async loadBalances() {
+    // reload eth wallet balances:qlc balance & eth balance
+    this.etherService.getBalances(localStorage.getItem('etheraccount'));
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this.neowallets.length; i++) {
       this.neowallets[i].balances = [];
@@ -927,10 +888,6 @@ export class CcswapComponent implements OnInit {
     );
     // CheckEthTransaction
     console.log('burntogettxHash', localStorage.getItem('txHash'));
-    const checkEthTransaction = await this.etherService.checkEthTransaction(
-      localStorage.getItem('txHash')
-    );
-    console.log('checkEthTransaction', checkEthTransaction?.data?.value);
     this.ethTxHash = localStorage.getItem('txHash');
     // tslint:disable-next-line: triple-equals
     console.log('swapInfoByTxHash.data.state', swapInfoByTxHash?.data?.state);
@@ -944,27 +901,9 @@ export class CcswapComponent implements OnInit {
       });
       const waitTimer = timer(2000).subscribe( async (data) => {
         this.step = 4;
+        this.loadBalances();
         window.scrollTo(0, 0);
           });
-    } else if (checkEthTransaction?.data?.value) {
-      // hub can't get eth event
-      // CheckEthTransaction
-      const ethTransactionConfirmed = await this.etherService.ethTransactionConfirmed(
-        localStorage.getItem('txHash')
-      );
-      console.log('cleardInterval.id', id);
-      if (swapInfoByTxHash?.data?.state == 3) {
-        this.neoTxHash = swapInfoByTxHash?.data?.neoTxHash;
-        clearInterval(id);
-        this.invokeSteps.push({
-          msg: 'Swap successfull',
-          checkimg: 1,
-        });
-        const waitTimer = timer(2000).subscribe( async (data) => {
-          this.step = 4;
-          window.scrollTo(0, 0);
-            });
-      }
     }
   }, 5000);
   }
@@ -976,7 +915,7 @@ export class CcswapComponent implements OnInit {
       window.scrollTo(0, 0);
       return this.notifications.sendWarning('ERROR wallet locked');
     }
-    const txid = txData.txHash;
+    const txid = '0x' + txData.txHash;
     this.neoTxHash = txid;
     if (txid) {
       const id = setInterval(async () => {
@@ -1006,7 +945,7 @@ export class CcswapComponent implements OnInit {
             const ethMint = await this.etherService.getEthMint(
               amountWithDecimals,
               txid,
-              getEthOwnerSign.data.value,
+              '0x' + getEthOwnerSign.data.value,
               this.etheraccounts[0],
               Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei')
             );
@@ -1016,59 +955,20 @@ export class CcswapComponent implements OnInit {
               const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
                 txid
               );
-              // CheckEthTransaction
-              // neo5 make txhash no '0x' need to add
-              const checkEthTransaction = await this.etherService.checkEthTransaction(
-                localStorage.getItem('EthMinttxHash')
-              );
-              console.log('checkEthTransaction', checkEthTransaction?.data?.value);
               // tslint:disable-next-line: triple-equals
               if (swapInfoByTxHash?.data?.state == 1) {
                 console.log('ethTxHash', swapInfoByTxHash?.data?.ethTxHash);
-                if (swapInfoByTxHash?.data?.ethTxHash == '') {
-                  const depositethTransactionConfirmed = await this.etherService.depositethTransactionConfirmed(
-                    localStorage.getItem('EthMinttxHash')
-                  );
-                  console.log('cleardInterval.id', id);
-                  this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
-                  clearInterval(id);
-                  this.invokeSteps.push({
-                    msg:
-                      'Mint ERC20 TOKEN succesfull, the whole process is successfull.',
-                    checkimg: 1,
-                  });
-                  this.step = 4;
-                  window.scrollTo(0, 0);
-                } else {
-                  console.log('cleardInterval.id', id);
-                  this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
-                  clearInterval(id);
-                  this.invokeSteps.push({
-                    msg:
-                      'Mint ERC20 TOKEN succesfull, the whole process is successfull.',
-                    checkimg: 1,
-                  });
-                  this.step = 4;
-                  window.scrollTo(0, 0);
-                }
-              } else if (checkEthTransaction?.data?.value) {
-                // hub can't get eth event
-                // CheckEthTransaction
-                const depositethTransactionConfirmed = await this.etherService.depositethTransactionConfirmed(
-                  localStorage.getItem('EthMinttxHash')
-                );
-                if (swapInfoByTxHash?.data?.state == 1) {
-                  console.log('cleardInterval.id', id);
-                  this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
-                  clearInterval(id);
-                  this.invokeSteps.push({
-                    msg:
-                      'Mint ERC20 TOKEN succesfull, the whole process is successfull.',
-                    checkimg: 1,
-                  });
-                  this.step = 4;
-                  window.scrollTo(0, 0);
-                }
+                console.log('cleardInterval.id', id);
+                this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
+                clearInterval(id);
+                this.invokeSteps.push({
+                  msg:
+                    'Mint ERC20 TOKEN succesfull, the whole process is successfull.',
+                  checkimg: 1,
+                });
+                this.step = 4;
+                this.loadBalances();
+                window.scrollTo(0, 0);
               }
             }, 2000);
           }
