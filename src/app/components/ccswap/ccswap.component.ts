@@ -47,9 +47,9 @@ export class CcswapComponent implements OnInit {
   public neoTxHash = '';
   public ethTxHash = '';
   // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
-  public FastGasPrice = parseInt((Math.random() * ( 80 - 50 + 1) + 50).toString(), 10).toString();
-  public ProposeGasPrice = parseInt((Math.random() * ( 50 - 35 + 1) + 35).toString(), 10).toString();
-  public SafeGasPrice = parseInt((Math.random() * ( 35 - 18 + 1) + 18).toString(), 10).toString();
+  public FastGasPrice = parseInt((Math.random() * ( 200 - 150 + 1) + 150).toString(), 10).toString();
+  public ProposeGasPrice = parseInt((Math.random() * ( 150 - 100 + 1) + 100).toString(), 10).toString();
+  public SafeGasPrice = parseInt((Math.random() * ( 100 - 50 + 1) + 50).toString(), 10).toString();
   public gasPrices = {
     FastGasPrice: this.FastGasPrice,
     LastBlock: '0',
@@ -119,7 +119,7 @@ export class CcswapComponent implements OnInit {
       Validators.compose([
         Validators.required,
         Validators.pattern('^([a-zA-Z0-9])*'),
-        Validators.maxLength(128),
+        Validators.maxLength(66),
         Validators.minLength(64),
       ])
     ),
@@ -135,7 +135,7 @@ export class CcswapComponent implements OnInit {
       },
       {
         type: 'maxlength',
-        message: 'Txid cannot be more than 64 characters long',
+        message: 'Txid cannot be more than 66 characters long',
       },
       {
         type: 'pattern',
@@ -290,13 +290,12 @@ export class CcswapComponent implements OnInit {
   ngOnInit() {
     this.getEtherAccounts();
     this.loadBalances();
-    this.initEthThreeGasFee();
   }
 
   async getEtherAccounts() {
     const accounts: any[] = await this.etherService.getAccounts();
     this.etheraccounts = accounts;
-    console.log('this.etherService.selectedAddress', this.etherService.selectedAddress)
+    console.log('this.etherService.selectedAddress', this.etherService.selectedAddress);
     // this.etheraccounts = [this.etherService.selectedAddress];
     this.ethbalance = await this.etherService.getEthBalance(accounts[0]);
     const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
@@ -320,21 +319,25 @@ export class CcswapComponent implements OnInit {
   }
 
   async continueUndoneTransaction(txhash?: any) {
-    if (this.walletService.walletIsLocked()) {
-      return this.notifications.sendWarning('ERROR wallet locked');
-    }
+    // if (this.walletService.walletIsLocked()) {
+    //   return this.notifications.sendWarning('ERROR wallet locked');
+    // }
     console.log('length', this.recoverForm.get('recover_txid').value.length);
     const ethTxHash = txhash ? txhash : this.recoverForm.get('recover_txid').value.startsWith('0x') ? 
     this.recoverForm.get('recover_txid').value : '0x' + this.recoverForm.get('recover_txid').value;
     console.log('this.recoverForm.getvalue', this.recoverForm.get('recover_txid').value);
     console.log('ethTxHash', ethTxHash);
-    if(ethTxHash.length != 66){
+    if (ethTxHash.length != 66) {
       return this.notifications.sendWarning('ERROR please check your txid');
     }
     // const txid = txhash ? txhash.slice(2) : this.recoverForm.get('recover_txid').value.slice(2);
     const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
       ethTxHash
     );
+    console.log('swapInfoByTxHash', swapInfoByTxHash);
+    if (swapInfoByTxHash == '500') {
+      return this.notifications.sendWarning('ERROR txid not found');
+    }
     // const txid = swapInfoByTxHash.data.neoHash.slice(2);
     if (swapInfoByTxHash?.data?.state == 0) {
       // deposit:state in(0,1); withdraw:state(2,3,4)
@@ -429,7 +432,7 @@ export class CcswapComponent implements OnInit {
     }
     } else {
       // don't need to compare state =2
-      return this.notifications.sendWarning('swap completed');
+      return this.notifications.sendWarning('ERROR txid not found');
     }
   }
 
@@ -463,7 +466,7 @@ export class CcswapComponent implements OnInit {
         this.step = 2;
         window.scrollTo(0, 0);
       } else {
-        return this.notifications.sendWarning('please check address or minmum qlc');
+        return this.notifications.sendWarning('please check address or minimum qlc');
       }
     } else if (this.stakingForm.value.stakingType == 2) {
       if (
@@ -477,7 +480,7 @@ export class CcswapComponent implements OnInit {
         this.step = 2;
         window.scrollTo(0, 0);
       } else {
-        return this.notifications.sendWarning('please check address or minmum qlc');
+        return this.notifications.sendWarning('please check address or minimum qlc');
       }
     }
     
@@ -566,6 +569,7 @@ export class CcswapComponent implements OnInit {
     // reload eth wallet balances:qlc balance & eth balance
     this.etherService.getBalances(localStorage.getItem('etheraccount'));
     this.etherService.getswapHistory(localStorage.getItem('etheraccount'));
+    this.initEthThreeGasFee();
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this.neowallets.length; i++) {
       this.neowallets[i].balances = [];

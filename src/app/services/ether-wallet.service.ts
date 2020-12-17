@@ -346,7 +346,7 @@ internalTransactions: any[];
           });
         return data;
       } catch (error) {
-        return error;
+        return 500;
       }
     }
 
