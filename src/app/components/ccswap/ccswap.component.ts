@@ -562,6 +562,7 @@ export class CcswapComponent implements OnInit {
   async loadBalances() {
     // reload eth wallet balances:qlc balance & eth balance
     this.etherService.getBalances(localStorage.getItem('etheraccount'));
+    this.etherService.getswapHistory(localStorage.getItem('etheraccount'));
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this.neowallets.length; i++) {
       this.neowallets[i].balances = [];
@@ -617,6 +618,7 @@ export class CcswapComponent implements OnInit {
       }*/
       console.log('this.etherService.selectedAddress', this.etherService.selectedAddress);
       console.log('this.stakingForm.value.toQLCWallet', this.stakingForm.value.toQLCWallet);
+      this.etherService.getswapHistory(this.etherService.selectedAddress);
       if (this.stakingForm.value.toQLCWallet == '' || this.stakingForm.value.toQLCWallet != this.etherService.selectedAddress ) {
         if (this.etherService.selectedAddress != undefined) {
           console.log('setting add')
@@ -632,11 +634,13 @@ export class CcswapComponent implements OnInit {
         }*/
         if (this.etherService.selectedAddress != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(this.etherService.selectedAddress);
+          this.etherService.getswapHistory(this.etherService.selectedAddress);
         }
       }
       if (this.stakingForm.value.toQLCWallet == '' || !this.neowallets.find((wallet) => wallet.id == this.stakingForm.value.toQLCWallet)) {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
+          
         }
       }
     }
