@@ -345,32 +345,35 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.swapHistory">
               <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
                 <span>
-                    <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==4)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
-                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
+                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span><br>
+                    <button *ngIf="(history.state ==0 || history.state ==4)" (click)="continueUndoneTransaction(history.neoTxHash)" title="click me to continue swap" type="submit" class="btn btn-primary" style="min-width:100%;margin-top:18px">
+                      CONTINUE SWAP
+                    </button>
                 </span>
                 <span class="d-xl-none">
                   <br>
                   <br>
                   Status: 
                   <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
-                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==0)" class="text-blue">Pending</span>
                   <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
                 </span>
               </div>
               <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">
                 <span>
                   <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
-                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==0)" class="text-blue">Pending</span>
                   <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
                 </span>
               </div>
               <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
                 <span class="d-xl-none">Sender: </span>
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Recipient: </span>
                 <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
