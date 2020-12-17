@@ -328,6 +328,9 @@ export class CcswapComponent implements OnInit {
     this.recoverForm.get('recover_txid').value : '0x' + this.recoverForm.get('recover_txid').value;
     console.log('this.recoverForm.getvalue', this.recoverForm.get('recover_txid').value);
     console.log('ethTxHash', ethTxHash);
+    if(ethTxHash.length != 66){
+      return this.notifications.sendWarning('ERROR please check your txid');
+    }
     // const txid = txhash ? txhash.slice(2) : this.recoverForm.get('recover_txid').value.slice(2);
     const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
       ethTxHash
@@ -618,7 +621,7 @@ export class CcswapComponent implements OnInit {
       }*/
       console.log('this.etherService.selectedAddress', this.etherService.selectedAddress);
       console.log('this.stakingForm.value.toQLCWallet', this.stakingForm.value.toQLCWallet);
-      this.etherService.getswapHistory(this.etherService.selectedAddress);
+      this.etherService.getswapHistory(this.stakingForm.get('fromNEOWallet').value);
       if (this.stakingForm.value.toQLCWallet == '' || this.stakingForm.value.toQLCWallet != this.etherService.selectedAddress ) {
         if (this.etherService.selectedAddress != undefined) {
           console.log('setting add')
@@ -640,9 +643,9 @@ export class CcswapComponent implements OnInit {
       if (this.stakingForm.value.toQLCWallet == '' || !this.neowallets.find((wallet) => wallet.id == this.stakingForm.value.toQLCWallet)) {
         if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
           this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
-          
         }
       }
+      this.etherService.getswapHistory(this.stakingForm.get('toQLCWallet').value);
     }
     // tslint:disable-next-line: member-ordering
     const selectedNEOWallet = this.neowallets.find (
