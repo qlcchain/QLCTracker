@@ -393,43 +393,7 @@ export class CcswapComponent implements OnInit {
       // state=3 is withdrawdown successfull
       return this.notifications.sendWarning('swap completed');
     } else if (swapInfoByTxHash?.data?.state == 4) {
-      // check if make ethTxHash
-    const checkburnEthTransaction = await this.etherService.checkEthTransaction(
-      ethTxHash
-    );
-    console.log('checkburnEthTransaction', checkburnEthTransaction?.data?.value);
-    if (checkburnEthTransaction?.data?.value) {
-      this.step = 3;
-      // deal withdraw error
-      this.ethTxHash = ethTxHash;
-      const withdrawethTransactionConfirmed: any = await this.etherService.withdrawethTransactionConfirmed(ethTxHash);
-      console.log('withdrawfailetocallethTransactionConfirmed', withdrawethTransactionConfirmed?.data?.value);
-      if (withdrawethTransactionConfirmed?.data?.value) {
-        const id = setInterval(async () => {
-          // tslint:disable-next-line: no-shadowed-variable
-          const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
-            ethTxHash,
-          );
-          // tslint:disable-next-line: triple-equals
-          if (swapInfoByTxHash?.data?.state == 3) {
-            this.neoTxHash = swapInfoByTxHash?.data?.neoTxHash;
-            this.haveswappedamount = new BigNumber(swapInfoByTxHash.data.amount)
-                .dividedBy(Math.pow(10, 8))
-                .toNumber();
-            console.log('cleardInterval.id', id);
-            clearInterval(id);
-            this.invokeSteps.push({
-              msg:
-                'the whole process successfull',
-              checkimg: 1,
-            });
-            this.step = 4;
-            this.loadBalances();
-            window.scrollTo(0, 0);
-          }
-        }, 5000);
-      }
-    }
+      return this.notifications.sendWarning('please wait neo node reonline');
     } else {
       // don't need to compare state =2
       return this.notifications.sendWarning('ERROR txid not found');
