@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  desktop: false,
+  desktop: true,
   version: '1.3.3',
   qlcChainNetwork: 'main', // test or main
   neoNetwork: 'test', // test or main
