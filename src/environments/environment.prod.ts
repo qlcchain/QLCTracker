@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   desktop: false,
   version: '1.3.3',
   qlcChainNetwork: 'main', // test or main
