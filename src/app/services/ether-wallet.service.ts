@@ -72,9 +72,10 @@ internalTransactions: any[];
       this.balances.QLC = qlcBalanceNumber;
       // const ethBalance = await this.getEthBalanceApi(address);
       const ethBalance = await this.getEthBalance(address);
-      const ethBalanceNumber = new BigNumber(ethBalance)
-      .dividedBy(Math.pow(10, 18))
-      .toNumber();
+      const ethBalanceNumber = new BigNumber(ethBalance).dividedBy(Math.pow(10, 18)).toNumber();
+      // const ethBalanceNumber = new BigNumber(ethBalance?.data?.result)
+      // .dividedBy(Math.pow(10, 18))
+      // .toNumber();
       console.log('getBalances.ethBalance', ethBalance);
       console.log('getBalances.ethBalanceNumber', ethBalanceNumber);
       this.balances.ETH = ethBalanceNumber;
@@ -116,6 +117,11 @@ internalTransactions: any[];
     const balance = await axios
       .get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=account&action=tokenbalance&address=${address}&contractaddress=${contractaddress}&tag=latest&apikey=${environment.ethEtherscanApiKey}`)
     return balance;
+  }
+  // getTransactionStatusByEthTxhash
+  async getTransactionsStatusByEthTxhash(ethTxhash: string) {
+    const transaction = await axios.get(`${environment.ethEtherscanApi[environment.ethNetworkDefault]}/api?module=transaction&action=gettxreceiptstatus&txhash=${ethTxhash}&apikey=${environment.ethEtherscanApiKey}`);
+    return transaction;
   }
   async getTransactions(address: string, numOfTransactions: number = null) {
     const size = numOfTransactions ? `&page=1&offset=${numOfTransactions}` : '';
@@ -265,9 +271,10 @@ internalTransactions: any[];
           return data;
         }
         // deposit/ethTransactionSent
-        async depositethTransactionSent(txid: any) {
+        async depositethTransactionSent(ethTxHash: any, neoTxHash: any) {
           const data = await axios.post(this.url + '/deposit/ethTransactionSent', {
-              hash: txid
+            ethTxHash,
+            neoTxHash
           },
           {
             headers: {
@@ -276,6 +283,22 @@ internalTransactions: any[];
             }
           );
           return data;
+        }
+        // deposit/ethTransactionID
+        async ethTransactionID(txid: any) {
+          try {
+          const data = await axios.get(this.url + '/deposit/ethTransactionID', {
+          params: {
+              hash: txid
+          },
+          headers: {
+            authorization: this.neo5toerc20swapjwtauth.authorization
+        }
+          });
+          return data;
+        } catch (error) {
+            return 500;
+          }
         }
         // deposit end
 
@@ -429,8 +452,8 @@ internalTransactions: any[];
         gasPrice
     }).then(result => {
       localStorage.setItem('EthMinttxHash', result.transactionHash);
-      // send ethTxHash to hub
-      this.depositethTransactionSent(result.transactionHash);
+      // send ethTxHash,neoTxHash to hub
+      this.depositethTransactionSent(result.transactionHash, nep5Hash);
       console.log('getEthMint', result);
       return result;
     });

@@ -338,9 +338,25 @@ export class CcswapComponent implements OnInit {
     if (swapInfoByTxHash == '500') {
       return this.notifications.sendWarning('ERROR txid not found');
     }
+    // get ethTransactionID when state =1,5 mins will be removed
+    const ethTransactionID: any = await this.etherService.ethTransactionID(
+      ethTxHash
+    );
     // const txid = swapInfoByTxHash.data.neoHash.slice(2);
     if (swapInfoByTxHash?.data?.state == 0) {
-      // deposit:state in(0,1); withdraw:state(2,3,4)
+      // deposit:state in(0:depending,1:completed); withdraw:state(2,3,4)
+      if (ethTransactionID?.data?.hash) {
+        // ethTransactionID
+        console.log('ethTransactionID?.data?.hash-confirm', ethTransactionID?.data?.hash);
+        const getTransactionsStatusByEthTxhash: any = await this.etherService.getTransactionsStatusByEthTxhash(
+          ethTransactionID?.data?.hash
+        );
+        if (getTransactionsStatusByEthTxhash?.data?.result?.status == '') {
+          return this.notifications.sendWarning('swap processing');
+        } else {
+          return this.notifications.sendWarning('swap completed');
+        }
+      }
       this.neoTxHash = ethTxHash;
       this.haveswappedamount = new BigNumber(swapInfoByTxHash.data.amount)
       .dividedBy(Math.pow(10, 8))
