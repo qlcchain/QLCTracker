@@ -1,6 +1,6 @@
 import * as CryptoJS from 'crypto-js';
 import * as bip39 from 'bip39';
-import Chainx, { Account, ApiBase, WsProvider } from 'chainx.js';
+//import Chainx, { Account, ApiBase, WsProvider } from 'chainx.js';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { WalletService } from './wallet.service';
@@ -73,7 +73,8 @@ export class ChainxAccountService {
   }
 
   account(wif) {
-    return Account.from(wif);
+    //return Account.from(wif);
+    return wif;
   }
 
   async getAssetsByAccount(address, pageIndex = 0, pageSize = 10) {
@@ -312,11 +313,13 @@ export class ChainxAccountService {
   }
 
   getPublicKey(address) {
-    return Account.decodeAddress(address);
+    //  return Account.decodeAddress(address);
+    return address;
   }
 
   getPublicAddress(publicKey) {
-    return Account.encodeAddress(publicKey);
+    //  return Account.encodeAddress(publicKey);
+    return publicKey;
   }
 
   decrypt(data) {
@@ -335,13 +338,14 @@ export class ChainxAccountService {
       mnemonic = true;
     }
 
-    wif = !wif ? Account.newMnemonic() : wif;
+    //wif = !wif ? Account.newMnemonic() : wif;
 
     const account = await this.account(wif);
 
-    Account.setNet(environment.chainxNetwork[environment.chainxNetworkDefault].toLowerCase());
+    //Account.setNet(environment.chainxNetwork[environment.chainxNetworkDefault].toLowerCase());
 
-    const address = Account.encodeAddress(account.publicKey());
+    //const address = Account.encodeAddress(account.publicKey());
+    const address = '';
     const chainxAccount = {
       id: address,
       index: this.walletService.wallet.chainxAccounts.length,

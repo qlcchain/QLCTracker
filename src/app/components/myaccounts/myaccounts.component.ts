@@ -11,6 +11,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalUnlockComponent } from '../modal-unlock/modal-unlock.component';
 import { ChainxAccountService } from '../../services/chainx-account.service';
 import { EtherWalletService } from 'src/app/services/ether-wallet.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-myaccounts',
@@ -49,6 +50,8 @@ export class MyaccountsComponent implements OnInit {
 
   msgLocked = '';
 
+	desktop = false;
+
   constructor(
     private walletService: WalletService,
     private chainxAccountService: ChainxAccountService,
@@ -62,6 +65,9 @@ export class MyaccountsComponent implements OnInit {
     public etherService: EtherWalletService
   ) {
     this.loadLang();
+		if (environment.desktop) {
+			this.desktop = true;
+		}
   }
 
   async ngOnInit() {

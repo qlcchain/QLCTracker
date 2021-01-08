@@ -30,6 +30,8 @@ export class Erc20WalletComponent implements OnInit {
   internalTransactions: any[];
   noWallet = true;
 
+	desktop = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -39,6 +41,9 @@ export class Erc20WalletComponent implements OnInit {
     private walletService: WalletService,
     public etherService: EtherWalletService
   ) {
+		if (environment.desktop) {
+			this.desktop = true;
+		}
   }
 
   async ngOnInit() {

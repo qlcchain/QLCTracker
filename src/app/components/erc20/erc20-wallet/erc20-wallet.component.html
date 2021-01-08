@@ -1,56 +1,125 @@
 <app-user-submenu></app-user-submenu>
-
-<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
-  <div class="row">
-    <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
-      <!-- LATEST TRANSACTIONS -->
-      <div class="container">
-        <div class="row">
-          <!-- TITLE -->
-          <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
-            <div class="content-title">
-              <h1 class="erc20" *ngIf="etherService.checkIfWallet()">Connect your ERC20 Wallet</h1>
-              <h1 class="erc20" *ngIf="!etherService.checkIfWallet()">Get your ERC20 Wallet</h1>
+<div *ngIf="desktop">
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <!-- LATEST TRANSACTIONS -->
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="erc20">Swap QLC Tokens</h1>
+              </div>
+            </div>
+            <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+              <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" routerLink="/wallets">
+                Back to my Wallets
+              </button>
             </div>
           </div>
-          <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
-            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" routerLink="/wallets">
-              Back to my Wallets
-            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container pb-2" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
+    <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
+      <!-- LEFT -->
+      <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 order-lg-1 pl-0 pr-0 mb-3">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 pb-2 pl-2 pr-2">
+              <div class="content-box-white h-auto">
+                <div class="container">
+                  <div class="row justify-content-center" style="padding: 57px 0px;">
+                    <div class="col-md-1 col-12 text-center">
+                    </div>
+                    <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;">
+                      Swap isn't supported in the desktop version. Please visit <a href="https://explorer.qlcchain.org/swap" target="_blank">https://explorer.qlcchain.org/swap</a>
+                    </div>
+                    <div class="col-md-4 col-12 my-auto">
+                      <a href="https://explorer.qlcchain.org/swap" target="_blank">
+                        <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
+                          OPEN ONLINE TRACKER
+                        </button>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--     RIGHT -->
+      <div class="col-lg-3 d-xl-block d-none order-2 pl-0 pr-0 mb-xs-3 mb-3">
+        <div class="col-12 pl-2 pr-2">
+          <div class="content-box-chainx h-100 pb-4 pr-0 erc20-background">
+            <div class="container">
+              <div class="row pt-3 pr-0">
+                <div class="col-12 pr-0 text-center connect-background">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="container pb-2" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
-  <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
-    <!-- LEFT -->
-    <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 order-lg-1 pl-0 pr-0 mb-3">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 pb-2 pl-2 pr-2">
-            <div class="content-box-white h-auto">
-              <div class="container">
-                <div class="row justify-content-center" style="padding: 57px 0px;">
-                  <div class="col-md-1 col-12 text-center">
-                    <img src="assets/img/qlc-icon-lock-red.svg" style="height: 70px;" >
-                  </div>
-                  <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;" *ngIf="etherService.checkIfWallet()">
-                    Please connect and authorize your ERC20 Wallet Client
-                  </div>
-                  <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;" *ngIf="!etherService.checkIfWallet()">
-                    To use this Dapp you must install MetaMask.
-                  </div>
-                  <div class="col-md-4 col-12 my-auto">
-                    <button type="submit" (click)="etherService?.connectWallet()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" *ngIf="etherService.checkIfWallet()">
-                      CONNECT WALLET
-                    </button>
-                    <a href="https://metamask.io" target="_blank" *ngIf="!etherService.checkIfWallet()">
-                      <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
-                        GET METAMASK
+<div *ngIf="!desktop">
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <!-- LATEST TRANSACTIONS -->
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="erc20" *ngIf="etherService.checkIfWallet()">Connect your ERC20 Wallet</h1>
+                <h1 class="erc20" *ngIf="!etherService.checkIfWallet()">Get your ERC20 Wallet</h1>
+              </div>
+            </div>
+            <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+              <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" routerLink="/wallets">
+                Back to my Wallets
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container pb-2" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
+    <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
+      <!-- LEFT -->
+      <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 order-lg-1 pl-0 pr-0 mb-3">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 pb-2 pl-2 pr-2">
+              <div class="content-box-white h-auto">
+                <div class="container">
+                  <div class="row justify-content-center" style="padding: 57px 0px;">
+                    <div class="col-md-1 col-12 text-center">
+                      <img src="assets/img/qlc-icon-lock-red.svg" style="height: 70px;" >
+                    </div>
+                    <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;" *ngIf="etherService.checkIfWallet()">
+                      Please connect and authorize your ERC20 Wallet Client
+                    </div>
+                    <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;" *ngIf="!etherService.checkIfWallet()">
+                      To use this Dapp you must install MetaMask.
+                    </div>
+                    <div class="col-md-4 col-12 my-auto">
+                      <button type="submit" (click)="etherService?.connectWallet()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" *ngIf="etherService.checkIfWallet()">
+                        CONNECT WALLET
                       </button>
-                    </a>
+                      <a href="https://metamask.io" target="_blank" *ngIf="!etherService.checkIfWallet()">
+                        <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
+                          GET METAMASK
+                        </button>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -58,14 +127,14 @@
           </div>
         </div>
       </div>
-    </div>
-    <!--     RIGHT -->
-    <div class="col-lg-3 d-xl-block d-none order-2 pl-0 pr-0 mb-xs-3 mb-3">
-      <div class="col-12 pl-2 pr-2">
-        <div class="content-box-chainx h-100 pb-4 pr-0 erc20-background">
-          <div class="container">
-            <div class="row pt-3 pr-0">
-              <div class="col-12 pr-0 text-center connect-background">
+      <!--     RIGHT -->
+      <div class="col-lg-3 d-xl-block d-none order-2 pl-0 pr-0 mb-xs-3 mb-3">
+        <div class="col-12 pl-2 pr-2">
+          <div class="content-box-chainx h-100 pb-4 pr-0 erc20-background">
+            <div class="container">
+              <div class="row pt-3 pr-0">
+                <div class="col-12 pr-0 text-center connect-background">
+                </div>
               </div>
             </div>
           </div>
@@ -73,352 +142,351 @@
       </div>
     </div>
   </div>
-</div>
-<!-- ERC20 Wallet Details -->
-<div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
-  <div class="row">
-    <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
-      <!-- ERC20 Wallet Details -->
-      <div class="container">
-        <div class="row">
-          <!-- TITLE -->
-          <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
-            <div class="content-title">
-              <h1 class="erc20">ERC20 Wallet Details - {{ etherService.getDefaultNetwork() }}</h1>
-            </div>
-          </div>
-          <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
-            <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" routerLink="/wallets">
-              Back to my Wallets
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container pb-2" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
-  <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
-    <!-- LEFT -->
-    <div class="col-lg-9 col-md-12 col-sm-12 order-lg-1 order-2 pl-0 pr-0 mb-3">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 pb-2 pl-2 pr-2">
-            <div class="content-box-blue h-auto pb-3 erc20-background-light">
-              <div class="container">
-                <div class="row qlc-table-header-blue erc20-background-light">
-                  <div class="col-12 white">Address</div>
-                </div>
-                <div class="row qlc-table-row-blue row-text-mid mt-3 erc20-background-light">
-                  <div class="col-12 text-break pr-3">{{ etherService.selectedAddress }} <a ngxClipboard [cbContent]="etherService.selectedAddress"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
-                </div>
+  <!-- ERC20 Wallet Details -->
+  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+        <!-- ERC20 Wallet Details -->
+        <div class="container">
+          <div class="row">
+            <!-- TITLE -->
+            <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+              <div class="content-title">
+                <h1 class="erc20">ERC20 Wallet Details - {{ etherService.getDefaultNetwork() }}</h1>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <!-- BALANCE QLC -->
-          <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
-            <div class="content-box-white h-auto mt-2 pb-2">
-              <div class="container">
-                <div class="row qlc-table-header-white">
-                  <div class="col-12">Eth Balance</div>
-                </div>
-              </div>
-              <div class="container">
-                <div class="row">
-                  <div class="col-3 mt-3">
-                    <img src="assets/img/swap/token-eth.png" class="w-100 icon-token">
-                  </div>
-                  <div class="col-9 pr-0 pl-0">
-                    <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                      <ng-container *ngIf="!loading; else showLoadingTemplate">
-                        <div class="col-12 pb-0" *ngIf="etherService?.balances && etherService?.balances?.ETH; else nanTemplate">{{ etherService?.balances?.ETH | currency:'':'':'1.2-8' }}</div>
-                      </ng-container>
-                    </div>
-                    <div class="row qlc-table-row-white sub-page pt-0">
-                      <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- BALANCE QSMS -->
-          <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
-            <div class="content-box-white h-auto mt-2 pb-2">
-              <div class="container">
-                <div class="row qlc-table-header-white">
-                  <div class="col-12">QLC Balance</div>
-                </div>
-              </div>
-              <div class="container">
-                <div class="row">
-                  <div class="col-3 mt-3">
-                    <img src="assets/img/swap/token-qlc-erc20.png" class="w-100 icon-token">
-                  </div>
-                  <div class="col-9 pr-0 pl-0">
-                    <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                      <ng-container *ngIf="!loading; else showLoadingTemplate">
-                        <div class="col-12 pb-0" *ngIf="etherService?.balances && etherService?.balances?.QLC; else nanTemplate">{{ etherService?.balances?.QLC | currency:'':'':'1.2-8' }}</div>
-                      </ng-container>
-                    </div>
-                    <div class="row qlc-table-row-white sub-page pt-0">
-                      <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--     RIGHT -->
-    <div class="col-lg-3 col-md-12 col-sm-12 order-lg-2 order-1 pl-0 pr-0 mb-xs-3 mb-3">
-      <div class="col-12 pl-2 pr-2">
-        <div class="content-box-chainx h-100 pb-4 pr-0 erc20-background">
-          <div class="container">
-            <div class="row qlc-table-header-blue erc20-background">
-              <div class="col-12 white">Account Actions</div>
-            </div>
-            <div class="row pt-3 pr-0">
-              <div class="col-12 pr-0">
-                <!--  <a routerLink="/erc20/send/{{ etherService.selectedAddress }}" class="menu-myaccount menu-icon-send pr-0">Send</a> -->
-                <a routerLink="/swap" class="menu-myaccount menu-icon-rename pr-0">Swap QLC Tokens</a> 
-                <a *ngIf="etherService.selectedAddress !== ''" href="{{ etherService.getExplorer() }}/address/{{ etherService.selectedAddress }}" class="menu-myaccount menu-icon-details pr-0" target="_blank">Account Details</a> 
-                <!--     <a (click)="etherService.disconnectWallet()" class="menu-myaccount menu-icon-delete pr-0" target="_blank">Disconnect wallet</a> -->
-              </div>
+            <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+              <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" routerLink="/wallets">
+                Back to my Wallets
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<!-- LATEST SWAP TRANSACTIONS -->
-<div class="container mt-0 mb-3">
-  <div class="row">
-    
-    <div class="col-12 pl-0 pr-0">
+  <div class="container pb-2" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
+    <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
+      <!-- LEFT -->
+      <div class="col-lg-9 col-md-12 col-sm-12 order-lg-1 order-2 pl-0 pr-0 mb-3">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 pb-2 pl-2 pr-2">
+              <div class="content-box-blue h-auto pb-3 erc20-background-light">
+                <div class="container">
+                  <div class="row qlc-table-header-blue erc20-background-light">
+                    <div class="col-12 white">Address</div>
+                  </div>
+                  <div class="row qlc-table-row-blue row-text-mid mt-3 erc20-background-light">
+                    <div class="col-12 text-break pr-3">{{ etherService.selectedAddress }} <a ngxClipboard [cbContent]="etherService.selectedAddress"><img src="assets/img/icons/copy.svg" class="img-copy" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></a></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <!-- BALANCE QLC -->
+            <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
+              <div class="content-box-white h-auto mt-2 pb-2">
+                <div class="container">
+                  <div class="row qlc-table-header-white">
+                    <div class="col-12">Eth Balance</div>
+                  </div>
+                </div>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-3 mt-3">
+                      <img src="assets/img/swap/token-eth.png" class="w-100 icon-token">
+                    </div>
+                    <div class="col-9 pr-0 pl-0">
+                      <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                        <ng-container *ngIf="!loading; else showLoadingTemplate">
+                          <div class="col-12 pb-0" *ngIf="etherService?.balances && etherService?.balances?.ETH; else nanTemplate">{{ etherService?.balances?.ETH | currency:'':'':'1.2-8' }}</div>
+                        </ng-container>
+                      </div>
+                      <div class="row qlc-table-row-white sub-page pt-0">
+                        <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- BALANCE QSMS -->
+            <div class="col-md-4 col-sm-6 col-12 pl-2 pr-2">
+              <div class="content-box-white h-auto mt-2 pb-2">
+                <div class="container">
+                  <div class="row qlc-table-header-white">
+                    <div class="col-12">QLC Balance</div>
+                  </div>
+                </div>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-3 mt-3">
+                      <img src="assets/img/swap/token-qlc-erc20.png" class="w-100 icon-token">
+                    </div>
+                    <div class="col-9 pr-0 pl-0">
+                      <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                        <ng-container *ngIf="!loading; else showLoadingTemplate">
+                          <div class="col-12 pb-0" *ngIf="etherService?.balances && etherService?.balances?.QLC; else nanTemplate">{{ etherService?.balances?.QLC | currency:'':'':'1.2-8' }}</div>
+                        </ng-container>
+                      </div>
+                      <div class="row qlc-table-row-white sub-page pt-0">
+                        <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--     RIGHT -->
+      <div class="col-lg-3 col-md-12 col-sm-12 order-lg-2 order-1 pl-0 pr-0 mb-xs-3 mb-3">
+        <div class="col-12 pl-2 pr-2">
+          <div class="content-box-chainx h-100 pb-4 pr-0 erc20-background">
+            <div class="container">
+              <div class="row qlc-table-header-blue erc20-background">
+                <div class="col-12 white">Account Actions</div>
+              </div>
+              <div class="row pt-3 pr-0">
+                <div class="col-12 pr-0">
+                  <!--  <a routerLink="/erc20/send/{{ etherService.selectedAddress }}" class="menu-myaccount menu-icon-send pr-0">Send</a> -->
+                  <a routerLink="/swap" class="menu-myaccount menu-icon-rename pr-0">Swap QLC Tokens</a> 
+                  <a *ngIf="etherService.selectedAddress !== ''" href="{{ etherService.getExplorer() }}/address/{{ etherService.selectedAddress }}" class="menu-myaccount menu-icon-details pr-0" target="_blank">Account Details</a> 
+                  <!--     <a (click)="etherService.disconnectWallet()" class="menu-myaccount menu-icon-delete pr-0" target="_blank">Disconnect wallet</a> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- LATEST SWAP TRANSACTIONS -->
+  <div class="container mt-0 mb-3">
+    <div class="row">
       
-      <!-- TITLE -->
-      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
-        <div class="content-title">
-          <h1>Latest Swap Transactions</h1>
-        </div>
-      </div>
-
-      <!-- LIST -->
-      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
-        <div class="content-box-white">
-
-
-          <div class="container">
-
-            <div class="row qlc-table-header">
-              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">TYPE</div>
-              <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">STATUS</div>
-              <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SENDER</div>
-              <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">RECIPIENT</div>
-              <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SWAPID</div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">AMOUNT</div>
-              <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-3 d-none d-md-block text-right pr-sm-4 pr-4">TIME</div>
-            </div>
-
-            <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.swapHistory">
-              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
-                <span>
-                    <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
-                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
-                </span>
-                <span class="d-xl-none">
-                  <br>
-                  <br>
-                  Status: 
-                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
-                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
-                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
-                </span>
-              </div>
-              <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">
-                <span>
-                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
-                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
-                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
-                </span>
-              </div>
-              <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
-                <span class="d-xl-none">Sender: </span>
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
-
-                <span class="d-xl-none"><br>Recipient: </span>
-                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
-
-                <span class="d-xl-none"><br>Swapid: </span>
-                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
-                  {{history.neoTxHash | squeeze : '10,9'}}
-                </a>
-                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
-                  {{history.ethTxHash | squeeze : '10,9'}}
-                </a>
-                
-                <span class="d-md-none"><br>Time:<br class="d-sm-none"> {{ history.lastModifyTime | date: 'short' }}</span>
-              </div>
-              <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
-                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '11,10'}}</a>
-
-              </div>
-              <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
-                  {{history.neoTxHash | squeeze : '11,10'}}
-                </a>
-                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
-                  {{history.ethTxHash | squeeze : '11,10'}}
-                </a>
-              </div>
-              <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
-                <span [ngClass]="{
-                  'text-blue': (history.state ==0 || history.state ==2),
-                  'text-color-green': (history.state ==1 || history.state ==3),
-                  'text-color-red': history.state == 4
-                }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">
-                <span>{{ history.lastModifyTime | date: 'short' }}</span>
-              </div>
-              <!-- <div class="container transaction-details">
-
-              </div> -->
-            </div>
-
-
-            
-          </div>
-
-        </div>
-      </div>
-
-      <!-- BUTTON -->
-      <!--
-      <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="accountBlocksCount>pageSize">
-        <a [routerLink]="'/transactions/1/' + accountId" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
-      </div>
-        -->
-    </div>
-    
-  </div>
-</div>
-
-<!-- Latest ETH Transfers -->
-<div class="container mt-0 mb-3" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
-  <div class="row">
-    <div class="col-12 pl-0 pr-0">
-      <!-- TITLE -->
-      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
-        <div class="content-title">
-          <h1>Latest ETH Transfers</h1>
-        </div>
-      </div>
-      <!-- LIST -->
-      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2" *ngIf="etherService.transactions; else showLoaderTemplate">
-        <div class="content-box-white">
-          <div class="container">
-            <div class="row qlc-table-header">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
-            </div>
-            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of etherService.transactions">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
-                <span class="qlc-icon icon-{{ transaction.from === addresslc ? 'Send' : 'Receive' }}" [title]="transaction.from === addresslc ? 'Send' : 'Receive'"></span> <span class="d-none d-sm-none d-md-inline-block txState">
-                  <span class="text-color-lightgrey">State</span><br>
-                  <span class="text-bold-grey" [innerText]="transaction.from === addresslc ? 'Send' : 'Receive'"></span>
-                </span>
-              </div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{transaction.from === addresslc ? 'to' : 'from'}}: </span> <a href="{{ etherService.getExplorer() }}/address/{{transaction.from === addresslc ? transaction.to : transaction.from}}" target="_blank">{{ transaction.from === addresslc ? transaction.to : transaction.from }}</a> <a href="{{ etherService.getExplorer() }}/tx/{{transaction.hash}}" target="_blank"><br> <span class="text-tiny">{{ transaction.hash }}</span> </a>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right ">
-                <span data-toggle="tooltip" data-placement="top" title="">{{ transaction.from === addresslc ? '-' : '+'}} {{ etherService.web3.utils.fromWei(transaction.value, 'ether') | currency:'':'':'1.2-8' }}</span> <br><span class="text-color-grey">ETH</span>
-              </div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
-                {{ transaction.timeStamp * 1000 | date: 'short' }}
-              </div>
-              <div class="container transaction-details">
-              </div>
-            </div>
+      <div class="col-12 pl-0 pr-0">
+        
+        <!-- TITLE -->
+        <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+          <div class="content-title">
+            <h1>Latest Swap Transactions</h1>
           </div>
         </div>
-      </div>
-      <!--       BUTTON-->
-      <ng-container *ngIf="transactions">
-        <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="transactions.length>10">
-          <a (click)="getAllTransactions()" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+
+
+            <div class="container">
+
+              <div class="row qlc-table-header">
+                <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">TYPE</div>
+                <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">STATUS</div>
+                <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SENDER</div>
+                <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">RECIPIENT</div>
+                <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SWAPID</div>
+                <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">AMOUNT</div>
+                <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-3 d-none d-md-block text-right pr-sm-4 pr-4">TIME</div>
+              </div>
+
+              <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.swapHistory">
+                <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
+                  <span>
+                      <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                      <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                      <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                      <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
+                      <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
+                  </span>
+                  <span class="d-xl-none">
+                    <br>
+                    <br>
+                    Status: 
+                    <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
+                    <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
+                    <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
+                  </span>
+                </div>
+                <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">
+                  <span>
+                    <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
+                    <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
+                    <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
+                  </span>
+                </div>
+                <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
+                  <span class="d-xl-none">Sender: </span>
+                  <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                  <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+
+                  <span class="d-xl-none"><br>Recipient: </span>
+                  <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                  <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+
+                  <span class="d-xl-none"><br>Swapid: </span>
+                  <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
+                    {{history.neoTxHash | squeeze : '10,9'}}
+                  </a>
+                  <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                    {{history.ethTxHash | squeeze : '10,9'}}
+                  </a>
+                  
+                  <span class="d-md-none"><br>Time:<br class="d-sm-none"> {{ history.lastModifyTime | date: 'short' }}</span>
+                </div>
+                <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
+                  <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
+                  <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '11,10'}}</a>
+
+                </div>
+                <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
+                  <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
+                    {{history.neoTxHash | squeeze : '11,10'}}
+                  </a>
+                  <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                    {{history.ethTxHash | squeeze : '11,10'}}
+                  </a>
+                </div>
+                <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
+                  <span [ngClass]="{
+                    'text-blue': (history.state ==0 || history.state ==2),
+                    'text-color-green': (history.state ==1 || history.state ==3),
+                    'text-color-red': history.state == 4
+                  }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">
+                  <span>{{ history.lastModifyTime | date: 'short' }}</span>
+                </div>
+                <!-- <div class="container transaction-details">
+
+                </div> -->
+              </div>
+
+
+              
+            </div>
+
+          </div>
         </div>
-      </ng-container>
+
+        <!-- BUTTON -->
+        <!--
+        <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="accountBlocksCount>pageSize">
+          <a [routerLink]="'/transactions/1/' + accountId" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+        </div>
+          -->
+      </div>
+      
     </div>
   </div>
-</div>
-<!--LATEST TRANSACTIONS-->
-<div class="container mt-0 mb-3" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
-  <div class="row">
-    <div class="col-12 pl-0 pr-0">
-      <!-- TITLE -->
-      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
-        <div class="content-title">
-          <h1>Latest Internal Transfers</h1>
+
+  <!-- Latest ETH Transfers -->
+  <div class="container mt-0 mb-3" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0">
+        <!-- TITLE -->
+        <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+          <div class="content-title">
+            <h1>Latest ETH Transfers</h1>
+          </div>
         </div>
-      </div>
-      <!-- LIST -->
-      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2" *ngIf="etherService.internalTransactions; else showLoaderTemplate">
-        <div class="content-box-white">
-          <div class="container">
-            <div class="row qlc-table-header">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
-            </div>
-            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of etherService.internalTransactions">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
-                <span class="qlc-icon icon-{{ transaction.from === addresslc ? 'Send' : 'Receive' }}" [title]="transaction.from === addresslc ? 'Send' : 'Receive'"></span> <span class="d-none d-sm-none d-md-inline-block txState">
-                  <span class="text-color-lightgrey">State</span><br>
-                  <span class="text-bold-grey" [innerText]="transaction.from === addresslc ? 'Send' : 'Receive'"></span>
-                </span>
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2" *ngIf="etherService.transactions; else showLoaderTemplate">
+          <div class="content-box-white">
+            <div class="container">
+              <div class="row qlc-table-header">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
+                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
               </div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{transaction.from === addresslc ? 'to' : 'from'}}: </span> <a href="{{ etherService.getExplorer() }}/address/{{transaction.from === addresslc ? transaction.to : transaction.from}}" target="_blank">{{ transaction.from === addresslc ? transaction.to : transaction.from }}</a> <a href="{{ etherService.getExplorer() }}/tx/{{transaction.hash}}" target="_blank"><br> <span class="text-tiny">{{ transaction.hash }}</span> </a>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right ">
-                <span data-toggle="tooltip" data-placement="top" title="">{{ transaction.from === addresslc ? '-' : '+'}} {{ etherService.web3.utils.fromWei(transaction.value, 'ether') | currency:'':'':'1.2-8' }}</span> <br><span class="text-color-grey">ETH</span>
-              </div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
-                {{ transaction.timeStamp * 1000 | date: 'short' }}
-              </div>
-              <div class="container transaction-details">
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of etherService.transactions">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+                  <span class="qlc-icon icon-{{ transaction.from === addresslc ? 'Send' : 'Receive' }}" [title]="transaction.from === addresslc ? 'Send' : 'Receive'"></span> <span class="d-none d-sm-none d-md-inline-block txState">
+                    <span class="text-color-lightgrey">State</span><br>
+                    <span class="text-bold-grey" [innerText]="transaction.from === addresslc ? 'Send' : 'Receive'"></span>
+                  </span>
+                </div>
+                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
+                  <span class="text-color-lightgrey">{{transaction.from === addresslc ? 'to' : 'from'}}: </span> <a href="{{ etherService.getExplorer() }}/address/{{transaction.from === addresslc ? transaction.to : transaction.from}}" target="_blank">{{ transaction.from === addresslc ? transaction.to : transaction.from }}</a> <a href="{{ etherService.getExplorer() }}/tx/{{transaction.hash}}" target="_blank"><br> <span class="text-tiny">{{ transaction.hash }}</span> </a>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right ">
+                  <span data-toggle="tooltip" data-placement="top" title="">{{ transaction.from === addresslc ? '-' : '+'}} {{ etherService.web3.utils.fromWei(transaction.value, 'ether') | currency:'':'':'1.2-8' }}</span> <br><span class="text-color-grey">ETH</span>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                  {{ transaction.timeStamp * 1000 | date: 'short' }}
+                </div>
+                <div class="container transaction-details">
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <!--       BUTTON-->
+        <ng-container *ngIf="transactions">
+          <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="transactions.length>10">
+            <a (click)="getAllTransactions()" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+          </div>
+        </ng-container>
       </div>
-      <!--       BUTTON-->
-      <ng-container *ngIf="internalTransactions">
-        <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="internalTransactions.length>10">
-          <a (click)="getAllInternalTransactions()" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+    </div>
+  </div>
+  <!--LATEST TRANSACTIONS-->
+  <div class="container mt-0 mb-3" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
+    <div class="row">
+      <div class="col-12 pl-0 pr-0">
+        <!-- TITLE -->
+        <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+          <div class="content-title">
+            <h1>Latest Internal Transfers</h1>
+          </div>
         </div>
-      </ng-container>
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2" *ngIf="etherService.internalTransactions; else showLoaderTemplate">
+          <div class="content-box-white">
+            <div class="container">
+              <div class="row qlc-table-header">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
+                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
+              </div>
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let transaction of etherService.internalTransactions">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+                  <span class="qlc-icon icon-{{ transaction.from === addresslc ? 'Send' : 'Receive' }}" [title]="transaction.from === addresslc ? 'Send' : 'Receive'"></span> <span class="d-none d-sm-none d-md-inline-block txState">
+                    <span class="text-color-lightgrey">State</span><br>
+                    <span class="text-bold-grey" [innerText]="transaction.from === addresslc ? 'Send' : 'Receive'"></span>
+                  </span>
+                </div>
+                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
+                  <span class="text-color-lightgrey">{{transaction.from === addresslc ? 'to' : 'from'}}: </span> <a href="{{ etherService.getExplorer() }}/address/{{transaction.from === addresslc ? transaction.to : transaction.from}}" target="_blank">{{ transaction.from === addresslc ? transaction.to : transaction.from }}</a> <a href="{{ etherService.getExplorer() }}/tx/{{transaction.hash}}" target="_blank"><br> <span class="text-tiny">{{ transaction.hash }}</span> </a>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right ">
+                  <span data-toggle="tooltip" data-placement="top" title="">{{ transaction.from === addresslc ? '-' : '+'}} {{ etherService.web3.utils.fromWei(transaction.value, 'ether') | currency:'':'':'1.2-8' }}</span> <br><span class="text-color-grey">ETH</span>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                  {{ transaction.timeStamp * 1000 | date: 'short' }}
+                </div>
+                <div class="container transaction-details">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--       BUTTON-->
+        <ng-container *ngIf="internalTransactions">
+          <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="internalTransactions.length>10">
+            <a (click)="getAllInternalTransactions()" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+          </div>
+        </ng-container>
+      </div>
     </div>
   </div>
 </div>
-
 <ng-template #nanTemplate>
   <div class="col-12 pb-0">NaN</div>
 </ng-template>
