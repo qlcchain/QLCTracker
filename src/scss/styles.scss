@@ -521,6 +521,9 @@ div[class*="col-"] a:hover {
     border-bottom: 1px solid #edeef4;
     min-height: 94px;
 }
+.neo-table-row {
+    min-height: auto;
+}
 .qlc-table-row-twolines {
     padding-bottom:10px;
 }
@@ -735,6 +738,10 @@ div[class*="col-"] a:hover {
     background: #2069c2 url("../assets/img/bg_box_user_mining.png") no-repeat right top;
     background-size: auto;
 }
+.bg-blue-submenu-swap {
+    background: #2069c2  url('../assets/img/swap/bg_box_user_swap.png') no-repeat right top;
+    background-size: auto;
+}
 .bg-blue-mining-sub {
     background: #2069c2 url("../assets/img/bg_box_user_mining.png") no-repeat right top;
     background-size: auto 145%;
@@ -796,7 +803,7 @@ div[class*="col-"] a:hover {
     font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
     background: none;
     color: #ffffff;
-    font-size: 32px;
+    font-size: 22px;
     font-weight: 500;
     letter-spacing: 0px;
 }
@@ -2166,7 +2173,7 @@ progressbar bar {
     text-decoration: none;
 }
 .qlc-top-submenu .submenu-item, .qlc-top-submenu .submenu-item:hover, .qlc-top-submenu .submenu-item.active {
-    margin-right:10px;
+    margin-right: 5px;
 }
 /*.qlc-top-submenu .submenu-item:last-child {
     margin-right:0px !important;
@@ -2196,6 +2203,37 @@ progressbar bar {
 .icon-submenu-staking {
     background: url('../assets/img/icons/submenu-staking.svg') no-repeat 10px 22px;
     background-size: 16px 16px;
+}
+.icon-submenu-swap {
+    background: url('../assets/img/swap/icons/submenu-swap.svg') no-repeat 10px 22px;
+    background-size: 16px 16px;
+}
+.qlc-icon-swap-blue {
+    background: url('../assets/img/swap/qlc-icon-swap-blue.svg') no-repeat;
+    background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: -5px;
+}
+.qlc-icon-swap-green {
+    background: url('../assets/img/swap/qlc-icon-swap-green.svg') no-repeat;
+    background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: -5px;
+}
+.qlc-icon-swap-red {
+    background: url('../assets/img/swap/qlc-icon-swap-red.svg') no-repeat;
+    background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: -5px;
 }
 .icon-submenu-mining {
     background: url('../assets/img/icons/submenu-mining.svg') no-repeat 10px 22px;
@@ -2393,7 +2431,7 @@ progressbar bar {
         padding: 20px 10px 20px 36px;
     }
     .qlc-top-submenu .submenu-item, .qlc-top-submenu .submenu-item:hover, .qlc-top-submenu .submenu-item.active {
-        margin-right:20px;
+        margin-right:10px;
     }
     .transaction-details.open {
         background: #f9f9fb url("../assets/img/qlc-icon-arrow-transaction-right-grey.svg") no-repeat center center;

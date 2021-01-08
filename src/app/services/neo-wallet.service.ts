@@ -15,13 +15,13 @@ import { NotificationService } from './notification.service';
 import { sc, tx } from '@cityofzion/neon-core';
 
 import { environment } from 'src/environments/environment';
-import { Provider,  
+import { Provider,
   filterHttpsOnly,
   findGoodNodesFromHeight,
   getBestUrl,
   PastTransaction,
   RpcNode } from '@cityofzion/neon-api/lib/provider/common';
-import axios from "axios";
+import axios from 'axios';
 
 import {
   NeoscanBalance,
@@ -32,21 +32,25 @@ import {
   NeoscanV1GetClaimableResponse,
   NeoscanV1GetHeightResponse,
   NeoscanV1GetUnclaimedResponse
-} from "@cityofzion/neon-api/lib/provider/neoscan/responses";
+} from '@cityofzion/neon-api/lib/provider/neoscan/responses';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NeoWalletService {
 
-  MIN_PASSPHRASE_LEN = 4
+  MIN_PASSPHRASE_LEN = 4;
 
   private apiAddress = environment.neoScanApi[environment.neoNetwork];
   private network = environment.neonNetwork[environment.neoNetwork];
   private neoscan = environment.neoScan[environment.neoNetwork];
+  private neoswap = environment.swapUrl[environment.neoNetwork];
+  private neotube = environment.neotube[environment.neoNetwork];
 
   private smartContractScript = environment.neoSmartContract[environment.neoNetwork];
-  
+  private neoswapsmartContractScript = environment.neo5swapSmartContract[environment.neoNetwork];
+  private neoqlcsmartContractScript = environment.neo5QLCSmartContract[environment.neoNetwork];
+
   tokenList = [];
 
   claimingTimer = null;
@@ -59,7 +63,7 @@ export class NeoWalletService {
     private addressBook: AddressBookService,
     private notificationService: NotificationService
   ) {
-    const tokenList = require('../../assets/data/neoTokenList_'+environment.neoNetwork+'.json');
+    const tokenList = require('../../assets/data/neoTokenList_' + environment.neoNetwork + '.json');
     this.tokenList = tokenList;
    }
 
@@ -258,6 +262,31 @@ export class NeoWalletService {
     return balance.balance;
   }
 
+  async getNeoRpcBalance(address) {
+      const balance = await axios.post(this.neoswap, {
+        jsonrpc: 2.0,
+        method: 'getnep5balances',
+        params: [address],
+        id: 1
+      });
+      return balance.data.result.balance;
+  }
+
+  // get balance from neotube
+  async getneoTuboBalance(address) {
+    const balance: any = await axios.post(this.neotube + 'address', {
+      method: 'getallassets',
+      params: [address]});
+      // tslint:disable-next-line: align
+      const assets: any[] = balance?.data?.result?.assets;
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < assets.length; i++) {
+        if ( assets[i].assetId == this.neoqlcsmartContractScript) {
+          return balance.data.result.assets[i];
+        }
+      }
+}
+
   async getLastTransactions(address) {
     const lastTransactionsResults = await this.request('/v1/get_address_abstracts/'+address+'/0');
     const tokens = Object.keys(this.tokenList);
@@ -453,8 +482,90 @@ export class NeoWalletService {
       //console.log(res.result.stack);
       //console.log('string ' + u.hexstring2str(res.result.stack[0].value));
     });
-
   }  
+
+  // 签名某个交易
+  async signTheTransaction(neoWalletAddress: string, unsignedData: string): Promise<any> {
+    const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === neoWalletAddress);
+    // 生成私钥
+    const wif = await this.decrypt(selectedWallet.encryptedwif, this.walletService.wallet.password);
+
+    if (wif === false) {
+      return false;
+    }
+    // 通过私钥生成公钥
+    const account = await new wallet.Account(wif);
+    const publicKey = account.publicKey;
+    console.log('account', account);
+    console.log('publicKey', publicKey);
+    // 通过私钥签名具体交易信息
+    const signature = await wallet.sign(unsignedData, wif);
+    console.log('signature', signature);
+    const signData = {
+      signature,
+      publicKey
+    };
+    return signData;
+  }
+  async neo5toerc20swapaccountLock(neoWalletAddress, neo5qlcAmount, erc20WalletAddress) {
+    const selectedWallet = this.walletService.wallet.neowallets.find(a => a.id === neoWalletAddress);
+    const wif = await this.decrypt(selectedWallet.encryptedwif, this.walletService.wallet.password);
+    const amountWithDecimals = new BigNumber(neo5qlcAmount).multipliedBy(100000000);
+    if (wif === false) {
+      return false;
+    }
+    console.log('wif', wif);
+    const account = await new wallet.Account(wif);
+    console.log('account', account);
+
+    // const amountWithDecimals = new BigNumber(erc20Amount).multipliedBy(100000000);
+    const providerapi = new myProvider(this.selectedNode);
+    console.log('providerapi', providerapi);
+    console.log('amount', amountWithDecimals);
+    console.log('neoWalletAddress', neoWalletAddress);
+    console.log('erc20WalletAddress', erc20WalletAddress);
+    // tslint:disable-next-line: no-use-before-declare
+    const apiProvider = new myProvider(environment.swapUrl[environment.neoNetwork]);
+    console.log('apiProvider', apiProvider);
+    
+    //console.log("\n\n--- API Provider ---");
+    //console.log(apiProvider);
+
+    const invoke = {
+      scriptHash: this.neoswapsmartContractScript, // Scripthash for the contract
+      operation: 'lock', // name of operation to perform.
+      args: [
+        sc.ContractParam.byteArray(neoWalletAddress, 'address'), // neo address
+        // tslint:disable-next-line: max-line-length
+        sc.ContractParam.integer(amountWithDecimals.toNumber()), // qlc amount
+        sc.ContractParam.byteArray(u.str2hexstring(erc20WalletAddress), 'string'), // qlc address
+      ]
+    }
+    console.log(invoke);
+
+    
+    const script = await Neon.create.script(invoke);
+    console.log(script);
+
+    const invokeConfig = {
+      api: apiProvider, // The API Provider that we rely on for balance and rpc information
+      account, // The sending Account
+      script // The Smart Contract invocation script
+    };
+
+    const returnTokeninvokeConfig = await Neon.doInvoke(invokeConfig)
+    .then(config2 => {
+      return config2.response;
+    })
+    .catch(err => {
+      return err;
+    });
+    const returnData = {
+      lockTxId : returnTokeninvokeConfig.txid
+    };
+    console.log('returnData', returnData);
+    return returnData;
+  }
 
   async contractLock(neoWalletAddress,qlcAmount,qlcWalletAddress,durationInDays) {
     //console.log('contractLock')

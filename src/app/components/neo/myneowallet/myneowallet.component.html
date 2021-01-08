@@ -214,7 +214,7 @@
 </div>
 
 
-<!-- LATEST TRANSACTIONS -->
+<!-- LATEST SWAP TRANSACTIONS -->
 <div class="container mt-0 mb-3">
   <div class="row">
     
@@ -223,7 +223,7 @@
       <!-- TITLE -->
       <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
         <div class="content-title">
-          <h1>Latest Transactions</h1>
+          <h1>Latest Swap Transactions</h1>
         </div>
       </div>
 
@@ -235,39 +235,85 @@
           <div class="container">
 
             <div class="row qlc-table-header">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
+              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">TYPE</div>
+              <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">STATUS</div>
+              <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SENDER</div>
+              <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">RECIPIENT</div>
+              <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SWAPID</div>
+              <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">AMOUNT</div>
+              <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-3 d-none d-md-block text-right pr-sm-4 pr-4">TIME</div>
             </div>
 
-            <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let history of walletHistory">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
-                <span class="qlc-icon icon-{{ history.type }}" title="{{ history.type }}"></span>
-                <span class="d-none d-sm-none d-md-inline-block txState">
-                  <span class="text-color-lightgrey">State</span><br>
-                  <span class="text-bold-grey">{{ history.type }}</span>
+            <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of swapHistory">
+              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
+                <span>
+                    <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
+                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
+                </span>
+                <span class="d-xl-none">
+                  <br>
+                  <br>
+                  Status: 
+                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
+                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
                 </span>
               </div>
-              <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
-                <span class="text-color-lightgrey">{{history.type == 'Send' ? 'to' : 'from'}}: </span> 
-                <a href="{{ neoService.getExplorer() }}/address/{{history.account}}" target="_blank" >{{ history.account }}</a>
-                <a href="{{ neoService.getExplorer() }}/transaction/{{history.txid}}" target="_blank" ><br>
-                  <span class="text-tiny">{{ history.txid }}</span>
+              <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">
+                <span>
+                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
+                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
+                </span>
+              </div>
+              <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
+                <span class="d-xl-none">Sender: </span>
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+
+                <span class="d-xl-none"><br>Recipient: </span>
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+
+                <span class="d-xl-none"><br>Swapid: </span>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
+                  {{history.neoTxHash | squeeze : '10,9'}}
                 </a>
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                  {{history.ethTxHash | squeeze : '10,9'}}
+                </a>
+                
+                <span class="d-md-none"><br>Time:<br class="d-sm-none"> {{ history.lastModifyTime | date: 'short' }}</span>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
-                history.type == 'Send' ? 'text-color-red' : 'text-color-green'
-              }}">
-                <span data-toggle="tooltip" data-placement="top" title="-">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | currency:'':'':'1.2-8' }}</span>
-                <br><span class="text-color-grey">{{ history.tokenName }}</span>
-              </div>
-              <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
-                {{ history.time * 1000 | date: 'short' }}
-              </div>
-              <div class="container transaction-details">
+              <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '11,10'}}</a>
 
               </div>
+              <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
+                  {{history.neoTxHash | squeeze : '11,10'}}
+                </a>
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                  {{history.ethTxHash | squeeze : '11,10'}}
+                </a>
+              </div>
+              <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
+                <span [ngClass]="{
+                  'text-blue': (history.state ==0 || history.state ==2),
+                  'text-color-green': (history.state ==1 || history.state ==3),
+                  'text-color-red': history.state == 4
+                }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">
+                <span>{{ history.lastModifyTime | date: 'short' }}</span>
+              </div>
+              <!-- <div class="container transaction-details">
+
+              </div> -->
             </div>
 
 
@@ -288,6 +334,80 @@
   </div>
 </div>
 
+
+<!-- LATEST TRANSACTIONS -->
+<div class="container mt-0 mb-3">
+    <div class="row">
+      
+      <div class="col-12 pl-0 pr-0">
+        
+        <!-- TITLE -->
+        <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+          <div class="content-title">
+            <h1>Latest Transactions</h1>
+          </div>
+        </div>
+  
+        <!-- LIST -->
+        <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+          <div class="content-box-white">
+  
+  
+            <div class="container">
+  
+              <div class="row qlc-table-header">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">Type</div>
+                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 text-truncate">Address / Transaction ID</div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pr-sm-0 pr-4 text-right">Amount</div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 d-none d-sm-block col-6 pr-4 text-right">Time</div>
+              </div>
+  
+              <div class="row qlc-table-row qlc-table-row-twolines closed" *ngFor="let history of walletHistory">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pl-4 pb-0">
+                  <span class="qlc-icon icon-{{ history.type }}" title="{{ history.type }}"></span>
+                  <span class="d-none d-sm-none d-md-inline-block txState">
+                    <span class="text-color-lightgrey">State</span><br>
+                    <span class="text-bold-grey">{{ history.type }}</span>
+                  </span>
+                </div>
+                <div class="col-xl-6 col-lg-5 col-md-5 col-sm-5 col-7 pb-0 text-truncate">
+                  <span class="text-color-lightgrey">{{history.type == 'Send' ? 'to' : 'from'}}: </span> 
+                  <a href="{{ neoService.getExplorer() }}/address/{{history.account}}" target="_blank" >{{ history.account }}</a>
+                  <a href="{{ neoService.getExplorer() }}/transaction/{{history.txid}}" target="_blank" ><br>
+                    <span class="text-tiny">{{ history.txid }}</span>
+                  </a>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-3 pb-0 pr-sm-0 pr-4 text-right {{
+                  history.type == 'Send' ? 'text-color-red' : 'text-color-green'
+                }}">
+                  <span data-toggle="tooltip" data-placement="top" title="-">{{history.type == 'Send' ? '-' : '+'}} {{ history.amount | currency:'':'':'1.2-8' }}</span>
+                  <br><span class="text-color-grey">{{ history.tokenName }}</span>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 pr-4 text-right">
+                  {{ history.time * 1000 | date: 'short' }}
+                </div>
+                <div class="container transaction-details">
+  
+                </div>
+              </div>
+  
+  
+              
+            </div>
+  
+          </div>
+        </div>
+  
+        <!-- BUTTON -->
+        <!--
+        <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="accountBlocksCount>pageSize">
+          <a [routerLink]="'/transactions/1/' + accountId" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+        </div>
+          -->
+      </div>
+      
+    </div>
+  </div>
 
 
 <ng-template #qrCode>

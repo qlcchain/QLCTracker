@@ -1,0 +1,731 @@
+<app-user-submenu></app-user-submenu>
+
+<!-- check metamask -->
+<div class="stake-screen-1" *ngIf="!etherService.metamask">
+  <app-erc20-wallet></app-erc20-wallet>
+</div>
+<!-- step 1: choose account to swap -->
+ <div class="stake-screen-1 qlc-content-home qlc-after-submenu" *ngIf='step == 1 && etherService.metamask'>
+
+<!-- SEND FORM -->
+<div class="row">
+  <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
+    <div class="container">
+      <div class="row">
+        <!-- TITLE -->
+        <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
+          <div class="content-title">
+            <h1 class="neo" *ngIf="recover != 1">Swap QLC Tokens</h1>
+            <h1 class="neo" *ngIf="recover == 1">Swap QLC Tokens - Recover</h1>
+          </div>
+        </div>
+        <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-2 pr-2">
+          <button type="submit" (click)="recover = !recover" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 neo-background-light">
+            <span *ngIf="recover != 1">Recover Transactions</span>
+            <span *ngIf="recover == 1">Back to swap</span>
+          </button>
+        </div>
+        <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
+          <button type="submit"  class="btn btn-primary content-header float-right w-100 pl-0 pr-0 " routerLink="/wallets">
+            Back to my Wallets
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container accounts" *ngIf="recover == 1">
+<div class="row">
+
+  <!-- FORM -->
+  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" >
+      <div class="container pl-0 pr-0">
+        <div class="row pl-0 pr-0">
+
+
+        <div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4 ng-invalid-ignore" [formGroup]="recoverForm">
+          <div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+
+              <div class="row pt-1 mt-4 pl-4 pr-4">
+
+                  <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4 mt-4">
+                    RECOVER TXID
+                  </div>
+                  <div class="col-md-9 text-left mb-4 mt-4">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control form-my-border"
+                        placeholder="txid"
+                        onfocus="this.placeholder = ''"
+                        style="height: 42px !important;"
+                        formControlName="recover_txid"
+                      />
+                    </div>
+                    
+                    <span *ngFor="let validation of recover_validation_messages.recover_txid">
+                      <span class="error-message pt-2" *ngIf="recoverForm.get('recover_txid').hasError(validation.type) && (recoverForm.get('recover_txid').dirty || recoverForm.get('recover_txid').touched)" style="color:#c10f0f;">{{validation.message}}<br></span>
+                    </span>
+                    <h5 class="pt-3" *ngFor="let step of recoverSteps">{{ step.msg }}</h5>
+                  </div>
+                  
+                  <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2 mb-4"></div>
+                  <div class="col-md-4 text-left mb-4">
+                    <button (click)="continueUndoneTransaction()" type="submit" class="btn btn-primary" style="min-width:100%;" [disabled]="checkingTxid == 1 || recoverForm.get('recover_txid').status != 'VALID' ">
+                      CONTINUE SWAP
+                    </button>
+                  </div>
+                  <div class="col-md-5 pt-3" *ngIf="checkingTxid == 1">
+                    <span class="security-email-sending" class="w-100"><p><img src="assets/img/loading-blue.gif" style="margin-left:-2px; height:24px; width:auto; margin-right:8px;margin-top:-2px;"> Checking txid ...</p></span>  
+                  </div>
+                </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+
+<div class="container accounts" *ngIf="recover == 0 || (recover == 1 && recovering_txid == 1)">
+  <div class="row">
+
+<!-- FORM -->
+<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 pb-3 ng-invalid-ignore" [formGroup]="stakingForm" >
+<div class="container pl-0 pr-0">
+<div class="row pl-0 pr-0">
+
+
+<div class="col-12 pl-md-2 pr-md-2 pl-sm-2 pb-2 order-md-4 order-1 mb-0 mb-md-4">
+  <div class="row mt-2 mb-3">
+    <div class="col-6 pr-2" (click)="stakingForm.get('stakingType').setValue(0);loadBalances()">
+        <div class="content-box-white swap-type" [ngClass]="{'selected': stakingForm.value.stakingType == 0, 'unselected': stakingForm.value.stakingType != 0}">
+          <div class="row">
+            <div class="col-6">
+              <img src="assets/img/swap/token-qlc-nep5.png" style="height: 35px; margin: 20px 10px 20px 30px;">
+              NEP5 QLC
+            </div>
+            <div class="col-6 text-right">
+              ERC20 QLC
+              <img src="assets/img/swap/token-qlc-erc20.png" style="height: 35px; margin: 20px 30px 20px 10px;">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="col-6 pl-2" (click)="stakingForm.get('stakingType').setValue(2);loadBalances()">
+      <div class="content-box-white swap-type" [ngClass]="{'selected': stakingForm.value.stakingType == 2, 'unselected': stakingForm.value.stakingType != 2}">
+        <div class="row">
+          <div class="col-6">
+            <img src="assets/img/swap/token-qlc-erc20.png" style="height: 35px; margin: 20px 10px 20px 30px;">
+            ERC20 QLC
+          </div>
+          <div class="col-6 text-right">
+            NEP5 QLC
+            <img src="assets/img/swap/token-qlc-nep5.png" style="height: 35px; margin: 20px 30px 20px 10px;">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="content-box-white h-auto mt-2 pb-2 pl-2 pr-2">
+
+<div class="container ml-1 pr-3 pl-3">
+<div class="row defaultTable sendTokens">
+<div class="col-12">
+
+<div>
+    <div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+      <div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+        FROM ACCOUNT
+      </div>
+      <div class="col-md-9 text-left">
+        <div *ngIf="this.stakingForm.value.stakingType == 0" class="form-group">
+          <select class="custom-select" formControlName="fromNEOWallet" (change)="selectAccount()">
+            <option *ngFor="let account of neowallets" [value]="account.id"
+              >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances[neoService.tokenList['QLC'].networks['1'].hash] != undefined)? ' ('+account.balances[neoService.tokenList['QLC'].networks['1'].hash].amount + ' QLC)' : '') }} </option>
+          </select>
+          <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
+          <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
+
+        </div>
+        <div *ngIf="this.stakingForm.value.stakingType == 2" class="form-group">
+          <select class="custom-select" formControlName="fromNEOWallet">
+            <option *ngFor="let account of etherService.accounts" [value]="account"
+              >{{ account }}</option>
+          </select>
+          <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
+          <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
+
+        </div>
+        <div class="form-group" *ngIf="recover == 1">
+          {{ stakingForm.value.fromNEOWallet }}
+        </div>
+      </div>
+    </div>
+
+
+<div class="row pt-4" style="border-bottom: 1px solid #edeef4;">
+<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">
+TO ACCOUNT
+</div>
+<div class="col-md-9 text-left">
+<div class="form-group" *ngIf="this.stakingForm.value.stakingType == 0">
+<select class="custom-select" formControlName="toQLCWallet">
+<option *ngFor="let account of etherService.accounts" [value]="account"
+>{{ account }}</option>
+</select>
+</div>
+<div class="form-group" *ngIf="this.stakingForm.value.stakingType == 2">
+<select class="custom-select" formControlName="toQLCWallet" (change)="selectAccount()">
+<option *ngFor="let account of neowallets" [value]="account.id"
+>{{ account.id }} </option>
+</select>
+</div>
+<div class="form-group" *ngIf="recover == 1">
+{{ stakingForm.value.toQLCWallet }}
+</div>
+</div>
+</div>
+                    
+<div class="row rowContent mb-5 mt-4" style="border-bottom: 1px solid #edeef4;">
+<div class="col-md-3 dataName pb-3 pb-md-0 form-label-custom-2">AMOUNT</div>
+<div class="col-md-9">
+<div class="row align-items-top" *ngIf="recover == 0">
+<div class="col-md-6 pb-3 pb-md-0">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <div class="input-group-text ">
+                QLC
+            </div>
+        </div>
+        <input
+            type="text"
+            class="form-control inlineForm"
+formControlName="amounToStake"
+            placeholder="{{ stakingTypes[this.stakingForm.value.stakingType].minAmount }}"
+onfocus="this.placeholder = ''"
+(change)="checkIfMinAmount()"
+            style="height: 42px !important;"
+        />
+        <div class="input-group-append">
+            <!--<a (click)="setMaxAmount()">
+                <div class="input-group-text maxLink">Max</div>
+</a>-->
+<div class="input-group-text maxLink">&nbsp;</div>
+        </div>
+</div>
+<p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum swap amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount}} QLC</p>
+</div>
+
+<div class="col-md-6">
+<div class="row align-items-top">
+<div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">BALANCE</div>
+<div class="col-md-6 ">
+<div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.availableQLCBalance}} QLC</strong></div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="form-group" *ngIf="recover == 1">
+{{ stakingForm.value.amounToStake }} QLC
+</div>
+
+</div>
+</div>
+
+
+
+
+<div class="issue-token" *ngIf="this.stakingForm.value.stakingType == 2">
+
+</div>
+<div class="row rowAmount pl-3 pl-sm-3 pl-sm-3 pr-3 pr-sm-3 pr-sm-3 pt-0 mt-0 pb-3 pt-4">
+        <div class="col-md-3"></div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-12 pl-0 pr-0 pl-md-2 pr-md-2">
+            <button (click)="checkForm()" type="submit" class="btn btn-primary" style="min-width:100%;">
+                REVIEW & INVOKE SWAP
+            </button>
+        </div>
+    </div>
+</div>
+
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+<!-- EXPLAINER -->
+<!-- <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+<div class="content-box-blue h-100 pb-3">
+<div class="container">
+
+<div class="row qlc-table-header-blue">
+<div class="col-12">NEP5 TO ERC20 TOKEN SWAP</div>
+</div>
+<div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
+<hr style="height:1px;width:100%;border:none;background:#7ca7e5;display:block;" />
+<p>
+Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into ERC20 QLC, users can also operate in the reverse direction.<br>
+</p>
+</div>
+</div>
+</div>
+</div>      -->
+</div>
+
+			<!-- EXPLAINER -->
+			<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+				<div class="content-box-blue h-100 pb-3">
+					<div class="container">
+
+            <div class="row qlc-table-header-blue">
+              <div class="col-12">NEP5 TO ERC20 TOKEN SWAP</div>
+            </div>
+            <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
+              <p>
+                <span style="line-height: 2.1em; display: inline-block;">Nep5 QLC holders can throught the cross-chain swap function convert 1:1 to ERC20 QLC, users can also operate in the reverse direction. </span><br>
+                <span style="line-height: 2.1em; color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Amount:</span> 1 QLC<br>
+                <span style="line-height: 2.1em; color:#7ca7e5;margin-top:4px;display:inline-block;">Ratio:</span> 1:1<br>
+              </p>
+              <p>
+                <a href="https://github.com/qlcchain/eth-staking-contracts/wiki/NEP5-TO-ERC20-Token-Swap-V2" target="_blank" style="text-decoration: underline; font-weight: 400;">Learn more on GitHub</a>
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+</div>	
+
+<!-- LATEST SWAP TRANSACTIONS -->
+<div class="container mt-0 mb-3">
+  <div class="row">
+    
+    <div class="col-12 pl-0 pr-0">
+      
+      <!-- TITLE -->
+      <div class="col-lg-12 mb-3 mt-2 pl-md-2 pr-md-2">
+        <div class="content-title">
+          <h1>Latest Swap Transactions</h1>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="col-lg-12 mb-4 pl-md-2 pr-md-2">
+        <div class="content-box-white">
+
+
+          <div class="container">
+
+            <div class="row qlc-table-header">
+              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">TYPE</div>
+              <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">STATUS</div>
+              <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SENDER</div>
+              <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">RECIPIENT</div>
+              <div class="col-xl-2 d-none d-xl-block text-left pr-sm-4 pr-md-0 pr-lg-0 pr-4">SWAPID</div>
+              <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">AMOUNT</div>
+              <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-3 d-none d-md-block text-right pr-sm-4 pr-4">TIME</div>
+            </div>
+
+            <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.swapHistory">
+              <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
+                <span>
+                    <span *ngIf="(history.state ==4)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
+                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span><br>
+                    <button *ngIf="(history.state ==0 || history.state ==4)" (click)="continueUndoneTransaction(history.neoTxHash)" title="click me to continue swap" type="submit" class="btn btn-primary" style="min-width:100%;margin-top:18px">
+                      CONTINUE SWAP
+                    </button>
+                </span>
+                <span class="d-xl-none">
+                  <br>
+                  <br>
+                  Status: 
+                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
+                  <span *ngIf="(history.state ==0)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
+                </span>
+              </div>
+              <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">
+                <span>
+                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
+                  <span *ngIf="(history.state ==0)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
+                </span>
+              </div>
+              <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
+                <span class="d-xl-none">Sender: </span>
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+
+                <span class="d-xl-none"><br>Recipient: </span>
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+
+                <span class="d-xl-none"><br>Swapid: </span>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
+                  {{history.neoTxHash | squeeze : '10,9'}}
+                </a>
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                  {{history.ethTxHash | squeeze : '10,9'}}
+                </a>
+                
+                <span class="d-md-none"><br>Time:<br class="d-sm-none"> {{ history.lastModifyTime | date: 'short' }}</span>
+              </div>
+              <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '11,10'}}</a>
+
+              </div>
+              <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
+                  {{history.neoTxHash | squeeze : '11,10'}}
+                </a>
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
+                  {{history.ethTxHash | squeeze : '11,10'}}
+                </a>
+              </div>
+              <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
+                <span [ngClass]="{
+                  'text-blue': (history.state ==0 || history.state ==2),
+                  'text-color-green': (history.state ==1 || history.state ==3),
+                  'text-color-red': history.state == 4
+                }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">
+                <span>{{ history.lastModifyTime | date: 'short' }}</span>
+              </div>
+              <!-- <div class="container transaction-details">
+
+              </div> -->
+            </div>
+
+
+            
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BUTTON -->
+      <!--
+      <div class="col-lg-12 mb-0 mt-2 pl-md-2 pr-md-2 text-center" *ngIf="accountBlocksCount>pageSize">
+        <a [routerLink]="'/transactions/1/' + accountId" class="btn btn-primary btn-blue">ALL TRANSACTIONS</a>
+      </div>
+        -->
+    </div>
+    
+  </div>
+</div>
+</div>
+<!-- confirm choose -->
+<div class="stake-screen-1"  *ngIf='step == 2'>
+
+
+
+    <!-- REVIEW A -->
+    <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+        <div class="row">
+            <div class="col-12 pl-0 pr-0 pb-2">
+                <div class="container">
+                        <div class="row">
+                            <!-- TITLE -->
+                            <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                                <div class="content-title">
+                                    <h1>Confirm Swap</h1>
+                                </div>
+                            </div>
+                            <!-- to do  -->
+                            <!-- <div class="col-md-3 col-12 pl-md-2 pr-md-2">
+                                    <button (click)="back()" type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0">
+                                        CHANGE / EDIT
+                                    </button>
+                            </div> -->
+                        </div>
+                    </div>
+            </div>
+        </div>
+  </div>
+
+  <div class="container">
+    <div class="row confirmTransaction">
+
+      <!-- ADDRESS -->
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-white h-auto pb-5">
+          <div class="container mb-3">
+
+
+                <div class="row align-items-center fromText pt-5">
+                  <div class="col-12 text-label">You are about to swap</div>
+                </div>
+                <div class="row align-items-center ">
+                  <div class="col-12 sum">
+                    <span>{{ stakingForm.value.amounToStake}} QLC</span>
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                </div>
+                <div class="row transfer">
+                  <div class="col-lg-6 text-center pt-4 pb-4">
+                    <div class="text-label pb-2">FROM ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'NEP5' : 'ERC20' }})</div>
+                    <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
+                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0])" class="text-blue">
+                        <span class="d-none d-xl-block">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
+                        </span>
+                        <span class="d-none d-lg-block d-xl-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '12,12' }}
+                        </span>
+                        <span class="d-none d-md-block d-lg-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '20,20' }}
+                        </span>
+                        <span class="d-none d-sm-block d-md-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
+                        </span>
+                        <span class="d-block d-sm-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '12,12' }}
+                        </span>
+                      </a>
+                    </div>
+                    <div class="pl-5 pr-5 pb-4">
+                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0])" class="address">{{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0] }}</a>
+                    </div>
+                    <div class="pt-2 text-bold negative_change text-color-red">-{{ stakingForm.value.amounToStake}} QLC</div>
+                    <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO LOCK' : 'AMOUNT TO BURN' }}</div>
+                  </div>
+                  <div class="col-lg-6 text-center pt-4 pb-4">
+                    <div class="text-label pb-2">TO ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'ERC20' : 'NEP5' }})</div>
+                    <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
+                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value)" class="text-blue">
+                        <span class="d-none d-xl-block">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '15,15' }}
+                        </span>
+                        <span class="d-none d-lg-block d-xl-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '12,12' }}
+                        </span>
+                        <span class="d-none d-md-block d-lg-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '20,20' }}
+                        </span>
+                        <span class="d-none d-sm-block d-md-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '15,15' }}
+                        </span>
+                        <span class="d-block d-sm-none">
+                          {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '12,12' }}
+                        </span>
+                      </a>
+                    </div>
+                    <div class="pl-5 pr-5 pb-4">
+                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value)" class="address">{{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) }}</a>
+                    </div>
+                    <div class="pt-2 text-bold positive_change text-color-green">+{{ stakingForm.value.amounToStake}} QLC</div>
+                    <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO MINT' : 'AMOUNT TO UNLOCK' }}</div>
+                  </div>
+                </div>
+                
+                <div class="row align-items-center ">
+                  <div class="col-12 sum">
+                  </div>
+                </div>
+
+                <div class="row align-items-center fromText">
+                  <div class="col-12 text-label">GAS PRICE</div>
+                </div>
+
+                <div class="row justify-content-center mt-2">
+                  <div (click)="selectedGasPrice = 'SafeGasPrice'" class="col-2 py-2" [ngClass]="{
+                    'gas-not-selected': selectedGasPrice != 'SafeGasPrice',
+                    'gas-selected': selectedGasPrice == 'SafeGasPrice'
+                  }">
+                    SLOW<br>
+                    <span style="color: #000000">{{gasPrices.SafeGasPrice}} WEI</span>
+                  
+                  </div>
+                  <div (click)="selectedGasPrice = 'ProposeGasPrice'" class="col-2 mx-2 py-2" [ngClass]="{
+                    'gas-not-selected': selectedGasPrice != 'ProposeGasPrice',
+                    'gas-selected': selectedGasPrice == 'ProposeGasPrice'
+                  }">
+                    AVERAGE<br>
+                    <span style="color: #000000">{{gasPrices.ProposeGasPrice}} WEI</span>
+                  </div>
+                  <div (click)="selectedGasPrice = 'FastGasPrice'" class="col-2 py-2" [ngClass]="{
+                    'gas-not-selected': selectedGasPrice != 'FastGasPrice',
+                    'gas-selected': selectedGasPrice == 'FastGasPrice'
+                  }">
+                    FAST<br>
+                    <span style="color: #000000">{{gasPrices.FastGasPrice}} WEI</span>
+                
+                  </div>
+                </div>
+                
+                <div class="row align-items-center ">
+                  <div class="col-12 sum">
+                  </div>
+                </div>
+      
+                <div class="row align-items-center justify-content-center rowDefault rowButtons pl-4 pr-4">
+                  <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 pr-sm-2 text-left text-truncate mobile-break mb-2">
+                    <button type="submit" class="btn-primary btn-red btn-danger w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="step = 1">
+                      {{ 'CANCEL' | translate }}
+                    </button>
+                  </div>
+                  <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-2">
+                    <button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="confirmInvoke()">
+                      CONFIRM & SWAP
+                    </button>
+                  </div>
+                </div>
+
+
+
+
+          
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- start swap -->
+<div class="stake-screen-1"  *ngIf='step == 3'>
+
+
+
+    <!-- LOADING -->
+    <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+        <div class="row">
+            <div class="col-12 pl-0 pr-0 pb-2">
+                <div class="container">
+                        <div class="row">
+                            <!-- TITLE -->
+                            <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                                <div class="content-title">
+                                    <h1>Swapping</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+  </div>
+
+  <div class="container">
+    <div class="row confirmTransaction">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-white h-auto pb-5">
+          <div class="container mb-3">
+            <div class="row align-items-center fromText pt-5">
+              <div class="col-12 text-label">PLEASE WAIT, THIS MAY TAKE SEVERAL MINUTES</div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                <img src="assets/img/Loader.svg" style="height: 50px; margin: 25px 0 25px 0;">
+              </div>
+            </div>
+            <div class="row align-items-center">
+              
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                <p style="color:#c10f0f;" class="pb-3"><strong>Important:</strong> Don't leave or close this page!</p>
+              </div>
+              <div class="col-12 text-center" *ngFor="let step of invokeSteps">
+                <p class="pt-0 pb-0"><span style="display:block;width:100%;margin-bottom:10px;margin-top:-5px;" *ngIf="step.checkimg == 1"><img src="assets/img/qlc-icon-staking-success-green.svg" style="width:20px;height:auto;"></span>{{ step.msg }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- completed -->
+<div class="stake-screen-1" *ngIf="step == 4">
+    <!-- COMPLETE -->
+    <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu">
+        <div class="row">
+            <div class="col-12 pl-0 pr-0 pb-2">
+                <div class="container">
+                        <div class="row">
+                            <!-- TITLE -->
+                            <div class="col-md-9 col-12 mt-2 pl-md-2 pr-md-2">
+                                <div class="content-title">
+                                    <h1>Swap successful</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+  </div>
+  <div class="container">
+    <div class="row confirmTransaction">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-xl-5 pb-lg-5 pb-2 mb-md-0 mb-sm-0 mb-md-0 mb-0">
+        <div class="content-box-white h-auto pb-5">
+          <div class="container mb-3">
+            <div class="row align-items-center fromText pt-5">
+              <div class="col-12 text-label">YOU HAVE SWAPPED</div>
+            </div>
+            <div class="row align-items-center ">
+              <div class="col-12 sum">
+                <span>{{ this.haveswappedamount }} QLC</span>
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                <img src="assets/img/swap/qlc-icon-check-success.svg" style="height: 50px; margin: 25px 0 25px 0;">
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center text-label">
+                NEO TRANSACTION HASH
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                {{ neoTxHash }}
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center text-label">
+                ETH TRANSACTION HASH
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-12 text-center">
+                {{ ethTxHash }}
+              </div>
+            </div>
+            
+  
+            <div class="row align-items-center justify-content-center rowDefault rowButtons pl-4 pr-4 mt-5">
+              <div class="col-lg-2 col-md-4 col-sm-5 col-12 px-0 px-sm-2 text-left text-truncate mobile-break mb-2">
+                <button type="submit" class="btn btn-primary btn-blue w-100" style="min-width:auto; padding-left:0px; padding-right:0px;" (click)="backtoswap();loadBalances()">
+                  CONTINUE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

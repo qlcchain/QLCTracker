@@ -394,12 +394,14 @@ export class StakingCreateComponent implements OnInit {
   
   selectAccount() {
 		if (this.stakingForm.value.fromNEOWallet == '') {
+      console.log('neowallets',this.neowallets)
       if (this.neowallets[0] != undefined && this.neowallets[0].id != undefined) {
         this.stakingForm.get('fromNEOWallet').setValue(this.neowallets[0].id);
         
       }
     }
     if (this.stakingForm.value.toQLCWallet == '') {
+      console.log('qlcwallets',this.accounts)
       if (this.accounts[0] != undefined && this.accounts[0].id != undefined) {
         this.stakingForm.get('toQLCWallet').setValue(this.accounts[0].id);
       }

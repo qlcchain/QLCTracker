@@ -14,7 +14,9 @@
               <span style="width:16px;height:16px;background:#2069c2;margin-left:16px;margin-right:8px;" class="d-inline-block d-sm-none"></span>
               <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">QLC<span class="d-none d-sm-inline d-md-none d-lg-inline"> Chain</span></span> 
               <span style="width:16px;height:16px;background:#8BC34A;display:inline-block;margin-left:16px;margin-right:8px;"></span>
-              <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">NEO<span class="d-none d-sm-inline d-md-none d-lg-inline">/NEP-5</span></span> 
+              <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">NEO<span class="d-none d-sm-inline d-md-none d-lg-inline">/NEP-5</span></span>
+              <span style="width:16px;height:16px;display:inline-block;margin-left:16px;margin-right:8px;" class="eth-background-light"></span>
+              <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">ETH<span class="d-none d-sm-inline d-md-none d-lg-inline">/ERC20</span></span> 
               <!--<span style="width:16px;height:16px;background:#caa847;display:inline-block;margin-left:16px;margin-right:8px;"></span>
               <span style="display:inline-block;vertical-align:top;height:16px;margin-top:3px;">ChainX</span>-->
             </div>
@@ -103,7 +105,7 @@
             <div class="col-12 mt-0 pl-0 pr-0 ml-0 mr-0">
               <div class="container pt-0 mt-0">
                 <div class="row qlc-table-header-white pt-0 mt-0">
-                  <div class="col-12 pt-0 mt-0">Other token Balances ({{ account.otherTokens.length }})</div>
+                  <div class="col-12 pt-0 mt-0">Other Balances ({{ account.otherTokens.length }})</div>
                 </div>
               </div>
               <div class="container">
@@ -134,7 +136,7 @@
             <div class="col-12 mt-0 pl-0 pr-0 ml-0 mr-0">
               <div class="container pt-0 mt-0">
                 <div class="row qlc-table-header-white pt-0 mt-0">
-                  <div class="col-12 pt-0 mt-0">Other token Balances (0)</div>
+                  <div class="col-12 pt-0 mt-0">Other Balances (0)</div>
                 </div>
               </div>
               <div class="container" style="padding-bottom:1px !important;">
@@ -258,6 +260,71 @@
       </button>
     </div>
     <!-- NEO END -->
+    <!-- ERC20 START -->
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngIf="etherService.selectedAddress && etherService.selectedAddress !== ''">
+      <div class="content-box-blue h-auto pb-3 eth-background-light" style="min-height: 172px;">
+        <div class="container">
+          <div class="row qlc-table-header-blue eth-background-light">
+            <div class="col-12 white">Address</div>
+          </div>
+          <div class="row qlc-table-row-blue row-text-mid mt-3 cursor-pointer eth-background-light">
+            <div class="col-12 text-break pr-3"
+              [routerLink]="'/wallets/erc20/' + etherService.selectedAddress"
+              tooltip="{{ 'ACCOUNTS.wallet_details' | translate }}"
+            >{{ etherService.selectedAddress }}</div>
+          </div>
+        </div>
+      </div>
+      <!-- BALANCES -->
+      <div class="content-box-white h-auto mt-2 pb-2" style="min-height: 172px;">
+        <div class="container">
+          <div class="row qlc-table-header-white">
+            <div class="col-12">Balances</div>
+          </div>
+        </div>
+        <!-- PCX -->
+        <div class="container">
+          <div class="row">
+            <div class="col-3 mt-3">
+              <img src="assets/img/swap/token-eth.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <ng-container *ngIf="!loading; else showLoadingTemplate">
+                  <div class="col-12 pb-0" >{{ etherService?.balances?.ETH | currency:'':'':'1.2-8' }} ETH</div>
+                </ng-container>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-3 mt-3">
+              <img src="assets/img/token-qlc.png" class="w-100 icon-token">
+            </div>
+            <div class="col-9 pr-0 pl-0">
+              <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
+                <ng-container *ngIf="!loading; else showLoadingTemplate">
+                  <div class="col-12 pb-0" >{{ etherService?.balances?.QLC | currency:'':'':'1.2-8' }} QLC</div>
+                </ng-container>
+              </div>
+              <div class="row qlc-table-row-white sub-page pt-0">
+                <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0 pl-3 pr-3">
+      <button type="submit" class="btn btn-primary button-newaccount eth-background" [routerLink]="'/wallets/erc20'" *ngIf="!etherService.selectedAddress">
+        Connect ERC20 Wallet
+      </button>
+    </div>
+    <!-- ERC20 END -->
     <!-- ChainX START 
     
     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngFor="let chainxAccount of chainxAccounts">

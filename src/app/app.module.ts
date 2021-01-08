@@ -79,6 +79,8 @@ import { UserSubmenuComponent } from './components/user-dashboard/user-submenu/u
 import { StakingDashboardComponent } from './components/staking-dashboard/staking-dashboard.component';
 import { SqueezeNumberPipe } from './pipes/squeeze-number.pipe';
 import { PortalComponent } from './components/portal/portal.component';
+import { CcswapComponent } from './components/ccswap/ccswap.component';
+import { Erc20WalletComponent } from './components/erc20/erc20-wallet/erc20-wallet.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -139,7 +141,9 @@ export function createTranslateLoader(http: HttpClient) {
     UserSubmenuComponent,
     StakingDashboardComponent,
     SqueezeNumberPipe,
-    PortalComponent
+    PortalComponent,
+    CcswapComponent,
+    Erc20WalletComponent
   ],
   imports: [
     BrowserModule,
