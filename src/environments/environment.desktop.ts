@@ -5,7 +5,7 @@
 export const environment = {
   production: true,
   desktop: true,
-  version: '1.3.3',
+  version: '1.4.0',
   qlcChainNetwork: 'main', // test or main
   neoNetwork: 'main', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
@@ -15,8 +15,8 @@ export const environment = {
     main: 'https://rpc.qlcchain.online'
   },
   rpcUrl: {
-    test: 'http://seed2.ngd.network:20332/',
-    main: 'https://rpc.qlcchain.online'
+    test: 'http://127.0.0.1:19735',
+    main: 'http://127.0.0.1:9735'
   },
   swapUrl: {
     test: 'http://seed2.ngd.network:20332/',
@@ -46,8 +46,8 @@ export const environment = {
     main: 'https://neotube.io/'
   },
   wsUrl: {
-    test: '',
-    main: 'wss://rpc-ws.qlcchain.online'
+    test: 'ws://127.0.0.1:19736',
+    main: 'ws://127.0.0.1:9736'
   },
   nep5Url: {
     test: '',

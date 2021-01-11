@@ -54,7 +54,7 @@ console.log(`path: ` + toExecutableName('gqlc'));
 const userData = app.getPath('userData');
 
 const defaultWalletData = {
-	version: 'v1.3.3',
+	version: 'v1.4.0',
 	nodeData: {
 		version: '',
 		filename: '',
@@ -93,19 +93,25 @@ function getConfig() {
 		}
 		if (cfg.version == 'v1.3.0') {
 			console.log('found version v1.3.0, updating');
-			cfg.version = 'v1.3.3';
+			cfg.version = 'v1.4.0';
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
 		if (cfg.version == 'v1.3.1') {
 			console.log('found version v1.3.1, updating');
-			cfg.version = 'v1.3.3';
+			cfg.version = 'v1.4.0';
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
 		if (cfg.version == 'v1.3.2') {
 			console.log('found version v1.3.2, updating');
-			cfg.version = 'v1.3.3';
+			cfg.version = 'v1.4.0';
+			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
+			return cfg;
+		}
+		if (cfg.version == 'v1.3.3') {
+			console.log('found version v1.3.3, updating');
+			cfg.version = 'v1.4.0';
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
@@ -178,12 +184,17 @@ var deleteFolderRecursive = function(path) {
   }
 };
 
+
 ipcMain.on('delete-ledger', (event, data) => {
   log.log('delete-ledger');
   const ledgerPath = path.join(configDir, 'ledger');
   console.log(ledgerPath);
-  deleteFolderRecursive(ledgerPath);
-  mainWindow.webContents.send('delete-ledger-finish',{});
+	deleteFolderRecursive(ledgerPath);
+	try {
+		mainWindow.webContents.send('delete-ledger-finish',{});
+	} catch (error) {
+		console.log(error);
+	}
 });
 
 ipcMain.on('node-data', (event, data) => {
@@ -192,17 +203,25 @@ ipcMain.on('node-data', (event, data) => {
 	//console.log(walletConfigData);
 	const nodePath = path.join(userData, walletConfigData.nodeData.filename);
 	if (fs.existsSync(nodePath)) { // check if node exists
-		mainWindow.webContents.send('node-data',{
-			'config': walletConfigData,
-			'arch' : process.arch,
-			'platform' : process.platform
-		});
+		try {
+			mainWindow.webContents.send('node-data',{
+				'config': walletConfigData,
+				'arch' : process.arch,
+				'platform' : process.platform
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	} else {
-		mainWindow.webContents.send('node-data',{
-			'config': defaultWalletData,
-			'arch' : process.arch,
-			'platform' : process.platform
-		});
+		try {
+			mainWindow.webContents.send('node-data',{
+				'config': defaultWalletData,
+				'arch' : process.arch,
+				'platform' : process.platform
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	}
 	
 });
@@ -268,36 +287,59 @@ function getProcessData() {
 			if (typeof list[0] != 'undefined') {
 				pidusage(list[0].pid, function (err, stats) {
 					//log.log(stats);
-					mainWindow.webContents.send('node-running',{
-						'status' : 1
-					});
-					mainWindow.webContents.send('node-process-data',{
-						stats
-					});
+					try {
+						mainWindow.webContents.send('node-running',{
+							'status' : 1
+						});
+						mainWindow.webContents.send('node-process-data',{
+							stats
+						});
+					} catch (error) {
+						console.log(error);
+					}
 				})
 			} else {
-				mainWindow.webContents.send('node-running',{
-					'status' : 0
-				});
+				try {
+					mainWindow.webContents.send('node-running',{
+						'status' : 0
+					});
+				} catch (error) {
+					console.log(error);
+				}
 			}
-		}, function (err) {
+		}
+		, function (err) {
 			log.log(err.stack || err);
-		});
+		})
+		.catch(console.log);
+		;
 }
 
 function onDownloadProgress(progress) {
 	log.log(progress);
-	mainWindow.webContents.send('download-progress',progress);
+	try {
+		mainWindow.webContents.send('download-progress',progress);
+	} catch (error) {
+		console.log(error);
+	}
 }
 
 function onMinerDownloadProgress(progress) {
 	log.log(progress);
-	mainWindow.webContents.send('download-miner-progress',progress);
+	try {
+		mainWindow.webContents.send('download-miner-progress',progress);
+	} catch (error) {
+		console.log(error);
+	}
 }
 
 function onPoolDownloadProgress(progress) {
 	log.log(progress);
-	mainWindow.webContents.send('download-pool-progress',progress);
+	try {
+		mainWindow.webContents.send('download-pool-progress',progress);
+	} catch (error) {
+		console.log(error);
+	}
 }
 
 function downloadUpdate(version,gitrev,platform) {
@@ -337,12 +379,16 @@ function downloadUpdate(version,gitrev,platform) {
  
 		log.log("DONE: " + info.url);
 		const previousFileName = walletConfigData.nodeData.filename;
-		mainWindow.webContents.send('download-finished', {
-			version,
-			filename,
-			gitrev,
-			platform
-		});
+		try {
+			mainWindow.webContents.send('download-finished', {
+				version,
+				filename,
+				gitrev,
+				platform
+			});
+		} catch (error) {
+			console.log(error);
+		}
 		walletConfigData.nodeData = {
 			version,
 			filename,
@@ -415,12 +461,16 @@ function downloadMiner(version,gitrev,platform) {
  
 		log.log("DONE: " + info.url);
 		const previousFileName = walletConfigData.minerData.filename;
-		mainWindow.webContents.send('download-miner-finished', {
-			version,
-			filename,
-			gitrev,
-			platform
-		});
+		try {
+			mainWindow.webContents.send('download-miner-finished', {
+				version,
+				filename,
+				gitrev,
+				platform
+			});	
+		} catch (error) {
+			console.log(error);
+		}
 		walletConfigData.minerData = {
 			version,
 			filename,
@@ -491,12 +541,16 @@ function downloadPool(version,gitrev,platform) {
  
 		log.log("DONE: " + info.url);
 		const previousFileName = walletConfigData.poolData.filename;
-		mainWindow.webContents.send('download-pool-finished', {
-			version,
-			filename,
-			gitrev,
-			platform
-		});
+		try {
+			mainWindow.webContents.send('download-pool-finished', {
+				version,
+				filename,
+				gitrev,
+				platform
+			});
+		} catch (error) {
+			console.log(error);
+		}
 		walletConfigData.poolData = {
 			version,
 			filename,
@@ -683,17 +737,25 @@ function downloadPool(version,gitrev,platform) {
 		});
 
 		if (!child) {
-			mainWindow.webContents.send('node-running',{
-				'status' : 0
-			});
+			try {
+				mainWindow.webContents.send('node-running',{
+					'status' : 0
+				});
+			} catch (error) {
+				console.log(error);
+			}
 			const err = new Error('gqlc not started');
 			err.code = 'ENOENT';
 			err.path = cmd;
 			throw err;
 		} else {
-			mainWindow.webContents.send('node-running',{
-				'status' : 1
-			});
+			try {
+				mainWindow.webContents.send('node-running',{
+					'status' : 1
+				});
+			} catch (error) {
+				console.log(error);
+			}
 			child.stdout.on('data', data => log.log('[node]', String(data).trim()));
 			child.stderr.on('data', data => log.log('[node]', String(data).trim()));
 	
@@ -744,25 +806,41 @@ function downloadPool(version,gitrev,platform) {
 		});
 
 		if (!miner) {
-			mainWindow.webContents.send('miner-running',{
-				'status' : 0
-			});
+			try {
+				mainWindow.webContents.send('miner-running',{
+					'status' : 0
+				});
+			} catch (error) {
+				console.log(error);
+			}
 			const err = new Error('miner not started');
 			err.code = 'ENOENT';
 			err.path = cmd;
 			throw err;
 		} else {
-			mainWindow.webContents.send('miner-running',{
-				'status' : 1
-			});
+			try {
+				mainWindow.webContents.send('miner-running',{
+					'status' : 1
+				});
+			} catch (error) {
+				console.log(error);
+			}
 		}
 		miner.stdout.on('data', data => { 
 			log.log('[miner]', String(data).trim()); 
-			mainWindow.webContents.send('miner-log',String(data).trim());
+			try {
+				mainWindow.webContents.send('miner-log',String(data).trim());
+			} catch (error) {
+				console.log(error);
+			}
 		});
 		miner.stderr.on('data', data => {
 			log.log('[miner]', String(data).trim());
-			mainWindow.webContents.send('miner-log',String(data).trim());
+			try {
+				mainWindow.webContents.send('miner-log',String(data).trim());
+			} catch (error) {
+				console.log(error);
+			}
 		});
 
 		miner.once('exit', () => {
@@ -810,25 +888,41 @@ function downloadPool(version,gitrev,platform) {
 		});
 
 		if (!pool) {
-			mainWindow.webContents.send('pool-running',{
-				'status' : 0
-			});
+			try {
+				mainWindow.webContents.send('pool-running',{
+					'status' : 0
+				});
+			} catch (error) {
+				console.log(error);
+			}
 			const err = new Error('pool not started');
 			err.code = 'ENOENT';
 			err.path = cmd;
 			throw err;
 		} else {
-			mainWindow.webContents.send('pool-running',{
-				'status' : 1
-			});
+			try {
+				mainWindow.webContents.send('pool-running',{
+					'status' : 1
+				});
+			} catch (error) {
+				console.log(error);
+			}
 		}
 		pool.stdout.on('data', data => {
 			log.log('[pool]', String(data).trim());
-			mainWindow.webContents.send('pool-log',String(data).trim());
+			try {
+				mainWindow.webContents.send('pool-log',String(data).trim());
+			} catch (error) {
+				console.log(error);
+			}
 		});
 		pool.stderr.on('data', data => {
 			log.log('[pool]', String(data).trim());
-			mainWindow.webContents.send('pool-log',String(data).trim());;
+			try {
+				mainWindow.webContents.send('pool-log',String(data).trim());;
+			} catch (error) {
+				console.log(error);
+			}
 		});
 
 		pool.once('exit', () => {
@@ -847,9 +941,13 @@ function downloadPool(version,gitrev,platform) {
 		if (typeof child.kill == 'function') {
 			child.kill();
 			if (mainWindow != null) {
-				mainWindow.webContents.send('node-running',{
-					'status' : 0
-				});
+				try {
+					mainWindow.webContents.send('node-running',{
+						'status' : 0
+					});
+				} catch (error) {
+					console.log(error);
+				}
 			}
 		}
 	};
@@ -858,9 +956,13 @@ function downloadPool(version,gitrev,platform) {
 	const killMinerHandler = () => { 
 		if (typeof miner.kill == 'function') {
 			miner.kill();
-			mainWindow.webContents.send('miner-running',{
-				'status' : 0
-			});
+			try {
+				mainWindow.webContents.send('miner-running',{
+					'status' : 0
+				});
+			} catch (error) {
+				console.log(error);
+			}
 		}
 	};
 	const removeMinerExitHandler = signalExit(killMinerHandler);
@@ -869,9 +971,13 @@ function downloadPool(version,gitrev,platform) {
 	const killPoolHandler = () => { 
 		if (typeof pool.kill == 'function') {
 			pool.kill();
-			mainWindow.webContents.send('pool-running',{
-				'status' : 0
-			});
+			try {
+				mainWindow.webContents.send('pool-running',{
+					'status' : 0
+				});
+			} catch (error) {
+				console.log(error);
+			}
 		}
 	};
 	const removePoolExitHandler = signalExit(killPoolHandler);
@@ -1007,7 +1113,11 @@ function downloadPool(version,gitrev,platform) {
 					{
 						label: `Check for Updates...`,
 						click(menuItem, browserWindow) {
-							mainWindow.webContents.send('update-check','');
+							try {
+								mainWindow.webContents.send('update-check','');
+							} catch (error) {
+								console.log(error);
+							}
 						}
 					}
 				]
@@ -1023,7 +1133,11 @@ function downloadPool(version,gitrev,platform) {
 					{
 						label: `Check for Updates...`,
 						click(menuItem, browserWindow) {
-							mainWindow.webContents.send('update-check','');
+							try {
+								mainWindow.webContents.send('update-check','');
+							} catch (error) {
+								console.log(error);
+							}
 						}
 					},
 					{ type: 'separator' },

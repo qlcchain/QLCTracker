@@ -308,9 +308,11 @@ export class DesktopComponent implements OnInit {
     });
     this.ipc.on('node-running', (event, data) => {
       //console.log('got node-running event',event);
-      //console.log('got data',data);
+      //console.log('node-running got data',data);
       //console.log(data);
       if (data.status == 1) {
+        if (this.showStartNode)
+          this.showStartNode = false;
         if (this.stoppingNode === false && !this.showStartNode && !this.showDownload && !this.showDownloading && !this.showDownloadFinished && !this.showNoUpdate) {
           this.node.running = true;
           this.showStartNode = false;

@@ -711,8 +711,8 @@
                     <div class="nodeInfoBox first">
                         <span class="nodeLabel">Node status: </span>
                         <span class="nodeData" *ngIf="node.running == false">Offline</span>
-                        <span class="nodeData" *ngIf="node.running == true && showSynchronizingNode && (api.nodeMainBlocksCount != api.nodeBlocksCount || api.nodeBlocksCount == 0 || api.nodeMainBlocksCount == 0)">Synchronizing</span>
-                        <span class="nodeData" *ngIf="node.running == true && showSynchronizingNode && api.nodeMainBlocksCount == api.nodeBlocksCount && api.nodeBlocksCount != 0 && api.nodeMainBlocksCount != 0">Online</span>
+                        <span class="nodeData" *ngIf="node.running == true && !node.synchronized">Synchronizing</span>
+                        <span class="nodeData" *ngIf="node.running == true && node.synchronized">Online</span>
                     </div>
                     <!--<div class="nodeInfoBox" *ngIf="node.running == true">
                         <span class="nodeLabel">Memory Usage: </span>

@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   desktop: true,
-  version: '1.3.3',
-  qlcChainNetwork: 'main', // test or main
+  version: '1.4.0',
+  qlcChainNetwork: 'test', // test or main
   neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
   ethNetworkDefault: 'rinkeby', // mainnet, ropsten, rinkeby
@@ -15,8 +15,8 @@ export const environment = {
     main: 'https://rpc.qlcchain.online'
   },
   rpcUrl: {
-    test: 'http://seed2.ngd.network:20332/',
-    main: 'https://rpc.qlcchain.online'
+    test: 'http://127.0.0.1:19735',
+    main: 'http://127.0.0.1:9735'
   },
   swapUrl: {
     test: 'http://seed2.ngd.network:20332/',
