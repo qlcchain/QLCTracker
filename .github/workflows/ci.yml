@@ -1,0 +1,25 @@
+name: CI/CD For QLCTracker
+on: [push, pull_request]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: npm i
+      - name: Build Web Version
+        run: npm run qlc:build
+      - name: Build npm run qlc:build-desktop-high-mem
+        run: npm run qlc:build-desktop-high-mem
+      - name: Archive build
+        if: success()
+        uses: actions/upload-artifact@v1
+        with:
+          name: deploy_dist
+          path: dist
