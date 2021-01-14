@@ -15,11 +15,13 @@ jobs:
         run: npm i
       - name: Build Web Version
         run: npm run qlc:build
-      - name: Build npm run qlc:build-desktop-high-mem
-        run: npm run qlc:build-desktop-high-mem
       - name: Archive build
         if: success()
         uses: actions/upload-artifact@v1
         with:
           name: deploy_dist
           path: dist
+      - name: Build Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          build_script_name: qlc:build-desktop
