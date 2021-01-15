@@ -115,9 +115,9 @@ export class MyaccountsComponent implements OnInit {
             accountMeta[token.tokenName] = token;
             if (this.walletService.tokenMap.hasOwnProperty(token.type)) {
               token.tokenInfo = this.walletService.tokenMap[token.type];
-            }
-            if (token.tokenInfo.tokenSymbol != 'QLC' && token.tokenInfo.tokenSymbol != 'QGAS') {
-              otherTokens.push(token);
+              if (token.tokenInfo?.tokenSymbol != 'QLC' && token.tokenInfo?.tokenSymbol != 'QGAS') {
+                otherTokens.push(token);
+              }
             }
           });
         }

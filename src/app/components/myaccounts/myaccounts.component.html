@@ -261,7 +261,7 @@
     </div>
     <!-- NEO END -->
     <!-- ERC20 START -->
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngIf="!desktop && etherService.selectedAddress && etherService.selectedAddress !== ''">
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 pb-2 mb-4" *ngIf="etherService.selectedAddress && etherService.selectedAddress !== ''">
       <div class="content-box-blue h-auto pb-3 eth-background-light" style="min-height: 172px;">
         <div class="container">
           <div class="row qlc-table-header-blue eth-background-light">
@@ -319,7 +319,7 @@
         </div>
       </div>
     </div>
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0 pl-3 pr-3"*ngIf="!desktop">
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 mb-0 pl-md-2 pr-md-2 pl-sm-2 mb-4 pt-0 pb-0 pl-3 pr-3">
       <button type="submit" class="btn btn-primary button-newaccount eth-background" [routerLink]="'/wallets/erc20'" *ngIf="!etherService.selectedAddress">
         Connect ERC20 Wallet
       </button>

@@ -5,10 +5,11 @@
 export const environment = {
   production: false,
   desktop: false,
-  version: '1.4.0',
+  version: '1.4.1',
   qlcChainNetwork: 'main', // test or main
   neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
+  infuraId: '111769056614454ba82f3c6a16be68bb',
   mainRpcUrl: {
     test: '',
     main: 'https://rpc.qlcchain.online'
