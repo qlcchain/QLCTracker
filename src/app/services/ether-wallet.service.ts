@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 // import { testContract } from 'src/constants/abi/testContract';
 import { neo5toerc20swap } from 'src/constants/abi/neo5toerc20swap';
 import axios from 'axios';
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 @Injectable({
   providedIn: 'root'
@@ -27,33 +28,100 @@ transactions: any[];
 erc20Transactions: any[];
 internalTransactions: any[];
 
-  constructor() {
-    if ((window as any).ethereum ||
-    ((window as any).web3 && (window as any).web3.currentProvider)) {
-      // (window as any).ethereum.enable();
-      this.web3 = new Web3((window as any).web3.currentProvider);
-    } else {
-      console.log('Please connect the metamask first!');
-      this.metamask = false;
-    }
+provider: any;
 
-    this.web3?.currentProvider.publicConfigStore.on('update', (data) => {
-      const ethAddress = (window as any).web3.currentProvider.selectedAddress;
-      if (ethAddress) {
-        this.metamask = true;
+  constructor() {
+    this.connect();
+  }
+  async connect() {
+    if ((window as any).ethereum && (window as any).web3 && (window as any).web3.currentProvider) {
+      this.web3 = new Web3((window as any).web3.currentProvider);
+      this.provider = (window as any).web3.currentProvider;
+      await (window as any).ethereum.enable();
+      this.provider.publicConfigStore.on('update', (data) => {
+        const ethAddress = (window as any).web3.currentProvider.selectedAddress;
+        if (ethAddress) {
+          this.metamask = true;
+        } else {
+          this.metamask = false;
+        }
+        if (this.selectedAddress !== ethAddress) {
+          this.accounts = [ ethAddress ];
+          this.selectedAddress = ethAddress;
+          this.getBalances(ethAddress);
+          this.getAllTransactions(ethAddress);
+          this.getswapHistory(ethAddress);
+          this.getAccounts();
+        }
+      });
+    } else {
+      this.provider = new WalletConnectProvider({
+        infuraId: environment.infuraId,
+      });
+      const getProvider = await this.provider.enable();
+      if (this.provider) {
+        // (window as any).ethereum.enable();
+        this.web3 = new Web3(this.provider);
+        const ethAddress = getProvider[0];
+        if (ethAddress) {
+          this.metamask = true;
+        } else {
+          this.metamask = false;
+        }
+        if (this.selectedAddress !== ethAddress) {
+          this.accounts = [ ethAddress ];
+          this.selectedAddress = ethAddress;
+          this.getBalances(ethAddress);
+          this.getAllTransactions(ethAddress);
+          this.getswapHistory(ethAddress);
+          this.getAccounts();
+        }
+        /*
+        this.provider.on("accountsChanged", (accounts: string[]) => {
+          console.log(accounts);
+        });
+        // Subscribe to chainId change
+        this.provider.on("chainChanged", (chainId: number) => {
+          console.log(chainId);
+        });
+        
+        // Subscribe to session disconnection
+        this.provider.on("disconnect", (code: number, reason: string) => {
+          console.log(code, reason);
+        });
+        
+        // Subscribe to session connection
+        this.provider.on("connect", (info: { chainId: number }) => {
+          console.log(info);
+        });
+        */
       } else {
+        console.log('Please connect first!');
         this.metamask = false;
       }
-      if (this.selectedAddress !== ethAddress) {
-        this.accounts = [ ethAddress ];
-        this.selectedAddress = ethAddress;
-        this.getBalances(ethAddress);
-        this.getAllTransactions(ethAddress);
-        this.getswapHistory(ethAddress);
-        this.getAccounts();
-      }
+    }
+
+    
+
+    /*
+    this.provider.on('update', (data) => {
+      console.log('update')
     });
+    */
   }
+
+  async disconnectWallet() {
+    if (typeof this.provider.disconnect == 'function') {
+      this.provider.disconnect();
+    };
+    if (typeof this.provider.close == 'function') {
+      this.provider.close();
+    };
+    this.metamask = false;
+    this.selectedAddress = '';
+    this.swapHistory = [];
+  }
+
   async getswapHistory(address: any) {
     const swaptransactions: any = await this.swapInfosByAddress(
       address,
@@ -418,7 +486,7 @@ internalTransactions: any[];
     }
 
     checkIfWallet() {
-      if (this.web3?.eth) {
+      if (this.web3) {
         return true;
       } else {
         return false;
@@ -430,14 +498,17 @@ internalTransactions: any[];
       return;
     }
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-    // console.log('getEthQLCBalance.account', account);
-    Contract.methods.balanceOf(account).call().then(sum => {
+
+    const balance = await Contract.methods.balanceOf(account).call().then(sum => {
       const balance = new BigNumber(sum)
       .dividedBy(Math.pow(10, 8))
       .toNumber();
       console.log('ether-wallet.service.getEthQLCBalance', balance);
       localStorage.setItem('qlcbalance', balance.toString());
       return balance;
+    })
+    .catch( (error) => {
+      console.log(error);
     });
   }
   // mint erc20 token
@@ -456,6 +527,9 @@ internalTransactions: any[];
       this.depositethTransactionSent(result.transactionHash, nep5Hash);
       console.log('getEthMint', result);
       return result;
+    })
+    .catch( (error) => {
+      console.log(error);
     });
  }
 

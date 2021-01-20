@@ -1,3 +1,13 @@
+<ng-template #publicrpctemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left w-100 text-center">Node Control Center</h4>
+    </div>
+    <div class="modal-body text-center">
+        Please choose how you would like to run the tracker.<br>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Use public node" (click)="usePublicNode()">Use public node</button>
+        <button type="button" class="btn btn-primary mt-4 mb-4" aria-label="Run locale node" (click)="useLocalNode()">Run local node</button>
+    </div>
+</ng-template>
 <ng-template #template>
     <div class="modal-header">
         <h4 class="modal-title pull-left w-100 text-center">Node Control Center</h4>
@@ -707,7 +717,7 @@
 
                 <div class="nodeControlIcon" [ngClass]="{'nodeOnline': node.running}"></div>
 
-                <div class="nodeInfoBoxHolder">
+                <div class="nodeInfoBoxHolder" *ngIf="!usingPublicNode">
                     <div class="nodeInfoBox first">
                         <span class="nodeLabel">Node status: </span>
                         <span class="nodeData" *ngIf="node.running == false">Offline</span>
@@ -731,12 +741,19 @@
                         <span class="nodeData">{{ nodeUptime }}</span>
                     </div>-->
                 </div>
-                <div class="nodeInfoBoxButton" *ngIf="node.running == true" style="right: 160px; position: absolute;">
+
+                <div class="nodeInfoBoxHolder" *ngIf="usingPublicNode">
+                    <div class="nodeInfoBox first" style="width: 240px;">
+                        <span class="nodeLabel">Node status: </span>
+                        <span class="nodeData">Connected to Public node</span>
+                    </div>
+                </div>
+                <div class="nodeInfoBoxButton" *ngIf="node.running == true && !usingPublicNode" style="right: 160px; position: absolute;">
                     <button (click)="openMiningSetupModal()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
                         Setup
                     </button>
                 </div>
-                <div class="nodeInfoBoxButton" *ngIf="node.running == true">
+                <div class="nodeInfoBoxButton" *ngIf="node.running == true && !usingPublicNode">
                     <button (click)="nodeStop()" class="btn btn-primary btn-node-start btn-small mt-2 mb-2">
                         Stop node
                     </button>

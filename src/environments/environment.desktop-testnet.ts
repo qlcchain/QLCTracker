@@ -3,20 +3,21 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   desktop: true,
-  version: '1.4.0',
-  qlcChainNetwork: 'test', // test or main
+  version: '1.4.1',
+  qlcChainNetwork: 'main', // test or main
   neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
   ethNetworkDefault: 'rinkeby', // mainnet, ropsten, rinkeby
+  infuraId: '111769056614454ba82f3c6a16be68bb',
   mainRpcUrl: {
     test: '',
     main: 'https://rpc.qlcchain.online'
   },
   rpcUrl: {
     test: 'http://127.0.0.1:19735',
-    main: 'http://127.0.0.1:9735'
+    main: 'https://rpc.qlcchain.online'
   },
   swapUrl: {
     test: 'http://seed2.ngd.network:20332/',
@@ -46,7 +47,7 @@ export const environment = {
     main: 'https://neotube.io/'
   },
   wsUrl: {
-    test: '',
+    test: 'ws://127.0.0.1:19736',
     main: 'wss://rpc-ws.qlcchain.online'
   },
   nep5Url: {

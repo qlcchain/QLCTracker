@@ -282,7 +282,10 @@ export class CcswapComponent implements OnInit {
     public etherService: EtherWalletService
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
-    etherService?.web3?.currentProvider.publicConfigStore.on('update', (data) => {
+    etherService.provider.publicConfigStore?.on('update', (data) => {
+      this.selectAccount();
+    });
+    etherService.provider.on('update', (data) => {
       this.selectAccount();
     });
   }

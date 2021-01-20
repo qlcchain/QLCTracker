@@ -1,73 +1,6 @@
 <app-user-submenu></app-user-submenu>
-<div *ngIf="desktop">
-  <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
-    <div class="row">
-      <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
-        <!-- LATEST TRANSACTIONS -->
-        <div class="container">
-          <div class="row">
-            <!-- TITLE -->
-            <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
-              <div class="content-title">
-                <h1 class="erc20">Swap QLC Tokens</h1>
-              </div>
-            </div>
-            <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
-              <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" routerLink="/wallets">
-                Back to my Wallets
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container pb-2" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
-    <div class="row pl-md-0 pr-md-0 pl-2 pr-2">
-      <!-- LEFT -->
-      <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 order-lg-1 pl-0 pr-0 mb-3">
-        <div class="container">
-          <div class="row">
-            <div class="col-12 pb-2 pl-2 pr-2">
-              <div class="content-box-white h-auto">
-                <div class="container">
-                  <div class="row justify-content-center" style="padding: 57px 0px;">
-                    <div class="col-md-1 col-12 text-center">
-                    </div>
-                    <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;">
-                      Swap isn't supported in the desktop version. Please visit <a href="https://explorer.qlcchain.org/swap" target="_blank">https://explorer.qlcchain.org/swap</a>
-                    </div>
-                    <div class="col-md-4 col-12 my-auto">
-                      <a href="https://explorer.qlcchain.org/swap" target="_blank">
-                        <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
-                          OPEN ONLINE TRACKER
-                        </button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--     RIGHT -->
-      <div class="col-lg-3 d-xl-block d-none order-2 pl-0 pr-0 mb-xs-3 mb-3">
-        <div class="col-12 pl-2 pr-2">
-          <div class="content-box-chainx h-100 pb-4 pr-0 erc20-background">
-            <div class="container">
-              <div class="row pt-3 pr-0">
-                <div class="col-12 pr-0 text-center connect-background">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div *ngIf="!desktop">
+
+<div>
   <div class="container mt-0 qlc-content-first qlc-content-home qlc-after-submenu" *ngIf="!etherService || etherService.selectedAddress == '' || !etherService.selectedAddress">
     <div class="row">
       <div class="col-12 pl-0 pr-0 pb-2 pl-md-0 pr-md-0 pl-2 pr-2">
@@ -111,7 +44,7 @@
                       To use this Dapp you must install MetaMask.
                     </div>
                     <div class="col-md-4 col-12 my-auto">
-                      <button type="submit" (click)="etherService?.connectWallet()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" *ngIf="etherService.checkIfWallet()">
+                      <button type="submit" (click)="etherService?.connect()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" *ngIf="etherService.checkIfWallet()">
                         CONNECT WALLET
                       </button>
                       <a href="https://metamask.io" target="_blank" *ngIf="!etherService.checkIfWallet()">
@@ -150,10 +83,15 @@
         <div class="container">
           <div class="row">
             <!-- TITLE -->
-            <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
+            <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
               <div class="content-title">
                 <h1 class="erc20">ERC20 Wallet Details - {{ etherService.getDefaultNetwork() }}</h1>
               </div>
+            </div>
+            <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-2 pr-2">
+              <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" (click)="etherService.disconnectWallet()">
+                Disconnect
+              </button>
             </div>
             <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
               <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" routerLink="/wallets">
