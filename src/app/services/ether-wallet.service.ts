@@ -486,7 +486,7 @@ provider: any;
     }
 
     checkIfWallet() {
-      if (this.web3?.eth) {
+      if (this.web3) {
         return true;
       } else {
         return false;

@@ -50,13 +50,13 @@ export class QLCWebSocketService {
     this.latestBlocksTimeStamp = now;
   }
 
+  wsUrl = environment.wsUrl[environment.qlcChainNetwork];
 
   connect() {
     if (this.socket.connected && this.socket.ws) return;
     delete this.socket.ws; // Maybe this will erase old connections
 
-    const wsUrl = environment.wsUrl[environment.qlcChainNetwork];
-    const ws = new WebSocket(wsUrl);
+    const ws = new WebSocket(this.wsUrl);
     this.socket.ws = ws;
 
     ws.onopen = event => {

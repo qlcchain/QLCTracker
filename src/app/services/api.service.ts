@@ -15,7 +15,7 @@ import  uuid from 'uuid/v4';
 	providedIn: 'root'
 })
 export class ApiService {
-	rpcUrl = environment.rpcUrl[environment.qlcChainNetwork];
+	public rpcUrl = environment.rpcUrl[environment.qlcChainNetwork];
 	alive = true;
 	connectTimer = null;
 	reconnectTime = 1000;

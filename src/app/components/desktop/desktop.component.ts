@@ -6,6 +6,10 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { ApiService } from 'src/app/services/api.service';
 import { interval, timer } from 'rxjs';
 import { WalletService } from 'src/app/services/wallet.service';
+import { QLCWebSocketService } from 'src/app/services/qlc-websocket.service';
+import { environment } from 'src/environments/environment';
+import { httpProvider } from 'qlc.js/provider/HTTP';
+import Client from 'qlc.js/client';
 
 @Component({
   selector: 'app-desktop',
@@ -152,10 +156,13 @@ export class DesktopComponent implements OnInit {
   stoppingPool = false;
 
   showPoolControl = false;
+  
+  usingPublicNode = false;
 
   private checkProccesInterval$ = interval(5000);
 
 
+  @ViewChild('publicrpctemplate', { read: TemplateRef, static:true }) publicrpctemplate: TemplateRef<any>;
   @ViewChild('template', { read: TemplateRef, static:true }) template: TemplateRef<any>;
   @ViewChild('templateNodeStopped', { read: TemplateRef, static:true }) templateNodeStopped: TemplateRef<any>;
   @ViewChild('templateUpdateCheck', { read: TemplateRef, static:true }) templateUpdateCheck: TemplateRef<any>;
@@ -172,20 +179,14 @@ export class DesktopComponent implements OnInit {
   @ViewChild('templatePoolMinersASIC', { read: TemplateRef, static:true }) templatePoolMinersASIC: TemplateRef<any>;
   
 
-  
-
-  
-
-  
-
-  
   constructor(
     public api: ApiService,
     public ipc: IpcService, 
     public node: NodeService, 
     private modalService: BsModalService,
     private notifications: NotificationService,
-    private walletService: WalletService
+    private walletService: WalletService,
+    private ws: QLCWebSocketService
   ) { }
 
   async ngOnInit() {
@@ -430,7 +431,7 @@ export class DesktopComponent implements OnInit {
       }
     });
     
-    this.openModal(this.template);
+    this.openModal(this.publicrpctemplate);
     //this.openMiningSetupModal();
     
     this.notifications.removeNotification('node-offline');
@@ -441,6 +442,22 @@ export class DesktopComponent implements OnInit {
     this.checkProccesInterval$.subscribe(async () => {
 			this.nodeGetProcess();
 		});
+  }
+
+  async useLocalNode() {
+    this.modalRef.hide();
+    this.openModal(this.template);
+  }
+
+  async usePublicNode() {
+    this.modalRef.hide();
+    this.api.rpcUrl = environment.mainRpcUrl[environment.qlcChainNetwork];
+    const httpRpc = new httpProvider(this.api.rpcUrl);
+    this.api.c = new Client(httpRpc, () => {});
+    this.ws.wsUrl = 'wss://rpc-ws.qlcchain.online';
+    this.node.running = true;
+    this.api.connect();
+    this.usingPublicNode = true;
   }
 
   async checkIfMinerAccounts() {
