@@ -411,9 +411,9 @@ export class DesktopComponent implements OnInit {
             this.showDownloadNew = true;
           } else {
             this.showDownloadUpdate = true;
-            if (latest.result.version === 'v1.4.1') {
+            //if (latest.result.version === 'v1.4.1') {
               this.deleteLedgerWarningShowOnUpdate = true;
-            }
+            //}
           }
 
         } else {
