@@ -34,12 +34,16 @@ provider: any;
     this.connect();
   }
   async connect() {
-    if ((window as any).ethereum && (window as any).web3 && (window as any).web3.currentProvider) {
-      this.web3 = new Web3((window as any).web3.currentProvider);
-      this.provider = (window as any).web3.currentProvider;
-      await (window as any).ethereum.enable();
-      this.provider.publicConfigStore.on('update', (data) => {
-        const ethAddress = (window as any).web3.currentProvider.selectedAddress;
+    if ((window as any).ethereum) {
+      this.web3 = new Web3((window as any).ethereum);
+      this.provider = await (window as any).ethereum;
+      console.log(this.provider)
+      //await (window as any).ethereum.enable();
+      const accounts = await this.provider.request({ method: 'eth_requestAccounts'});
+      console.log(accounts)
+      const ethAddress = accounts[0];
+      //this.provider.on('update', (data) => {
+        //const ethAddress = (window as any).ethereum.currentProvider.selectedAddress;
         if (ethAddress) {
           this.metamask = true;
         } else {
@@ -53,7 +57,23 @@ provider: any;
           this.getswapHistory(ethAddress);
           this.getAccounts();
         }
-      });
+      //});
+      this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
+      this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
+      this.provider.on('chainChanged', (chainChanged) => { console.log (chainChanged)})
+      this.provider.on('accountsChanged', (accounts) => { 
+        console.log ('accountsChanged', accounts)
+        const ethAddress = accounts[0];
+        if (this.selectedAddress !== ethAddress) {
+          this.accounts = [ ethAddress ];
+          this.selectedAddress = ethAddress;
+          this.getBalances(ethAddress);
+          this.getAllTransactions(ethAddress);
+          this.getswapHistory(ethAddress);
+          this.getAccounts();
+        }
+      })
+      this.provider.on('message', (message) => { console.log ('message', message)})
     } else {
       this.provider = new WalletConnectProvider({
         infuraId: environment.infuraId,
@@ -76,10 +96,19 @@ provider: any;
           this.getswapHistory(ethAddress);
           this.getAccounts();
         }
-        /*
         this.provider.on("accountsChanged", (accounts: string[]) => {
-          console.log(accounts);
+          console.log ('accountsChanged', accounts)
+          const ethAddress = accounts[0];
+          if (this.selectedAddress !== ethAddress) {
+            this.accounts = [ ethAddress ];
+            this.selectedAddress = ethAddress;
+            this.getBalances(ethAddress);
+            this.getAllTransactions(ethAddress);
+            this.getswapHistory(ethAddress);
+            this.getAccounts();
+          }
         });
+        /*
         // Subscribe to chainId change
         this.provider.on("chainChanged", (chainId: number) => {
           console.log(chainId);

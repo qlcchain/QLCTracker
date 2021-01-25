@@ -282,10 +282,8 @@ export class CcswapComponent implements OnInit {
     public etherService: EtherWalletService
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
-    etherService.provider.publicConfigStore?.on('update', (data) => {
-      this.selectAccount();
-    });
-    etherService.provider.on('update', (data) => {
+   
+    etherService?.provider?.on('accountsChanged', (accounts) => { 
       this.selectAccount();
     });
   }
@@ -309,7 +307,7 @@ export class CcswapComponent implements OnInit {
   async initEthThreeGasFee() {
     const threeGasPrices = await this.etherService.getThreeGasPrice();
     if (threeGasPrices?.data?.result) {
-      console.log(threeGasPrices);
+      //console.log(threeGasPrices);
       this.gasPrices = threeGasPrices?.data?.result;
     }
   }
@@ -550,8 +548,8 @@ export class CcswapComponent implements OnInit {
 
   async loadBalances() {
     // reload eth wallet balances:qlc balance & eth balance
-    this.etherService.getBalances(localStorage.getItem('etheraccount'));
-    this.etherService.getswapHistory(localStorage.getItem('etheraccount'));
+    this.etherService.getBalances(this.etherService.selectedAddress);
+    this.etherService.getswapHistory(this.etherService.selectedAddress);
     this.initEthThreeGasFee();
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this.neowallets.length; i++) {
@@ -591,7 +589,7 @@ export class CcswapComponent implements OnInit {
 
   async selectAccount() {
     // reload eth qlc balance when switch tab
-    this.etherService.getEthQLCBalance(localStorage.getItem('etheraccount'));
+    this.etherService.getEthQLCBalance(this.etherService.selectedAddress);
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
       // tslint:disable-next-line: max-line-length
