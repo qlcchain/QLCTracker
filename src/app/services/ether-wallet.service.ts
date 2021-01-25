@@ -58,11 +58,11 @@ provider: any;
           this.getAccounts();
         }
       //});
-      this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
-      this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
-      this.provider.on('chainChanged', (chainChanged) => { console.log (chainChanged)})
+      //this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
+      //this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
+      //this.provider.on('chainChanged', (chainChanged) => { console.log (chainChanged)})
       this.provider.on('accountsChanged', (accounts) => { 
-        console.log ('accountsChanged', accounts)
+        //console.log ('accountsChanged', accounts)
         const ethAddress = accounts[0];
         if (this.selectedAddress !== ethAddress) {
           this.accounts = [ ethAddress ];
@@ -73,7 +73,7 @@ provider: any;
           this.getAccounts();
         }
       })
-      this.provider.on('message', (message) => { console.log ('message', message)})
+      //this.provider.on('message', (message) => { console.log ('message', message)})
     } else {
       this.provider = new WalletConnectProvider({
         infuraId: environment.infuraId,
@@ -515,7 +515,7 @@ provider: any;
     }
 
     checkIfWallet() {
-      if (this.web3) {
+      if ((window as any).ethereum) {
         return true;
       } else {
         return false;
