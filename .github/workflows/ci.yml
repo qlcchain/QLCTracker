@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: Install dependencies
+      - name: Install dependencies(npm i)
         run: npm i
       - name: Build Web Version
         run: npm run qlc:build
@@ -41,3 +41,28 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+      - name: Archive desktop build
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-${{ matrix.platform }}-${{ matrix.type }}
+          path: |
+            dist-desktop/*.exe
+            dist-desktop/*.deb
+            dist-desktop/*.dmg
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Download build
+        uses: actions/download-artifact@v1
+        with:
+          name: deploy_dist
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          github_token: ${{ secrets.github_token }}
+          BRANCH: gh-pages
+          FOLDER: deploy_dist
