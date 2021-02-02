@@ -31,38 +31,38 @@ internalTransactions: any[];
 provider: any;
 
   constructor() {
-    this.connect();
+    // this.connect();
   }
   async connect() {
     if ((window as any).ethereum) {
       this.web3 = new Web3((window as any).ethereum);
       this.provider = await (window as any).ethereum;
-      console.log(this.provider)
-      //await (window as any).ethereum.enable();
+      console.log(this.provider);
+      // await (window as any).ethereum.enable();
       const accounts = await this.provider.request({ method: 'eth_requestAccounts'});
-      console.log(accounts)
+      console.log(accounts);
       const ethAddress = accounts[0];
-      //this.provider.on('update', (data) => {
-        //const ethAddress = (window as any).ethereum.currentProvider.selectedAddress;
-        if (ethAddress) {
-          this.metamask = true;
-        } else {
-          this.metamask = false;
-        }
-        if (this.selectedAddress !== ethAddress) {
-          this.accounts = [ ethAddress ];
-          this.selectedAddress = ethAddress;
-          this.getBalances(ethAddress);
-          this.getAllTransactions(ethAddress);
-          this.getswapHistory(ethAddress);
-          this.getAccounts();
-        }
-      //});
-      //this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
-      //this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
-      //this.provider.on('chainChanged', (chainChanged) => { console.log (chainChanged)})
-      this.provider.on('accountsChanged', (accounts) => { 
-        //console.log ('accountsChanged', accounts)
+      // this.provider.on('update', (data) => {
+      // const ethAddress = (window as any).ethereum.currentProvider.selectedAddress;
+      if (ethAddress) {
+        this.metamask = true;
+      } else {
+        this.metamask = false;
+      }
+      if (this.selectedAddress !== ethAddress) {
+        this.accounts = [ ethAddress ];
+        this.selectedAddress = ethAddress;
+        this.getBalances(ethAddress);
+        this.getAllTransactions(ethAddress);
+        this.getswapHistory(ethAddress);
+        this.getAccounts();
+      }
+      // });
+      // this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
+      // this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
+      // this.provider.on('chainChanged', (chainChanged) => { console.log (chainChanged)})
+      this.provider.on('accountsChanged', (accounts) => {
+        // console.log ('accountsChanged', accounts)
         const ethAddress = accounts[0];
         if (this.selectedAddress !== ethAddress) {
           this.accounts = [ ethAddress ];
@@ -73,7 +73,7 @@ provider: any;
           this.getAccounts();
         }
       })
-      //this.provider.on('message', (message) => { console.log ('message', message)})
+      // this.provider.on('message', (message) => { console.log ('message', message)})
     } else {
       this.provider = new WalletConnectProvider({
         infuraId: environment.infuraId,
@@ -96,8 +96,8 @@ provider: any;
           this.getswapHistory(ethAddress);
           this.getAccounts();
         }
-        this.provider.on("accountsChanged", (accounts: string[]) => {
-          console.log ('accountsChanged', accounts)
+        this.provider.on('accountsChanged', (accounts: string[]) => {
+          console.log ('accountsChanged', accounts);
           const ethAddress = accounts[0];
           if (this.selectedAddress !== ethAddress) {
             this.accounts = [ ethAddress ];
@@ -167,12 +167,10 @@ provider: any;
       console.log('getBalances.qlcbalance', localStorage.getItem('qlcbalance'));
       const qlcBalanceNumber: any = localStorage.getItem('qlcbalance');
       this.balances.QLC = qlcBalanceNumber;
-      // const ethBalance = await this.getEthBalanceApi(address);
-      const ethBalance = await this.getEthBalance(address);
-      const ethBalanceNumber = new BigNumber(ethBalance).dividedBy(Math.pow(10, 18)).toNumber();
-      // const ethBalanceNumber = new BigNumber(ethBalance?.data?.result)
-      // .dividedBy(Math.pow(10, 18))
-      // .toNumber();
+      const ethBalance = await this.getEthBalanceApi(address);
+      const ethBalanceNumber = new BigNumber(ethBalance?.data?.result).dividedBy(Math.pow(10, 18)).toNumber();
+      // const ethBalance = await this.getEthBalance(address);
+      // const ethBalanceNumber = new BigNumber(ethBalance).dividedBy(Math.pow(10, 18)).toNumber();
       console.log('getBalances.ethBalance', ethBalance);
       console.log('getBalances.ethBalanceNumber', ethBalanceNumber);
       this.balances.ETH = ethBalanceNumber;
@@ -586,15 +584,17 @@ provider: any;
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
     console.log('getEthBurn.amount', amount);
     console.log('getEthBurn.nep5Hash', nep5Address);
-    console.log('account', account);
+    console.log('getEthBurn.account', account);
+    console.log('getEthBurn.gasPrice', gasPrice);
     return await Contract.methods.burn(nep5Address, amount).send({
         from: account,
         gasPrice
     }).then(result => {
+      console.log('getEthBurn.result', result);
       localStorage.setItem('txHash', result.transactionHash);
       // send ethTxHash to hub
       this.withdrawethTransactionSent(result.transactionHash);
-      console.log('getEthBurn.result', result);
+      console.log('getEthBurn.result.transactionHash', result.transactionHash);
       return result;
     });
   }

@@ -53,8 +53,10 @@ console.log(`path: ` + toExecutableName('gqlc'));
 
 const userData = app.getPath('userData');
 
+const version = 'v1.4.2';
+
 const defaultWalletData = {
-	version: 'v1.4.2',
+	version: version,
 	nodeData: {
 		version: '',
 		filename: '',
@@ -93,31 +95,31 @@ function getConfig() {
 		}
 		if (cfg.version == 'v1.3.0') {
 			console.log('found version v1.3.0, updating');
-			cfg.version = 'v1.4.2';
+			cfg.version = version;
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
 		if (cfg.version == 'v1.3.1') {
 			console.log('found version v1.3.1, updating');
-			cfg.version = 'v1.4.2';
+			cfg.version = version;
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
 		if (cfg.version == 'v1.3.2') {
 			console.log('found version v1.3.2, updating');
-			cfg.version = 'v1.4.2';
+			cfg.version = version;
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
 		if (cfg.version == 'v1.3.3') {
 			console.log('found version v1.3.3, updating');
-			cfg.version = 'v1.4.2';
+			cfg.version = version;
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
 		if (cfg.version == 'v1.4.0') {
 			console.log('found version v1.3.3, updating');
-			cfg.version = 'v1.4.2';
+			cfg.version = version;
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
 		}
