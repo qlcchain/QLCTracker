@@ -132,7 +132,7 @@ export class NeoWalletService {
       wif = wallet.generatePrivateKey();
     const encryptedwif = await this.encrypt(wif, this.walletService.wallet.password);
     const neoAccount = await this.account(wif);
-    console.log('neoAccount', neoAccount);
+    // console.log('neoAccount', neoAccount);
     if (name!='')
       this.addressBook.saveAddress(neoAccount.address, name);
     const neoWallet = {

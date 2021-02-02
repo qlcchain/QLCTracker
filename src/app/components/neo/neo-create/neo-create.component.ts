@@ -99,7 +99,7 @@ export class NeoCreateComponent implements OnInit {
     this.notifications.sendInfo('Creating wallet, please wait.');
     this.alreadyImporting = true;
     const account = await this.neoWallet.createWallet('new', this.walletNameModel.trim());
-    console.log('neo-create.createwallet', account);
+    // console.log('neo-create.createwallet', account);
     this.newWalletEncryptedKey = account.encryptedwif;
 
     const wif = await this.neoWallet.decrypt(account.encryptedwif, this.wallet.password);
