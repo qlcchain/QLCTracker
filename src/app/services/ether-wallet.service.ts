@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { neo5toerc20swap } from 'src/constants/abi/neo5toerc20swap';
 import axios from 'axios';
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +31,9 @@ internalTransactions: any[];
 
 provider: any;
 
+accountSub: Subject<string> = new Subject<string>();
+
   constructor() {
-    // this.connect();
   }
   async connect() {
     if ((window as any).ethereum) {
@@ -40,7 +42,7 @@ provider: any;
       console.log(this.provider);
       // await (window as any).ethereum.enable();
       const accounts = await this.provider.request({ method: 'eth_requestAccounts'});
-      console.log(accounts);
+      //console.log(accounts);
       const ethAddress = accounts[0];
       // this.provider.on('update', (data) => {
       // const ethAddress = (window as any).ethereum.currentProvider.selectedAddress;
@@ -57,12 +59,14 @@ provider: any;
         this.getswapHistory(ethAddress);
         this.getAccounts();
       }
+      
+      this.accountSub.next(accounts)
       // });
       // this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
       // this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
       // this.provider.on('chainChanged', (chainChanged) => { console.log (chainChanged)})
       this.provider.on('accountsChanged', (accounts) => {
-        // console.log ('accountsChanged', accounts)
+        //console.log ('provider accountsChanged', accounts)
         const ethAddress = accounts[0];
         if (this.selectedAddress !== ethAddress) {
           this.accounts = [ ethAddress ];
@@ -71,6 +75,7 @@ provider: any;
           this.getAllTransactions(ethAddress);
           this.getswapHistory(ethAddress);
           this.getAccounts();
+          this.accountSub.next(accounts)
         }
       })
       // this.provider.on('message', (message) => { console.log ('message', message)})
@@ -95,9 +100,10 @@ provider: any;
           this.getAllTransactions(ethAddress);
           this.getswapHistory(ethAddress);
           this.getAccounts();
+          this.accountSub.next(this.accounts)
         }
         this.provider.on('accountsChanged', (accounts: string[]) => {
-          console.log ('accountsChanged', accounts);
+          //  console.log ('provider accountsChanged', accounts);
           const ethAddress = accounts[0];
           if (this.selectedAddress !== ethAddress) {
             this.accounts = [ ethAddress ];
@@ -106,22 +112,26 @@ provider: any;
             this.getAllTransactions(ethAddress);
             this.getswapHistory(ethAddress);
             this.getAccounts();
+            this.accountSub.next(this.accounts)
           }
         });
         /*
         // Subscribe to chainId change
         this.provider.on("chainChanged", (chainId: number) => {
-          console.log(chainId);
+          console.log('provider chainChanged', chainId);
         });
         
         // Subscribe to session disconnection
         this.provider.on("disconnect", (code: number, reason: string) => {
-          console.log(code, reason);
+          console.log('provider disconnect', code, reason);
         });
         
         // Subscribe to session connection
         this.provider.on("connect", (info: { chainId: number }) => {
-          console.log(info);
+          console.log('provider connect', info);
+        });
+        this.provider.on('update', (data) => {
+          console.log('provider update', data)
         });
         */
       } else {
@@ -521,7 +531,7 @@ provider: any;
     }
   // get erc20 contract balance
   async getEthQLCBalance(account: any) {
-    if (!this.checkIfWallet()) {
+    if (!this.checkIfWallet() || !this.web3) {
       return;
     }
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);

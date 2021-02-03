@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { WalletService } from 'src/app/services/wallet.service';
 import { AddressBookService } from 'src/app/services/address-book.service';
@@ -18,8 +18,6 @@ import { minAmountValidator } from '../../directives/amount-validator.directive'
 
 import { environment } from 'src/environments/environment';
 import { EtherWalletService } from 'src/app/services/ether-wallet.service';
-import { AnyARecord } from 'dns';
-import { tx } from '@cityofzion/neon-js';
 
 const nacl = window['nacl'];
 
@@ -28,7 +26,7 @@ const nacl = window['nacl'];
   templateUrl: './ccswap.component.html',
   styleUrls: ['./ccswap.component.scss'],
 })
-export class CcswapComponent implements OnInit {
+export class CcswapComponent implements OnInit, OnDestroy {
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
   haveswappedamount: any;
@@ -282,12 +280,21 @@ export class CcswapComponent implements OnInit {
     public etherService: EtherWalletService
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
-    etherService?.provider?.on('accountsChanged', (accounts) => {
-      this.selectAccount();
-    });
+  }
+
+  ngOnDestroy() {
+    this.etherService.accountSub.unsubscribe();
   }
 
   ngOnInit() {
+    this.etherService.accountSub.subscribe(
+      (test) => { 
+        console.log('sub test', test)
+        this.selectAccount();
+        this.getEtherAccounts();
+        this.loadBalances();
+      }
+    )
     this.getEtherAccounts();
     this.loadBalances();
   }
@@ -641,10 +648,10 @@ export class CcswapComponent implements OnInit {
       .setValue(
         this.stakingForm.value.stakingType == 0 ?
         selectedNEOWallet?.balances[
-          this.neoService.tokenList['QLC'].networks['1'].hash
+          this.neoService?.tokenList['QLC']?.networks['1']?.hash
         ] !== undefined
           ? selectedNEOWallet?.balances[
-              this.neoService.tokenList['QLC'].networks['1'].hash
+              this.neoService?.tokenList['QLC']?.networks['1']?.hash
             ].amount
           : 0 : localStorage.getItem('qlcbalance')
       );
