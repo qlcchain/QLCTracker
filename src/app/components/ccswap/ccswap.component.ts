@@ -283,7 +283,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.etherService.accountSub.unsubscribe();
+    //this.etherService.accountSub.unsubscribe();
   }
 
   ngOnInit() {
