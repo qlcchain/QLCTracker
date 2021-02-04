@@ -118,7 +118,13 @@ function getConfig() {
 			return cfg;
 		}
 		if (cfg.version == 'v1.4.0') {
-			console.log('found version v1.3.3, updating');
+			console.log('found version v1.4.0, updating');
+			cfg.version = version;
+			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
+			return cfg;
+		}
+		if (cfg.version == 'v1.4.1') {
+			console.log('found version v1.4.1, updating');
 			cfg.version = version;
 			fs.writeFileSync(wallletConfigPath, JSON.stringify(cfg, null, 4));
 			return cfg;
