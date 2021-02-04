@@ -531,11 +531,7 @@ accountSub: Subject<string> = new Subject<string>();
     }
   // get erc20 contract balance
   async getEthQLCBalance(account: any) {
-    if (!this.checkIfWallet() || !this.web3) {
-      return;
-    }
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
-
     const balance = await Contract.methods.balanceOf(account).call().then(sum => {
       const balance = new BigNumber(sum)
       .dividedBy(Math.pow(10, 8))
