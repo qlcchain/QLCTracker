@@ -33,26 +33,32 @@
             <div class="col-12 pb-2 pl-2 pr-2">
               <div class="content-box-white h-auto">
                 <div class="container">
-                  <div class="row justify-content-center" style="padding: 57px 0px;">
+                  <div class="row justify-content-center" style="padding: 57px 0px 20px 0;" [ngStyle]="{'padding': !etherService.checkIfWallet() ? '57px 0px 20px 0' : '57px 0px 57px 0' }">
                     <div class="col-md-1 col-12 text-center">
                       <img src="assets/img/qlc-icon-lock-red.svg" style="height: 70px;" >
                     </div>
-                    <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;" *ngIf="etherService.checkIfWallet()">
-                      Please connect and authorize your ERC20 Wallet Client
-                    </div>
-                    <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;" *ngIf="!etherService.checkIfWallet()">
-                      To use this Dapp you must install MetaMask.
-                    </div>
-                    <div class="col-md-4 col-12 my-auto">
-                      <button type="submit" (click)="etherService?.connect()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light" *ngIf="etherService.checkIfWallet()">
-                        CONNECT WALLET
-                      </button>
-                      <a href="https://metamask.io" target="_blank" *ngIf="!etherService.checkIfWallet()">
-                        <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
-                          GET METAMASK
+                      <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;">
+                        Please connect and authorize your ERC20 Wallet Client
+                      </div>
+                      <div class="col-md-4 col-12 my-auto">
+                        <button type="submit" (click)="etherService?.connect()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
+                          CONNECT WALLET
                         </button>
-                      </a>
+                      </div>
                     </div>
+                    <div class="row justify-content-center" style="padding: 10px 0px;" *ngIf="!desktop && !etherService.checkIfWallet()">
+                      <div class="col-12 text-center">
+                        or
+                      </div>
+                    </div>
+                    <div class="row justify-content-center" style="padding: 20px 0 57px 0px;" *ngIf="!desktop && !etherService.checkIfWallet()">
+                      <div class="col-md-4 col-12 my-auto">
+                        <a href="https://metamask.io" target="_blank">
+                          <button type="submit" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
+                            GET METAMASK
+                          </button>
+                        </a>
+                      </div>
                   </div>
                 </div>
               </div>

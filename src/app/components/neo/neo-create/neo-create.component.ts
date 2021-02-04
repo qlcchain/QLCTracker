@@ -87,21 +87,22 @@ export class NeoCreateComponent implements OnInit {
     this.importEncryptedKeyPasswordModel = '';
     this.notifications.sendSuccess('Wallet was imported.');
     this.alreadyImporting = false;
-    this.router.navigate(['/wallets/neo/'+account.id]);
+    this.router.navigate(['/wallets/neo/'+ account.id]);
   }
 
   async createWallet() {
-    if (this.walletService.isLocked()){
-      this.notifications.sendError('Wallet must be unlocked.',);
+    if (this.walletService.isLocked()) {
+      this.notifications.sendError('Wallet must be unlocked.');
       return;
     }
     this.activePanel = 1;
     this.notifications.sendInfo('Creating wallet, please wait.');
     this.alreadyImporting = true;
-    const account = await this.neoWallet.createWallet('new',this.walletNameModel.trim());
+    const account = await this.neoWallet.createWallet('new', this.walletNameModel.trim());
+    // console.log('neo-create.createwallet', account);
     this.newWalletEncryptedKey = account.encryptedwif;
 
-    const wif = await this.neoWallet.decrypt(account.encryptedwif,this.wallet.password);
+    const wif = await this.neoWallet.decrypt(account.encryptedwif, this.wallet.password);
     if (wif != false) {
       this.newWalletPrivateKey = wif;
       this.newWallet = account;

@@ -311,6 +311,9 @@ export class DesktopComponent implements OnInit {
       //console.log('got node-running event',event);
       //console.log('node-running got data',data);
       //console.log(data);
+      if (this.usingPublicNode) {
+        return;
+      }
       if (data.status == 1) {
         if (this.showStartNode)
           this.showStartNode = false;
@@ -408,9 +411,9 @@ export class DesktopComponent implements OnInit {
             this.showDownloadNew = true;
           } else {
             this.showDownloadUpdate = true;
-            if (latest.result.version === 'v1.4.1') {
+            //if (latest.result.version === 'v1.4.1') {
               this.deleteLedgerWarningShowOnUpdate = true;
-            }
+            //}
           }
 
         } else {
@@ -438,15 +441,15 @@ export class DesktopComponent implements OnInit {
     this.notifications.removeNotification('node-connect');
 
     this.nodeData();
-
-    this.checkProccesInterval$.subscribe(async () => {
-			this.nodeGetProcess();
-		});
   }
 
   async useLocalNode() {
     this.modalRef.hide();
     this.openModal(this.template);
+
+    this.checkProccesInterval$.subscribe(async () => {
+			this.nodeGetProcess();
+		});
   }
 
   async usePublicNode() {

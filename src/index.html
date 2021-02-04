@@ -20,6 +20,17 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="assets/img/favicon-16x16.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="assets/img/favicon-16x16.png" sizes="16x16" />
+
+    <script>
+      // 这段代码要放在其他js的前面
+      (function(){
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   
     <script type="text/javascript" src="assets/lib/blake2b/blake2b.js"></script>
     <script type="text/javascript" src="assets/lib/tweetnacl/nacl.js"></script>
