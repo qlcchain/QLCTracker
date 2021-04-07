@@ -11,7 +11,7 @@ export const environment = {
   chainxNetworkDefault: 'main', // test or main // test doesn't work
   infuraId: '111769056614454ba82f3c6a16be68bb',
   mainRpcUrl: {
-    test: '',
+    test: 'https://rpc-test.qlcchain.online',
     main: 'https://rpc.qlcchain.online'
   },
   rpcUrl: {

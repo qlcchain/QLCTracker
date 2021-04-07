@@ -6,17 +6,17 @@ export const environment = {
   production: false,
   desktop: false,
   version: '1.4.2',
-  qlcChainNetwork: 'main', // test or main
+  qlcChainNetwork: 'test', // test or main
   neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
   ethNetworkDefault: 'rinkeby', // mainnet, ropsten, rinkeby
   infuraId: '111769056614454ba82f3c6a16be68bb',
   mainRpcUrl: {
-    test: '',
+    test: 'https://rpc-test.qlcchain.online',
     main: 'https://rpc.qlcchain.online'
   },
   rpcUrl: {
-    test: 'http://seed2.ngd.network:20332/',
+    test: 'https://rpc-test.qlcchain.online',
     main: 'https://rpc.qlcchain.online'
   },
   swapUrl: {
@@ -81,6 +81,10 @@ export const environment = {
   etherswapSmartContract: {
     test: '0xE2484A4178Ce7FfD5cd000030b2a5de08c0Caf8D',
     main: '0xd196f680e0bDF810f1fe8b323b90CA0B62f4e63e'
+  },
+  bscswapSmartContract: {
+    test: '0xF284c1C1D03BCCC8b32e9736919C0D7CA8b06aeD',
+    main: ''
   },
   testSmartContract: {
     test: '0x40E3dCC2EC0B8f7381332614630Aa9EF19b18cA2',

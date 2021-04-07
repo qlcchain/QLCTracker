@@ -119,6 +119,19 @@ export const neo5toerc20swap = [
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "active",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -445,6 +458,13 @@ export const neo5toerc20swap = [
       }
     ],
     "name": "burn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "circuitBraker",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

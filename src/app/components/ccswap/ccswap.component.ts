@@ -18,6 +18,7 @@ import { minAmountValidator } from '../../directives/amount-validator.directive'
 
 import { environment } from 'src/environments/environment';
 import { EtherWalletService } from 'src/app/services/ether-wallet.service';
+import { ActivatedRoute } from '@angular/router';
 
 const nacl = window['nacl'];
 
@@ -27,6 +28,7 @@ const nacl = window['nacl'];
   styleUrls: ['./ccswap.component.scss'],
 })
 export class CcswapComponent implements OnInit, OnDestroy {
+  parasGet = 'eth';
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
   haveswappedamount: any;
@@ -277,7 +279,8 @@ export class CcswapComponent implements OnInit, OnDestroy {
     private notifications: NotificationService,
     private trans: TranslateService,
     private confidantApi: ApiConfidantService,
-    public etherService: EtherWalletService
+    public etherService: EtherWalletService,
+    private route: ActivatedRoute
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
   }
@@ -287,6 +290,10 @@ export class CcswapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // this.route.queryParams.subscribe(p => {
+    //   this.parasGet = p.
+
+    // })
     this.etherService.accountSub.subscribe(
       (test) => { 
         console.log('sub test', test)
