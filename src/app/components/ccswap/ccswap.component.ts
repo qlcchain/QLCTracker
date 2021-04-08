@@ -28,7 +28,7 @@ const nacl = window['nacl'];
   styleUrls: ['./ccswap.component.scss'],
 })
 export class CcswapComponent implements OnInit, OnDestroy {
-  parasGet = 'eth';
+  chainType = '';
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
   haveswappedamount: any;
@@ -283,6 +283,9 @@ export class CcswapComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {
     this.stakingTypes = this.staking[environment.neoNetwork];
+
+    // Get Current Path:  company  同理
+    this.route?.url?.subscribe(url => this.chainType =  url[1]?.path);
   }
 
   ngOnDestroy() {
@@ -333,6 +336,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
   }
 
   async continueUndoneTransaction(txhash?: any) {
+    console.log('continueUndoneTransaction,chainType', this.chainType);
     // if (this.walletService.walletIsLocked()) {
     //   return this.notifications.sendWarning('ERROR wallet locked');
     // }
@@ -353,7 +357,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
       return this.notifications.sendWarning('ERROR txid not found');
     }
     // get ethTransactionID when state =1,5 mins will be removed
-    const ethTransactionID: any = await this.etherService.ethTransactionID(
+    const ethTransactionID: any = await this.etherService.chainTransactionID(
       ethTxHash
     );
     // const txid = swapInfoByTxHash.data.neoHash.slice(2);
@@ -377,7 +381,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
       .toNumber();
       this.step = 3;
       console.log('txid.slice', ethTxHash);
-      const getEthOwnerSign = await this.etherService.getEthOwnerSign(ethTxHash);
+      const getEthOwnerSign = await this.etherService.getChainOwnerSign(ethTxHash);
       console.log('getEthOwnerSign', getEthOwnerSign);
       if (getEthOwnerSign.data.value) {
         const amountWithDecimals = swapInfoByTxHash.data.amount;
@@ -387,12 +391,13 @@ export class CcswapComponent implements OnInit, OnDestroy {
           'getEthOwnerSign.data.value',
           getEthOwnerSign.data.value
         );
-        const ethMint = await this.etherService.getEthMint(
+        const ethMint = await this.etherService.getQlcMint(
           amountWithDecimals,
           ethTxHash,
           '0x' + getEthOwnerSign.data.value,
-          swapInfoByTxHash.data.ethUserAddr,
-          Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei')
+          swapInfoByTxHash.data.chainUserAddr,
+          Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei'),
+          this.chainType
         );
         // tslint:disable-next-line: no-shadowed-variable
         const id = setInterval(async () => {
@@ -402,7 +407,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
           );
           // tslint:disable-next-line: triple-equals
           if (swapInfoByTxHash?.data?.state == 1) {
-              this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
+              this.ethTxHash = swapInfoByTxHash?.data?.chainTxHash;
               console.log('cleardInterval.id', id);
               clearInterval(id);
               this.invokeSteps.push({
@@ -807,7 +812,8 @@ export class CcswapComponent implements OnInit, OnDestroy {
             signData.signature,
             txData.txHash,
             signData.publicKey,
-            this.stakingForm.value.fromNEOWallet
+            this.stakingForm.value.fromNEOWallet,
+            this.chainType
           );
           console.log('sendNeoTransaction', sendNeoTransaction);
           this.invokeSteps.push({
@@ -828,28 +834,6 @@ export class CcswapComponent implements OnInit, OnDestroy {
         }
       }
     }
-  }
-  async invokeNeoContractFunction() {
-    console.log('invokeNeoContractFunction');
-    // 这里需要判断lock产生的交易是否成功，成功后调用 NeoTransactionConfirmed
-    // const checkLockTransaction = await this.etherService.neoTransactionConfirmed(txData.lockTxId);
-    // console.log('checkLockTransaction', checkLockTransaction);
-    // if (checkLockTransaction.data.value) {
-    //   this.invokeSteps.push({ msg: 'TXID received. Preparing confirmed.', checkimg: 1});
-    //   const neoTransactionConfirmed = await this.etherService.neoTransactionConfirmed(txData.lockTxId);
-    //   console.log('etherService.neoTransactionConfirmed', neoTransactionConfirmed);
-    //   if (neoTransactionConfirmed.data.value) {
-    //       this.invokeSteps.push({ msg: 'TXID confirmed.', checkimg: 1});
-    //       console.log('stakingForm.value.amounToStake', this.stakingForm.value.amounToStake);
-    //       console.log('confirmInvoke.txData', txData);
-    //       this.mintERC20Token(txData, this.stakingForm.value.amounToStake);
-    //   } else {
-    //     this.invokeSteps.push({ msg: 'TXID confirmation error.', checkimg: 0});
-    //   }
-    // } else {
-    //   this.invokeSteps.push({ msg: 'LockTransaction fail', checkimg: 1});
-    //   return;
-    // }
   }
 
   // get transactions
@@ -879,11 +863,12 @@ export class CcswapComponent implements OnInit, OnDestroy {
     console.log('neo5Address', neo5Address);
     console.log('account', account);
     console.log('amountWithDecimals', amountWithDecimals);
-    const burnERC20Token = await this.etherService.getEthBurn(
+    const burnERC20Token = await this.etherService.getQlcBurn(
       neo5Address,
       amountWithDecimals,
       account,
-      Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei')
+      Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei'),
+      this.chainType
     );
     const id = setInterval(async () => {
     console.log('burnERC20Token', burnERC20Token);
@@ -934,7 +919,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
             msg: 'TXID confirmed. Preparing to mint ERC20 Token.',
             checkimg: 1,
           });
-          const getEthOwnerSign = await this.etherService.getEthOwnerSign(txid);
+          const getEthOwnerSign = await this.etherService.getChainOwnerSign(txid);
           console.log('getEthOwnerSign', getEthOwnerSign);
           if (getEthOwnerSign.data.value) {
             const amountWithDecimals = Web3.utils.toBN(toswapAmount).mul(Web3.utils.toBN(100000000));
@@ -947,12 +932,13 @@ export class CcswapComponent implements OnInit, OnDestroy {
               'getEthOwnerSign.data.value',
               getEthOwnerSign.data.value
             );
-            const ethMint = await this.etherService.getEthMint(
+            const ethMint = await this.etherService.getQlcMint(
               amountWithDecimals,
               txid,
               '0x' + getEthOwnerSign.data.value,
               this.etheraccounts[0],
-              Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei')
+              Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], 'Gwei'),
+              this.chainType
             );
             // tslint:disable-next-line: no-shadowed-variable
             const id = setInterval(async () => {
@@ -962,9 +948,9 @@ export class CcswapComponent implements OnInit, OnDestroy {
               );
               // tslint:disable-next-line: triple-equals
               if (swapInfoByTxHash?.data?.state == 1) {
-                console.log('ethTxHash', swapInfoByTxHash?.data?.ethTxHash);
+                console.log('ethTxHash', swapInfoByTxHash?.data?.chainTxHash);
                 console.log('cleardInterval.id', id);
-                this.ethTxHash = swapInfoByTxHash?.data?.ethTxHash;
+                this.ethTxHash = swapInfoByTxHash?.data?.chainTxHash;
                 clearInterval(id);
                 this.invokeSteps.push({
                   msg:

@@ -244,8 +244,8 @@
                       <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                       <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                       <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                      <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
-                      <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
+                      <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span *ngIf="history.chain =='ETH'" class="text-color-grey">ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey">BEP20</span></span>
+                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span *ngIf="history.chain =='ETH'" class="text-color-grey"> ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey"> BEP20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span><br>
                   </span>
                   <span class="d-xl-none">
                     <br>

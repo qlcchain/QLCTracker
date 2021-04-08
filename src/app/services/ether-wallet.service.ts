@@ -13,10 +13,11 @@ import { Subject } from 'rxjs';
 })
 export class EtherWalletService {
 swapHistory: any[];
+qgasswapHistory: any[];
 web3: any;
 accounts: any;
 metamask: boolean;
-address: any = environment.etherswapSmartContract[environment.neoNetwork];
+address: any;
 private url: string = environment.neo5toerc20swapwrapperurl[environment.neoNetwork];
 private neo5toerc20swapjwtauth = environment.neo5toerc20swapjwtauth[environment.neoNetwork];
 abi = neo5toerc20swap;
@@ -57,6 +58,7 @@ accountSub: Subject<string> = new Subject<string>();
         this.getBalances(ethAddress);
         this.getAllTransactions(ethAddress);
         this.getswapHistory(ethAddress);
+        this.getqgasswapHistory(ethAddress);
         this.getAccounts();
       }
       
@@ -74,6 +76,7 @@ accountSub: Subject<string> = new Subject<string>();
           this.getBalances(ethAddress);
           this.getAllTransactions(ethAddress);
           this.getswapHistory(ethAddress);
+          this.getqgasswapHistory(ethAddress);
           this.getAccounts();
           this.accountSub.next(accounts)
         }
@@ -99,6 +102,7 @@ accountSub: Subject<string> = new Subject<string>();
           this.getBalances(ethAddress);
           this.getAllTransactions(ethAddress);
           this.getswapHistory(ethAddress);
+          this.getqgasswapHistory(ethAddress);
           this.getAccounts();
           this.accountSub.next(this.accounts)
         }
@@ -111,6 +115,7 @@ accountSub: Subject<string> = new Subject<string>();
             this.getBalances(ethAddress);
             this.getAllTransactions(ethAddress);
             this.getswapHistory(ethAddress);
+            this.getqgasswapHistory(ethAddress);
             this.getAccounts();
             this.accountSub.next(this.accounts)
           }
@@ -161,6 +166,7 @@ accountSub: Subject<string> = new Subject<string>();
     this.swapHistory = [];
   }
 
+  // qlc swap history
   async getswapHistory(address: any) {
     const swaptransactions: any = await this.swapInfosByAddress(
       address,
@@ -169,6 +175,17 @@ accountSub: Subject<string> = new Subject<string>();
     );
     this.swapHistory = swaptransactions.data.infos;
   }
+
+  // qlc swap history
+  async getqgasswapHistory(address: any) {
+    const swaptransactions: any = await this.qgasswapInfosByAddress(
+      address,
+      1,
+      20
+    );
+    this.qgasswapHistory = swaptransactions.data.infos;
+  }
+
   async getBalances(address) {
     if (address && address != '') {
       // const qlcBalance = await this.getTokenBalance(address, this.address);
@@ -307,10 +324,12 @@ accountSub: Subject<string> = new Subject<string>();
     }
   // depost start method:post
   // deposit/neoTransactionConfirmed
-  async neoTransactionConfirmed(txid: any) {
+  async neoTransactionConfirmed(hash: any, chainType: string) {
     const data = await axios.post(this.url + '/deposit/neoTransactionConfirmed',
     {
-      hash: txid},
+      hash,
+      chainType
+    },
   {
     headers: {
       authorization: this.neo5toerc20swapjwtauth.authorization
@@ -318,10 +337,10 @@ accountSub: Subject<string> = new Subject<string>();
     });
     return data;
   }
-    // deposit/getEthOwnerSign
-    async getEthOwnerSign(txid: any) {
-      const data = await axios.post(this.url + '/deposit/getEthOwnerSign',  {
-          hash: txid
+    // deposit/getChainOwnerSign
+    async getChainOwnerSign(hash: any) {
+      const data = await axios.post(this.url + '/deposit/getChainOwnerSign',  {
+          hash
       },
       {
         headers: {
@@ -332,11 +351,11 @@ accountSub: Subject<string> = new Subject<string>();
       return data;
     }
         // deposit/packNeoTransaction
-        async packNeoTransaction(amount: any, nep5SenderAddr: any, erc20ReceiverAddr: any) {
+        async packNeoTransaction(amount: any, nep5SenderAddr: any, tokenMintedToAddress: any) {
           const data = await axios.post(this.url + '/deposit/packNeoTransaction', {
             amount,
             nep5SenderAddr,
-            erc20ReceiverAddr
+            tokenMintedToAddress
             },
             {
               headers: {
@@ -347,12 +366,13 @@ accountSub: Subject<string> = new Subject<string>();
           return data;
         }
         // deposit/sendNeoTransaction
-        async sendNeoTransaction(signature: string, txHash: string, publicKey: string, nep5SenderAddr: string) {
+        async sendNeoTransaction(signature: string, txHash: string, publicKey: string, nep5SenderAddr: string, chainType: string) {
           const data = await axios.post(this.url + '/deposit/sendNeoTransaction', {
             signature,
             txHash,
             publicKey,
-            nep5SenderAddr
+            nep5SenderAddr,
+            chainType
             },
             {
               headers: {
@@ -363,9 +383,10 @@ accountSub: Subject<string> = new Subject<string>();
           return data;
         }
         // depositethTransactionConfirmed
-        async depositethTransactionConfirmed(txid: any) {
-          const data = await axios.post(this.url + '/deposit/ethTransactionConfirmed', {
-              hash: txid
+        async depositethTransactionConfirmed(hash: any, chainType: string) {
+          const data = await axios.post(this.url + '/deposit/chainTransactionConfirmed', {
+              hash,
+              chainType
           },
           {
             headers: {
@@ -375,10 +396,10 @@ accountSub: Subject<string> = new Subject<string>();
           );
           return data;
         }
-        // deposit/ethTransactionSent
-        async depositethTransactionSent(ethTxHash: any, neoTxHash: any) {
-          const data = await axios.post(this.url + '/deposit/ethTransactionSent', {
-            ethTxHash,
+        // deposit/chainTransactionSent
+        async depositchainTransactionSent(chainTxHash: any, neoTxHash: any) {
+          const data = await axios.post(this.url + '/deposit/chainTransactionSent', {
+            chainTxHash,
             neoTxHash
           },
           {
@@ -389,12 +410,12 @@ accountSub: Subject<string> = new Subject<string>();
           );
           return data;
         }
-        // deposit/ethTransactionID
-        async ethTransactionID(txid: any) {
+        // deposit/chainTransactionID
+        async chainTransactionID(hash: any) {
           try {
-          const data = await axios.get(this.url + '/deposit/ethTransactionID', {
+          const data = await axios.get(this.url + '/deposit/chainTransactionID', {
           params: {
-              hash: txid
+              hash
           },
           headers: {
             authorization: this.neo5toerc20swapjwtauth.authorization
@@ -405,13 +426,94 @@ accountSub: Subject<string> = new Subject<string>();
             return 500;
           }
         }
+
+        // qgas
+        // qgasswap/getChainOwnerSign
+        async qgasgetChainOwnerSign(hash: any) {
+          const data = await axios.post(this.url + '/qgasswap/getChainOwnerSign', {
+            hash
+            },
+            {
+              headers: {
+                authorization: this.neo5toerc20swapjwtauth.authorization
+            }
+              }
+          );
+          return data;
+        }
+        // qgasswap/getPledgeSendBlock
+        async qgasgetPledgeSendBlock(fromAddress: string, amount: string, tokenMintedToAddress: string, chainType: string) {
+          const data = await axios.post(this.url + '/qgasswap/getPledgeSendBlock', {
+            fromAddress,
+            amount,
+            tokenMintedToAddress,
+            chainType
+            },
+            {
+              headers: {
+                authorization: this.neo5toerc20swapjwtauth.authorization
+            }
+              }
+          );
+          return data;
+        }
+        // qgasswap/getWithdrawRewardBlock
+        async qgasgetWithdrawRewardBlock(hash: any) {
+          const data = await axios.post(this.url + '/qgasswap/getWithdrawRewardBlock', {
+              hash
+          },
+          {
+            headers: {
+              authorization: this.neo5toerc20swapjwtauth.authorization
+          }
+            }
+          );
+          return data;
+        }
+        // qgasswap/pledgeChainTxSent
+        async qgaspledgeChainTxSent(chainTxHash: any, qlcTxHash: any) {
+          const data = await axios.post(this.url + '/qgasswap/pledgeChainTxSent', {
+            chainTxHash,
+            qlcTxHash
+          },
+          {
+            headers: {
+              authorization: this.neo5toerc20swapjwtauth.authorization
+          }
+            }
+          );
+          return data;
+        }
+        // qgasswap/processBlock
+        async qgasprocessBlock(hash: any, signature: any, work: any) {
+          try {
+          const data = await axios.get(this.url + '/qgasswap/processBlock', {
+          params: {
+              hash,
+              signature,
+              work
+          },
+          headers: {
+            authorization: this.neo5toerc20swapjwtauth.authorization
+        }
+          });
+          return data;
+        } catch (error) {
+            return 500;
+          }
+        }
+
+
+
+
         // deposit end
 
         // withdraw start method:post
         // withdrawethTransactionConfirmed
-        async withdrawethTransactionConfirmed(txid: any) {
-          const data = await axios.post(this.url + '/withdraw/ethTransactionConfirmed', {
-              hash: txid
+        async withdrawchainTransactionConfirmed(hash: any, chainType: string) {
+          const data = await axios.post(this.url + '/withdraw/chainTransactionConfirmed', {
+              hash,
+              chainType
           },
           {
             headers: {
@@ -421,10 +523,11 @@ accountSub: Subject<string> = new Subject<string>();
           );
           return data;
         }
-        // withdraw/ethTransactionSent
-        async withdrawethTransactionSent(txid: any) {
-          const data = await axios.post(this.url + '/withdraw/ethTransactionSent', {
-              hash: txid
+        // withdraw/chainTransactionSent
+        async withdrawchainTransactionSent(hash: any, chainType: string) {
+          const data = await axios.post(this.url + '/withdraw/chainTransactionSent', {
+            hash,
+            chainType
           },
           {
             headers: {
@@ -434,14 +537,31 @@ accountSub: Subject<string> = new Subject<string>();
           );
           return data;
         }
+
+        // qgas
+        // qgasswap/withdrawChainTxSent
+        async qgaswithdrawChainTxSent(hash: any, chainType: string) {
+          const data = await axios.post(this.url + '/qgasswap/withdrawChainTxSent', {
+            hash,
+            chainType
+          },
+          {
+            headers: {
+              authorization: this.neo5toerc20swapjwtauth.authorization
+          }
+            }
+          );
+          return data;
+        }
+
         // withdraw end
 
     // info start method:get
     // info/checkNeoTransaction
-    async checkNeoTransaction(txid: any) {
+    async checkNeoTransaction(hash: any) {
       const data = await axios.get(this.url + '/info/checkNeoTransaction', {
       params: {
-          hash: txid
+          hash
       },
       headers: {
         authorization: this.neo5toerc20swapjwtauth.authorization
@@ -450,10 +570,10 @@ accountSub: Subject<string> = new Subject<string>();
       return data;
     }
     // info/checkEthTransaction
-    async checkEthTransaction(txid: any) {
+    async checkEthTransaction(hash: any) {
       const data = await axios.get(this.url + '/info/checkEthTransaction', {
       params: {
-          hash: txid
+          hash
       },
       headers: {
         authorization: this.neo5toerc20swapjwtauth.authorization
@@ -462,11 +582,11 @@ accountSub: Subject<string> = new Subject<string>();
       return data;
     }
     // info/swapInfoByTxHash
-    async swapInfoByTxHash(txid: any) {
+    async swapInfoByTxHash(hash: any) {
       try {
         const data: any = await axios.get(this.url + '/info/swapInfoByTxHash', {
           params: {
-              hash: txid
+              hash
           },
           headers: {
             authorization: this.neo5toerc20swapjwtauth.authorization
@@ -522,6 +642,68 @@ accountSub: Subject<string> = new Subject<string>();
       return data;
     }
 
+    // qgasswap/swapInfoByTxHash
+    async qgasswapInfoByTxHash(hash: any) {
+      try {
+        const data: any = await axios.get(this.url + '/qgasswap/swapInfoByTxHash', {
+          params: {
+              hash
+          },
+          headers: {
+            authorization: this.neo5toerc20swapjwtauth.authorization
+        }
+          });
+        return data;
+      } catch (error) {
+        return 500;
+      }
+    }
+
+    // /qgasswap/swapInfosByAddress
+    async qgasswapInfosByAddress(address: string, page: any, pageSize: any) {
+      const data = await axios.get(this.url + '/qgasswap/swapInfosByAddress', {
+      params: {
+          address,
+          page,
+          pageSize
+      },
+      headers: {
+        authorization: this.neo5toerc20swapjwtauth.authorization
+    }
+      });
+      return data;
+    }
+
+    // /qgasswap/swapInfosByState
+    async qgasswapInfosByState(state: string, page: any, pageSize: any) {
+      const data = await axios.get(this.url + '/qgasswap/swapInfosByState', {
+      params: {
+          state,
+          page,
+          pageSize
+      },
+      headers: {
+        authorization: this.neo5toerc20swapjwtauth.authorization
+    }
+      });
+      return data;
+    }
+
+    // /qgasswap/swapInfosCount
+    async qgasswapInfosCount() {
+      const data = await axios.get(this.url + '/qgasswap/swapInfosCount', {
+      headers: {
+        authorization: this.neo5toerc20swapjwtauth.authorization
+    }
+      });
+      return data;
+    }
+
+
+
+
+    // info end method:get
+
     checkIfWallet() {
       if ((window as any).ethereum) {
         return true;
@@ -544,8 +726,11 @@ accountSub: Subject<string> = new Subject<string>();
       console.log(error);
     });
   }
-  // mint erc20 token
-  async getEthMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice?: any) {
+  // mint qlc erc20 token
+  async getQlcMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice: any, chainType: string) {
+    this.address = chainType === 'eth' ?
+    environment.etherswapSmartContract[environment.neoNetwork] :
+    environment.bscswapSmartContract[environment.neoNetwork];
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
     console.log('ether-wallet.service.getEthMint.amount', amount);
     console.log('ether-wallet.service.getEthMint.nep5Hash', nep5Hash);
@@ -557,7 +742,7 @@ accountSub: Subject<string> = new Subject<string>();
     }).then(result => {
       localStorage.setItem('EthMinttxHash', result.transactionHash);
       // send ethTxHash,neoTxHash to hub
-      this.depositethTransactionSent(result.transactionHash, nep5Hash);
+      this.depositchainTransactionSent(result.transactionHash, nep5Hash);
       console.log('getEthMint', result);
       return result;
     })
@@ -565,6 +750,31 @@ accountSub: Subject<string> = new Subject<string>();
       console.log(error);
     });
  }
+
+ // mint qgas erc20 token
+ async getQgasMint(amount: any, qlcTxHash: any, signature: any, account: any, gasPrice: any, chainType: string) {
+  this.address = chainType === 'qgaseth' ?
+  environment.qgasetherswapSmartContract[environment.neoNetwork] :
+  environment.qgasbscswapSmartContract[environment.neoNetwork];
+  const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+  console.log('ether-wallet.service.getEthMint.amount', amount);
+  console.log('ether-wallet.service.getEthMint.nep5Hash', qlcTxHash);
+  console.log('ether-wallet.service.getEthMint.signature', signature);
+  console.log('ether-wallet.service.getEthMint.account', account);
+  return await Contract.methods.mint(amount, qlcTxHash, signature).send({
+      from: account,
+      gasPrice
+  }).then(result => {
+    localStorage.setItem('EthMinttxHash', result.transactionHash);
+    // send ethTxHash,neoTxHash to hub
+    this.qgaspledgeChainTxSent(result.transactionHash, qlcTxHash);
+    console.log('getEthMint', result);
+    return result;
+  })
+  .catch( (error) => {
+    console.log(error);
+  });
+}
 
  async estimateGasEthMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice?: any) {
   const Contract = await new this.web3.eth.Contract(this.abi, this.address);
@@ -585,8 +795,11 @@ accountSub: Subject<string> = new Subject<string>();
   });
  }
 
- // burn erc20 token
-  async getEthBurn(nep5Address: any, amount: any, account: any, gasPrice?: any): Promise<any> {
+ // burn qlc erc20 token
+  async getQlcBurn(nep5Address: any, amount: any, account: any, gasPrice: any, chainType: string): Promise<any> {
+    this.address = chainType === 'eth' ?
+    environment.etherswapSmartContract[environment.neoNetwork] :
+    environment.bscswapSmartContract[environment.neoNetwork];
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
     console.log('getEthBurn.amount', amount);
     console.log('getEthBurn.nep5Hash', nep5Address);
@@ -599,7 +812,30 @@ accountSub: Subject<string> = new Subject<string>();
       console.log('getEthBurn.result', result);
       localStorage.setItem('txHash', result.transactionHash);
       // send ethTxHash to hub
-      this.withdrawethTransactionSent(result.transactionHash);
+      this.withdrawchainTransactionSent(result.transactionHash, chainType);
+      console.log('getEthBurn.result.transactionHash', result.transactionHash);
+      return result;
+    });
+  }
+
+  // burn qgas erc20 token
+  async getQgasBurn(qgasAddress: any, amount: any, account: any, gasPrice: any, chainType: string): Promise<any> {
+    this.address = chainType === 'qgaseth' ?
+    environment.qgasetherswapSmartContract[environment.neoNetwork] :
+    environment.qgasbscswapSmartContract[environment.neoNetwork];
+    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+    console.log('getEthBurn.amount', amount);
+    console.log('getEthBurn.nep5Hash', qgasAddress);
+    console.log('getEthBurn.account', account);
+    console.log('getEthBurn.gasPrice', gasPrice);
+    return await Contract.methods.burn(qgasAddress, amount).send({
+        from: account,
+        gasPrice
+    }).then(result => {
+      console.log('getEthBurn.result', result);
+      localStorage.setItem('txHash', result.transactionHash);
+      // send ethTxHash to hub
+      this.qgaswithdrawChainTxSent(result.transactionHash, chainType);
       console.log('getEthBurn.result.transactionHash', result.transactionHash);
       return result;
     });

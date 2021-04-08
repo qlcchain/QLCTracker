@@ -94,6 +94,8 @@ const routes: Routes = [
   { path: 'swap', component: SwapDashboardComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'swap/eth', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'swap/bsc', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'swap/qgaseth', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'swap/qgasbsc', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'staking/chainx', component: ChainxStakingComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'staking/chainx/invoke', component: ChainxStakingComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'mining', component: MiningComponent, canActivate: [CanActivateRouteGuard] },

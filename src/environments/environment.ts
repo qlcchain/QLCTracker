@@ -86,6 +86,14 @@ export const environment = {
     test: '0xF284c1C1D03BCCC8b32e9736919C0D7CA8b06aeD',
     main: ''
   },
+  qgasetherswapSmartContract: {
+    test: '0x1aFFc415416f1D157F4603f37aE1AC9011487111',
+    main: ''
+  },
+  qgasbscswapSmartContract: {
+    test: '0xF791c6cf47C3650Fb8e65f1Ab0bFaDEfcFD51af5',
+    main: ''
+  },
   testSmartContract: {
     test: '0x40E3dCC2EC0B8f7381332614630Aa9EF19b18cA2',
     main: ''
