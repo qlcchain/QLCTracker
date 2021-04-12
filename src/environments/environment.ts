@@ -83,7 +83,7 @@ export const environment = {
     main: '0xd196f680e0bDF810f1fe8b323b90CA0B62f4e63e'
   },
   bscswapSmartContract: {
-    test: '0xF284c1C1D03BCCC8b32e9736919C0D7CA8b06aeD',
+    test: '0x550f28C8ccc66002E927483C6cb83D9997d9ebf2',
     main: ''
   },
   qgasetherswapSmartContract: {

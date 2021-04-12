@@ -718,6 +718,7 @@ accountSub: Subject<string> = new Subject<string>();
     }
   // get erc20 contract balance
   async getEthQLCBalance(account: any, chainType: string) {
+    console.log('getEthQLCBalance.chainType', chainType);
     this.address = chainType === 'eth' ?
     environment.etherswapSmartContract[environment.neoNetwork] :
     environment.bscswapSmartContract[environment.neoNetwork];
