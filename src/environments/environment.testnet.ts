@@ -9,18 +9,42 @@ export const environment = {
   qlcChainNetwork: 'test', // test or main
   neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
+  ethNetworkDefault: 'rinkeby', // mainnet, ropsten, rinkeby
   infuraId: '111769056614454ba82f3c6a16be68bb',
   mainRpcUrl: {
     test: 'https://rpc-test.qlcchain.online',
     main: 'https://rpc.qlcchain.online'
   },
   rpcUrl: {
-    test: 'http://seed2.ngd.network:20332/',
+    test: 'https://rpc-test.qlcchain.online',
     main: 'https://rpc.qlcchain.online'
   },
   swapUrl: {
     test: 'http://seed2.ngd.network:20332/',
     main: 'http://seed2.ngd.network:10332/'
+  },
+  neotube: {
+    test: 'https://testnet.api.neotube.io/api/',
+    main: 'https://mainnet.api.neotube.io/api/'
+  },
+  etherscan: {
+    test: 'https://rinkeby.etherscan.io/',
+    main: 'https://etherscan.io/'
+  },
+  ethExplorer: {
+    mainnet: 'https://etherscan.io',
+    ropsten: 'https://ropsten.etherscan.io',
+    rinkeby: 'https://rinkeby.etherscan.io'
+  },
+  ethEtherscanApiKey: 'QB9XWH5BSIYIVIVZ5A85C8TK3XTH4WPVAK',
+  ethEtherscanApi: {
+    mainnet: 'https://api.etherscan.io',
+    ropsten: 'https://api-ropsten.etherscan.io',
+    rinkeby: 'https://api-rinkeby.etherscan.io'
+  },
+  neotubeSite: {
+    test: 'https://testnet.neotube.io/',
+    main: 'https://neotube.io/'
   },
   wsUrl: {
     test: '',
@@ -40,7 +64,7 @@ export const environment = {
     {authorization: 'eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJRTENDaGFpbiBCb3QiLCJqdGkiOiJiZDhiMDM3YS03YzgzLTQxN2UtYTVhMC1kNzc2ODg0MGNlMjIiLCJpYXQiOjE2MDYzOTY5MDgsImlzcyI6IlFMQ0NoYWluIEJvdCIsInN1YiI6InNpZ25lciIsInJvbGVzIjpbInVzZXIiXX0.AHXxllMMeBelYQ8zMLMIZLrlwkxqwGfZ_Zrdzfny7dGHgLOVxUQpIGZjwL5ZTyOTZa5aJ-3sr5lehNWofnM47vOjAV5CpJ3LdGec1DcGX9mN45anluoavcBVePmE1c4maMv4Ale7DEamhSndsYnEGjRJYb2HjNMm0geIVOcs9xW9zQ5z'},
     main:
     // tslint:disable-next-line: max-line-length
-    {authorization:'eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJRTENDaGFpbiBCb3QiLCJqdGkiOiJiZDhiMDM3YS03YzgzLTQxN2UtYTVhMC1kNzc2ODg0MGNlMjIiLCJpYXQiOjE2MDYzOTY5MDgsImlzcyI6IlFMQ0NoYWluIEJvdCIsInN1YiI6InNpZ25lciIsInJvbGVzIjpbInVzZXIiXX0.AHXxllMMeBelYQ8zMLMIZLrlwkxqwGfZ_Zrdzfny7dGHgLOVxUQpIGZjwL5ZTyOTZa5aJ-3sr5lehNWofnM47vOjAV5CpJ3LdGec1DcGX9mN45anluoavcBVePmE1c4maMv4Ale7DEamhSndsYnEGjRJYb2HjNMm0geIVOcs9xW9zQ5z'}
+    {authorization:'eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJRTENDaGFpbiBCb3QiLCJqdGkiOiIwYmE3N2ViMS0yNmMyLTRhZTItODU1Yi0zYmU5NmI3ODVjZTYiLCJpYXQiOjE2MDk4Mjg4MzksImlzcyI6IlFMQ0NoYWluIEJvdCIsInN1YiI6InNpZ25lciIsInJvbGVzIjpbInVzZXIiXX0.AVHd9IlSEb8SkblcJFc_e2oLNe-xb7Chm7jQCr3tlT06AYqlHP1Ks1ajP7AbTl_-Yrlgu1l9phyEnNaJevmQY2r3AVucd0a9j41cSfA5q-XelapyeDNbf8SihOYo_pclsBPR9WsCU9ABOHLzNd-uh_yVFMbICdYNDaP_rrP4o8iBH4oq'}
   },
   neoSmartContract: {
     test: '',
@@ -48,7 +72,11 @@ export const environment = {
   },
   neo5swapSmartContract: {
     test: 'bfcbb52d61bc6d3ef2c8cf43f595f4bf5cac66c5',
-    main: ''
+    main: 'd2028b9c5639ef287cff7b08e1a4ec0b858e68a2'
+  },
+  neo5QLCSmartContract: {
+    test: 'b9d7ea3062e6aeeb3e8ad9548220c4ba1361d263',
+    main: '0d821bd7b6d53f5c2b40e217c6defc8bbe896cf5'
   },
   etherswapSmartContract: {
     test: '0xE2484A4178Ce7FfD5cd000030b2a5de08c0Caf8D',
