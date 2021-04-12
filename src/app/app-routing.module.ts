@@ -42,6 +42,7 @@ import { MiningRewardComponent } from './components/qlc/mining/mining-reward/min
 import { StakingDashboardComponent } from './components/staking-dashboard/staking-dashboard.component';
 import { PortalComponent } from './components/portal/portal.component';
 import { CcswapComponent } from './components/ccswap/ccswap.component';
+import { CcqgasswapComponent } from './components/ccqgasswap/ccqgasswap.component';
 import { Erc20WalletComponent } from './components/erc20/erc20-wallet/erc20-wallet.component';
 import { SwapDashboardComponent } from './components/swap-dashboard/swap-dashboard.component';
 
@@ -94,8 +95,8 @@ const routes: Routes = [
   { path: 'swap', component: SwapDashboardComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'swap/eth', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'swap/bsc', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
-  { path: 'swap/qgaseth', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
-  { path: 'swap/qgasbsc', component: CcswapComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'swap/qgaseth', component: CcqgasswapComponent, canActivate: [CanActivateRouteGuard] },
+  { path: 'swap/qgasbsc', component: CcqgasswapComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'staking/chainx', component: ChainxStakingComponent, canActivate: [CanActivateRouteGuard] },
   //{ path: 'staking/chainx/invoke', component: ChainxStakingComponent, canActivate: [CanActivateRouteGuard] },
   { path: 'mining', component: MiningComponent, canActivate: [CanActivateRouteGuard] },

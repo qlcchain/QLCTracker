@@ -4,14 +4,17 @@ import BigNumber from 'bignumber.js';
 import { environment } from 'src/environments/environment';
 // import { testContract } from 'src/constants/abi/testContract';
 import { neo5toerc20swap } from 'src/constants/abi/neo5toerc20swap';
+import { qgascrosschainswap } from 'src/constants/abi/qgascrosschainswap';
 import axios from 'axios';
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Subject } from 'rxjs';
+import { ActivatedRoute } from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class EtherWalletService {
+chainType: string;
 swapHistory: any[];
 qgasswapHistory: any[];
 web3: any;
@@ -21,6 +24,7 @@ address: any;
 private url: string = environment.neo5toerc20swapwrapperurl[environment.neoNetwork];
 private neo5toerc20swapjwtauth = environment.neo5toerc20swapjwtauth[environment.neoNetwork];
 abi = neo5toerc20swap;
+qgasabi = qgascrosschainswap;
 selectedAddress: string = '';
 balances = {
   ETH: 0,
@@ -34,7 +38,8 @@ provider: any;
 
 accountSub: Subject<string> = new Subject<string>();
 
-  constructor() {
+  constructor(private route: ActivatedRoute) {
+    this.route?.url?.subscribe((url) => (this.chainType = url[1]?.path));
   }
   async connect() {
     if ((window as any).ethereum) {
@@ -190,7 +195,7 @@ accountSub: Subject<string> = new Subject<string>();
     if (address && address != '') {
       // const qlcBalance = await this.getTokenBalance(address, this.address);
       console.log('getBalances.address', address);
-      const qlcBalance: any = await this.getEthQLCBalance(address);
+      // const qlcBalance: any = await this.getEthQLCBalance(address, this.chainType);
       console.log('getBalances.qlcbalance', localStorage.getItem('qlcbalance'));
       const qlcBalanceNumber: any = localStorage.getItem('qlcbalance');
       this.balances.QLC = qlcBalanceNumber;
@@ -442,7 +447,7 @@ accountSub: Subject<string> = new Subject<string>();
           return data;
         }
         // qgasswap/getPledgeSendBlock
-        async qgasgetPledgeSendBlock(fromAddress: string, amount: string, tokenMintedToAddress: string, chainType: string) {
+        async qgasgetPledgeSendBlock(fromAddress: string, amount: any, tokenMintedToAddress: string, chainType: string) {
           const data = await axios.post(this.url + '/qgasswap/getPledgeSendBlock', {
             fromAddress,
             amount,
@@ -485,7 +490,7 @@ accountSub: Subject<string> = new Subject<string>();
           return data;
         }
         // qgasswap/processBlock
-        async qgasprocessBlock(hash: any, signature: any, work: any) {
+        async qgasprocessBlock(hash: any, signature: string, work: any) {
           try {
           const data = await axios.get(this.url + '/qgasswap/processBlock', {
           params: {
@@ -712,7 +717,10 @@ accountSub: Subject<string> = new Subject<string>();
       }
     }
   // get erc20 contract balance
-  async getEthQLCBalance(account: any) {
+  async getEthQLCBalance(account: any, chainType: string) {
+    this.address = chainType === 'eth' ?
+    environment.etherswapSmartContract[environment.neoNetwork] :
+    environment.bscswapSmartContract[environment.neoNetwork];
     const Contract = await new this.web3.eth.Contract(this.abi, this.address);
     const balance = await Contract.methods.balanceOf(account).call().then(sum => {
       const balance = new BigNumber(sum)
@@ -753,10 +761,10 @@ accountSub: Subject<string> = new Subject<string>();
 
  // mint qgas erc20 token
  async getQgasMint(amount: any, qlcTxHash: any, signature: any, account: any, gasPrice: any, chainType: string) {
-  this.address = chainType === 'qgaseth' ?
+  this.address = chainType === 'eth' ?
   environment.qgasetherswapSmartContract[environment.neoNetwork] :
   environment.qgasbscswapSmartContract[environment.neoNetwork];
-  const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+  const Contract = await new this.web3.eth.Contract(this.qgasabi, this.address);
   console.log('ether-wallet.service.getEthMint.amount', amount);
   console.log('ether-wallet.service.getEthMint.nep5Hash', qlcTxHash);
   console.log('ether-wallet.service.getEthMint.signature', signature);
@@ -820,10 +828,10 @@ accountSub: Subject<string> = new Subject<string>();
 
   // burn qgas erc20 token
   async getQgasBurn(qgasAddress: any, amount: any, account: any, gasPrice: any, chainType: string): Promise<any> {
-    this.address = chainType === 'qgaseth' ?
+    this.address = chainType === 'eth' ?
     environment.qgasetherswapSmartContract[environment.neoNetwork] :
     environment.qgasbscswapSmartContract[environment.neoNetwork];
-    const Contract = await new this.web3.eth.Contract(this.abi, this.address);
+    const Contract = await new this.web3.eth.Contract(this.qgasabi, this.address);
     console.log('getEthBurn.amount', amount);
     console.log('getEthBurn.nep5Hash', qgasAddress);
     console.log('getEthBurn.account', account);

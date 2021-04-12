@@ -315,7 +315,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
     console.log('this.etherService.selectedAddress', this.etherService.selectedAddress);
     // this.etheraccounts = [this.etherService.selectedAddress];
     this.ethbalance = await this.etherService.getEthBalance(accounts[0]);
-    const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0]);
+    const etherqlcbalance: any = await this.etherService.getEthQLCBalance(accounts[0], this.chainType);
     this.etherqlcbalance = etherqlcbalance;
     return accounts;
   }
@@ -607,7 +607,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
 
   async selectAccount() {
     // reload eth qlc balance when switch tab
-    this.etherService.getEthQLCBalance(this.etherService.selectedAddress);
+    this.etherService.getEthQLCBalance(this.etherService.selectedAddress, this.chainType);
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
       // tslint:disable-next-line: max-line-length

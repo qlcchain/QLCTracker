@@ -82,6 +82,7 @@ import { PortalComponent } from './components/portal/portal.component';
 import { CcswapComponent } from './components/ccswap/ccswap.component';
 import { Erc20WalletComponent } from './components/erc20/erc20-wallet/erc20-wallet.component';
 import { SwapDashboardComponent } from './components/swap-dashboard/swap-dashboard.component';
+import { CcqgasswapComponent } from './components/ccqgasswap/ccqgasswap.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -145,7 +146,8 @@ export function createTranslateLoader(http: HttpClient) {
     PortalComponent,
     CcswapComponent,
     Erc20WalletComponent,
-    SwapDashboardComponent
+    SwapDashboardComponent,
+    CcqgasswapComponent
   ],
   imports: [
     BrowserModule,
