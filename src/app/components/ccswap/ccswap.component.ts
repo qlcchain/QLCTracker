@@ -47,14 +47,10 @@ export class CcswapComponent implements OnInit, OnDestroy {
   public neoTxHash = '';
   public ethTxHash = '';
   // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
-  public FastGasPrice = parseInt((Math.random() * ( 200 - 150 + 1) + 150).toString(), 10).toString();
-  public ProposeGasPrice = parseInt((Math.random() * ( 150 - 100 + 1) + 100).toString(), 10).toString();
-  public SafeGasPrice = parseInt((Math.random() * ( 100 - 50 + 1) + 50).toString(), 10).toString();
-  public gasPrices = {
-    FastGasPrice: this.FastGasPrice,
-    LastBlock: '0',
-    ProposeGasPrice: this.ProposeGasPrice,
-    SafeGasPrice: this.SafeGasPrice
+  FastGasPrice: any;
+  ProposeGasPrice: any;
+  SafeGasPrice: any;
+  gasPrices = {
   };
 
   public selectedGasPrice = 'ProposeGasPrice';
@@ -286,6 +282,22 @@ export class CcswapComponent implements OnInit, OnDestroy {
 
     // Get Current Path:  company  同理
     this.route?.url?.subscribe(url => this.chainType =  url[1]?.path);
+    // init gasfee
+     // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+    this.FastGasPrice = this.chainType === 'eth'
+    ? parseInt((Math.random() * ( 200 - 150 + 1) + 150).toString(), 10).toString()
+    : '15';
+    this.ProposeGasPrice = this.chainType === 'eth' ?
+    parseInt((Math.random() * ( 150 - 100 + 1) + 100).toString(), 10).toString()
+    : '10';
+    this.SafeGasPrice = this.chainType === 'eth' ?
+    parseInt((Math.random() * ( 100 - 50 + 1) + 50).toString(), 10).toString() : '5';
+    this.gasPrices = {
+      FastGasPrice: this.FastGasPrice,
+      LastBlock: '0',
+      ProposeGasPrice: this.ProposeGasPrice,
+      SafeGasPrice: this.SafeGasPrice
+    };
   }
 
   ngOnDestroy() {
@@ -298,7 +310,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
 
     // })
     this.etherService.accountSub.subscribe(
-      (test) => { 
+      (test) => {
         console.log('sub test', test)
         this.selectAccount();
         this.getEtherAccounts();
@@ -321,9 +333,8 @@ export class CcswapComponent implements OnInit, OnDestroy {
   }
   // init eth three gas fee
   async initEthThreeGasFee() {
-    const threeGasPrices = await this.etherService.getThreeGasPrice();
-    if (threeGasPrices?.data?.result) {
-      //console.log(threeGasPrices);
+    const threeGasPrices = await this.etherService.getThreeGasPrice(this.chainType);
+    if (threeGasPrices?.data?.result && this.chainType === 'eth') {
       this.gasPrices = threeGasPrices?.data?.result;
     }
   }

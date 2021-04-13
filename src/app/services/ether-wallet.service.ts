@@ -172,11 +172,12 @@ accountSub: Subject<string> = new Subject<string>();
   }
 
   // qlc swap history
-  async getswapHistory(address: any) {
+  async getswapHistory(address: any, chain?: any) {
     const swaptransactions: any = await this.swapInfosByAddress(
       address,
       1,
-      20
+      20,
+      chain
     );
     this.swapHistory = swaptransactions.data.infos;
   }
@@ -316,12 +317,20 @@ accountSub: Subject<string> = new Subject<string>();
       });
     }
     // get erc20 three gasPrice
-    async getThreeGasPrice() {
+    async getThreeGasPrice(chainType: string) {
       // tslint:disable-next-line: new-parens
       // tslint:disable-next-line: max-line-length
       const getThreeGasPriceUrl = 'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=DJV72718MY7XV8EMXTUY6DM1KCV2C6X14T';
       return axios.get(getThreeGasPriceUrl).then(data => {
         console.log('ether-wallet.service.getThreeGasPrice.data', data);
+        const bscdata = {result:
+          {
+          FastGasPrice: 10,
+          LastBlock: '0',
+          ProposeGasPrice: 8,
+          SafeGasPrice: 5
+        }
+      };
         return data;
       }).catch(err => {
         return err;
@@ -618,12 +627,13 @@ accountSub: Subject<string> = new Subject<string>();
     }
 
     // info/swapInfosByAddress
-    async swapInfosByAddress(address: any, page: any, pageSize: any) {
+    async swapInfosByAddress(address: any, page: any, pageSize: any, chain?: any) {
       const data = await axios.get(this.url + '/info/swapInfosByAddress', {
       params: {
           address,
           page,
-          pageSize
+          pageSize,
+          chain
       },
       headers: {
         authorization: this.neo5toerc20swapjwtauth.authorization
@@ -665,12 +675,13 @@ accountSub: Subject<string> = new Subject<string>();
     }
 
     // /qgasswap/swapInfosByAddress
-    async qgasswapInfosByAddress(address: string, page: any, pageSize: any) {
+    async qgasswapInfosByAddress(address: string, page: any, pageSize: any, chain?: any) {
       const data = await axios.get(this.url + '/qgasswap/swapInfosByAddress', {
       params: {
           address,
           page,
-          pageSize
+          pageSize,
+          chain
       },
       headers: {
         authorization: this.neo5toerc20swapjwtauth.authorization
