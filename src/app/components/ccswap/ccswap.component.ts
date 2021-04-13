@@ -283,7 +283,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
 
     // Get Current Path:  company  同理
     this.route?.url?.subscribe(url => this.chainType =  url[1]?.path);
-    this.chainType20 = this.chainType20 === 'eth' ? 'ERC20' : 'BEP20';
+    this.chainType20 = this.chainType === 'eth' ? 'ERC20' : 'BEP20';
     // init gasfee
      // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
     this.FastGasPrice = this.chainType === 'eth'
@@ -929,7 +929,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
           console.log('cleardInterval.id', id);
           clearInterval(id);
           this.invokeSteps.push({
-            msg: 'TXID confirmed. Preparing to mint' + this.chainType20 + 'Token.',
+            msg: 'TXID confirmed. Preparing to mint ' + this.chainType20 + ' Token.',
             checkimg: 1,
           });
           const getEthOwnerSign = await this.etherService.getChainOwnerSign(txid);

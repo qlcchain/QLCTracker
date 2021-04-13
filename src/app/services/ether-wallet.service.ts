@@ -216,6 +216,31 @@ accountSub: Subject<string> = new Subject<string>();
     }
   }
 
+  // qgas balance
+  // async getQgasBalances(address) {
+  //   if (address && address != '') {
+  //     // const qlcBalance = await this.getTokenBalance(address, this.address);
+  //     console.log('getQgasBalances.address', address);
+  //     // const qlcBalance: any = await this.getEthQLCBalance(address, this.chainType);
+  //     console.log('getQgasBalances.qlcbalance', localStorage.getItem('qgasbalance'));
+  //     const qlcBalanceNumber: any = localStorage.getItem('qgasbalance');
+  //     this.balances.QLC = qlcBalanceNumber;
+  //     const ethBalance = await this.getEthBalanceApi(address);
+  //     const ethBalanceNumber = new BigNumber(ethBalance?.data?.result).dividedBy(Math.pow(10, 18)).toNumber();
+  //     // const ethBalance = await this.getEthBalance(address);
+  //     // const ethBalanceNumber = new BigNumber(ethBalance).dividedBy(Math.pow(10, 18)).toNumber();
+  //     console.log('getQgasBalances.ethBalance', ethBalance);
+  //     console.log('getQgasBalances.ethBalanceNumber', ethBalanceNumber);
+  //     this.balances.ETH = ethBalanceNumber;
+  //     console.log('this.balances', this.balances);
+  //   } else {
+  //     this.balances = {
+  //       QLC: 0,
+  //       ETH: 0
+  //     };
+  //   }
+  // }
+
   async getAllTransactions(address) {
     this.transactions = [];
     this.erc20Transactions = [];
@@ -747,6 +772,25 @@ accountSub: Subject<string> = new Subject<string>();
       console.log(error);
     });
   }
+  // get qgas contract balance
+  async getQGASBalance(account: any, chainType: string) {
+    console.log('getQGASBalance.chainType', chainType);
+    this.address = chainType === 'eth' ?
+    environment.qgasetherswapSmartContract[environment.neoNetwork] :
+    environment.qgasbscswapSmartContract[environment.neoNetwork];
+    const Contract = await new this.web3.eth.Contract(this.qgasabi, this.address);
+    const balance = await Contract.methods.balanceOf(account).call().then(sum => {
+      const balance = new BigNumber(sum)
+      .dividedBy(Math.pow(10, 8))
+      .toNumber();
+      console.log('ether-wallet.service.getQGASBalance', balance);
+      localStorage.setItem('qgasbalance', balance.toString());
+      return balance;
+    })
+    .catch( (error) => {
+      console.log(error);
+    });
+  }
   // mint qlc erc20 token
   async getQlcMint(amount: any, nep5Hash: any, signature: any, account: any, gasPrice: any, chainType: string) {
     this.address = chainType === 'eth' ?
@@ -778,18 +822,18 @@ accountSub: Subject<string> = new Subject<string>();
   environment.qgasetherswapSmartContract[environment.neoNetwork] :
   environment.qgasbscswapSmartContract[environment.neoNetwork];
   const Contract = await new this.web3.eth.Contract(this.qgasabi, this.address);
-  console.log('ether-wallet.service.getEthMint.amount', amount);
-  console.log('ether-wallet.service.getEthMint.nep5Hash', qlcTxHash);
-  console.log('ether-wallet.service.getEthMint.signature', signature);
-  console.log('ether-wallet.service.getEthMint.account', account);
+  console.log('ether-wallet.service.getQgasMint.amount', amount);
+  console.log('ether-wallet.service.getQgasMint.qlcTxHash', qlcTxHash);
+  console.log('ether-wallet.service.getQgasMint.signature', signature);
+  console.log('ether-wallet.service.getQgasMint.account', account);
   return await Contract.methods.mint(amount, qlcTxHash, signature).send({
       from: account,
       gasPrice
   }).then(result => {
-    localStorage.setItem('EthMinttxHash', result.transactionHash);
+    console.log('getQgasMint', result);
+    localStorage.setItem('QgasMintHash', result.transactionHash);
     // send ethTxHash,neoTxHash to hub
     this.qgaspledgeChainTxSent(result.transactionHash, qlcTxHash);
-    console.log('getEthMint', result);
     return result;
   })
   .catch( (error) => {

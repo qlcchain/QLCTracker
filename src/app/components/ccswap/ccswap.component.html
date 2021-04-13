@@ -373,17 +373,17 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
               <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
                 <span class="d-xl-none">Sender: </span>
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ this.chainType == 'eth' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Recipient: </span>
                 <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ this.chainType == 'eth' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Swapid: </span>
                 <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
                   {{history.neoTxHash | squeeze : '10,9'}}
                 </a>
-                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.chainTxHash}}" target="_blank" >
+                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ this.chainType == 'eth' ? etherscan : bscscan }}/tx/{{history.chainTxHash}}" target="_blank" >
                   {{history.chainTxHash | squeeze : '10,9'}}
                 </a>
                 
@@ -391,14 +391,14 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
               </div>
               <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
                 <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '11,10'}}</a>
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ this.chainType == 'eth' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '11,10'}}</a>
 
               </div>
               <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
                   {{history.neoTxHash | squeeze : '11,10'}}
                 </a>
-                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.chainTxHash}}" target="_blank" >
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ this.chainType == 'eth' ? etherscan : bscscan }}/tx/{{history.chainTxHash}}" target="_blank" >
                   {{history.chainTxHash | squeeze : '11,10'}}
                 </a>
               </div>

@@ -303,9 +303,9 @@
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
                 <span [ngClass]="{
-                  'text-blue': (history.state ==0 || history.state ==2),
-                  'text-color-green': (history.state ==1 || history.state ==3),
-                  'text-color-red': history.state == 4
+                  'text-blue': (history.state ==1 || history.state ==4),
+                  'text-color-green': (history.state ==2 || history.state ==5),
+                  'text-color-red': history.state == 0
                 }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">

@@ -31,6 +31,10 @@ export const environment = {
     test: 'https://rinkeby.etherscan.io/',
     main: 'https://etherscan.io/'
   },
+  bscscan: {
+    test: 'https://testnet.bscscan.com/',
+    main: 'https://bscscan.com/'
+  },
   ethExplorer: {
     mainnet: 'https://etherscan.io',
     ropsten: 'https://ropsten.etherscan.io',

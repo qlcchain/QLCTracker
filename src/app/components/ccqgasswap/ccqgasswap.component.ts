@@ -28,9 +28,11 @@ const nacl = window["nacl"];
   styleUrls: ["./ccqgasswap.component.scss"],
 })
 export class CcqgasswapComponent implements OnInit, OnDestroy {
-  chainType = "";
+  chainType = '';
+  chainType20 = '';
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
+  bscscan = environment.bscscan[environment.neoNetwork];
   haveswappedamount: any;
   ethbalance: any;
   transactions: any[] = [];
@@ -47,23 +49,10 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
   public neoTxHash = "";
   public ethTxHash = "";
   // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
-  public FastGasPrice = parseInt(
-    (Math.random() * (200 - 150 + 1) + 150).toString(),
-    10
-  ).toString();
-  public ProposeGasPrice = parseInt(
-    (Math.random() * (150 - 100 + 1) + 100).toString(),
-    10
-  ).toString();
-  public SafeGasPrice = parseInt(
-    (Math.random() * (100 - 50 + 1) + 50).toString(),
-    10
-  ).toString();
-  public gasPrices = {
-    FastGasPrice: this.FastGasPrice,
-    LastBlock: "0",
-    ProposeGasPrice: this.ProposeGasPrice,
-    SafeGasPrice: this.SafeGasPrice,
+  FastGasPrice: any;
+  ProposeGasPrice: any;
+  SafeGasPrice: any;
+  gasPrices = {
   };
 
   public selectedGasPrice = "ProposeGasPrice";
@@ -298,6 +287,23 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
 
     // Get Current Path:  company  同理
     this.route?.url?.subscribe((url) => (this.chainType = url[1]?.path === 'qgaseth' ? 'eth' : 'bsc'));
+    this.chainType20 = this.chainType === 'eth' ? 'ERC20' : 'BEP20';
+    // init gasfee
+     // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+    this.FastGasPrice = this.chainType === 'eth'
+    ? parseInt((Math.random() * ( 200 - 150 + 1) + 150).toString(), 10).toString()
+    : '15';
+    this.ProposeGasPrice = this.chainType === 'eth' ?
+    parseInt((Math.random() * ( 150 - 100 + 1) + 100).toString(), 10).toString()
+    : '10';
+    this.SafeGasPrice = this.chainType === 'eth' ?
+    parseInt((Math.random() * ( 100 - 50 + 1) + 50).toString(), 10).toString() : '5';
+    this.gasPrices = {
+      FastGasPrice: this.FastGasPrice,
+      LastBlock: '0',
+      ProposeGasPrice: this.ProposeGasPrice,
+      SafeGasPrice: this.SafeGasPrice
+    };
   }
 
   ngOnDestroy() {
@@ -352,98 +358,64 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
   }
 
   async continueUndoneTransaction(txhash?: any) {
-    console.log("continueUndoneTransaction,chainType", this.chainType);
+    console.log('continueUndoneTransaction,chainType', this.chainType);
     // if (this.walletService.walletIsLocked()) {
     //   return this.notifications.sendWarning('ERROR wallet locked');
     // }
-    console.log("length", this.recoverForm.get("recover_txid").value.length);
+    console.log('length', this.recoverForm.get('recover_txid').value.length);
     const ethTxHash = txhash
-      ? txhash
-      : this.recoverForm.get("recover_txid").value.startsWith("0x")
-      ? this.recoverForm.get("recover_txid").value
-      : "0x" + this.recoverForm.get("recover_txid").value;
+      ? '0x' + txhash
+      : this.recoverForm.get('recover_txid').value.startsWith('0x')
+      ? this.recoverForm.get('recover_txid').value
+      : '0x' + this.recoverForm.get('recover_txid').value;
     console.log(
-      "this.recoverForm.getvalue",
-      this.recoverForm.get("recover_txid").value
+      'this.recoverForm.getvalue',
+      this.recoverForm.get('recover_txid').value
     );
-    console.log("ethTxHash", ethTxHash);
+    console.log('ethTxHash', ethTxHash);
     if (ethTxHash.length != 66) {
-      return this.notifications.sendWarning("ERROR please check your txid");
+      return this.notifications.sendWarning('ERROR please check your txid');
     }
     // const txid = txhash ? txhash.slice(2) : this.recoverForm.get('recover_txid').value.slice(2);
     const swapInfoByTxHash = await this.etherService.qgasswapInfoByTxHash(
       ethTxHash
     );
-    console.log("swapInfoByTxHash", swapInfoByTxHash);
+    console.log('swapInfoByTxHash', swapInfoByTxHash);
     if (swapInfoByTxHash == "500") {
-      return this.notifications.sendWarning("ERROR txid not found");
+      return this.notifications.sendWarning('ERROR txid not found');
     }
     // get ethTransactionID when state =1,5 mins will be removed
-    const ethTransactionID: any = await this.etherService.chainTransactionID(
-      ethTxHash
-    );
+    // const ethTransactionID: any = await this.etherService.chainTransactionID(
+    //   ethTxHash
+    // );
     // const txid = swapInfoByTxHash.data.neoHash.slice(2);
-    if (swapInfoByTxHash?.data?.state == 0) {
+    if (swapInfoByTxHash?.data?.state == 1) {
       // deposit:state in(0:depending,1:completed); withdraw:state(2,3,4)
-      if (ethTransactionID?.data?.hash) {
-        // ethTransactionID
-        console.log(
-          "ethTransactionID?.data?.hash-confirm",
-          ethTransactionID?.data?.hash
-        );
-        const getTransactionsStatusByEthTxhash: any = await this.etherService.getTransactionsStatusByEthTxhash(
-          ethTransactionID?.data?.hash
-        );
-        if (getTransactionsStatusByEthTxhash?.data?.result?.status == "") {
-          return this.notifications.sendWarning("swap processing");
-        } else {
-          return this.notifications.sendWarning("swap completed");
-        }
-      }
+      // if (ethTransactionID?.data?.hash) {
+      //   // ethTransactionID
+      //   console.log(
+      //     'ethTransactionID?.data?.hash-confirm',
+      //     ethTransactionID?.data?.hash
+      //   );
+      //   const getTransactionsStatusByEthTxhash: any = await this.etherService.getTransactionsStatusByEthTxhash(
+      //     ethTransactionID?.data?.hash
+      //   );
+      //   if (getTransactionsStatusByEthTxhash?.data?.result?.status == "") {
+      //     return this.notifications.sendWarning("swap processing");
+      //   } else {
+      //     return this.notifications.sendWarning("swap completed");
+      //   }
+      // }
       this.neoTxHash = ethTxHash;
       this.haveswappedamount = new BigNumber(swapInfoByTxHash.data.amount)
         .dividedBy(Math.pow(10, 8))
         .toNumber();
       this.step = 3;
-      console.log("txid.slice", ethTxHash);
-      const getEthOwnerSign = await this.etherService.getChainOwnerSign(
-        ethTxHash
+      // mint erc20/bsc20 token
+      const mintData = await this.mintERC20Token(
+        ethTxHash,
+        this.haveswappedamount
       );
-      console.log("getEthOwnerSign", getEthOwnerSign);
-      if (getEthOwnerSign.data.value) {
-        const amountWithDecimals = swapInfoByTxHash.data.amount;
-        console.log("amountWithDecimals", amountWithDecimals);
-        console.log("txid", ethTxHash);
-        console.log("getEthOwnerSign.data.value", getEthOwnerSign.data.value);
-        const ethMint = await this.etherService.getQlcMint(
-          amountWithDecimals,
-          ethTxHash,
-          "0x" + getEthOwnerSign.data.value,
-          swapInfoByTxHash.data.chainUserAddr,
-          Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], "Gwei"),
-          this.chainType
-        );
-        // tslint:disable-next-line: no-shadowed-variable
-        const id = setInterval(async () => {
-          // tslint:disable-next-line: no-shadowed-variable
-          const swapInfoByTxHash = await this.etherService.swapInfoByTxHash(
-            ethTxHash
-          );
-          // tslint:disable-next-line: triple-equals
-          if (swapInfoByTxHash?.data?.state == 1) {
-            this.ethTxHash = swapInfoByTxHash?.data?.chainTxHash;
-            console.log("cleardInterval.id", id);
-            clearInterval(id);
-            this.invokeSteps.push({
-              msg: "Mint ERC20 TOKEN succesfull, the whole process successfull",
-              checkimg: 1,
-            });
-            this.step = 4;
-            this.loadBalances();
-            window.scrollTo(0, 0);
-          }
-        }, 5000);
-      }
     } else if (swapInfoByTxHash?.data?.state == 1) {
       // state=1 is depositdown successfull
       return this.notifications.sendWarning("swap completed");
@@ -472,41 +444,39 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     this.markFormGroupTouched(this.stakingForm);
     // tslint:disable-next-line: radix
     if (parseInt(this.stakingForm.value.amounToStake) < 1) {
-      return this.notifications.sendWarning("1 QLC Minimum");
+      return this.notifications.sendWarning('1 QLC Minimum');
     }
     // tslint:disable-next-line: radix
     if (this.stakingForm.value.stakingType == 0) {
       if (
         // tslint:disable-next-line: triple-equals
-        this.stakingForm.get("fromQLCWallet").status == "VALID" &&
+        this.stakingForm.get('fromQLCWallet').status == 'VALID' &&
         // tslint:disable-next-line: triple-equals
-        this.stakingForm.get("toQLCWallet").status == "VALID" &&
+        this.stakingForm.get('toQLCWallet').status == 'VALID' &&
         // tslint:disable-next-line: radix
-        parseInt(this.stakingForm.value.amounToStake) <=
-          parseInt(this.stakingForm.get("availableQLCBalance").value)
+        parseInt(this.stakingForm.value.amounToStake) <= parseInt(this.stakingForm.get('availableQLCBalance').value)
       ) {
         this.step = 2;
         window.scrollTo(0, 0);
       } else {
         return this.notifications.sendWarning(
-          "please check address or minimum qlc"
+          'please check address or minimum qlc'
         );
       }
     } else if (this.stakingForm.value.stakingType == 2) {
       if (
         // tslint:disable-next-line: triple-equals
-        this.stakingForm.get("fromQLCWallet").status == "VALID" &&
+        this.stakingForm.get('fromQLCWallet').status == 'VALID' &&
         // tslint:disable-next-line: triple-equals
-        this.stakingForm.get("toQLCWallet").status == "VALID" &&
+        this.stakingForm.get('toQLCWallet').status == 'VALID' &&
         // tslint:disable-next-line: radix
-        parseInt(this.stakingForm.value.amounToStake) <=
-          parseInt(localStorage.getItem("qlcbalance"))
+        parseInt(this.stakingForm.value.amounToStake) <= parseInt(localStorage.getItem('qgasbalance'))
       ) {
         this.step = 2;
         window.scrollTo(0, 0);
       } else {
         return this.notifications.sendWarning(
-          "please check address or minimum qlc"
+          'please check address or minimum qlc'
         );
       }
     }
@@ -644,7 +614,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
   }
   async selectAccount() {
     // reload eth qlc balance when switch tab
-    this.etherService.getEthQLCBalance(this.etherService.selectedAddress, this.chainType);
+    this.etherService.getQGASBalance(this.etherService.selectedAddress, this.chainType);
     // deposit
     if (this.stakingForm.value.stakingType == 0) {
       // tslint:disable-next-line: max-line-length
@@ -726,18 +696,16 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line: triple-equals
       (a) => a.id == this.stakingForm.value.fromQLCWallet
     );
+    console.log('this.stakingForm.value.stakingType', this.stakingForm.value.stakingType);
     this.stakingForm
-      .get("availableQLCBalance")
+      .get('availableQLCBalance')
       .setValue(
         this.stakingForm.value.stakingType == 0
-          ? selectedNEOWallet?.balances[
-              this.neoService?.tokenList["QLC"]?.networks["1"]?.hash
-            ] !== undefined
-            ? selectedNEOWallet?.balances[
-                this.neoService?.tokenList["QLC"]?.networks["1"]?.hash
-              ].amount
+          ? selectedNEOWallet?.balances['QGAS']?.balance !== undefined
+            ? new BigNumber(selectedNEOWallet?.balances['QGAS']?.balance).dividedBy(Math.pow(10, 8))
+            .toNumber()
             : 1
-          : localStorage.getItem("qlcbalance")
+          : localStorage.getItem('qgasbalance')
       );
 
     this.checkIfMinAmount();
@@ -902,7 +870,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
         console.log('mint.processBlock', processBlock);
         // mint erc20/bsc20 token
         const mintData = await this.mintERC20Token(
-          txData,
+          txData.hash,
           this.stakingForm.value.amounToStake
         );
         }
@@ -963,6 +931,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line: triple-equals
       console.log('swapInfoByTxHash.data.state', swapInfoByTxHash?.data?.state);
       if (swapInfoByTxHash?.data?.state == 4) {
+        clearInterval(id);
         // call /qgasswap/getWithdrawRewardBlock to get contract reward block
         const qgasgetWithdrawRewardBlock = await this.etherService.qgasgetWithdrawRewardBlock(
           localStorage.getItem('txHash')
@@ -981,20 +950,27 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
               signature,
               work
             );
-            if (swapInfoByTxHash?.data?.state === 5) {
-              this.neoTxHash = swapInfoByTxHash?.data?.qlcRewardTxHash;
-              clearInterval(id);
+            const id5 = setInterval(async () => {
+              // tslint:disable-next-line: no-shadowed-variable
+              const swapInfoByTxHash = await this.etherService.qgasswapInfoByTxHash(
+                localStorage.getItem('txHash')
+              );
+              if (swapInfoByTxHash?.data?.state === 5) {
+                this.neoTxHash = swapInfoByTxHash?.data?.qlcRewardTxHash;
+                clearInterval(id5);
 
-              this.invokeSteps.push({
-                msg: 'Swap successfull',
-                checkimg: 1,
-              });
-              const waitTimer = timer(2000).subscribe(async (data) => {
-                this.step = 4;
-                this.loadBalances();
-                window.scrollTo(0, 0);
-              });
-            }
+                this.invokeSteps.push({
+                  msg: 'Swap successfull',
+                  checkimg: 1,
+                });
+                const waitTimer = timer(2000).subscribe(async (data) => {
+                  this.step = 4;
+                  this.loadBalances();
+                  window.scrollTo(0, 0);
+                });
+              }
+
+            }, 2000);
         }
       }
     }, 5000);
@@ -1008,7 +984,8 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
       return this.notifications.sendWarning("ERROR wallet locked");
     }
     console.log('mintERC20Token', txData);
-    const txid = txData.hash;
+    const txid = txData.startsWith('0x') ? txData : '0x' + txData;
+    console.log('mintERC20Token.txid', txid);
     this.neoTxHash = txid;
     if (txid) {
       const id = setInterval(async () => {
@@ -1019,7 +996,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
           console.log("cleardInterval.id", id);
           clearInterval(id);
           this.invokeSteps.push({
-            msg: "TXID confirmed. Preparing to mint ERC20 Token.",
+            msg: 'TXID confirmed. Preparing to mint ' + this.chainType20 + ' Token.',
             checkimg: 1,
           });
           const getEthOwnerSign = await this.etherService.qgasgetChainOwnerSign(
@@ -1042,7 +1019,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
             const ethMint = await this.etherService.getQgasMint(
               amountWithDecimals,
               txid,
-              getEthOwnerSign.data.value,
+              '0x' + getEthOwnerSign.data.value,
               this.etheraccounts[0],
               Web3.utils.toWei(this.gasPrices[this.selectedGasPrice], "Gwei"),
               this.chainType
