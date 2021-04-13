@@ -293,7 +293,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
 					<div class="container">
 
             <div class="row qlc-table-header-blue">
-              <div class="col-12">NEP5 TO ERC20 TOKEN SWAP</div>
+              <div class="col-12">NEP5 TO {{this.chainType20}} TOKEN SWAP</div>
             </div>
             <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
               <p>
@@ -485,7 +485,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                 </div>
                 <div class="row transfer">
                   <div class="col-lg-6 text-center pt-4 pb-4">
-                    <div class="text-label pb-2">FROM ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'NEP5' : 'ERC20' }})</div>
+                    <div class="text-label pb-2">FROM ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'NEP5' : this.chainType20 }})</div>
                     <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
                       <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0])" class="text-blue">
                         <span class="d-none d-xl-block">
@@ -512,7 +512,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                     <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO LOCK' : 'AMOUNT TO BURN' }}</div>
                   </div>
                   <div class="col-lg-6 text-center pt-4 pb-4">
-                    <div class="text-label pb-2">TO ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'ERC20' : 'NEP5' }})</div>
+                    <div class="text-label pb-2">TO ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? this.chainType20 : 'NEP5' }})</div>
                     <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
                       <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value)" class="text-blue">
                         <span class="d-none d-xl-block">
@@ -706,7 +706,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             </div>
             <div class="row align-items-center">
               <div class="col-12 text-center text-label">
-                ETH TRANSACTION HASH
+                {{this.chainType.toUpperCase()}} TRANSACTION HASH
               </div>
             </div>
             <div class="row align-items-center">

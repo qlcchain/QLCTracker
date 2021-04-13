@@ -10,8 +10,8 @@
             <!-- TITLE -->
             <div class="col-md-9 col-12 mt-2 pl-2 pr-2">
               <div class="content-title">
-                <h1 class="erc20" *ngIf="etherService.checkIfWallet()">Connect your ERC20 Wallet</h1>
-                <h1 class="erc20" *ngIf="!etherService.checkIfWallet()">Get your ERC20 Wallet</h1>
+                <h1 class="erc20" *ngIf="etherService.checkIfWallet()">Connect your metamask Wallet</h1>
+                <h1 class="erc20" *ngIf="!etherService.checkIfWallet()">Get your metamask Wallet</h1>
               </div>
             </div>
             <div class="col-md-3 col-12 pl-2 pr-2 pt-md-0 pt-2">
@@ -38,7 +38,7 @@
                       <img src="assets/img/qlc-icon-lock-red.svg" style="height: 70px;" >
                     </div>
                       <div class="col-xl-3 col-md-5 py-md-0 py-3 col-12 my-auto text-center" style="font-size: 12px;">
-                        Please connect and authorize your ERC20 Wallet Client
+                        Please connect and authorize your metamask Wallet Client
                       </div>
                       <div class="col-md-4 col-12 my-auto">
                         <button type="submit" (click)="etherService?.connect()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
@@ -91,7 +91,7 @@
             <!-- TITLE -->
             <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
               <div class="content-title">
-                <h1 class="erc20">ERC20 Wallet Details - {{ etherService.getDefaultNetwork() }}</h1>
+                <h1 class="erc20">Wallet Details - {{ etherService.getDefaultNetwork() }}</h1>
               </div>
             </div>
             <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-2 pr-2">

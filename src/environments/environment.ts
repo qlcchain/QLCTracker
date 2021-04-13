@@ -17,7 +17,7 @@ export const environment = {
   },
   rpcUrl: {
     test: 'https://rpc-test.qlcchain.online',
-    main: 'https://rpc.qlcchain.online'
+    main: 'https://rpc-test.qlcchain.online'
   },
   swapUrl: {
     test: 'http://seed2.ngd.network:20332/',

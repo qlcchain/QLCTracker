@@ -501,16 +501,17 @@ accountSub: Subject<string> = new Subject<string>();
         // qgasswap/processBlock
         async qgasprocessBlock(hash: any, signature: string, work: any) {
           try {
-          const data = await axios.get(this.url + '/qgasswap/processBlock', {
-          params: {
+          const data = await axios.post(this.url + '/qgasswap/processBlock',{
               hash,
               signature,
               work
           },
-          headers: {
-            authorization: this.neo5toerc20swapjwtauth.authorization
-        }
-          });
+          {
+            headers: {
+              authorization: this.neo5toerc20swapjwtauth.authorization
+          }
+            }
+          );
           return data;
         } catch (error) {
             return 500;
