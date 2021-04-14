@@ -697,6 +697,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
       (a) => a.id == this.stakingForm.value.fromQLCWallet
     );
     console.log('this.stakingForm.value.stakingType', this.stakingForm.value.stakingType);
+    console.log('selectedNEOWallet', selectedNEOWallet);
     this.stakingForm
       .get('availableQLCBalance')
       .setValue(
