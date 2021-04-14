@@ -312,8 +312,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
 
     // })
     this.etherService.accountSub.subscribe(
-      (test) => {
-        console.log('sub test', test)
+      (sub) => {
         this.selectAccount();
         this.getEtherAccounts();
         this.loadBalances();
