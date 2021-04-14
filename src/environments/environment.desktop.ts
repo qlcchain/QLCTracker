@@ -82,6 +82,22 @@ export const environment = {
     test: '0xE2484A4178Ce7FfD5cd000030b2a5de08c0Caf8D',
     main: '0xd196f680e0bDF810f1fe8b323b90CA0B62f4e63e'
   },
+  bscscan: {
+    test: 'https://testnet.bscscan.com/',
+    main: 'https://bscscan.com/'
+  },
+  bscswapSmartContract: {
+    test: '0x550f28C8ccc66002E927483C6cb83D9997d9ebf2',
+    main: ''
+  },
+  qgasetherswapSmartContract: {
+    test: '0x1aFFc415416f1D157F4603f37aE1AC9011487111',
+    main: ''
+  },
+  qgasbscswapSmartContract: {
+    test: '0xF791c6cf47C3650Fb8e65f1Ab0bFaDEfcFD51af5',
+    main: ''
+  },
   testSmartContract: {
     test: '0x40E3dCC2EC0B8f7381332614630Aa9EF19b18cA2',
     main: ''
