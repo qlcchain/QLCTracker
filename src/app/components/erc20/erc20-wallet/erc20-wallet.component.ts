@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 export class Erc20WalletComponent implements OnInit {
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
+  bscscan = environment.bscscan[environment.neoNetwork];
   swapHistory: any[] = [];
   address = this.etherService.selectedAddress;
   addresslc: string;

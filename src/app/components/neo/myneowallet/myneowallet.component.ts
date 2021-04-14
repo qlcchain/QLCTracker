@@ -28,6 +28,7 @@ import { environment } from 'src/environments/environment';
 export class MyneowalletComponent implements OnInit {
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
+  bscscan = environment.bscscan[environment.neoNetwork];
   wallet = this.walletService.wallet;
   walletAccount = {
     balances: [],

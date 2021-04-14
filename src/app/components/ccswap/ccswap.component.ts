@@ -32,6 +32,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
   chainType20 = '';
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
+  bscscan = environment.bscscan[environment.neoNetwork];
   haveswappedamount: any;
   ethbalance: any;
   transactions: any[] = [];

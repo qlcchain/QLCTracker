@@ -28,6 +28,8 @@ const nacl = window["nacl"];
   styleUrls: ["./ccqgasswap.component.scss"],
 })
 export class CcqgasswapComponent implements OnInit, OnDestroy {
+  accounts = this.walletService.wallet.accounts;
+  wallet = this.walletService.wallet;
   chainType = '';
   chainType20 = '';
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
@@ -66,7 +68,6 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
   confidants = [];
   macaddresses = [];
 
-  accounts = this.walletService.wallet.accounts;
   accountTokens: any = [];
   selectedToken: any = [];
   selectedTokenSymbol = '';
@@ -563,32 +564,54 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
   }
 
   async loadBalances() {
-    const tokenMap = {};
-    const tokens = await this.api.tokens();
-    if (!tokens.error) {
-      tokens.result.forEach((token) => {
-        tokenMap[token.tokenId] = token;
-      });
-    }
+    // const tokenMap = {};
+    // const tokens = await this.api.tokens();
+    // if (!tokens.error) {
+    //   tokens.result.forEach((token) => {
+    //     tokenMap[token.tokenId] = token;
+    //   });
+    // }
 
-    // fill account meta
-    for (const account of this.accounts) {
-      const accountInfo = await this.api.accountInfo(account.id);
-      if (!accountInfo.error) {
-        const am = accountInfo.result;
-        account.otherTokens = [];
-        for (const token of am.tokens) {
-          if (tokenMap.hasOwnProperty(token.type)) {
-            token.tokenInfo = tokenMap[token.type];
-            if (
-              token.tokenInfo.tokenSymbol !== 'QLC' &&
-              token.tokenInfo.tokenSymbol !== 'QGAS'
-            ) {
-              account.otherTokens.push(token);
+    // // fill account meta
+    // for (const account of this.accounts) {
+    //   const accountInfo = await this.api.accountInfo(account.id);
+    //   if (!accountInfo.error) {
+    //     const am = accountInfo.result;
+    //     account.otherTokens = [];
+    //     for (const token of am.tokens) {
+    //       if (tokenMap.hasOwnProperty(token.type)) {
+    //         token.tokenInfo = tokenMap[token.type];
+    //         if (
+    //           token.tokenInfo.tokenSymbol !== 'QLC' &&
+    //           token.tokenInfo.tokenSymbol !== 'QGAS'
+    //         ) {
+    //           account.otherTokens.push(token);
+    //         }
+    //       }
+    //     }
+    //     account.accountMeta = am;
+    //   }
+    // }
+
+    await this.walletService.loadTokens();
+    for (let i = 0; i < this.accounts.length; i++) {
+      const am = await this.api.accountInfo(this.accounts[i].id);
+      if (!am.error) {
+        const accountMeta = [];
+        const otherTokens = [];
+        if (am.result.tokens && Array.isArray(am.result.tokens)) {
+          am.result.tokens.forEach(token => {
+            accountMeta[token.tokenName] = token;
+            if (this.walletService.tokenMap.hasOwnProperty(token.type)) {
+              token.tokenInfo = this.walletService.tokenMap[token.type];
+              if (token.tokenInfo?.tokenSymbol != 'QLC' && token.tokenInfo?.tokenSymbol != 'QGAS') {
+                otherTokens.push(token);
+              }
             }
-          }
+          });
         }
-        account.accountMeta = am;
+        this.accounts[i].balances = accountMeta;
+        this.accounts[i].otherTokens = otherTokens;
       }
     }
     this.selectAccount();
