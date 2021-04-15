@@ -1,6 +1,6 @@
 {
   "name": "qlctracker",
-  "version": "v1.4.2",
+  "version": "v1.4.3",
   "main": "desktop/main.js",
   "author": "QLC Chain Team <admin@qlink.mobi>",
   "description": "QLC Wallet and Explorer",
@@ -116,7 +116,7 @@
   },
   "build": {
     "appId": "org.qlcchain.qlctracker",
-    "buildVersion": "1.4.2",
+    "buildVersion": "1.4.3",
     "productName": "QLCTracker",
     "asar": true,
     "files": [
