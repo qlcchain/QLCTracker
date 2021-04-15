@@ -110,8 +110,8 @@
             </div>
             <div class="col-6 text-right">
               {{this.chainType=='eth' ? 'ERC20 QLC' : 'BEP20 QLC'}}
-              <img src="assets/img/swap/token-qlc-erc20.png" style="height: 35px; margin: 20px 30px 20px 10px;">
-
+              <img *ngIf="this.chainType=='eth'" src="assets/img/swap/token-qlc-erc20-grey.png" style="height: 35px; margin: 20px 30px 20px 10px;">
+              <img *ngIf="this.chainType!='eth'" src="assets/img/swap/token-qlc-bep20-yellow.png" style="height: 35px; margin: 20px 30px 20px 10px;">
             </div>
           </div>
         </div>
@@ -120,7 +120,8 @@
       <div class="content-box-white swap-type" [ngClass]="{'selected': stakingForm.value.stakingType == 2, 'unselected': stakingForm.value.stakingType != 2}">
         <div class="row">
           <div class="col-6">
-            <img src="assets/img/swap/token-qlc-erc20.png" style="height: 35px; margin: 20px 10px 20px 30px;">
+            <img *ngIf="this.chainType=='eth'" src="assets/img/swap/token-qlc-erc20-grey.png" style="height: 35px; margin: 20px 30px 20px 10px;">
+            <img *ngIf="this.chainType!='eth'" src="assets/img/swap/token-qlc-bep20-yellow.png" style="height: 35px; margin: 20px 30px 20px 10px;">
             {{this.chainType=='eth' ? 'ERC20 QLC' : 'BEP20 QLC'}}
           </div>
           <div class="col-6 text-right">
