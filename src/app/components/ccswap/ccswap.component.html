@@ -487,7 +487,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                   <div class="col-lg-6 text-center pt-4 pb-4">
                     <div class="text-label pb-2">FROM ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'NEP5' : this.chainType20 }})</div>
                     <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
-                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0])" class="text-blue">
+                      <a  class="text-blue">
                         <span class="d-none d-xl-block">
                           {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
                         </span>
@@ -506,7 +506,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                       </a>
                     </div>
                     <div class="pl-5 pr-5 pb-4">
-                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0])" class="address">{{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0] }}</a>
+                      <a  class="address">{{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0] }}</a>
                     </div>
                     <div class="pt-2 text-bold negative_change text-color-red">-{{ stakingForm.value.amounToStake}} QLC</div>
                     <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO LOCK' : 'AMOUNT TO BURN' }}</div>
@@ -514,7 +514,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                   <div class="col-lg-6 text-center pt-4 pb-4">
                     <div class="text-label pb-2">TO ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? this.chainType20 : 'NEP5' }})</div>
                     <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
-                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value)" class="text-blue">
+                      <a  class="text-blue">
                         <span class="d-none d-xl-block">
                           {{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) | squeeze : '15,15' }}
                         </span>
@@ -533,7 +533,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                       </a>
                     </div>
                     <div class="pl-5 pr-5 pb-4">
-                      <a [routerLink]="'/wallets/neo/' + (this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value)" class="address">{{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) }}</a>
+                      <a  class="address">{{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) }}</a>
                     </div>
                     <div class="pt-2 text-bold positive_change text-color-green">+{{ stakingForm.value.amounToStake}} QLC</div>
                     <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO MINT' : 'AMOUNT TO UNLOCK' }}</div>
