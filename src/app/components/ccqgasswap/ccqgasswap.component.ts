@@ -874,17 +874,17 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
         // client sign and calculate work by getPledgeSendBlock return values
         // get sign and calc work
         const walletAccount = await this.walletService.getWalletAccount(this.stakingForm.value.fromQLCWallet);
-        console.log('mint.walletAccount', walletAccount);
-        console.log('mint.txData?.hash', txData?.hash);
-        console.log('mint.txData?.root', txData?.root);
+        // console.log('mint.walletAccount', walletAccount);
+        // console.log('mint.txData?.hash', txData?.hash);
+        // console.log('mint.txData?.root', txData?.root);
         const signed = nacl.sign.detached(this.util.hex.toUint8(txData?.hash),
         walletAccount.keyPair.secretKey);
-        console.log('mint.walletAccount.keyPair.secretKey', walletAccount.keyPair.secretKey);
-        console.log('mint.signed', signed);
+        // console.log('mint.walletAccount.keyPair.secretKey', walletAccount.keyPair.secretKey);
+        // console.log('mint.signed', signed);
         const signature = this.util.hex.fromUint8(signed);
         const work = await this.workPool.getWork(txData?.root);
-        console.log('mint.signature:this.util.hex.fromUint8(signed)', signature);
-        console.log('mint.work', work);
+        // console.log('mint.signature:this.util.hex.fromUint8(signed)', signature);
+        // console.log('mint.work', work);
         // call qgasswap/processBlock to process block on qlc chain
         const processBlock = await this.etherService.qgasprocessBlock(
           txData?.hash,
