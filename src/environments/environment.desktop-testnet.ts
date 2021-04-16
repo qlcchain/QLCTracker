@@ -17,7 +17,7 @@ export const environment = {
   },
   rpcUrl: {
     test: 'http://127.0.0.1:19735',
-    main: 'https://rpc-test.qlcchain.online'
+    main: 'http://127.0.0.1:9735'
   },
   swapUrl: {
     test: 'http://seed2.ngd.network:20332/',
@@ -129,6 +129,10 @@ export const environment = {
   chainxNetwork: {
     test: 'TestNet',
     main: 'MainNet'
+  },
+  BSC_NETWORK_CHAIN_ID: {
+    test: '97',
+    main: '56'
   },
   chainxApi: {
     test: 'https://api.chainx.org.cn',

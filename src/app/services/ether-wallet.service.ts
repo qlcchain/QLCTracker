@@ -14,6 +14,7 @@ import { ActivatedRoute } from "@angular/router";
   providedIn: 'root'
 })
 export class EtherWalletService {
+NETWORK_CHAIN_ID;
 chainType: string;
 swapHistory: any[];
 qgasswapHistory: any[];
@@ -23,6 +24,7 @@ metamask: boolean;
 address: any;
 private url: string = environment.neo5toerc20swapwrapperurl[environment.neoNetwork];
 private neo5toerc20swapjwtauth = environment.neo5toerc20swapjwtauth[environment.neoNetwork];
+public BSC_NETWORK_CHAIN_ID = environment.BSC_NETWORK_CHAIN_ID[environment.neoNetwork];
 abi = neo5toerc20swap;
 qgasabi = qgascrosschainswap;
 selectedAddress: string = '';
@@ -35,6 +37,34 @@ erc20Transactions: any[];
 internalTransactions: any[];
 
 provider: any;
+NETWORK_CHAIN_ID_BSCTEST = 97;
+NETWORK_CHAIN_ID_BSCMAIN = 56;
+bscmainparams = [
+  {
+    chainId: `0x${this.NETWORK_CHAIN_ID_BSCMAIN?.toString(16)}`,
+    chainName: 'Binance Smart Chain Mainnet',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'bnb',
+      decimals: 18,
+    },
+    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    blockExplorerUrls: ['https://bscscan.com/'],
+  },
+];
+bsctestntparams = [
+  {
+    chainId: `0x${this.NETWORK_CHAIN_ID_BSCTEST?.toString(16)}`,
+    chainName: 'Binance Smart Chain Testnet',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'bnb',
+      decimals: 18,
+    },
+    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+    blockExplorerUrls: ['https://testnet.bscscan.com/'],
+  },
+];
 
 accountSub: Subject<string> = new Subject<string>();
 
@@ -45,10 +75,13 @@ accountSub: Subject<string> = new Subject<string>();
     if ((window as any).ethereum) {
       this.web3 = new Web3((window as any).ethereum);
       this.provider = await (window as any).ethereum;
-      console.log(this.provider);
+      this.provider = (window as any).ethereum;
+      this.NETWORK_CHAIN_ID = this.provider.networkVersion;
+
+      console.log('ether-wallet.service', this.NETWORK_CHAIN_ID);
       // await (window as any).ethereum.enable();
       const accounts = await this.provider.request({ method: 'eth_requestAccounts'});
-      //console.log(accounts);
+
       const ethAddress = accounts[0];
       // this.provider.on('update', (data) => {
       // const ethAddress = (window as any).ethereum.currentProvider.selectedAddress;
@@ -66,8 +99,7 @@ accountSub: Subject<string> = new Subject<string>();
         this.getqgasswapHistory(ethAddress);
         this.getAccounts();
       }
-      
-      this.accountSub.next(accounts)
+      this.accountSub.next(accounts);
       // });
       // this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
       // this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
@@ -149,9 +181,6 @@ accountSub: Subject<string> = new Subject<string>();
         this.metamask = false;
       }
     }
-
-    
-
     /*
     this.provider.on('update', (data) => {
       console.log('update')
@@ -160,10 +189,10 @@ accountSub: Subject<string> = new Subject<string>();
   }
 
   async disconnectWallet() {
-    if (typeof this.provider.disconnect == 'function') {
+    if (typeof this.provider?.disconnect == 'function') {
       this.provider.disconnect();
     };
-    if (typeof this.provider.close == 'function') {
+    if (typeof this.provider?.close == 'function') {
       this.provider.close();
     };
     this.metamask = false;

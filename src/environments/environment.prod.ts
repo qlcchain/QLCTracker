@@ -130,6 +130,10 @@ export const environment = {
     test: 'TestNet',
     main: 'MainNet'
   },
+  BSC_NETWORK_CHAIN_ID: {
+    test: '97',
+    main: '56'
+  },
   chainxApi: {
     test: 'https://api.chainx.org.cn',
     main: 'https://api.chainx.org.cn'

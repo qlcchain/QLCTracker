@@ -280,6 +280,8 @@ export class CcswapComponent implements OnInit, OnDestroy {
     public etherService: EtherWalletService,
     private route: ActivatedRoute
   ) {
+    this.etherService.disconnectWallet();
+    // choose network
     this.stakingTypes = this.staking[environment.neoNetwork];
 
     // Get Current Path:  company  同理
@@ -321,6 +323,49 @@ export class CcswapComponent implements OnInit, OnDestroy {
     )
     this.getEtherAccounts();
     this.loadBalances();
+    this.switchnetwork();
+  }
+
+  async switchnetwork() {
+    try {
+      if( this.etherService.provider ) {
+        console.log('ether-wallet.service.NETWORK_CHAIN_ID', this.etherService.NETWORK_CHAIN_ID);
+        console.log('ccswap.chainType', this.chainType);
+        if ( this.chainType == 'eth') {
+          if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != 4 ) {
+            this.etherService.disconnectWallet();
+            return this.notifications.sendWarning('Please switch network to Rinkby');
+          } else if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != 1 ) {
+            this.etherService.disconnectWallet();
+            return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
+          }
+        } else {
+          if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+            this.etherService.disconnectWallet();
+            await this.etherService.provider.request({
+                            method: 'wallet_addEthereumChain',
+                            params: this.etherService.bscmainparams,
+                          });
+            this.etherService?.connect();
+            return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
+        } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+          this.etherService.disconnectWallet();
+          await this.etherService.provider.request({
+            method: 'wallet_addEthereumChain',
+            params: this.etherService.bsctestntparams,
+          });
+          this.etherService?.connect();
+          return this.notifications.sendWarning('Please switch network to Binance Smart Chain Testnet');
+        }
+        }
+      } else {
+        console.error('Can not setup the network on metamask because window.ethereum is undefined');
+        return false;
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   }
 
   async getEtherAccounts() {
