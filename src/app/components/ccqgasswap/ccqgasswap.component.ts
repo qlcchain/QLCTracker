@@ -289,6 +289,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     // Get Current Path:  company  同理
     this.route?.url?.subscribe((url) => (this.chainType = url[1]?.path === 'qgaseth' ? 'eth' : 'bsc'));
     this.chainType20 = this.chainType === 'eth' ? 'ERC20' : 'BEP20';
+    localStorage.setItem('chainType', this.chainType);
     // init gasfee
      // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
     this.FastGasPrice = this.chainType === 'eth'
@@ -305,6 +306,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
       ProposeGasPrice: this.ProposeGasPrice,
       SafeGasPrice: this.SafeGasPrice
     };
+    this.etherService.getqgasswapHistory(this.etherService.selectedAddress);
   }
 
   ngOnDestroy() {
@@ -485,6 +487,41 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
   }
 
   async checkForm() {
+    // webVersion =1 is web version;
+    if (this.etherService.webVersion == 1) {
+      if ( this.etherService.provider && this.chainType == 'eth') {
+        if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != 4 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Rinkby');
+        } else if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != 1 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
+        }
+      }
+      if ( this.etherService.provider && this.chainType == 'bsc') {
+        if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+          this.step = 1;
+          window.scrollTo(0, 0);
+          await this.etherService.provider.request({
+                          method: 'wallet_addEthereumChain',
+                          params: this.etherService.bscmainparams,
+                        });
+          return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
+      } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+        this.step = 1;
+        window.scrollTo(0, 0);
+        await this.etherService.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: this.etherService.bsctestntparams,
+        });
+        return this.notifications.sendWarning('Please switch network to Binance Smart Chain Testnet');
+      }
+      }
+    }
     this.markFormGroupTouched(this.stakingForm);
     // tslint:disable-next-line: radix
     if (parseInt(this.stakingForm.value.amounToStake) < 1) {
@@ -860,6 +897,41 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
   }
 
   async confirmInvoke() {
+    // webVersion =1 is web version;
+    if (this.etherService.webVersion == 1) {
+      if ( this.etherService.provider && this.chainType == 'eth') {
+        if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != 4 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Rinkby');
+        } else if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != 1 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
+        }
+      }
+      if ( this.etherService.provider && this.chainType == 'bsc') {
+        if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+          this.step = 1;
+          window.scrollTo(0, 0);
+          await this.etherService.provider.request({
+                          method: 'wallet_addEthereumChain',
+                          params: this.etherService.bscmainparams,
+                        });
+          return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
+      } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+        this.step = 1;
+        window.scrollTo(0, 0);
+        await this.etherService.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: this.etherService.bsctestntparams,
+        });
+        return this.notifications.sendWarning('Please switch network to Binance Smart Chain Testnet');
+      }
+      }
+    }
     if (this.gasPrices[this.selectedGasPrice] === undefined) {
       console.log(
         'this.gasPrices[this.selectedGasPrice]',

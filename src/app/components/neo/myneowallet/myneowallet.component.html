@@ -116,8 +116,8 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances != null && walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash]">{{ walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash].amount | currency:'':'':'1.2-8' }}</div>
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances == null || (walletAccount.balances != null && !walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="this.neoqlcbalance != null">{{ this.neoqlcbalance | currency:'':'':'1.2-8' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="this.neoqlcbalance == null">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
                                             <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>

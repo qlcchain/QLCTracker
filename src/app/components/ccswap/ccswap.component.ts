@@ -287,6 +287,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
     // Get Current Path:  company  同理
     this.route?.url?.subscribe(url => this.chainType =  url[1]?.path);
     this.chainType20 = this.chainType === 'eth' ? 'ERC20' : 'BEP20';
+    localStorage.setItem('chainType', this.chainType);
     // init gasfee
      // parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
     this.FastGasPrice = this.chainType === 'eth'
@@ -346,7 +347,6 @@ export class CcswapComponent implements OnInit, OnDestroy {
                             method: 'wallet_addEthereumChain',
                             params: this.etherService.bscmainparams,
                           });
-            this.etherService?.connect();
             return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
         } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
           this.etherService.disconnectWallet();
@@ -354,7 +354,6 @@ export class CcswapComponent implements OnInit, OnDestroy {
             method: 'wallet_addEthereumChain',
             params: this.etherService.bsctestntparams,
           });
-          this.etherService?.connect();
           return this.notifications.sendWarning('Please switch network to Binance Smart Chain Testnet');
         }
         }
@@ -504,6 +503,42 @@ export class CcswapComponent implements OnInit, OnDestroy {
   }
 
   async checkForm() {
+    // webVersion =1 is web version;
+    if (this.etherService.webVersion == 1) {
+      if ( this.etherService.provider && this.chainType == 'eth') {
+        if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != 4 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Rinkby');
+        } else if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != 1 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
+        }
+      }
+      if ( this.etherService.provider && this.chainType == 'bsc') {
+        if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+          this.step = 1;
+          window.scrollTo(0, 0);
+          await this.etherService.provider.request({
+                          method: 'wallet_addEthereumChain',
+                          params: this.etherService.bscmainparams,
+                        });
+          return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
+      } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+        this.step = 1;
+        window.scrollTo(0, 0);
+        await this.etherService.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: this.etherService.bsctestntparams,
+        });
+        return this.notifications.sendWarning('Please switch network to Binance Smart Chain Testnet');
+      }
+      }
+    }
+    
     this.markFormGroupTouched(this.stakingForm);
     // tslint:disable-next-line: radix
     if (parseInt(this.stakingForm.value.amounToStake) < 1) {
@@ -625,7 +660,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
   async loadBalances() {
     // reload eth wallet balances:qlc balance & eth balance
     this.etherService.getBalances(this.etherService.selectedAddress);
-    this.etherService.getswapHistory(this.etherService.selectedAddress);
+    // this.etherService.getswapHistory(this.etherService.selectedAddress);
     this.initEthThreeGasFee();
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this.neowallets.length; i++) {
@@ -811,6 +846,41 @@ export class CcswapComponent implements OnInit, OnDestroy {
   }
 
   async confirmInvoke() {
+    // webVersion =1 is web version;
+    if (this.etherService.webVersion == 1) {
+      if ( this.etherService.provider && this.chainType == 'eth') {
+        if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != 4 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Rinkby');
+        } else if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != 1 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
+        }
+      }
+      if ( this.etherService.provider && this.chainType == 'bsc') {
+        if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+          this.step = 1;
+          window.scrollTo(0, 0);
+          await this.etherService.provider.request({
+                          method: 'wallet_addEthereumChain',
+                          params: this.etherService.bscmainparams,
+                        });
+          return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
+      } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+        this.step = 1;
+        window.scrollTo(0, 0);
+        await this.etherService.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: this.etherService.bsctestntparams,
+        });
+        return this.notifications.sendWarning('Please switch network to Binance Smart Chain Testnet');
+      }
+      }
+    }
     if (this.gasPrices[this.selectedGasPrice] == undefined) {
       console.log('this.gasPrices[this.selectedGasPrice]', this.gasPrices[this.selectedGasPrice]);
       return this.notifications.sendWarning('Please choose one gas fee');

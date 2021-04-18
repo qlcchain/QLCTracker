@@ -107,7 +107,7 @@ export const environment = {
     main: '02c6e68c61480003ed163f72b41cbb50ded29d79e513fd299d2cb844318b1b8ad5'
   },
   neoScanApi: {
-    test: 'https://api.neoscan.io/api/main_net',
+    test: 'https://testnet.api.neotube.io',
     main: 'https://api.neoscan.io/api/main_net'
   },
   neoScan: {

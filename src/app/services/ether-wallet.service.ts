@@ -14,6 +14,7 @@ import { ActivatedRoute } from "@angular/router";
   providedIn: 'root'
 })
 export class EtherWalletService {
+webVersion;
 NETWORK_CHAIN_ID;
 chainType: string;
 swapHistory: any[];
@@ -81,6 +82,7 @@ accountSub: Subject<string> = new Subject<string>();
       console.log('ether-wallet.service', this.NETWORK_CHAIN_ID);
       // await (window as any).ethereum.enable();
       const accounts = await this.provider.request({ method: 'eth_requestAccounts'});
+      this.webVersion = 1;
 
       const ethAddress = accounts[0];
       // this.provider.on('update', (data) => {
@@ -103,7 +105,9 @@ accountSub: Subject<string> = new Subject<string>();
       // });
       // this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
       // this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
-      // this.provider.on('chainChanged', (chainChanged) => { console.log (chainChanged)})
+      this.provider.on('chainChanged', (chainChanged) => {
+        this.connect();
+      });
       this.provider.on('accountsChanged', (accounts) => {
         //console.log ('provider accountsChanged', accounts)
         const ethAddress = accounts[0];

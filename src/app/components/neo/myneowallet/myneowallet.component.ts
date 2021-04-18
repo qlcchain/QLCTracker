@@ -26,6 +26,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./myneowallet.component.scss'],
 })
 export class MyneowalletComponent implements OnInit {
+  neoqlcbalance;
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
   bscscan = environment.bscscan[environment.neoNetwork];
@@ -172,15 +173,22 @@ export class MyneowalletComponent implements OnInit {
     this.addressBookEntry = this.addressBook.getAccountName(this.walletId);
     this.addressBookModel = this.addressBookEntry || '';
 
+    const neoqlcbalance: any = await this.neoService.getneoTuboBalance(
+      this.walletId
+    );
+    this.neoqlcbalance = neoqlcbalance.balance;
+
+    console.log('myneowallet.balance', neoqlcbalance);
+
     const balance: any = await this.neoService.getNeoScanBalance(this.walletId);
 
-    for (const asset of balance) {
-      this.walletAccount.balances[asset.asset_hash] = {
-        amount: new BigNumber(asset.amount).toFixed(),
-        asset: asset.asset,
-        asset_symbol: asset.asset_symbol,
-      };
-    }
+    // for (const asset of balance) {
+    //   this.walletAccount.balances[asset.assetId] = {
+    //     amount: new BigNumber(asset.balance).toFixed(),
+    //     asset: asset.assetId,
+    //     asset_symbol: asset.symbol,
+    //   };
+    // }
     this.claimableGas = await this.neoService.getClaimAmount(this.walletId);
     const transactions = await this.neoService.getLastTransactions(
       this.walletId

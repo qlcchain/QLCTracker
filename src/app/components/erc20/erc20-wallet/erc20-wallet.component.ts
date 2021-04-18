@@ -74,7 +74,8 @@ export class Erc20WalletComponent implements OnInit {
       this.etherService.connect();
       console.log('switchnetwork.this.etherService.provider', this.etherService.provider);
       if (this.etherService.provider) {
-        if ( environment.neoNetwork == 'test' ) {
+        console.log('localStorage.getItem(chainType)', localStorage.getItem('chainType'));
+        if ( environment.neoNetwork == 'test' && localStorage.getItem('chainType') == 'eth' ) {
           console.log('switchnetwork.this.etherService.NETWORK_CHAIN_ID', this.etherService.NETWORK_CHAIN_ID);
           if ( this.etherService.NETWORK_CHAIN_ID != 4 ) {
               this.etherService?.disconnectWallet();
@@ -83,7 +84,7 @@ export class Erc20WalletComponent implements OnInit {
           this.etherService?.connect();
         }
       }
-        if ( environment.neoNetwork == 'main' ) {
+        if ( environment.neoNetwork == 'main' && localStorage.getItem('chainType') == 'eth' ) {
           if ( this.etherService.NETWORK_CHAIN_ID != 1 ) {
             this.etherService?.disconnectWallet();
             return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
