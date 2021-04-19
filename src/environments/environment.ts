@@ -88,15 +88,15 @@ export const environment = {
   },
   bscswapSmartContract: {
     test: '0x550f28C8ccc66002E927483C6cb83D9997d9ebf2',
-    main: ''
+    main: '0x76ebCBbCDbC4431aC997e377c79e997332D16516'
   },
   qgasetherswapSmartContract: {
     test: '0x1aFFc415416f1D157F4603f37aE1AC9011487111',
-    main: ''
+    main: '0x2952CcBa7EF0c9a11b4560fAbda062499BBabF9f'
   },
   qgasbscswapSmartContract: {
     test: '0xF791c6cf47C3650Fb8e65f1Ab0bFaDEfcFD51af5',
-    main: ''
+    main: '0xBBb2D36B8f37769AD4ceDf33Cf3037Eb4FE41482'
   },
   testSmartContract: {
     test: '0x40E3dCC2EC0B8f7381332614630Aa9EF19b18cA2',

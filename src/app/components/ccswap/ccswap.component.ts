@@ -334,22 +334,22 @@ export class CcswapComponent implements OnInit, OnDestroy {
         console.log('ccswap.chainType', this.chainType);
         if ( this.chainType == 'eth') {
           if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != 4 ) {
-            this.etherService.disconnectWallet();
+            // this.etherService.disconnectWallet();
             return this.notifications.sendWarning('Please switch network to Rinkby');
           } else if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != 1 ) {
-            this.etherService.disconnectWallet();
+            // this.etherService.disconnectWallet();
             return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
           }
         } else {
           if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
-            this.etherService.disconnectWallet();
+            // this.etherService.disconnectWallet();
             await this.etherService.provider.request({
                             method: 'wallet_addEthereumChain',
                             params: this.etherService.bscmainparams,
                           });
             return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
         } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
-          this.etherService.disconnectWallet();
+          // this.etherService.disconnectWallet();
           await this.etherService.provider.request({
             method: 'wallet_addEthereumChain',
             params: this.etherService.bsctestntparams,
