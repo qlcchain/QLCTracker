@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 export class Erc20WalletComponent implements OnInit {
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
+  bscscan = environment.bscscan[environment.neoNetwork];
   swapHistory: any[] = [];
   address = this.etherService.selectedAddress;
   addresslc: string;
@@ -39,7 +40,8 @@ export class Erc20WalletComponent implements OnInit {
     private addressBookService: AddressBookService,
     private notificationService: NotificationService,
     private walletService: WalletService,
-    public etherService: EtherWalletService
+    public etherService: EtherWalletService,
+    private notifications: NotificationService,
   ) {
 		if (environment.desktop) {
 			this.desktop = true;
@@ -65,6 +67,36 @@ export class Erc20WalletComponent implements OnInit {
       this.noWallet = false;
     }
     this.loading = false;
+  }
+
+  async switchnetwork() {
+    try {
+      this.etherService.connect();
+      console.log('switchnetwork.this.etherService.provider', this.etherService.provider);
+      if (this.etherService.provider) {
+        console.log('localStorage.getItem(chainType)', localStorage.getItem('chainType'));
+        if ( environment.neoNetwork == 'test' && localStorage.getItem('chainType') == 'eth' ) {
+          console.log('switchnetwork.this.etherService.NETWORK_CHAIN_ID', this.etherService.NETWORK_CHAIN_ID);
+          if ( this.etherService.NETWORK_CHAIN_ID != 4 ) {
+              this.etherService?.disconnectWallet();
+              return this.notifications.sendWarning('Please switch network to Rinkby');
+          } else {
+          this.etherService?.connect();
+        }
+      }
+        if ( environment.neoNetwork == 'main' && localStorage.getItem('chainType') == 'eth' ) {
+          if ( this.etherService.NETWORK_CHAIN_ID != 1 ) {
+            this.etherService?.disconnectWallet();
+            return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
+          } else {
+          this.etherService?.connect();
+        }
+      }
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   }
 
   async getBalances() {

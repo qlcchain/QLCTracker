@@ -5,19 +5,19 @@
 export const environment = {
   production: true,
   desktop: true,
-  version: '1.4.2',
+  version: '1.4.3',
   qlcChainNetwork: 'main', // test or main
   neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
   ethNetworkDefault: 'rinkeby', // mainnet, ropsten, rinkeby
   infuraId: '111769056614454ba82f3c6a16be68bb',
   mainRpcUrl: {
-    test: '',
-    main: 'https://rpc.qlcchain.online'
+    test: 'https://rpc-test.qlcchain.online',
+    main: 'https://rpc-test.qlcchain.online'
   },
   rpcUrl: {
     test: 'http://127.0.0.1:19735',
-    main: 'https://rpc.qlcchain.online'
+    main: 'http://127.0.0.1:9735'
   },
   swapUrl: {
     test: 'http://seed2.ngd.network:20332/',
@@ -78,9 +78,25 @@ export const environment = {
     test: 'b9d7ea3062e6aeeb3e8ad9548220c4ba1361d263',
     main: '0d821bd7b6d53f5c2b40e217c6defc8bbe896cf5'
   },
+  bscscan: {
+    test: 'https://testnet.bscscan.com/',
+    main: 'https://bscscan.com/'
+  },
   etherswapSmartContract: {
     test: '0xE2484A4178Ce7FfD5cd000030b2a5de08c0Caf8D',
     main: '0xd196f680e0bDF810f1fe8b323b90CA0B62f4e63e'
+  },
+  bscswapSmartContract: {
+    test: '0x550f28C8ccc66002E927483C6cb83D9997d9ebf2',
+    main: '0x76ebCBbCDbC4431aC997e377c79e997332D16516'
+  },
+  qgasetherswapSmartContract: {
+    test: '0x1aFFc415416f1D157F4603f37aE1AC9011487111',
+    main: '0x2952CcBa7EF0c9a11b4560fAbda062499BBabF9f'
+  },
+  qgasbscswapSmartContract: {
+    test: '0xF791c6cf47C3650Fb8e65f1Ab0bFaDEfcFD51af5',
+    main: '0xBBb2D36B8f37769AD4ceDf33Cf3037Eb4FE41482'
   },
   testSmartContract: {
     test: '0x40E3dCC2EC0B8f7381332614630Aa9EF19b18cA2',
@@ -91,7 +107,7 @@ export const environment = {
     main: '02c6e68c61480003ed163f72b41cbb50ded29d79e513fd299d2cb844318b1b8ad5'
   },
   neoScanApi: {
-    test: 'https://api.neoscan.io/api/main_net',
+    test: 'https://testnet.api.neotube.io',
     main: 'https://api.neoscan.io/api/main_net'
   },
   neoScan: {
@@ -113,6 +129,10 @@ export const environment = {
   chainxNetwork: {
     test: 'TestNet',
     main: 'MainNet'
+  },
+  BSC_NETWORK_CHAIN_ID: {
+    test: '97',
+    main: '56'
   },
   chainxApi: {
     test: 'https://api.chainx.org.cn',

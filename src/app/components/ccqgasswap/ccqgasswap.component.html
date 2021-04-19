@@ -15,8 +15,8 @@
         <!-- TITLE -->
         <div class="col-md-6 col-12 mt-2 pl-2 pr-2">
           <div class="content-title">
-            <h1 class="neo" *ngIf="recover != 1">Swap QLC Tokens</h1>
-            <h1 class="neo" *ngIf="recover == 1">Swap QLC Tokens - Recover</h1>
+            <h1 class="neo" *ngIf="recover != 1">Swap QGAS Tokens</h1>
+            <h1 class="neo" *ngIf="recover == 1">Swap QGAS Tokens - Recover</h1>
           </div>
         </div>
         <div class="col-md-3 col-12 pl-md-2 pr-md-2 pl-2 pr-2">
@@ -106,10 +106,10 @@
           <div class="row">
             <div class="col-6">
               <img src="assets/img/swap/token-qlc-nep5.png" style="height: 35px; margin: 20px 10px 20px 30px;">
-              NEP5 QLC
+              QLC QGAS
             </div>
             <div class="col-6 text-right">
-              {{this.chainType=='eth' ? 'ERC20 QLC' : 'BEP20 QLC'}}
+              {{ this.chainType== 'eth' ? 'ERC20 QGAS' : 'BEP20 QGAS'}}
               <img *ngIf="this.chainType=='eth'" src="assets/img/swap/token-qlc-erc20-grey.png" style="height: 35px; margin: 20px 30px 20px 10px;">
               <img *ngIf="this.chainType!='eth'" src="assets/img/swap/token-qlc-bep20-yellow.png" style="height: 35px; margin: 20px 30px 20px 10px;">
             </div>
@@ -122,10 +122,10 @@
           <div class="col-6">
             <img *ngIf="this.chainType=='eth'" src="assets/img/swap/token-qlc-erc20-grey.png" style="height: 35px; margin: 20px 30px 20px 10px;">
             <img *ngIf="this.chainType!='eth'" src="assets/img/swap/token-qlc-bep20-yellow.png" style="height: 35px; margin: 20px 30px 20px 10px;">
-            {{this.chainType=='eth' ? 'ERC20 QLC' : 'BEP20 QLC'}}
+            {{ this.chainType== 'eth' ? 'ERC20 QGAS' : 'BEP20 QGAS'}}
           </div>
           <div class="col-6 text-right">
-            NEP5 QLC
+            QLC QGAS
             <img src="assets/img/swap/token-qlc-nep5.png" style="height: 35px; margin: 20px 30px 20px 10px;">
 
           </div>
@@ -146,16 +146,16 @@
       </div>
       <div class="col-md-9 text-left">
         <div *ngIf="this.stakingForm.value.stakingType == 0" class="form-group">
-          <select class="custom-select" formControlName="fromNEOWallet" (change)="selectAccount()">
-            <option *ngFor="let account of neowallets" [value]="account.id"
-              >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }} {{ ((account.balances != undefined && account.balances[neoService.tokenList['QLC'].networks['1'].hash] != undefined)? ' ('+account.balances[neoService.tokenList['QLC'].networks['1'].hash].amount + ' QLC)' : '') }} </option>
+          <select class="custom-select" formControlName="fromQLCWallet" (change)="selectAccount()">
+            <option *ngFor="let account of accounts" [value]="account.id"
+              >{{ account.addressBookName ? account.addressBookName + ' - ' : '' }} {{ account.id }}</option>
           </select>
           <!-- <p *ngIf="this.stakingForm.value.stakingType == 0" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a NEP-5 address you want to swap ERC20 QLC from</p>
           <p *ngIf="this.stakingForm.value.stakingType == 2" style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">Select a ERC20 address you want to swap NEP-5 QLC from</p> -->
 
         </div>
         <div *ngIf="this.stakingForm.value.stakingType == 2" class="form-group">
-          <select class="custom-select" formControlName="fromNEOWallet">
+          <select class="custom-select" formControlName="fromQLCWallet">
             <option *ngFor="let account of etherService.accounts" [value]="account"
               >{{ account }}</option>
           </select>
@@ -164,7 +164,7 @@
 
         </div>
         <div class="form-group" *ngIf="recover == 1">
-          {{ stakingForm.value.fromNEOWallet }}
+          {{ stakingForm.value.fromQLCWallet }}
         </div>
       </div>
     </div>
@@ -183,7 +183,7 @@ TO ACCOUNT
 </div>
 <div class="form-group" *ngIf="this.stakingForm.value.stakingType == 2">
 <select class="custom-select" formControlName="toQLCWallet" (change)="selectAccount()">
-<option *ngFor="let account of neowallets" [value]="account.id"
+<option *ngFor="let account of accounts" [value]="account.id"
 >{{ account.id }} </option>
 </select>
 </div>
@@ -201,7 +201,7 @@ TO ACCOUNT
     <div class="input-group">
         <div class="input-group-prepend">
             <div class="input-group-text ">
-                QLC
+                QGAS
             </div>
         </div>
         <input
@@ -220,21 +220,23 @@ onfocus="this.placeholder = ''"
 <div class="input-group-text maxLink">&nbsp;</div>
         </div>
 </div>
-<p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum swap amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount}} QLC</p>
+<p style="max-width:100%;font-size:11px;padding-left:16px;padding-top:8px;">The minimum swap amount is {{ stakingTypes[this.stakingForm.value.stakingType].minAmount}} QGAS</p>
 </div>
 
 <div class="col-md-6">
 <div class="row align-items-top">
 <div class="col-md-6 dataName pb-3 pb-md-0 form-label-custom-2">BALANCE</div>
 <div class="col-md-6 ">
-<div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ this.stakingForm.value.availableQLCBalance}} QLC</strong></div>
+<!-- <div class="text-right fiat pr-1" style="color:#595757;"><strong>{{ tokenBalance('QGAS') | qlc: 8 | currency:'':'':'1.2-8' }} QGAS</strong></div> -->
+<div class="text-right fiat pr-1" style="color:#595757;"><strong>{{this.stakingForm.value.availableQLCBalance}} QGAS</strong></div>
+
 </div>
 </div>
 </div>
 
 </div>
 <div class="form-group" *ngIf="recover == 1">
-{{ stakingForm.value.amounToStake }} QLC
+{{ stakingForm.value.amounToStake }} QGAS
 </div>
 
 </div>
@@ -294,16 +296,16 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
 					<div class="container">
 
             <div class="row qlc-table-header-blue">
-              <div class="col-12">NEP5 TO {{this.chainType20}} TOKEN SWAP</div>
+              <div class="col-12">QGAS TO {{this.chainType20}} TOKEN SWAP</div>
             </div>
             <div class="row qlc-table-row-blue mt-3 qlc-stake-explainer pr-3">
               <p>
-                <span style="line-height: 2.1em; display: inline-block;">Nep5 QLC holders can through the cross-chain swap function convert 1:1 to {{this.chainType=='eth' ? 'ERC20 QLC' : 'BEP20 QLC'}}, users can also operate in the reverse direction. </span><br>
-                <span style="line-height: 2.1em; color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Amount:</span> 1 QLC<br>
+                <span style="line-height: 2.1em; display: inline-block;">QGAS holders can through the cross-chain swap function convert 1:1 to {{this.chainType=='eth' ? 'ERC20 QGAS' : 'BEP20 QGAS'}} , users can also operate in the reverse direction. </span><br>
+                <span style="line-height: 2.1em; color:#7ca7e5;margin-top:4px;display:inline-block;">Minimum Amount:</span> 1 QGAS<br>
                 <span style="line-height: 2.1em; color:#7ca7e5;margin-top:4px;display:inline-block;">Ratio:</span> 1:1<br>
               </p>
               <p>
-                <a href="https://github.com/qlcchain/eth-staking-contracts/wiki/NEP5-TO-ERC20-Token-Swap-V2" target="_blank" style="text-decoration: underline; font-weight: 400;">Learn more on GitHub</a>
+                <a href="https://github.com/qlcchain/eth-staking-contracts/wiki/QGas-To-ERC20(BEP20)-Swap" target="_blank" style="text-decoration: underline; font-weight: 400;">Learn more on GitHub</a>
               </p>
 
             </div>
@@ -343,15 +345,15 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
               <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-3 d-none d-md-block text-right pr-sm-4 pr-4">TIME</div>
             </div>
 
-            <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.swapHistory">
+            <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.qgasswapHistory">
               <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
                 <span>
                     <span *ngIf="(history.state ==4)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==0 || history.state ==2)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span *ngIf="history.chain =='ETH'" class="text-color-grey">ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey">BEP20</span></span>
-                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span *ngIf="history.chain =='ETH'" class="text-color-grey"> ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey"> BEP20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span><br>
-                    <button *ngIf="(history.state ==0 || history.state ==4)" (click)="continueUndoneTransaction(history.neoTxHash)" title="click me to continue swap" type="submit" class="btn btn-primary" style="min-width:100%;margin-top:18px">
+                    <span *ngIf="(history.state ==2 || history.state ==5)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0 || history.state ==1 || history.state ==2)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> QGAS</span> <span class="text-color-lightgrey"> to </span> <span *ngIf="history.chain =='ETH'" class="text-color-grey">ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey">BEP20</span></span>
+                    <span *ngIf="(history.state ==3 || history.state ==4 || history.state ==5)"><span class="text-color-lightgrey">Swap</span>  <span *ngIf="history.chain =='ETH'" class="text-color-grey"> ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey"> BEP20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">QGAS</span></span><br>
+                    <button *ngIf="(history.state ==1 || history.state ==4)" (click)="continueUndoneTransaction(history.qlcSendTxHash)" title="click me to continue swap" type="submit" class="btn btn-primary" style="min-width:100%;margin-top:18px">
                       CONTINUE SWAP
                     </button>
                 </span>
@@ -359,56 +361,56 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                   <br>
                   <br>
                   Status: 
-                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
-                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
-                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
+                  <span *ngIf="(history.state ==2 || history.state ==5)" class="text-color-green">Completed</span>
+                  <span *ngIf="(history.state ==1 || history.state ==4)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==0 || history.state ==3)" class="text-color-red">Failed</span>
                 </span>
               </div>
               <div class="col-xl-1 d-none d-xl-block text-color-lightgrey text-left text-tiny">
                 <span>
-                  <span *ngIf="(history.state ==1 || history.state ==3)" class="text-color-green">Completed</span>
-                  <span *ngIf="(history.state ==0 || history.state ==2)" class="text-blue">Pending</span>
-                  <span *ngIf="(history.state ==4)" class="text-color-red">Failed</span>
+                  <span *ngIf="(history.state ==2 || history.state ==5)" class="text-color-green">Completed</span>
+                  <span *ngIf="(history.state ==1 || history.state ==4)" class="text-blue">Pending</span>
+                  <span *ngIf="(history.state ==0 || history.state ==3)" class="text-color-red">Failed</span>
                 </span>
               </div>
               <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
                 <span class="d-xl-none">Sender: </span>
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
+                <a *ngIf="(history.state== 0 || history.state ==1 || history.state ==2)" href="/wallets/qlc/{{history.qlcUserAddr}}" target="_blank" >{{history.qlcUserAddr | squeeze : '10,9'}}</a>
+                <a *ngIf="(history.state== 3 || history.state ==4 || history.state ==5)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Recipient: </span>
-                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
+                <a class="d-xl-none" *ngIf="(history.state== 3 || history.state ==4 || history.state ==5)" href="/wallets/qlc/{{history.qlcUserAddr}}" target="_blank" >{{history.qlcUserAddr | squeeze : '10,9'}}</a>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1 || history.state ==2)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Swapid: </span>
-                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
-                  {{history.neoTxHash | squeeze : '10,9'}}
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1|| history.state ==2)" href="{{ neotubeSite }}/transaction/{{history.qlcSendTxHash}}" target="_blank" >
+                  {{history.qlcSendTxHash | squeeze : '10,9'}}
                 </a>
-                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}/tx/{{history.chainTxHash}}" target="_blank" >
+                <a class="d-xl-none" *ngIf="(history.state== 3 || history.state ==4 || history.state ==5)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}/tx/{{history.chainTxHash}}" target="_blank" >
                   {{history.chainTxHash | squeeze : '10,9'}}
                 </a>
                 
                 <span class="d-md-none"><br>Time:<br class="d-sm-none"> {{ history.lastModifyTime | date: 'short' }}</span>
               </div>
               <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
-                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '11,10'}}</a>
+                <a *ngIf="(history.state== 3 || history.state ==4 || history.state ==5)" href="/wallets/qlc/{{history.qlcUserAddr}}" target="_blank" >{{history.qlcUserAddr | squeeze : '11,10'}}</a>
+                <a *ngIf="(history.state== 0 || history.state ==1 || history.state ==2)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '11,10'}}</a>
 
               </div>
               <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
-                  {{history.neoTxHash | squeeze : '11,10'}}
+                <a *ngIf="(history.state== 0 || history.state ==1 || history.state ==2)" href="/transaction/{{history.qlcSendTxHash}}" target="_blank" >
+                  {{history.qlcSendTxHash | squeeze : '11,10'}}
                 </a>
-                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}/tx/{{history.chainTxHash}}" target="_blank" >
+                <a *ngIf="(history.state== 3 || history.state ==4 || history.state ==5)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}/tx/{{history.chainTxHash}}" target="_blank" >
                   {{history.chainTxHash | squeeze : '11,10'}}
                 </a>
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
                 <span [ngClass]="{
-                  'text-blue': (history.state ==0 || history.state ==2),
-                  'text-color-green': (history.state ==1 || history.state ==3),
-                  'text-color-red': history.state == 4
-                }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
+                  'text-blue': (history.state ==1 || history.state ==4),
+                  'text-color-green': (history.state ==2 || history.state ==5),
+                  'text-color-red': history.state == 0
+                }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QGAS</span>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">
                 <span>{{ history.lastModifyTime | date: 'short' }}</span>
@@ -479,41 +481,41 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                 </div>
                 <div class="row align-items-center ">
                   <div class="col-12 sum">
-                    <span>{{ stakingForm.value.amounToStake}} QLC</span>
+                    <span>{{ stakingForm.value.amounToStake}} QGAS</span>
                   </div>
                 </div>
                 <div class="row align-items-center">
                 </div>
                 <div class="row transfer">
                   <div class="col-lg-6 text-center pt-4 pb-4">
-                    <div class="text-label pb-2">FROM ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'NEP5' : this.chainType20 }})</div>
+                    <div class="text-label pb-2">FROM ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? 'QGAS' : this.chainType20 }})</div>
                     <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
                       <a  class="text-blue">
                         <span class="d-none d-xl-block">
-                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromQLCWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
                         </span>
                         <span class="d-none d-lg-block d-xl-none">
-                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '12,12' }}
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromQLCWallet').value : this.etheraccounts[0]) | squeeze : '12,12' }}
                         </span>
                         <span class="d-none d-md-block d-lg-none">
-                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '20,20' }}
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromQLCWallet').value : this.etheraccounts[0]) | squeeze : '20,20' }}
                         </span>
                         <span class="d-none d-sm-block d-md-none">
-                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromQLCWallet').value : this.etheraccounts[0]) | squeeze : '15,15' }}
                         </span>
                         <span class="d-block d-sm-none">
-                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0]) | squeeze : '12,12' }}
+                          {{(this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromQLCWallet').value : this.etheraccounts[0]) | squeeze : '12,12' }}
                         </span>
                       </a>
                     </div>
                     <div class="pl-5 pr-5 pb-4">
-                      <a  class="address">{{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromNEOWallet').value : this.etheraccounts[0] }}</a>
+                      <a  class="address">{{this.stakingForm.value.stakingType == 0 ? this.stakingForm.get('fromQLCWallet').value : this.etheraccounts[0] }}</a>
                     </div>
-                    <div class="pt-2 text-bold negative_change text-color-red">-{{ stakingForm.value.amounToStake}} QLC</div>
+                    <div class="pt-2 text-bold negative_change text-color-red">-{{ stakingForm.value.amounToStake}} QGAS</div>
                     <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO LOCK' : 'AMOUNT TO BURN' }}</div>
                   </div>
                   <div class="col-lg-6 text-center pt-4 pb-4">
-                    <div class="text-label pb-2">TO ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? this.chainType20 : 'NEP5' }})</div>
+                    <div class="text-label pb-2">TO ACCOUNT ({{ this.stakingForm.value.stakingType == 0 ? this.chainType20 : 'QGAS' }})</div>
                     <div class="pl-5 pr-5 text-truncate pt-1 pb-1">
                       <a  class="text-blue">
                         <span class="d-none d-xl-block">
@@ -536,7 +538,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                     <div class="pl-5 pr-5 pb-4">
                       <a  class="address">{{(this.stakingForm.value.stakingType == 0 ? this.etheraccounts[0] : this.stakingForm.get('toQLCWallet').value) }}</a>
                     </div>
-                    <div class="pt-2 text-bold positive_change text-color-green">+{{ stakingForm.value.amounToStake}} QLC</div>
+                    <div class="pt-2 text-bold positive_change text-color-green">+{{ stakingForm.value.amounToStake}} QGAS</div>
                     <div class="text-label pb-3">{{ this.stakingForm.value.stakingType == 0 ? 'AMOUNT TO MINT' : 'AMOUNT TO UNLOCK' }}</div>
                   </div>
                 </div>
@@ -687,7 +689,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             </div>
             <div class="row align-items-center ">
               <div class="col-12 sum">
-                <span>{{ this.haveswappedamount }} QLC</span>
+                <span>{{ this.haveswappedamount }} QGAS</span>
               </div>
             </div>
             <div class="row align-items-center">
@@ -697,7 +699,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             </div>
             <div class="row align-items-center">
               <div class="col-12 text-center text-label">
-                NEO TRANSACTION HASH
+                QGAS TRANSACTION HASH
               </div>
             </div>
             <div class="row align-items-center">

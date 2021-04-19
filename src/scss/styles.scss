@@ -553,9 +553,9 @@ div[class*="col-"] a:hover {
 .qlc-table-header div:first-child {
     padding: 20px 10px 16px 20px;
 }
-.qlc-table-row div:first-child {
-    padding: 16px 10px 18px 20px;
-}
+// .qlc-table-row div:first-child {
+//     padding: 16px 10px 18px 20px;
+// }
 
 .img-qr {
     height:22px;
@@ -767,6 +767,23 @@ div[class*="col-"] a:hover {
     background: #caa847 url("../assets/img/bg_box_quicksend_chainx.png") no-repeat right top;
     background-size: auto;
 }
+.bg-swap-qlc2eth {
+    background: #66696e url("../assets/img/bg_box_swap_qlc2eth.png") no-repeat right top;
+    background-size: auto;
+}
+.bg-swap-qlc2bsc {
+    background: #f3ba2f url("../assets/img/bg_box_swap_qlc2bsc.png") no-repeat right top;
+    background-size: auto;
+}
+.bg-swap-qgas2eth {
+    background: #66696e url("../assets/img/bg_box_swap_qgas2eth.png") no-repeat right top;
+    background-size: auto;
+}
+.bg-swap-qgas2bsc {
+    background: #f3ba2f url("../assets/img/bg_box_swap_qgas2bsc.png") no-repeat right top;
+    background-size: auto;
+}
+
 
 /* BOXES */
 
@@ -1192,7 +1209,7 @@ a.qlc-top-mainnet-red:hover {
     font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
     background: none;
     color: #ffffff;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 400;
     letter-spacing: 0px;
 }
@@ -1211,6 +1228,22 @@ a.qlc-top-mainnet-red:hover {
     text-transform: uppercase;
     font-weight: 700;
 }
+.qlc-table-header-eth-grey {
+    font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
+    background: none;
+    color: #9a9a9a !important;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.qlc-table-header-bsc-yellow {
+    font-family: "Lato", Gotham, "Helvetica Neue", Helvetica, Arial, "sans-serif";
+    background: none;
+    color: #ffdf71 !important;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
 .qlc-table-header-darkpurple div a, .qlc-table-header-purple div a {
     color:#a887ef;
     text-decoration: none;
@@ -1224,7 +1257,7 @@ a.qlc-top-mainnet-red:hover {
 .qlc-table-header-darkpurple div a .qlc-icon, .qlc-table-header-purple div a .qlc-icon {
     margin-top: -4px;
 }
-.qlc-table-header-purple, .qlc-table-header-white {
+.qlc-table-header-purple, .qlc-table-header-white, .qlc-table-header-eth-grey, .qlc-table-header-bsc-yellow {
     padding: 30px 10px 0px 10px;
 }
 .qlc-table-row-purple, .qlc-table-row-white {

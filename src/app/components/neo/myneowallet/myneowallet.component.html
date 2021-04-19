@@ -116,8 +116,8 @@
                                     </div>
                                     <div class="col-9 pr-0 pl-0">
                                         <div class="row qlc-table-row-white row-text-mid mt-3 pb-0">
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances != null && walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash]">{{ walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash].amount | currency:'':'':'1.2-8' }}</div>
-                                            <div class="col-12 pb-0" *ngIf="walletAccount.balances == null || (walletAccount.balances != null && !walletAccount.balances[neoService.tokenList['QLC'].networks['1'].hash])">NaN</div>
+                                            <div class="col-12 pb-0" *ngIf="this.neoqlcbalance != null">{{ this.neoqlcbalance | currency:'':'':'1.2-8' }}</div>
+                                            <div class="col-12 pb-0" *ngIf="this.neoqlcbalance == null">NaN</div>
                                         </div>
                                         <div class="row qlc-table-row-white sub-page pt-0">
                                             <div class="col-12 text-wrap pt-0"><span class="text-blue">-</span></div>
@@ -250,8 +250,8 @@
                     <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==1 || history.state ==3)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">ERC20</span></span>
-                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> ERC20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span>
+                    <span *ngIf="(history.state ==0 || history.state ==1)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> NEP5</span> <span class="text-color-lightgrey"> to </span> <span *ngIf="history.chain =='ETH'" class="text-color-grey">ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey">BEP20</span></span>
+                    <span *ngIf="(history.state ==2 || history.state ==3 || history.state ==4)"><span class="text-color-lightgrey">Swap</span>  <span *ngIf="history.chain =='ETH'" class="text-color-grey"> ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey"> BEP20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">NEP5</span></span><br>
                 </span>
                 <span class="d-xl-none">
                   <br>
@@ -272,40 +272,40 @@
               <div class="col-xl-2 col-lg-6 pr-lg-4 col-md-4 col-5 text-left text-color-lightgrey text-tiny">
                 <span class="d-xl-none">Sender: </span>
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+                <a *ngIf="(history.state== 2 || history.state ==3)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Recipient: </span>
                 <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '10,9'}}</a>
-                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '10,9'}}</a>
+                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '10,9'}}</a>
 
                 <span class="d-xl-none"><br>Swapid: </span>
-                <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
-                  {{history.neoTxHash | squeeze : '10,9'}}
-                </a>
-                <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
-                  {{history.ethTxHash | squeeze : '10,9'}}
-                </a>
+                  <a class="d-xl-none" *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
+                    {{history.neoTxHash | squeeze : '10,9'}}
+                  </a>
+                  <a class="d-xl-none" *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}/tx/{{history.chainTxHash}}" target="_blank" >
+                    {{history.chainTxHash | squeeze : '10,9'}}
+                  </a>
                 
                 <span class="d-md-none"><br>Time:<br class="d-sm-none"> {{ history.lastModifyTime | date: 'short' }}</span>
               </div>
               <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
                 <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ neotubeSite }}address/{{history.neoUserAddr}}/page/1" target="_blank" >{{history.neoUserAddr | squeeze : '11,10'}}</a>
-                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ etherscan }}address/{{history.ethUserAddr}}" target="_blank" >{{history.ethUserAddr | squeeze : '11,10'}}</a>
+                <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}address/{{history.chainUserAddr}}" target="_blank" >{{history.chainUserAddr | squeeze : '11,10'}}</a>
 
               </div>
               <div class="col-xl-2 d-none d-xl-block text-left text-color-lightgrey text-tiny">
                 <a *ngIf="(history.state== 0 || history.state ==1)" href="{{ neotubeSite }}/transaction/{{history.neoTxHash}}" target="_blank" >
                   {{history.neoTxHash | squeeze : '11,10'}}
                 </a>
-                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ etherscan }}/tx/{{history.ethTxHash}}" target="_blank" >
-                  {{history.ethTxHash | squeeze : '11,10'}}
+                <a *ngIf="(history.state== 2 || history.state ==3 || history.state ==4)" href="{{ history.chain == 'ETH' ? etherscan : bscscan }}/tx/{{history.chainTxHash}}" target="_blank" >
+                  {{history.chainTxHash | squeeze : '11,10'}}
                 </a>
               </div>
               <div class="col-xl-1 col-lg-1 col-md-2 col-3 text-color-lightgrey text-right text-tiny">
                 <span [ngClass]="{
                   'text-blue': (history.state ==0 || history.state ==2),
                   'text-color-green': (history.state ==1 || history.state ==3),
-                  'text-color-red': history.state == 4
+                  'text-color-red': history.state == 0
                 }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QLC</span>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">
