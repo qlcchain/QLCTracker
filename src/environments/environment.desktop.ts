@@ -13,7 +13,7 @@ export const environment = {
   infuraId: '111769056614454ba82f3c6a16be68bb',
   mainRpcUrl: {
     test: 'https://rpc-test.qlcchain.online',
-    main: 'https://rpc-test.qlcchain.online'
+    main: 'https://rpc.qlcchain.online'
   },
   rpcUrl: {
     test: 'http://127.0.0.1:19735',
