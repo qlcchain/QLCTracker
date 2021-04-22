@@ -70,7 +70,7 @@ bsctestntparams = [
 accountSub: Subject<string> = new Subject<string>();
 
   constructor(private route: ActivatedRoute) {
-    this.route?.url?.subscribe((url) => (this.chainType = url[1]?.path));
+    this.route?.url?.subscribe((url) => (this.chainType = (url[1]?.path === 'eth' || url[1]?.path === 'qgaseth') ? 'ETH' : 'BSC' ));
   }
   async connect() {
     if ((window as any).ethereum) {
@@ -97,8 +97,8 @@ accountSub: Subject<string> = new Subject<string>();
         this.selectedAddress = ethAddress;
         this.getBalances(ethAddress);
         this.getAllTransactions(ethAddress);
-        this.getswapHistory(ethAddress);
-        this.getqgasswapHistory(ethAddress);
+        // this.getswapHistory(ethAddress, this.chainType);
+        this.getqgasswapHistory(ethAddress, this.chainType);
         this.getAccounts();
       }
       this.accountSub.next(accounts);
@@ -116,8 +116,8 @@ accountSub: Subject<string> = new Subject<string>();
           this.selectedAddress = ethAddress;
           this.getBalances(ethAddress);
           this.getAllTransactions(ethAddress);
-          this.getswapHistory(ethAddress);
-          this.getqgasswapHistory(ethAddress);
+          // this.getswapHistory(ethAddress, this.chainType);
+          this.getqgasswapHistory(ethAddress, this.chainType);
           this.getAccounts();
           this.accountSub.next(accounts)
         }
@@ -142,8 +142,8 @@ accountSub: Subject<string> = new Subject<string>();
           this.selectedAddress = ethAddress;
           this.getBalances(ethAddress);
           this.getAllTransactions(ethAddress);
-          this.getswapHistory(ethAddress);
-          this.getqgasswapHistory(ethAddress);
+          // this.getswapHistory(ethAddress, this.chainType);
+          this.getqgasswapHistory(ethAddress, this.chainType);
           this.getAccounts();
           this.accountSub.next(this.accounts)
         }
@@ -155,8 +155,8 @@ accountSub: Subject<string> = new Subject<string>();
             this.selectedAddress = ethAddress;
             this.getBalances(ethAddress);
             this.getAllTransactions(ethAddress);
-            this.getswapHistory(ethAddress);
-            this.getqgasswapHistory(ethAddress);
+            // this.getswapHistory(ethAddress, this.chainType);
+            this.getqgasswapHistory(ethAddress, this.chainType);
             this.getAccounts();
             this.accountSub.next(this.accounts)
           }
@@ -216,11 +216,12 @@ accountSub: Subject<string> = new Subject<string>();
   }
 
   // qlc swap history
-  async getqgasswapHistory(address: any) {
+  async getqgasswapHistory(address: any, chain: any = 'BSC') {
     const swaptransactions: any = await this.qgasswapInfosByAddress(
       address,
       1,
-      20
+      20,
+      chain
     );
     this.qgasswapHistory = swaptransactions.data.infos;
   }
@@ -734,7 +735,7 @@ accountSub: Subject<string> = new Subject<string>();
     }
 
     // /qgasswap/swapInfosByAddress
-    async qgasswapInfosByAddress(address: string, page: any, pageSize: any, chain?: any) {
+    async qgasswapInfosByAddress(address: string, page: any, pageSize: any, chain: any) {
       const data = await axios.get(this.url + '/qgasswap/swapInfosByAddress', {
       params: {
           address,

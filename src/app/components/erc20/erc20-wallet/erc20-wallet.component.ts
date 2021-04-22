@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { WalletService } from '../../../services/wallet.service';
 import { combineLatest, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './erc20-wallet.component.html',
   styleUrls: ['./erc20-wallet.component.scss']
 })
-export class Erc20WalletComponent implements OnInit {
+export class Erc20WalletComponent implements OnInit, OnDestroy {
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
   etherscan = environment.etherscan[environment.neoNetwork];
   bscscan = environment.bscscan[environment.neoNetwork];
@@ -43,25 +43,29 @@ export class Erc20WalletComponent implements OnInit {
     public etherService: EtherWalletService,
     private notifications: NotificationService,
   ) {
-		if (environment.desktop) {
-			this.desktop = true;
-		}
+      if (environment.desktop) {
+        this.desktop = true;
+      }
   }
 
   async ngOnInit() {
     this.addresslc = this.address.toLowerCase();
-    // this.getEtherAccounts();
     this.loadWallet();
+    this.getSwapHistory();
   }
-  // async getEtherAccounts() {
-  //   const accounts: any[] = await this.etherService.getAccounts();
-  //   const swaptransactions: any = await this.etherService.swapInfosByAddress(
-  //     accounts[0],
-  //     1,
-  //     20
-  //   );
-  //   this.swapHistory = swaptransactions.data.infos;
-  // }
+  async ngOnDestroy() {
+    this.etherService.swapHistory = [];
+  }
+  async getSwapHistory() {
+    const accounts: any[] = await this.etherService.getAccounts();
+    const swaptransactions: any = await this.etherService.swapInfosByAddress(
+      this.etherService.selectedAddress ? this.etherService.selectedAddress : accounts[0],
+      1,
+      20
+    );
+    this.swapHistory = swaptransactions.data.infos;
+    console.log('this.swapHistory', this.swapHistory);
+  }
   async loadWallet() {
     if (this.etherService.selectedAddress) {
       this.noWallet = false;

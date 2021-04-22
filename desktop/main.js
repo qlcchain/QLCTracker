@@ -53,7 +53,7 @@ console.log(`path: ` + toExecutableName('gqlc'));
 
 const userData = app.getPath('userData');
 
-const version = 'v1.4.3';
+const version = 'v1.5';
 
 const defaultWalletData = {
 	version: version,

@@ -348,9 +348,9 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
             <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.qgasswapHistory">
               <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
                 <span>
-                    <span *ngIf="(history.state ==4)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==0 || history.state ==3)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==2 || history.state ==5)" class="qlc-icon-swap-green d-none d-md-inline-block" title="{{history.stateStr}}"></span>
-                    <span *ngIf="(history.state ==0)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
+                    <span *ngIf="(history.state ==1 || history.state ==4)" class="qlc-icon-swap-blue d-none d-md-inline-block" title="{{history.stateStr}}"></span>
                     <span *ngIf="(history.state ==0 || history.state ==1 || history.state ==2)"><span class="text-color-lightgrey">Swap</span>  <span class="text-color-grey"> QGAS</span> <span class="text-color-lightgrey"> to </span> <span *ngIf="history.chain =='ETH'" class="text-color-grey">ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey">BEP20</span></span>
                     <span *ngIf="(history.state ==3 || history.state ==4 || history.state ==5)"><span class="text-color-lightgrey">Swap</span>  <span *ngIf="history.chain =='ETH'" class="text-color-grey"> ERC20</span><span *ngIf="history.chain =='BSC'" class="text-color-grey"> BEP20</span> <span class="text-color-lightgrey"> to </span> <span class="text-color-grey">QGAS</span></span><br>
                     <button *ngIf="(history.state ==1 || history.state ==4)" (click)="continueUndoneTransaction(history.qlcSendTxHash)" title="click me to continue swap" type="submit" class="btn btn-primary" style="min-width:100%;margin-top:18px">
@@ -409,7 +409,7 @@ Nep5 QLC holders can through the cross-chain swap function, 1:1 conversion into 
                 <span [ngClass]="{
                   'text-blue': (history.state ==1 || history.state ==4),
                   'text-color-green': (history.state ==2 || history.state ==5),
-                  'text-color-red': history.state == 0
+                  'text-color-red': (history.state == 0 || history.state ==3)
                 }" data-toggle="tooltip" data-placement="top" title="-">{{ history.amount | qlc | currency:'':'':'1.2-8' }} QGAS</span>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-3 d-none d-md-block pr-4 text-tiny text-right">

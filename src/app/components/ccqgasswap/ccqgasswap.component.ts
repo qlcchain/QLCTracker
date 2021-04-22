@@ -306,7 +306,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
       ProposeGasPrice: this.ProposeGasPrice,
       SafeGasPrice: this.SafeGasPrice
     };
-    this.etherService.getqgasswapHistory(this.etherService.selectedAddress);
+    this.etherService.getqgasswapHistory(this.etherService.selectedAddress, this.chainType.toUpperCase());
   }
 
   ngOnDestroy() {
@@ -714,6 +714,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
 		}
   }
   async selectAccount() {
+    this.etherService.getqgasswapHistory(this.etherService.selectedAddress, this.chainType.toUpperCase());
     // reload eth qlc balance when switch tab
     this.etherService.getQGASBalance(this.etherService.selectedAddress, this.chainType);
     // deposit
@@ -746,9 +747,6 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
         "this.stakingForm.value.toQLCWallet",
         this.stakingForm.value.toQLCWallet
       );
-      this.etherService.getqgasswapHistory(
-        this.stakingForm.get("fromQLCWallet").value
-      );
       if (
         this.stakingForm.value.toQLCWallet == "" ||
         this.stakingForm.value.toQLCWallet != this.etherService.selectedAddress
@@ -775,7 +773,6 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
           this.stakingForm
             .get("fromQLCWallet")
             .setValue(this.etherService.selectedAddress);
-          this.etherService.getqgasswapHistory(this.etherService.selectedAddress);
         }
       }
       if (
@@ -788,9 +785,6 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
           this.stakingForm.get("toQLCWallet").setValue(this.accounts[0].id);
         }
       }
-      this.etherService.getqgasswapHistory(
-        this.stakingForm.get("toQLCWallet").value
-      );
     }
     // tslint:disable-next-line: member-ordering
     const selectedNEOWallet = this.accounts.find(
@@ -949,7 +943,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: radix
     if (parseFloat(Web3.utils.fromWei(this.ethbalance, 'ether')) < 0.01) {
       return this.notifications.sendWarning(
-        'Your eth wallet balance is insufficient'
+        'Your wallet current account balance is insufficient'
       );
     }
     if (this.walletService.walletIsLocked()) {
@@ -995,7 +989,9 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
         // console.log('mint.walletAccount.keyPair.secretKey', walletAccount.keyPair.secretKey);
         // console.log('mint.signed', signed);
         const signature = this.util.hex.fromUint8(signed);
-        const work = await this.workPool.getWork(txData?.root);
+        // cancel work
+        // const work = await this.workPool.getWork(txData?.root);
+        const work = '';
         // console.log('mint.signature:this.util.hex.fromUint8(signed)', signature);
         // console.log('mint.work', work);
         // call qgasswap/processBlock to process block on qlc chain
@@ -1080,7 +1076,9 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
             const signed = nacl.sign.detached(this.util.hex.toUint8(qgasgetWithdrawRewardBlock?.data?.hash),
             walletAccount.keyPair.secretKey);
             const signature = this.util.hex.fromUint8(signed);
-            const work = await this.workPool.getWork(qgasgetWithdrawRewardBlock?.data?.root);
+            // cancel work
+            // const work = await this.workPool.getWork(qgasgetWithdrawRewardBlock?.data?.root);
+            const work = '';
             // call qgasswap/processBlock to process block on qlc chain
             const processBlock = await this.etherService.qgasprocessBlock(
               qgasgetWithdrawRewardBlock?.data?.hash,

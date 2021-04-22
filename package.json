@@ -1,6 +1,6 @@
 {
   "name": "qlctracker",
-  "version": "v1.4.3",
+  "version": "v1.5",
   "main": "desktop/main.js",
   "author": "QLC Chain Team <admin@qlink.mobi>",
   "description": "QLC Wallet and Explorer",
@@ -74,6 +74,7 @@
     "qrcode": "^1.4.4",
     "rxjs": "^6.6.3",
     "signal-exit": "^3.0.3",
+    "sockjs": "^0.3.21",
     "ssri": "^8.0.1",
     "to-executable-name": "^2.0.0",
     "tslib": "^1.14.1",
