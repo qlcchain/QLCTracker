@@ -6,18 +6,18 @@ export const environment = {
   production: false,
   desktop: false,
   version: '1.5.0',
-  qlcChainNetwork: 'main', // test or main
+  qlcChainNetwork: 'test', // test or main
   neoNetwork: 'test', // test or main
   chainxNetworkDefault: 'main', // test or main // test doesn't work
   ethNetworkDefault: 'rinkeby', // mainnet, ropsten, rinkeby
   infuraId: '111769056614454ba82f3c6a16be68bb',
   mainRpcUrl: {
     test: 'https://rpc-test.qlcchain.online',
-    main: 'https://rpc-test.qlcchain.online'
+    main: 'https://rpc.qlcchain.online'
   },
   rpcUrl: {
     test: 'https://rpc-test.qlcchain.online',
-    main: 'https://rpc-test.qlcchain.online'
+    main: 'https://rpc.qlcchain.online'
   },
   swapUrl: {
     test: 'http://seed2.ngd.network:20332/',
@@ -51,7 +51,7 @@ export const environment = {
     main: 'https://neotube.io/'
   },
   wsUrl: {
-    test: '',
+    test: 'wss://rpc-ws.qlcchain.online',
     main: 'wss://rpc-ws.qlcchain.online'
   },
   nep5Url: {

@@ -832,15 +832,13 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     .get('availableQLCBalance')
     .setValue(
       this.stakingForm.value.stakingType == 0
-        ? selectedNEOWallet?.balances['QGAS']?.balance !== undefined
+        ? selectedNEOWallet?.balances != undefined
           ? new BigNumber(selectedNEOWallet?.balances['QGAS']?.balance).dividedBy(Math.pow(10, 8))
           .toNumber()
-          : 1
+          : 0
         : localStorage.getItem('qgasbalance')
     );
-
     this.checkIfMinAmount();
-    
   }
 
   checkIfMinAmount() {
