@@ -51,7 +51,7 @@ export const environment = {
     main: 'https://neotube.io/'
   },
   wsUrl: {
-    test: '',
+    test: 'wss://rpc-ws.qlcchain.online',
     main: 'wss://rpc-ws.qlcchain.online'
   },
   nep5Url: {
