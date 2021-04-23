@@ -706,7 +706,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     //   }
     // }
 
-    await this.walletService.loadTokens();
+    await this.walletService?.loadTokens();
     for (let i = 0; i < this.accounts.length; i++) {
       const am = await this.api.accountInfo(this.accounts[i].id);
       if (!am.error) {
@@ -828,7 +828,9 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     );
     console.log('this.stakingForm.value.stakingType', this.stakingForm.value.stakingType);
     console.log('selectedNEOWallet', selectedNEOWallet);
-    this.stakingForm
+    // check selectedNEOWallet?.balances
+    if ( selectedNEOWallet?.balances ) {
+      this.stakingForm
       .get('availableQLCBalance')
       .setValue(
         this.stakingForm.value.stakingType == 0
@@ -839,7 +841,8 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
           : localStorage.getItem('qgasbalance')
       );
 
-    this.checkIfMinAmount();
+      this.checkIfMinAmount();
+    }
   }
 
   checkIfMinAmount() {
