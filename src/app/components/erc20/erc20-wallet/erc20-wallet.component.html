@@ -41,7 +41,7 @@
                         Please connect and authorize your metamask Wallet Client
                       </div>
                       <div class="col-md-4 col-12 my-auto">
-                        <button type="submit" (click)="etherService.connect()" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
+                        <button type="submit" (click)="etherService.connect();getSwapHistory();" class="btn btn-primary content-header float-right w-100 pl-0 pr-0 erc20-background-light">
                           CONNECT WALLET
                         </button>
                       </div>
@@ -209,7 +209,7 @@
     </div>
   </div>
   <!-- LATEST SWAP TRANSACTIONS -->
-  <div class="container mt-0 mb-3">
+  <div class="container mt-0 mb-3" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
     <div class="row">
       
       <div class="col-12 pl-0 pr-0">
@@ -238,7 +238,7 @@
                 <div class="col-xl-2 col-lg-2 pr-lg-4 col-md-3 d-none d-md-block text-right pr-sm-4 pr-4">TIME</div>
               </div>
 
-              <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of etherService.swapHistory">
+              <div class="row qlc-table-row neo-table-row closed row-anim-in" *ngFor="let history of swapHistory">
                 <div class="col-xl-2 col-lg-3 pr-lg-4 col-md-3 col-4 text-left text-color-lightgrey text-tiny">
                   <span>
                       <span *ngIf="(history.state ==2)" class="qlc-icon-swap-red d-none d-md-inline-block" title="{{history.stateStr}}"></span>

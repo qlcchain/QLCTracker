@@ -28,6 +28,7 @@ const nacl = window['nacl'];
   styleUrls: ['./ccswap.component.scss'],
 })
 export class CcswapComponent implements OnInit, OnDestroy {
+  swapHistory: any[] = [];
   chainType = '';
   chainType20 = '';
   neotubeSite = environment.neotubeSite[environment.neoNetwork];
@@ -280,7 +281,6 @@ export class CcswapComponent implements OnInit, OnDestroy {
     public etherService: EtherWalletService,
     private route: ActivatedRoute
   ) {
-    this.etherService.disconnectWallet();
     // choose network
     this.stakingTypes = this.staking[environment.neoNetwork];
 
@@ -304,6 +304,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
       ProposeGasPrice: this.ProposeGasPrice,
       SafeGasPrice: this.SafeGasPrice
     };
+    // this.etherService.getswapHistory(this.etherService.selectedAddress, this.chainType.toUpperCase());
   }
 
   ngOnDestroy() {
@@ -393,6 +394,41 @@ export class CcswapComponent implements OnInit, OnDestroy {
   }
 
   async continueUndoneTransaction(txhash?: any) {
+    // webVersion =1 is web version;
+    if (this.etherService.webVersion == 1) {
+      if ( this.etherService.provider && this.chainType == 'eth') {
+        if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != 4 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Rinkby');
+        } else if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != 1 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
+        }
+      }
+      if ( this.etherService.provider && this.chainType == 'bsc') {
+        if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+          this.step = 1;
+          window.scrollTo(0, 0);
+          await this.etherService.provider.request({
+                          method: 'wallet_addEthereumChain',
+                          params: this.etherService.bscmainparams,
+                        });
+          return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
+      } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+        this.step = 1;
+        window.scrollTo(0, 0);
+        await this.etherService.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: this.etherService.bsctestntparams,
+        });
+        return this.notifications.sendWarning('Please switch network to Binance Smart Chain Testnet');
+      }
+      }
+    }
     console.log('continueUndoneTransaction,chainType', this.chainType);
     // if (this.walletService.walletIsLocked()) {
     //   return this.notifications.sendWarning('ERROR wallet locked');
@@ -699,6 +735,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
   }
 
   async selectAccount() {
+    this.etherService.getswapHistory(this.etherService.selectedAddress, this.chainType.toUpperCase());
     // reload eth qlc balance when switch tab
     this.etherService.getEthQLCBalance(this.etherService.selectedAddress, this.chainType);
     // deposit
@@ -717,7 +754,6 @@ export class CcswapComponent implements OnInit, OnDestroy {
       }*/
       console.log('this.etherService.selectedAddress', this.etherService.selectedAddress);
       console.log('this.stakingForm.value.toQLCWallet', this.stakingForm.value.toQLCWallet);
-      this.etherService.getswapHistory(this.stakingForm.get('fromNEOWallet').value);
       if (this.stakingForm.value.toQLCWallet == '' || this.stakingForm.value.toQLCWallet != this.etherService.selectedAddress ) {
         if (this.etherService.selectedAddress != undefined) {
           console.log('setting add')
@@ -733,7 +769,6 @@ export class CcswapComponent implements OnInit, OnDestroy {
         }*/
         if (this.etherService.selectedAddress != undefined) {
           this.stakingForm.get('fromNEOWallet').setValue(this.etherService.selectedAddress);
-          this.etherService.getswapHistory(this.etherService.selectedAddress);
         }
       }
       if (this.stakingForm.value.toQLCWallet == '' || !this.neowallets.find((wallet) => wallet.id == this.stakingForm.value.toQLCWallet)) {
@@ -741,7 +776,6 @@ export class CcswapComponent implements OnInit, OnDestroy {
           this.stakingForm.get('toQLCWallet').setValue(this.neowallets[0].id);
         }
       }
-      this.etherService.getswapHistory(this.stakingForm.get('toQLCWallet').value);
     }
     // tslint:disable-next-line: member-ordering
     const selectedNEOWallet = this.neowallets.find (
@@ -890,7 +924,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
     console.log('parseInt(Web3.utils.fromWei(this.ethbalance))', parseFloat(Web3.utils.fromWei(this.ethbalance, 'ether')));
     // tslint:disable-next-line: radix
     if (parseFloat(Web3.utils.fromWei(this.ethbalance, 'ether')) < 0.01) {
-      return this.notifications.sendWarning('Your eth wallet balance is insufficient');
+      return this.notifications.sendWarning('Your wallet current account balance is insufficient');
     }
     if (this.walletService.walletIsLocked()) {
       return this.notifications.sendWarning('ERROR wallet locked');
@@ -968,7 +1002,7 @@ export class CcswapComponent implements OnInit, OnDestroy {
   async getUndownTransactions(address: any) {
     this.step = 5;
     console.log('getUndownTransactions.address', address);
-    const data: any = await this.etherService.swapInfosByAddress(address, 1, 10);
+    const data: any = await this.etherService.swapInfosByAddress(address, 1, 10, this.chainType.toUpperCase());
     console.log('getUndownTransactions.data.info', data);
     this.transactions = data.data.infos;
     console.log('getUndownTransactions.transactions', this.transactions);
