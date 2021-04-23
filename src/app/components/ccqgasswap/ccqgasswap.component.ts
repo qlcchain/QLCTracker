@@ -402,6 +402,41 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
   }
 
   async continueUndoneTransaction(txhash?: any) {
+    // webVersion =1 is web version;
+    if (this.etherService.webVersion == 1) {
+      if ( this.etherService.provider && this.chainType == 'eth') {
+        if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != 4 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Rinkby');
+        } else if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != 1 ) {
+          // this.etherService.disconnectWallet();
+          this.step = 1;
+          window.scrollTo(0, 0);
+          return this.notifications.sendWarning('Please switch network to Ethereum Mainnet');
+        }
+      }
+      if ( this.etherService.provider && this.chainType == 'bsc') {
+        if ( environment.neoNetwork == 'main' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+          this.step = 1;
+          window.scrollTo(0, 0);
+          await this.etherService.provider.request({
+                          method: 'wallet_addEthereumChain',
+                          params: this.etherService.bscmainparams,
+                        });
+          return this.notifications.sendWarning('Please switch network to Binance Smart Chain Mainnet');
+      } else if ( environment.neoNetwork == 'test' && this.etherService.NETWORK_CHAIN_ID != this.etherService.BSC_NETWORK_CHAIN_ID) {
+        this.step = 1;
+        window.scrollTo(0, 0);
+        await this.etherService.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: this.etherService.bsctestntparams,
+        });
+        return this.notifications.sendWarning('Please switch network to Binance Smart Chain Testnet');
+      }
+      }
+    }
     console.log('continueUndoneTransaction,chainType', this.chainType);
     // if (this.walletService.walletIsLocked()) {
     //   return this.notifications.sendWarning('ERROR wallet locked');

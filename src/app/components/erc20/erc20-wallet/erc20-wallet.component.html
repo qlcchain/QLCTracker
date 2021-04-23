@@ -209,7 +209,7 @@
     </div>
   </div>
   <!-- LATEST SWAP TRANSACTIONS -->
-  <div class="container mt-0 mb-3">
+  <div class="container mt-0 mb-3" *ngIf="etherService.selectedAddress && etherService.selectedAddress != ''">
     <div class="row">
       
       <div class="col-12 pl-0 pr-0">

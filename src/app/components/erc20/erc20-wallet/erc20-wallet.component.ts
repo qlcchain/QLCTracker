@@ -60,7 +60,7 @@ export class Erc20WalletComponent implements OnInit, OnDestroy {
     const accounts: any[] = await this.etherService.getAccounts();
     const swaptransactions: any = await this.etherService.swapInfosByAddress(
       this.etherService.selectedAddress ? this.etherService.selectedAddress : accounts[0],
-      1,
+      0,
       20
     );
     this.swapHistory = swaptransactions.data.infos;

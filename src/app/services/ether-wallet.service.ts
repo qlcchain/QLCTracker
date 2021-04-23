@@ -106,6 +106,7 @@ accountSub: Subject<string> = new Subject<string>();
       // this.provider.on('connect', (connectInfo) => { console.log (connectInfo)})
       // this.provider.on('disconnect', (disconnect) => { console.log (disconnect)})
       this.provider.on('chainChanged', (chainChanged) => {
+        console.log('ether-wallet.Service.this.chainType', this.chainType);
         this.connect();
       });
       this.provider.on('accountsChanged', (accounts) => {
@@ -208,7 +209,7 @@ accountSub: Subject<string> = new Subject<string>();
   async getswapHistory(address: any, chain?: any) {
     const swaptransactions: any = await this.swapInfosByAddress(
       address,
-      1,
+      0,
       20,
       chain
     );
@@ -219,7 +220,7 @@ accountSub: Subject<string> = new Subject<string>();
   async getqgasswapHistory(address: any, chain: any = 'BSC') {
     const swaptransactions: any = await this.qgasswapInfosByAddress(
       address,
-      1,
+      0,
       20,
       chain
     );
