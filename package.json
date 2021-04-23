@@ -110,7 +110,7 @@
     "lodash": "^4.17.20",
     "popper.js": "^1.16.1",
     "protractor": "^7.0.0",
-    "tar": "^4.4.13",
+    "tar": "^6.1.0",
     "ts-node": "^8.10.2",
     "tslint": "~5.16.0",
     "typescript": "3.7.5"
