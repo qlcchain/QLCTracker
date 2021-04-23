@@ -558,7 +558,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     this.markFormGroupTouched(this.stakingForm);
     // tslint:disable-next-line: radix
     if (parseInt(this.stakingForm.value.amounToStake) < 1) {
-      return this.notifications.sendWarning('1 QLC Minimum');
+      return this.notifications.sendWarning('1 QGAS Minimum');
     }
     // tslint:disable-next-line: radix
     if (this.stakingForm.value.stakingType == 0) {
@@ -574,7 +574,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
         window.scrollTo(0, 0);
       } else {
         return this.notifications.sendWarning(
-          'please check address or minimum qlc'
+          'please check address or minimum qgas'
         );
       }
     } else if (this.stakingForm.value.stakingType == 2) {
@@ -590,7 +590,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
         window.scrollTo(0, 0);
       } else {
         return this.notifications.sendWarning(
-          'please check address or minimum qlc'
+          'please check address or minimum qgas'
         );
       }
     }
