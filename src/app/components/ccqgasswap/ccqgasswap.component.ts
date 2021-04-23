@@ -828,21 +828,19 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     );
     console.log('this.stakingForm.value.stakingType', this.stakingForm.value.stakingType);
     console.log('selectedNEOWallet', selectedNEOWallet);
-    // check selectedNEOWallet?.balances
-    if ( selectedNEOWallet?.balances ) {
-      this.stakingForm
-      .get('availableQLCBalance')
-      .setValue(
-        this.stakingForm.value.stakingType == 0
-          ? selectedNEOWallet?.balances['QGAS']?.balance !== undefined
-            ? new BigNumber(selectedNEOWallet?.balances['QGAS']?.balance).dividedBy(Math.pow(10, 8))
-            .toNumber()
-            : 1
-          : localStorage.getItem('qgasbalance')
-      );
+    this.stakingForm
+    .get('availableQLCBalance')
+    .setValue(
+      this.stakingForm.value.stakingType == 0
+        ? selectedNEOWallet?.balances['QGAS']?.balance !== undefined
+          ? new BigNumber(selectedNEOWallet?.balances['QGAS']?.balance).dividedBy(Math.pow(10, 8))
+          .toNumber()
+          : 1
+        : localStorage.getItem('qgasbalance')
+    );
 
-      this.checkIfMinAmount();
-    }
+    this.checkIfMinAmount();
+    
   }
 
   checkIfMinAmount() {
