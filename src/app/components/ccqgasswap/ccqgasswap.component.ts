@@ -558,7 +558,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     this.markFormGroupTouched(this.stakingForm);
     // tslint:disable-next-line: radix
     if (parseInt(this.stakingForm.value.amounToStake) < 1) {
-      return this.notifications.sendWarning('1 QLC Minimum');
+      return this.notifications.sendWarning('1 QGAS Minimum');
     }
     // tslint:disable-next-line: radix
     if (this.stakingForm.value.stakingType == 0) {
@@ -574,7 +574,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
         window.scrollTo(0, 0);
       } else {
         return this.notifications.sendWarning(
-          'please check address or minimum qlc'
+          'please check address or minimum qgas'
         );
       }
     } else if (this.stakingForm.value.stakingType == 2) {
@@ -590,7 +590,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
         window.scrollTo(0, 0);
       } else {
         return this.notifications.sendWarning(
-          'please check address or minimum qlc'
+          'please check address or minimum qgas'
         );
       }
     }
@@ -706,7 +706,7 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     //   }
     // }
 
-    await this.walletService.loadTokens();
+    await this.walletService?.loadTokens();
     for (let i = 0; i < this.accounts.length; i++) {
       const am = await this.api.accountInfo(this.accounts[i].id);
       if (!am.error) {
@@ -829,17 +829,18 @@ export class CcqgasswapComponent implements OnInit, OnDestroy {
     console.log('this.stakingForm.value.stakingType', this.stakingForm.value.stakingType);
     console.log('selectedNEOWallet', selectedNEOWallet);
     this.stakingForm
-      .get('availableQLCBalance')
-      .setValue(
-        this.stakingForm.value.stakingType == 0
-          ? selectedNEOWallet?.balances['QGAS']?.balance !== undefined
-            ? new BigNumber(selectedNEOWallet?.balances['QGAS']?.balance).dividedBy(Math.pow(10, 8))
-            .toNumber()
-            : 1
-          : localStorage.getItem('qgasbalance')
-      );
+    .get('availableQLCBalance')
+    .setValue(
+      this.stakingForm.value.stakingType == 0
+        ? selectedNEOWallet?.balances['QGAS']?.balance !== undefined
+          ? new BigNumber(selectedNEOWallet?.balances['QGAS']?.balance).dividedBy(Math.pow(10, 8))
+          .toNumber()
+          : 1
+        : localStorage.getItem('qgasbalance')
+    );
 
     this.checkIfMinAmount();
+    
   }
 
   checkIfMinAmount() {
