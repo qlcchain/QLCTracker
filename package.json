@@ -58,7 +58,7 @@
     "electron-updater": "^4.3.5",
     "electron-util": "^0.11.0",
     "elliptic": "^6.5.4",
-    "ethers": "^5.0.26",
+    "ethers": "^5.1.3",
     "find-process": "^1.4.4",
     "fs-extra": "^8.1.0",
     "inly": "^4.0.8",
