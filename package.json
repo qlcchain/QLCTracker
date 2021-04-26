@@ -48,7 +48,7 @@
     "bip39": "^3.0.3",
     "blakejs": "^1.1.0",
     "bootstrap": "^4.6.0",
-    "chart.js": "^2.9.4",
+    "chart.js": "^3.2.0",
     "chmod-plus": "0.0.3",
     "core-js": "^2.6.12",
     "cross-spawn-with-kill": "^1.0.0",
