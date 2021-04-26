@@ -98,7 +98,7 @@
     "download": "^8.0.0",
     "electron": "^11.2.1",
     "electron-builder": "^22.9.1",
-    "electron-is-dev": "^1.2.0",
+    "electron-is-dev": "^2.0.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "^6.0.1",
